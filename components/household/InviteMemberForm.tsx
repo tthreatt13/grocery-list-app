@@ -2,9 +2,9 @@
 
 import { useState, FormEvent } from 'react'
 import { MemberRole } from '@/lib/types'
-import Input from '@/components/ui/Input'
-import Select from '@/components/ui/Select'
-import Button from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
+import { Select } from '@/components/ui/Select'
+import { Button } from '@/components/ui/Button'
 
 interface InviteMemberFormProps {
   onSubmit: (data: { email: string; role: MemberRole }) => void
