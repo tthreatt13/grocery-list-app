@@ -124,17 +124,17 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 3.13 Add "Share List" button placeholder on list detail page
   - [x] 3.14 Commit grocery list UI with message "feat: add grocery list screens and components"
 
-- [ ] 4.0 Build pantry inventory UI screens
-  - [ ] 4.1 Create `app/pantry/page.tsx` as main pantry inventory page
-  - [ ] 4.2 Create `components/pantry/PantryGrid.tsx` to display items in a responsive grid
-  - [ ] 4.3 Create `components/pantry/PantryItemCard.tsx` with item name, quantity, expiration date, and image placeholder
-  - [ ] 4.4 Add visual indicators for items that are low stock (badge or color)
-  - [ ] 4.5 Add visual indicators for items expiring soon (warning color/icon)
-  - [ ] 4.6 Create `components/pantry/AddPantryItemForm.tsx` with fields for name, quantity, category, expiration date
-  - [ ] 4.7 Add "Add to Pantry" button that opens modal with AddPantryItemForm
-  - [ ] 4.8 Add category filter dropdown for pantry items
-  - [ ] 4.9 Add search functionality to filter pantry items by name
-  - [ ] 4.10 Commit pantry inventory UI with message "feat: add pantry inventory screens and components"
+- [x] 4.0 Build pantry inventory UI screens
+  - [x] 4.1 Create `app/pantry/page.tsx` as main pantry inventory page
+  - [x] 4.2 Create `components/pantry/PantryGrid.tsx` to display items in a responsive grid
+  - [x] 4.3 Create `components/pantry/PantryItemCard.tsx` with item name, quantity, expiration date, and image placeholder
+  - [x] 4.4 Add visual indicators for items that are low stock (badge or color)
+  - [x] 4.5 Add visual indicators for items expiring soon (warning color/icon)
+  - [x] 4.6 Create `components/pantry/AddPantryItemForm.tsx` with fields for name, quantity, category, expiration date
+  - [x] 4.7 Add "Add to Pantry" button that opens modal with AddPantryItemForm
+  - [x] 4.8 Add category filter dropdown for pantry items
+  - [x] 4.9 Add search functionality to filter pantry items by name
+  - [x] 4.10 Commit pantry inventory UI with message "feat: add pantry inventory screens and components"
 
 - [ ] 5.0 Build weekly meal planner UI screens
   - [ ] 5.1 Create `app/meal-planner/page.tsx` as main meal planner page
