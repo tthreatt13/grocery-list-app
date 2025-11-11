@@ -55,7 +55,7 @@ export default function AddMealModal({
 
   return (
     <Modal open={isOpen} onClose={onClose}>
-      <div className="bg-white rounded-lg p-6 w-full max-w-md" role="dialog">
+      <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Add Meal</h2>
         <p className="text-sm text-gray-600 mb-6">
           {mealType} for {formatDate(date, 'EEEE, MMMM d')}

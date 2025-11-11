@@ -21,7 +21,8 @@ describe('AddMealModal', () => {
         date={new Date('2024-11-10')}
       />
     )
-    expect(screen.getByText('Add Meal')).toBeInTheDocument()
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    expect(screen.getAllByText('Add Meal').length).toBeGreaterThan(0)
   })
 
   it('does not render when isOpen is false', () => {

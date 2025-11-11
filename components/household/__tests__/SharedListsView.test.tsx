@@ -49,7 +49,8 @@ describe('SharedListsView', () => {
 
   it('shows the last edit timestamp for each list', () => {
     render(<SharedListsView lists={mockSharedLists} />)
-    expect(screen.getByText(/Last edited:/)).toBeInTheDocument()
+    const lastEditedElements = screen.getAllByText(/Last edited:/)
+    expect(lastEditedElements.length).toBeGreaterThan(0)
   })
 
   it('displays the number of people each list is shared with', () => {

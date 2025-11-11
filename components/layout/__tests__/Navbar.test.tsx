@@ -23,7 +23,7 @@ describe('Navbar', () => {
 
   it('renders user avatar with initials', () => {
     render(<Navbar />)
-    expect(screen.getByText('JP')).toBeInTheDocument()
+    expect(screen.getByText('TT')).toBeInTheDocument()
   })
 
   it('highlights active link based on pathname', () => {

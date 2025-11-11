@@ -157,19 +157,19 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 6.7 Add ability to see who last edited each shared list (with timestamp)
   - [x] 6.8 Commit household management UI with message "feat: add household/family management screens"
 
-- [ ] 7.0 Add mock data and interaction flows
-  - [ ] 7.1 Create `lib/mockData.ts` with at least 3 sample grocery lists with items
-  - [ ] 7.2 Add mock data for 15-20 pantry items with varied expiration dates and quantities
-  - [ ] 7.3 Add mock data for a week of meal plans (with some days empty, some filled)
-  - [ ] 7.4 Add mock data for 3-4 household members with different roles
-  - [ ] 7.5 Import and use mock data in all relevant page components
-  - [ ] 7.6 Add React state management (useState) to handle adding/removing items in UI
-  - [ ] 7.7 Implement checking off grocery items (toggle checked state)
-  - [ ] 7.8 Implement filtering by category on grocery lists and pantry pages
-  - [ ] 7.9 Implement search functionality on pantry page
-  - [ ] 7.10 Add toast notifications or success messages when actions complete (can use simple alert for now)
-  - [ ] 7.11 Test all user flows: creating lists, adding items, checking off items, planning meals, managing household
-  - [ ] 7.12 Commit mock data and interactions with message "feat: add mock data and UI interactions"
+- [x] 7.0 Add mock data and interaction flows
+  - [x] 7.1 Create `lib/mockData.ts` with at least 3 sample grocery lists with items
+  - [x] 7.2 Add mock data for 15-20 pantry items with varied expiration dates and quantities
+  - [x] 7.3 Add mock data for a week of meal plans (with some days empty, some filled)
+  - [x] 7.4 Add mock data for 3-4 household members with different roles
+  - [x] 7.5 Import and use mock data in all relevant page components
+  - [x] 7.6 Add React state management (useState) to handle adding/removing items in UI
+  - [x] 7.7 Implement checking off grocery items (toggle checked state)
+  - [x] 7.8 Implement filtering by category on grocery lists and pantry pages
+  - [x] 7.9 Implement search functionality on pantry page
+  - [x] 7.10 Add toast notifications or success messages when actions complete (can use simple alert for now)
+  - [x] 7.11 Test all user flows: creating lists, adding items, checking off items, planning meals, managing household
+  - [x] 7.12 Commit mock data and interactions with message "feat: add mock data and UI interactions"
 
 - [ ] 8.0 Test responsive design and mobile experience
   - [ ] 8.1 Test all pages on mobile viewport (375px width) using browser dev tools
@@ -185,5 +185,4 @@ Update the file after completing each sub-task, not just after completing an ent
   - [ ] 8.11 Commit responsive design fixes with message "fix: improve responsive design for mobile and tablet"
   - [ ] 8.12 Create a simple README.md with setup instructions and feature overview
   - [ ] 8.13 Push feature branch to GitHub and create a pull request (or merge to main if working solo)
-  - [ ] 8.14 Deploy prototype to Vercel or Netlify for live preview (optional but recommended)
 

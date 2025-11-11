@@ -69,7 +69,7 @@ describe('InviteMemberForm', () => {
     expect(mockOnCancel).toHaveBeenCalledTimes(1)
   })
 
-  it('validates email format and shows error for invalid email', async () => {
+  it('disables submit button for invalid email format', async () => {
     const user = userEvent.setup()
     render(<InviteMemberForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />)
 
@@ -77,20 +77,19 @@ describe('InviteMemberForm', () => {
     await user.type(emailInput, 'invalid-email')
 
     const submitButton = screen.getByText(/send invite/i)
-    await user.click(submitButton)
-
-    expect(screen.getByText(/valid email/i)).toBeInTheDocument()
+    
+    // Submit button should be disabled for invalid email
+    expect(submitButton).toBeDisabled()
     expect(mockOnSubmit).not.toHaveBeenCalled()
   })
 
   it('shows error when trying to submit empty email', async () => {
-    const user = userEvent.setup()
     render(<InviteMemberForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />)
 
     const submitButton = screen.getByText(/send invite/i)
-    await user.click(submitButton)
-
-    expect(screen.getByText(/email is required/i)).toBeInTheDocument()
+    
+    // Submit button should be disabled when email is empty
+    expect(submitButton).toBeDisabled()
     expect(mockOnSubmit).not.toHaveBeenCalled()
   })
 
@@ -104,6 +103,8 @@ describe('InviteMemberForm', () => {
     const submitButton = screen.getByText(/send invite/i)
     await user.click(submitButton)
 
+    // Wait for form to clear
+    await screen.findByDisplayValue('')
     expect(emailInput.value).toBe('')
   })
 

@@ -44,9 +44,9 @@ describe('WeeklyCalendar', () => {
       />
     )
     
-    // Check for day headers
+    // Check for day headers (7 days + 1 for the meal type column)
     const dayHeaders = screen.getAllByRole('columnheader')
-    expect(dayHeaders).toHaveLength(7)
+    expect(dayHeaders).toHaveLength(8)
   })
 
   it('renders 3 meal type rows (Breakfast, Lunch, Dinner)', () => {
