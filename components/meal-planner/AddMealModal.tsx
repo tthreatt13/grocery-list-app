@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { MealType } from '@/lib/types'
-import Modal from '@/components/ui/Modal'
-import Input from '@/components/ui/Input'
-import Button from '@/components/ui/Button'
+import { Modal } from '@/components/ui/Modal'
+import { Input } from '@/components/ui/Input'
+import { Button } from '@/components/ui/Button'
 import { formatDate } from '@/lib/utils'
 
 interface AddMealModalProps {
@@ -54,7 +54,7 @@ export default function AddMealModal({
   if (!isOpen) return null
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal open={isOpen} onClose={onClose}>
       <div className="bg-white rounded-lg p-6 w-full max-w-md" role="dialog">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Add Meal</h2>
         <p className="text-sm text-gray-600 mb-6">

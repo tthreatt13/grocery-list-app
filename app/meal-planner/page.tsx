@@ -5,7 +5,7 @@ import { Meal, MealType } from '@/lib/types'
 import { mockMeals } from '@/lib/mockData'
 import WeeklyCalendar from '@/components/meal-planner/WeeklyCalendar'
 import AddMealModal from '@/components/meal-planner/AddMealModal'
-import Button from '@/components/ui/Button'
+import { Button } from '@/components/ui/Button'
 import { formatDate, generateId } from '@/lib/utils'
 
 export default function MealPlannerPage() {
