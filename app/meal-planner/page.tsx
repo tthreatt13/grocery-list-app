@@ -4,7 +4,9 @@ import { useState } from 'react'
 import { Meal, MealType } from '@/lib/types'
 import { mockMeals } from '@/lib/mockData'
 import WeeklyCalendar from '@/components/meal-planner/WeeklyCalendar'
+import MobileWeeklyCalendar from '@/components/meal-planner/MobileWeeklyCalendar'
 import AddMealModal from '@/components/meal-planner/AddMealModal'
+import MealDetailsModal from '@/components/meal-planner/MealDetailsModal'
 import { Button } from '@/components/ui/Button'
 import { formatDate, generateId } from '@/lib/utils'
 
@@ -25,6 +27,10 @@ export default function MealPlannerPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [selectedMealType, setSelectedMealType] = useState<MealType>(MealType.DINNER)
+  
+  // State for meal details modal
+  const [isMealDetailsOpen, setIsMealDetailsOpen] = useState(false)
+  const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null)
 
   // Navigate to previous week
   const handlePreviousWeek = () => {
@@ -70,9 +76,10 @@ export default function MealPlannerPage() {
     setIsAddModalOpen(false)
   }
 
-  // Handle meal click (currently just logs)
+  // Handle meal click - opens details modal
   const handleMealClick = (meal: Meal) => {
-    console.log('Meal clicked:', meal)
+    setSelectedMeal(meal)
+    setIsMealDetailsOpen(true)
   }
 
   // Handle meal edit
@@ -122,17 +129,22 @@ export default function MealPlannerPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+    <div className="min-h-screen bg-gray-50 md:p-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
+        {/* Header - Desktop */}
+        <div className="hidden md:block mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Meal Planner</h1>
           <p className="text-gray-600">Plan your meals for the week and generate grocery lists</p>
         </div>
 
-        {/* Week Navigation */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-          <div className="flex items-center justify-between flex-wrap gap-4">
+        {/* Header - Mobile */}
+        <div className="md:hidden bg-white border-b border-gray-200 px-4 py-3 mb-4">
+          <h1 className="text-xl font-bold text-gray-900">Meal Planner</h1>
+        </div>
+
+        {/* Week Navigation - Desktop */}
+        <div className="hidden md:flex bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+          <div className="flex items-center justify-between flex-wrap gap-4 w-full">
             <div className="flex items-center space-x-3">
               <button
                 onClick={handlePreviousWeek}
@@ -206,8 +218,89 @@ export default function MealPlannerPage() {
           </div>
         </div>
 
-        {/* Weekly Calendar */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        {/* Week Navigation - Mobile (Compact) */}
+        <div className="md:hidden bg-white border-b border-gray-200 px-4 py-3 mb-4">
+          <div className="flex items-center justify-between mb-3">
+            <button
+              onClick={handlePreviousWeek}
+              className="p-2 hover:bg-gray-100 rounded-full active:bg-gray-200 transition-colors"
+              aria-label="Previous week"
+            >
+              <svg
+                className="w-6 h-6 text-gray-700"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </button>
+
+            <div className="text-center flex-1">
+              <h2 className="text-base font-semibold text-gray-900">{getWeekRange()}</h2>
+            </div>
+
+            <button
+              onClick={handleNextWeek}
+              className="p-2 hover:bg-gray-100 rounded-full active:bg-gray-200 transition-colors"
+              aria-label="Next week"
+            >
+              <svg
+                className="w-6 h-6 text-gray-700"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
+          </div>
+          
+          <div className="flex space-x-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleToday}
+              className="flex-shrink-0"
+            >
+              Today
+            </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={handleGenerateGroceryList}
+              className="flex-1 flex items-center justify-center"
+            >
+              <svg
+                className="w-4 h-4 mr-1.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                />
+              </svg>
+              Generate List
+            </Button>
+          </div>
+        </div>
+
+        {/* Weekly Calendar - Desktop View */}
+        <div className="hidden md:block bg-white rounded-lg shadow-sm border border-gray-200 p-4">
           <WeeklyCalendar
             startDate={currentWeekStart}
             meals={meals}
@@ -218,8 +311,18 @@ export default function MealPlannerPage() {
           />
         </div>
 
-        {/* Quick Stats */}
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Mobile Weekly Calendar - Mobile View */}
+        <div className="md:hidden px-4 pb-20">
+          <MobileWeeklyCalendar
+            startDate={currentWeekStart}
+            meals={meals}
+            onEmptySlotClick={handleEmptySlotClick}
+            onMealClick={handleMealClick}
+          />
+        </div>
+
+        {/* Quick Stats - Desktop Only */}
+        <div className="hidden md:grid mt-6 grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white rounded-lg border border-gray-200 p-4">
             <div className="flex items-center">
               <div className="p-3 bg-green-100 rounded-lg">
@@ -331,6 +434,15 @@ export default function MealPlannerPage() {
         onAdd={handleAddMeal}
         mealType={selectedMealType}
         date={selectedDate}
+      />
+
+      {/* Meal Details Modal */}
+      <MealDetailsModal
+        isOpen={isMealDetailsOpen}
+        onClose={() => setIsMealDetailsOpen(false)}
+        meal={selectedMeal}
+        onEdit={handleMealEdit}
+        onDelete={handleMealDelete}
       />
     </div>
   )

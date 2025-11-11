@@ -20,7 +20,7 @@ export default function Home() {
         {/* Welcome Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome back, John! 👋
+            Welcome back, Tony! 👋
           </h1>
           <p className="text-gray-600">
             Here's what's happening with your grocery planning today.

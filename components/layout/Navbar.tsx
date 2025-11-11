@@ -52,7 +52,7 @@ export default function Navbar() {
           {/* User Avatar */}
           <div className="flex items-center">
             <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center cursor-pointer">
-              <span className="text-white font-semibold">JP</span>
+              <span className="text-white font-semibold">TT</span>
             </div>
           </div>
         </div>
