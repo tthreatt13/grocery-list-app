@@ -91,3 +91,11 @@ export function generateId(): string {
   return Math.random().toString(36).substr(2, 9)
 }
 
+/**
+ * Formats a date to a distance string from now (e.g., "2 hours ago")
+ * Alias for formatRelativeTime for semantic clarity
+ */
+export function formatDistanceToNow(date: Date): string {
+  return formatRelativeTime(date)
+}
+
