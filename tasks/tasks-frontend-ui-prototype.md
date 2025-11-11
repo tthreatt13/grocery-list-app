@@ -93,19 +93,19 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 1.4 Set up `app/globals.css` with Tailwind directives and any global custom styles
   - [x] 1.5 Create `.gitignore` to exclude `node_modules/`, `.next/`, `.env.local`, etc.
   - [x] 1.6 Test the setup by running `npm run dev` and verify the default page loads at http://localhost:3000
-  - [ ] 1.7 Commit the initial setup with message "chore: initialize Next.js project with Tailwind CSS"
+  - [x] 1.7 Commit the initial setup with message "chore: initialize Next.js project with Tailwind CSS"
 
 - [ ] 2.0 Create design system and reusable UI components
-  - [ ] 2.1 Create `lib/types.ts` with TypeScript interfaces for GroceryList, GroceryItem, PantryItem, Meal, HouseholdMember
-  - [ ] 2.2 Create `lib/utils.ts` with utility functions (e.g., `cn()` for className merging, date formatters)
-  - [ ] 2.3 Create `components/ui/Button.tsx` with variants (primary, secondary, outline, ghost) and sizes (sm, md, lg)
-  - [ ] 2.4 Create `components/ui/Input.tsx` with label, error state, and placeholder support
-  - [ ] 2.5 Create `components/ui/Card.tsx` as a container component with optional header, body, and footer
-  - [ ] 2.6 Create `components/ui/Modal.tsx` with open/close state, backdrop, and accessibility (focus trap, ESC to close)
-  - [ ] 2.7 Create `components/ui/Badge.tsx` for displaying categories, tags, or status indicators
-  - [ ] 2.8 Create `components/ui/Checkbox.tsx` with checked/unchecked states and onChange handler
-  - [ ] 2.9 Create `components/ui/Select.tsx` dropdown component with options array prop
-  - [ ] 2.10 Test all UI components by creating a temporary test page and verify they render correctly
+  - [x] 2.1 Create `lib/types.ts` with TypeScript interfaces for GroceryList, GroceryItem, PantryItem, Meal, HouseholdMember
+  - [x] 2.2 Create `lib/utils.ts` with utility functions (e.g., `cn()` for className merging, date formatters)
+  - [x] 2.3 Create `components/ui/Button.tsx` with variants (primary, secondary, outline, ghost) and sizes (sm, md, lg)
+  - [x] 2.4 Create `components/ui/Input.tsx` with label, error state, and placeholder support
+  - [x] 2.5 Create `components/ui/Card.tsx` as a container component with optional header, body, and footer
+  - [x] 2.6 Create `components/ui/Modal.tsx` with open/close state, backdrop, and accessibility (focus trap, ESC to close)
+  - [x] 2.7 Create `components/ui/Badge.tsx` for displaying categories, tags, or status indicators
+  - [x] 2.8 Create `components/ui/Checkbox.tsx` with checked/unchecked states and onChange handler
+  - [x] 2.9 Create `components/ui/Select.tsx` dropdown component with options array prop
+  - [x] 2.10 Test all UI components by creating a temporary test page and verify they render correctly
   - [ ] 2.11 Commit design system components with message "feat: add reusable UI components"
 
 - [ ] 3.0 Build grocery list UI screens
