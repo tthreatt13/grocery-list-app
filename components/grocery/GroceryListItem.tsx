@@ -10,14 +10,16 @@ interface GroceryListItemProps {
 }
 
 export default function GroceryListItem({ item, onToggle }: GroceryListItemProps) {
-  const getBadgeVariant = (category: string) => {
+  const getBadgeVariant = (category: string): 'default' | 'primary' | 'success' | 'warning' | 'danger' => {
     switch (category) {
       case 'Produce':
         return 'success'
       case 'Dairy':
-        return 'info'
+        return 'primary'
       case 'Meat':
-        return 'error'
+        return 'danger'
+      case 'Bakery':
+        return 'warning'
       default:
         return 'default'
     }

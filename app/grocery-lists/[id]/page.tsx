@@ -215,7 +215,7 @@ export default function GroceryListDetailPage() {
 
         {/* Add Item Modal */}
         <Modal
-          isOpen={isAddModalOpen}
+          open={isAddModalOpen}
           onClose={() => setIsAddModalOpen(false)}
           title="Add New Item"
         >

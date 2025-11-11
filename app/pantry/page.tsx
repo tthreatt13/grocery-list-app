@@ -171,7 +171,7 @@ export default function PantryPage() {
 
       {/* Add Item Modal */}
       <Modal
-        isOpen={isModalOpen}
+        open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title="Add Pantry Item"
       >

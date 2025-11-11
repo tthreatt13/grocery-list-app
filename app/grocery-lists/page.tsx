@@ -72,7 +72,7 @@ export default function GroceryListsPage() {
 
         {/* Create List Modal */}
         <Modal
-          isOpen={isModalOpen}
+          open={isModalOpen}
           onClose={() => {
             setIsModalOpen(false)
             setNewListName('')

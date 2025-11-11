@@ -351,3 +351,126 @@ export const mockPantryItems: PantryItem[] = [
   },
 ]
 
+// Mock Meal Data for weekly planner
+export const mockMeals: Meal[] = [
+  {
+    id: 'm1',
+    name: 'Scrambled Eggs & Toast',
+    mealType: MealType.BREAKFAST,
+    date: getDaysFromNow(0),
+    notes: 'With avocado',
+    ingredients: ['Eggs', 'Bread', 'Butter', 'Avocado'],
+    createdBy: 'John Parent',
+  },
+  {
+    id: 'm2',
+    name: 'Grilled Chicken Salad',
+    mealType: MealType.LUNCH,
+    date: getDaysFromNow(0),
+    ingredients: ['Chicken Breast', 'Lettuce', 'Tomatoes', 'Cucumber', 'Olive Oil'],
+    createdBy: 'Jane Parent',
+  },
+  {
+    id: 'm3',
+    name: 'Spaghetti Bolognese',
+    mealType: MealType.DINNER,
+    date: getDaysFromNow(0),
+    notes: 'Kids favorite!',
+    ingredients: ['Pasta', 'Ground Beef', 'Tomato Sauce', 'Onions', 'Garlic'],
+    createdBy: 'John Parent',
+  },
+  {
+    id: 'm4',
+    name: 'Pancakes',
+    mealType: MealType.BREAKFAST,
+    date: getDaysFromNow(1),
+    ingredients: ['Flour', 'Milk', 'Eggs', 'Butter', 'Maple Syrup'],
+    createdBy: 'Jane Parent',
+  },
+  {
+    id: 'm5',
+    name: 'Turkey Sandwich',
+    mealType: MealType.LUNCH,
+    date: getDaysFromNow(1),
+    ingredients: ['Bread', 'Turkey', 'Lettuce', 'Tomato', 'Mayo'],
+    createdBy: 'John Parent',
+  },
+  {
+    id: 'm6',
+    name: 'Tacos',
+    mealType: MealType.DINNER,
+    date: getDaysFromNow(2),
+    notes: 'Taco Tuesday!',
+    ingredients: ['Ground Beef', 'Taco Shells', 'Cheese', 'Lettuce', 'Salsa'],
+    createdBy: 'John Parent',
+  },
+  {
+    id: 'm7',
+    name: 'Oatmeal',
+    mealType: MealType.BREAKFAST,
+    date: getDaysFromNow(3),
+    ingredients: ['Oats', 'Milk', 'Honey', 'Bananas', 'Berries'],
+    createdBy: 'Jane Parent',
+  },
+  {
+    id: 'm8',
+    name: 'Pizza',
+    mealType: MealType.DINNER,
+    date: getDaysFromNow(4),
+    notes: 'Homemade or delivery?',
+    ingredients: ['Pizza Dough', 'Tomato Sauce', 'Cheese', 'Pepperoni'],
+    createdBy: 'John Parent',
+  },
+  {
+    id: 'm9',
+    name: 'Stir Fry',
+    mealType: MealType.DINNER,
+    date: getDaysFromNow(5),
+    ingredients: ['Chicken', 'Rice', 'Broccoli', 'Carrots', 'Soy Sauce'],
+    createdBy: 'Jane Parent',
+  },
+]
+
+// Mock Household Data
+export const mockHouseholdMembers: HouseholdMember[] = [
+  {
+    id: 'u1',
+    name: 'John Parent',
+    email: 'john@example.com',
+    role: MemberRole.ADMIN,
+    joinedAt: new Date('2024-01-01'),
+    lastActive: new Date('2024-11-11'),
+  },
+  {
+    id: 'u2',
+    name: 'Jane Parent',
+    email: 'jane@example.com',
+    role: MemberRole.ADMIN,
+    joinedAt: new Date('2024-01-01'),
+    lastActive: new Date('2024-11-10'),
+  },
+  {
+    id: 'u3',
+    name: 'Grandma Smith',
+    email: 'grandma@example.com',
+    role: MemberRole.MEMBER,
+    joinedAt: new Date('2024-03-15'),
+    lastActive: new Date('2024-11-08'),
+  },
+  {
+    id: 'u4',
+    name: 'Uncle Bob',
+    email: 'bob@example.com',
+    role: MemberRole.VIEWER,
+    joinedAt: new Date('2024-06-20'),
+    lastActive: new Date('2024-11-05'),
+  },
+]
+
+export const mockHousehold: Household = {
+  id: 'h1',
+  name: 'The Parent Family',
+  members: mockHouseholdMembers,
+  createdAt: new Date('2024-01-01'),
+}
+

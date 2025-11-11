@@ -19,7 +19,7 @@ export default function PantryItemCard({ item }: PantryItemCardProps) {
     const daysUntilExpiration = Math.ceil((expirationDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
     
     if (daysUntilExpiration < 0) {
-      return { status: 'expired', text: 'Expired', variant: 'error' as const }
+      return { status: 'expired', text: 'Expired', variant: 'danger' as const }
     } else if (daysUntilExpiration <= 3) {
       return { status: 'expiring', text: 'Expires Soon', variant: 'warning' as const }
     }
