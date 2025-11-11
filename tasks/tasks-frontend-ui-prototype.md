@@ -95,7 +95,7 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 1.6 Test the setup by running `npm run dev` and verify the default page loads at http://localhost:3000
   - [x] 1.7 Commit the initial setup with message "chore: initialize Next.js project with Tailwind CSS"
 
-- [ ] 2.0 Create design system and reusable UI components
+- [x] 2.0 Create design system and reusable UI components
   - [x] 2.1 Create `lib/types.ts` with TypeScript interfaces for GroceryList, GroceryItem, PantryItem, Meal, HouseholdMember
   - [x] 2.2 Create `lib/utils.ts` with utility functions (e.g., `cn()` for className merging, date formatters)
   - [x] 2.3 Create `components/ui/Button.tsx` with variants (primary, secondary, outline, ghost) and sizes (sm, md, lg)
@@ -171,18 +171,18 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 7.11 Test all user flows: creating lists, adding items, checking off items, planning meals, managing household
   - [x] 7.12 Commit mock data and interactions with message "feat: add mock data and UI interactions"
 
-- [ ] 8.0 Test responsive design and mobile experience
-  - [ ] 8.1 Test all pages on mobile viewport (375px width) using browser dev tools
-  - [ ] 8.2 Test all pages on tablet viewport (768px width)
-  - [ ] 8.3 Test all pages on desktop viewport (1440px width)
-  - [ ] 8.4 Verify bottom mobile navigation works correctly and highlights active page
-  - [ ] 8.5 Verify all modals are properly centered and scrollable on small screens
-  - [ ] 8.6 Verify all forms are usable with proper input sizes on mobile
-  - [ ] 8.7 Test that grocery list items are easy to check off on mobile (large touch targets)
-  - [ ] 8.8 Verify calendar view in meal planner is scrollable/usable on mobile
-  - [ ] 8.9 Fix any layout issues or overlapping elements found during testing
-  - [ ] 8.10 Add touch-friendly button sizes (minimum 44x44px) where needed
-  - [ ] 8.11 Commit responsive design fixes with message "fix: improve responsive design for mobile and tablet"
-  - [ ] 8.12 Create a simple README.md with setup instructions and feature overview
-  - [ ] 8.13 Push feature branch to GitHub and create a pull request (or merge to main if working solo)
+- [x] 8.0 Test responsive design and mobile experience
+  - [x] 8.1 Test all pages on mobile viewport (375px width) using browser dev tools
+  - [x] 8.2 Test all pages on tablet viewport (768px width)
+  - [x] 8.3 Test all pages on desktop viewport (1440px width)
+  - [x] 8.4 Verify bottom mobile navigation works correctly and highlights active page
+  - [x] 8.5 Verify all modals are properly centered and scrollable on small screens
+  - [x] 8.6 Verify all forms are usable with proper input sizes on mobile
+  - [x] 8.7 Test that grocery list items are easy to check off on mobile (large touch targets)
+  - [x] 8.8 Verify calendar view in meal planner is scrollable/usable on mobile
+  - [x] 8.9 Fix any layout issues or overlapping elements found during testing
+  - [x] 8.10 Add touch-friendly button sizes (minimum 44x44px) where needed
+  - [x] 8.11 Commit responsive design fixes with message "fix: improve responsive design for mobile and tablet"
+  - [x] 8.12 Create a simple README.md with setup instructions and feature overview
+  - [x] 8.13 Push feature branch to GitHub and create a pull request (or merge to main if working solo)
 

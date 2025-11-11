@@ -19,9 +19,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     }
     
     const sizeStyles = {
-      sm: 'text-sm px-3 py-1.5',
-      md: 'text-base px-4 py-2',
-      lg: 'text-lg px-6 py-3',
+      sm: 'text-sm px-3 py-2 min-h-[44px]',
+      md: 'text-base px-4 py-2.5 min-h-[44px]',
+      lg: 'text-lg px-6 py-3 min-h-[48px]',
     }
 
     if (asChild && React.isValidElement(props.children)) {

@@ -19,10 +19,10 @@ export default function Home() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
             Welcome back, Tony! 👋
           </h1>
-          <p className="text-gray-600">
+          <p className="text-sm sm:text-base text-gray-600">
             Here's what's happening with your grocery planning today.
           </p>
         </div>
@@ -80,38 +80,38 @@ export default function Home() {
 
         {/* Quick Actions */}
         <div className="mb-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
             <Link href="/grocery-lists">
-              <Button variant="outline" className="w-full h-20 flex flex-col items-center justify-center space-y-2">
+              <Button variant="outline" className="w-full min-h-[80px] flex flex-col items-center justify-center space-y-2">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
-                <span className="text-sm">New List</span>
+                <span className="text-xs sm:text-sm">New List</span>
               </Button>
             </Link>
             <Link href="/pantry">
-              <Button variant="outline" className="w-full h-20 flex flex-col items-center justify-center space-y-2">
+              <Button variant="outline" className="w-full min-h-[80px] flex flex-col items-center justify-center space-y-2">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
-                <span className="text-sm">Pantry</span>
+                <span className="text-xs sm:text-sm">Pantry</span>
               </Button>
             </Link>
             <Link href="/meal-planner">
-              <Button variant="outline" className="w-full h-20 flex flex-col items-center justify-center space-y-2">
+              <Button variant="outline" className="w-full min-h-[80px] flex flex-col items-center justify-center space-y-2">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                <span className="text-sm">Plan Meals</span>
+                <span className="text-xs sm:text-sm">Plan Meals</span>
               </Button>
             </Link>
             <Link href="/household">
-              <Button variant="outline" className="w-full h-20 flex flex-col items-center justify-center space-y-2">
+              <Button variant="outline" className="w-full min-h-[80px] flex flex-col items-center justify-center space-y-2">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
-                <span className="text-sm">Family</span>
+                <span className="text-xs sm:text-sm">Family</span>
               </Button>
             </Link>
           </div>
@@ -120,7 +120,7 @@ export default function Home() {
         {/* Recent Lists */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-900">Recent Lists</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900">Recent Lists</h2>
             <Link href="/grocery-lists">
               <Button variant="ghost" size="sm">View All</Button>
             </Link>

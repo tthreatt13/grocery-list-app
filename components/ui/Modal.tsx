@@ -62,7 +62,7 @@ export const Modal: React.FC<ModalProps> = ({
           )}
           <button
             onClick={onClose}
-            className="ml-auto text-gray-400 hover:text-gray-600 transition-colors"
+            className="ml-auto text-gray-400 hover:text-gray-600 transition-colors p-2 -mr-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
             aria-label="Close modal"
           >
             <svg
