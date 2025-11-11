@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { GroceryList } from '@/lib/types'
-import Card from '@/components/ui/Card'
+import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { formatRelativeTime } from '@/lib/utils'
 

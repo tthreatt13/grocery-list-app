@@ -1,7 +1,7 @@
 'use client'
 
 import { HouseholdMember, MemberRole } from '@/lib/types'
-import Card from '@/components/ui/Card'
+import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { formatDistanceToNow } from '@/lib/utils'
 
