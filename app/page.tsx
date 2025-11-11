@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import Card from '@/components/ui/Card'
-import Button from '@/components/ui/Button'
+import { Card } from '@/components/ui/Card'
+import { Button } from '@/components/ui/Button'
 import { mockGroceryLists } from '@/lib/mockData'
 import { formatRelativeTime } from '@/lib/utils'
 

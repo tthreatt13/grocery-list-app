@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import Card from '@/components/ui/Card'
-import Badge from '@/components/ui/Badge'
+import { Card } from '@/components/ui/Card'
+import { Badge } from '@/components/ui/Badge'
 import { GroceryList } from '@/lib/types'
 import { formatRelativeTime } from '@/lib/utils'
 

@@ -1,5 +1,5 @@
-import Checkbox from '@/components/ui/Checkbox'
-import Badge from '@/components/ui/Badge'
+import { Checkbox } from '@/components/ui/Checkbox'
+import { Badge } from '@/components/ui/Badge'
 import { GroceryItem } from '@/lib/types'
 import { formatQuantity } from '@/lib/utils'
 import { cn } from '@/lib/utils'

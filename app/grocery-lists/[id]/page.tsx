@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import Button from '@/components/ui/Button'
-import Modal from '@/components/ui/Modal'
-import Card from '@/components/ui/Card'
+import { Button } from '@/components/ui/Button'
+import { Modal } from '@/components/ui/Modal'
+import { Card } from '@/components/ui/Card'
 import GroceryListItem from '@/components/grocery/GroceryListItem'
 import AddItemForm from '@/components/grocery/AddItemForm'
 import CategoryFilter from '@/components/grocery/CategoryFilter'
