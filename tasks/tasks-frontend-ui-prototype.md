@@ -83,16 +83,16 @@ Update the file after completing each sub-task, not just after completing an ent
 
 ## Tasks
 
-- [ ] 0.0 Create feature branch
-  - [ ] 0.1 Create and checkout a new branch for frontend UI development (e.g., `git checkout -b feature/frontend-ui-prototype`)
+- [x] 0.0 Create feature branch
+  - [x] 0.1 Create and checkout a new branch for frontend UI development (e.g., `git checkout -b feature/frontend-ui-prototype`)
 
-- [ ] 1.0 Set up Next.js project with Tailwind CSS
-  - [ ] 1.1 Initialize Next.js project with TypeScript using `npx create-next-app@latest grocery-app --typescript --tailwind --app --no-src-dir`
-  - [ ] 1.2 Review and update `package.json` to ensure all dependencies are correct
-  - [ ] 1.3 Configure `tailwind.config.js` with custom colors for the app theme (primary, secondary, accent colors for busy parents)
-  - [ ] 1.4 Set up `app/globals.css` with Tailwind directives and any global custom styles
-  - [ ] 1.5 Create `.gitignore` to exclude `node_modules/`, `.next/`, `.env.local`, etc.
-  - [ ] 1.6 Test the setup by running `npm run dev` and verify the default page loads at http://localhost:3000
+- [x] 1.0 Set up Next.js project with Tailwind CSS
+  - [x] 1.1 Initialize Next.js project with TypeScript using `npx create-next-app@latest grocery-app --typescript --tailwind --app --no-src-dir`
+  - [x] 1.2 Review and update `package.json` to ensure all dependencies are correct (added Jest and RTL for TDD)
+  - [x] 1.3 Configure `tailwind.config.js` with custom colors for the app theme (primary, secondary, accent colors for busy parents)
+  - [x] 1.4 Set up `app/globals.css` with Tailwind directives and any global custom styles
+  - [x] 1.5 Create `.gitignore` to exclude `node_modules/`, `.next/`, `.env.local`, etc.
+  - [x] 1.6 Test the setup by running `npm run dev` and verify the default page loads at http://localhost:3000
   - [ ] 1.7 Commit the initial setup with message "chore: initialize Next.js project with Tailwind CSS"
 
 - [ ] 2.0 Create design system and reusable UI components
