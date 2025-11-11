@@ -136,16 +136,16 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 4.9 Add search functionality to filter pantry items by name
   - [x] 4.10 Commit pantry inventory UI with message "feat: add pantry inventory screens and components"
 
-- [ ] 5.0 Build weekly meal planner UI screens
-  - [ ] 5.1 Create `app/meal-planner/page.tsx` as main meal planner page
-  - [ ] 5.2 Create `components/meal-planner/WeeklyCalendar.tsx` showing 7 days with breakfast, lunch, dinner slots
-  - [ ] 5.3 Create `components/meal-planner/MealCard.tsx` to display meal name, image placeholder, and quick actions
-  - [ ] 5.4 Add ability to click on empty meal slot to open AddMealModal
-  - [ ] 5.5 Create `components/meal-planner/AddMealModal.tsx` with meal name, meal type, and notes fields
-  - [ ] 5.6 Add "Generate Grocery List from Week" button to create list from all planned meals
-  - [ ] 5.7 Add navigation arrows to move between weeks (previous/next week)
-  - [ ] 5.8 Add drag-and-drop placeholder indicators for future enhancement
-  - [ ] 5.9 Commit meal planner UI with message "feat: add weekly meal planner screens and components"
+- [x] 5.0 Build weekly meal planner UI screens
+  - [x] 5.1 Create `app/meal-planner/page.tsx` as main meal planner page
+  - [x] 5.2 Create `components/meal-planner/WeeklyCalendar.tsx` showing 7 days with breakfast, lunch, dinner slots
+  - [x] 5.3 Create `components/meal-planner/MealCard.tsx` to display meal name, image placeholder, and quick actions
+  - [x] 5.4 Add ability to click on empty meal slot to open AddMealModal
+  - [x] 5.5 Create `components/meal-planner/AddMealModal.tsx` with meal name, meal type, and notes fields
+  - [x] 5.6 Add "Generate Grocery List from Week" button to create list from all planned meals
+  - [x] 5.7 Add navigation arrows to move between weeks (previous/next week)
+  - [x] 5.8 Add drag-and-drop placeholder indicators for future enhancement
+  - [x] 5.9 Commit meal planner UI with message "feat: add weekly meal planner screens and components"
 
 - [ ] 6.0 Build household/family management UI screens
   - [ ] 6.1 Create `app/household/page.tsx` as household management page

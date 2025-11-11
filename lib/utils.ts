@@ -12,7 +12,32 @@ export function cn(...inputs: ClassValue[]) {
 /**
  * Formats a date to a human-readable string
  */
-export function formatDate(date: Date): string {
+export function formatDate(date: Date, format?: string): string {
+  if (format === 'EEEE, MMMM d') {
+    // Full weekday name, full month name, day
+    return new Intl.DateTimeFormat('en-US', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+    }).format(date)
+  }
+  
+  if (format === 'EEE') {
+    // Short weekday name (Mon, Tue, Wed)
+    return new Intl.DateTimeFormat('en-US', {
+      weekday: 'short',
+    }).format(date)
+  }
+
+  if (format === 'MMM d') {
+    // Short month name and day (Nov 10)
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+    }).format(date)
+  }
+  
+  // Default format
   return new Intl.DateTimeFormat('en-US', {
     month: 'short',
     day: 'numeric',
