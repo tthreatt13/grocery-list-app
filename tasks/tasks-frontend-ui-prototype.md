@@ -106,23 +106,23 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 2.8 Create `components/ui/Checkbox.tsx` with checked/unchecked states and onChange handler
   - [x] 2.9 Create `components/ui/Select.tsx` dropdown component with options array prop
   - [x] 2.10 Test all UI components by creating a temporary test page and verify they render correctly
-  - [ ] 2.11 Commit design system components with message "feat: add reusable UI components"
+  - [x] 2.11 Commit design system components with message "feat: add reusable UI components"
 
-- [ ] 3.0 Build grocery list UI screens
-  - [ ] 3.1 Create `components/layout/Navbar.tsx` with app logo, navigation links, and user avatar placeholder
-  - [ ] 3.2 Create `components/layout/MobileNav.tsx` for bottom navigation on mobile (Home, Lists, Pantry, Planner, Family)
-  - [ ] 3.3 Update `app/layout.tsx` to include Navbar and MobileNav components
-  - [ ] 3.4 Create `app/page.tsx` as dashboard/home page with quick stats and recent activity
-  - [ ] 3.5 Create `app/grocery-lists/page.tsx` showing all grocery lists in a grid layout
-  - [ ] 3.6 Create `components/grocery/GroceryListCard.tsx` to display list preview with title, item count, and last updated date
-  - [ ] 3.7 Add "Create New List" button on grocery-lists page that opens a modal
-  - [ ] 3.8 Create `app/grocery-lists/[id]/page.tsx` for individual list detail view
-  - [ ] 3.9 Create `components/grocery/GroceryListItem.tsx` with checkbox, item name, quantity, and category badge
-  - [ ] 3.10 Create `components/grocery/AddItemForm.tsx` with fields for item name, quantity, category, and notes
-  - [ ] 3.11 Create `components/grocery/CategoryFilter.tsx` to filter items by category (Produce, Dairy, Meat, etc.)
-  - [ ] 3.12 Add ability to check off items (strike-through effect) in the list detail view
-  - [ ] 3.13 Add "Share List" button placeholder on list detail page
-  - [ ] 3.14 Commit grocery list UI with message "feat: add grocery list screens and components"
+- [x] 3.0 Build grocery list UI screens
+  - [x] 3.1 Create `components/layout/Navbar.tsx` with app logo, navigation links, and user avatar placeholder
+  - [x] 3.2 Create `components/layout/MobileNav.tsx` for bottom navigation on mobile (Home, Lists, Pantry, Planner, Family)
+  - [x] 3.3 Update `app/layout.tsx` to include Navbar and MobileNav components
+  - [x] 3.4 Create `app/page.tsx` as dashboard/home page with quick stats and recent activity
+  - [x] 3.5 Create `app/grocery-lists/page.tsx` showing all grocery lists in a grid layout
+  - [x] 3.6 Create `components/grocery/GroceryListCard.tsx` to display list preview with title, item count, and last updated date
+  - [x] 3.7 Add "Create New List" button on grocery-lists page that opens a modal
+  - [x] 3.8 Create `app/grocery-lists/[id]/page.tsx` for individual list detail view
+  - [x] 3.9 Create `components/grocery/GroceryListItem.tsx` with checkbox, item name, quantity, and category badge
+  - [x] 3.10 Create `components/grocery/AddItemForm.tsx` with fields for item name, quantity, category, and notes
+  - [x] 3.11 Create `components/grocery/CategoryFilter.tsx` to filter items by category (Produce, Dairy, Meat, etc.)
+  - [x] 3.12 Add ability to check off items (strike-through effect) in the list detail view
+  - [x] 3.13 Add "Share List" button placeholder on list detail page
+  - [x] 3.14 Commit grocery list UI with message "feat: add grocery list screens and components"
 
 - [ ] 4.0 Build pantry inventory UI screens
   - [ ] 4.1 Create `app/pantry/page.tsx` as main pantry inventory page
