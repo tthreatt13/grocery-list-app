@@ -147,15 +147,15 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 5.8 Add drag-and-drop placeholder indicators for future enhancement
   - [x] 5.9 Commit meal planner UI with message "feat: add weekly meal planner screens and components"
 
-- [ ] 6.0 Build household/family management UI screens
-  - [ ] 6.1 Create `app/household/page.tsx` as household management page
-  - [ ] 6.2 Create `components/household/MemberCard.tsx` showing member name, avatar, role, and status
-  - [ ] 6.3 Display list of current household members with their roles (Admin, Member, Viewer)
-  - [ ] 6.4 Create `components/household/InviteMemberForm.tsx` with email input and role selector
-  - [ ] 6.5 Add "Invite Member" button that opens modal with InviteMemberForm
-  - [ ] 6.6 Create `components/household/SharedListsView.tsx` showing which lists are shared with whom
-  - [ ] 6.7 Add ability to see who last edited each shared list (with timestamp)
-  - [ ] 6.8 Commit household management UI with message "feat: add household/family management screens"
+- [x] 6.0 Build household/family management UI screens
+  - [x] 6.1 Create `app/household/page.tsx` as household management page
+  - [x] 6.2 Create `components/household/MemberCard.tsx` showing member name, avatar, role, and status
+  - [x] 6.3 Display list of current household members with their roles (Admin, Member, Viewer)
+  - [x] 6.4 Create `components/household/InviteMemberForm.tsx` with email input and role selector
+  - [x] 6.5 Add "Invite Member" button that opens modal with InviteMemberForm
+  - [x] 6.6 Create `components/household/SharedListsView.tsx` showing which lists are shared with whom
+  - [x] 6.7 Add ability to see who last edited each shared list (with timestamp)
+  - [x] 6.8 Commit household management UI with message "feat: add household/family management screens"
 
 - [ ] 7.0 Add mock data and interaction flows
   - [ ] 7.1 Create `lib/mockData.ts` with at least 3 sample grocery lists with items
