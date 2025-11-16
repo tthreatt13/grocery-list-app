@@ -10,7 +10,7 @@ jest.mock('next/navigation', () => ({
 // Mock Clerk
 const mockUseAuth = jest.fn(() => ({ isSignedIn: false, isLoaded: true }))
 jest.mock('@clerk/nextjs', () => ({
-  SignInButton: ({ children }: any) => <div data-testid="sign-in-button">{children}</div>,
+  SignInButton: ({ children }: { children: React.ReactNode }) => <div data-testid="sign-in-button">{children}</div>,
   useAuth: mockUseAuth,
   UserButton: () => <div data-testid="user-button">TT</div>,
 }))

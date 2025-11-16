@@ -180,7 +180,7 @@ describe('utils', () => {
           id: '1',
           name: 'Mystery Item',
           quantity: 1,
-          category: undefined as any,
+          category: undefined as unknown as ItemCategory,
           checked: false,
           addedAt: new Date(),
         },

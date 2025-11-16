@@ -17,7 +17,6 @@ import {
   addGroceryItem,
   updateGroceryItem,
   deleteGroceryItem,
-  GroceryListWithItems,
 } from '@/lib/api/grocery'
 import { transformGroceryItem, transformGroceryList } from '@/lib/adapters/groceryAdapters'
 

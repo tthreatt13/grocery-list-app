@@ -42,7 +42,7 @@ export default function PantryPage() {
   const [error, setError] = useState<string | null>(null)
   const [isAdding, setIsAdding] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
-  const [isDeleting, setIsDeleting] = useState(false)
+  const [, setIsDeleting] = useState(false)
   const [isCreatingList, setIsCreatingList] = useState(false)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
