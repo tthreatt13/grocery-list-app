@@ -173,7 +173,7 @@ export default function HouseholdPage() {
 
       const memberResponse = await inviteMember(
         selectedHouseholdId,
-        { email: data.email, role: data.role },
+        { email: data.email, role: data.role.toLowerCase() as 'admin' | 'member' | 'viewer' },
         token
       )
 

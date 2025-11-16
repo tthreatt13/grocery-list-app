@@ -86,7 +86,7 @@ export default function GroceryListCard({ list, onDelete }: GroceryListCardProps
 
           {/* Footer */}
           <div className="flex items-center justify-between text-xs text-gray-500">
-            <span>Updated {formatRelativeTime((list as FlexibleGroceryList).updatedAt || (list as FlexibleGroceryList).updated_at)}</span>
+            <span>Updated {formatRelativeTime((list as FlexibleGroceryList).updatedAt || (list as FlexibleGroceryList).updated_at || new Date())}</span>
             {sharedWith.length > 0 && (
               <div className="flex items-center space-x-1">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

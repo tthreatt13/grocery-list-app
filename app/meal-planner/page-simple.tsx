@@ -25,7 +25,6 @@ export default function MealPlannerPage() {
         if (!token) return
 
         const householdsData = await getHouseholds(token)
-        setHouseholds(householdsData)
         
         if (householdsData.length > 0) {
           const householdId = selectedHouseholdId || householdsData[0].id
