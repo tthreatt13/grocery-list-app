@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     allowed_origins: list[str] = [
         "http://localhost:3000",
         "http://localhost:3001",
-        "https://grocery-list-app-eight.vercel.app",  # Production frontend
+        "https://grocery-list-app-seven.vercel.app",  # Production frontend
         "https://*.vercel.app",  # Vercel preview deployments
     ]
     
