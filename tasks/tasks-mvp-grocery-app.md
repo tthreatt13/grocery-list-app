@@ -221,27 +221,27 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 8.21 Remove or comment out `lib/mockData.ts` (keep for reference)
   - [x] 8.22 Commit frontend integration with message "feat: integrate frontend with backend API"
 
-- [ ] 9.0 Deploy backend to Railway and configure production environment
-  - [ ] 9.1 Sign up for Railway account at railway.app
-  - [ ] 9.2 Create new Railway project for grocery app backend
-  - [ ] 9.3 Add PostgreSQL database to Railway project
-  - [ ] 9.4 Create `backend/Dockerfile` with Python 3.11 base image and app setup
-  - [ ] 9.5 Create `backend/railway.json` with start command configuration
-  - [ ] 9.6 Update `backend/main.py` to bind to host 0.0.0.0 and use PORT env var
-  - [ ] 9.7 Push backend code to GitHub repository
-  - [ ] 9.8 Connect Railway project to GitHub repository
-  - [ ] 9.9 Configure Railway environment variables (DATABASE_URL, CLERK_SECRET_KEY, etc.)
-  - [ ] 9.10 Deploy backend to Railway and verify deployment succeeds
-  - [ ] 9.11 Test backend health endpoint on Railway URL
-  - [ ] 9.12 Run database migrations on Railway: `railway run alembic upgrade head`
-  - [ ] 9.13 Configure Clerk webhook URL to point to Railway backend
-  - [ ] 9.14 Update frontend `.env.local` with Railway backend URL (NEXT_PUBLIC_API_URL)
-  - [ ] 9.15 Deploy frontend to Vercel (should already be configured)
-  - [ ] 9.16 Update Vercel environment variables with production values
-  - [ ] 9.17 Test production deployment end-to-end
-  - [ ] 9.18 Configure Railway domain (optional custom domain)
-  - [ ] 9.19 Set up Railway logs and monitoring
-  - [ ] 9.20 Commit deployment configuration with message "chore: add Railway deployment configuration"
+- [x] 9.0 Deploy backend to Railway and configure production environment
+  - [x] 9.1 Sign up for Railway account at railway.app
+  - [x] 9.2 Create new Railway project for grocery app backend
+  - [x] 9.3 Add PostgreSQL database to Railway project
+  - [x] 9.4 Create `backend/Dockerfile` with Python 3.11 base image and app setup
+  - [x] 9.5 Create `backend/railway.json` with start command configuration
+  - [x] 9.6 Update `backend/main.py` to bind to host 0.0.0.0 and use PORT env var
+  - [x] 9.7 Push backend code to GitHub repository
+  - [x] 9.8 Connect Railway project to GitHub repository
+  - [x] 9.9 Configure Railway environment variables (DATABASE_URL, CLERK_SECRET_KEY, etc.)
+  - [x] 9.10 Deploy backend to Railway and verify deployment succeeds
+  - [x] 9.11 Test backend health endpoint on Railway URL
+  - [x] 9.12 Run database migrations on Railway: `railway run alembic upgrade head`
+  - [x] 9.13 Configure Clerk webhook URL to point to Railway backend
+  - [x] 9.14 Update frontend `.env.local` with Railway backend URL (NEXT_PUBLIC_API_URL)
+  - [x] 9.15 Deploy frontend to Vercel (should already be configured)
+  - [x] 9.16 Update Vercel environment variables with production values
+  - [x] 9.17 Test production deployment end-to-end
+  - [x] 9.18 Configure Railway domain (optional custom domain)
+  - [x] 9.19 Set up Railway logs and monitoring
+  - [x] 9.20 Commit deployment configuration with message "chore: add Railway deployment configuration"
 
 - [ ] 10.0 End-to-end testing and bug fixes
   - [ ] 10.1 Create test user account with Clerk in production
