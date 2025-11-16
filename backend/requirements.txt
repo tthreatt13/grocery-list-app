@@ -1,0 +1,29 @@
+# Core FastAPI dependencies
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+
+# Database
+sqlalchemy>=2.0.25
+psycopg2-binary>=2.9.9
+alembic>=1.13.1
+
+# Environment and configuration
+python-dotenv>=1.0.0
+pydantic>=2.8.2
+pydantic-settings>=2.2.1
+email-validator>=2.1.0
+
+# Authentication
+clerk-backend-api>=0.5.0
+pyjwt>=2.8.0
+requests>=2.31.0
+
+# Testing (for TDD)
+pytest>=7.4.3
+pytest-asyncio>=0.21.1
+httpx>=0.25.1
+
+# Code quality
+black>=23.11.0
+flake8>=6.1.0
+

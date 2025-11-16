@@ -9,6 +9,8 @@ export interface ModalProps {
   title?: string
   children: React.ReactNode
   className?: string
+  closeOnBackdropClick?: boolean
+  closeOnEscape?: boolean
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -17,10 +19,12 @@ export const Modal: React.FC<ModalProps> = ({
   title,
   children,
   className,
+  closeOnBackdropClick = true,
+  closeOnEscape = true,
 }) => {
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' && closeOnEscape) {
         onClose()
       }
     }
@@ -34,15 +38,21 @@ export const Modal: React.FC<ModalProps> = ({
       document.removeEventListener('keydown', handleEscape)
       document.body.style.overflow = 'unset'
     }
-  }, [open, onClose])
+  }, [open, onClose, closeOnEscape])
 
   if (!open) return null
+
+  const handleBackdropClick = () => {
+    if (closeOnBackdropClick) {
+      onClose()
+    }
+  }
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50"
       data-testid="modal-backdrop"
-      onClick={onClose}
+      onClick={handleBackdropClick}
     >
       <div
         className={cn(

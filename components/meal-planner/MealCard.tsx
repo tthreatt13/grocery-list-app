@@ -1,6 +1,6 @@
 import { Meal } from '@/lib/types'
 import { Badge } from '@/components/ui/Badge'
-import { cn } from '@/lib/utils'
+import Image from 'next/image'
 
 interface MealCardProps {
   meal: Meal
@@ -29,28 +29,28 @@ export default function MealCard({ meal, onEdit, onDelete }: MealCardProps) {
   return (
     <div className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
       {/* Image placeholder */}
-      <div className="w-full h-32 bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center">
-        <img
-          src={meal.imageUrl || '/meal-placeholder.svg'}
-          alt={meal.name}
-          className="w-16 h-16 text-orange-400"
-          onError={(e) => {
-            // Fallback to icon if image fails to load
-            e.currentTarget.style.display = 'none'
-          }}
-        />
-        {!meal.imageUrl && (
+      <div className="w-full h-32 bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center relative">
+        {meal.imageUrl ? (
+          <Image
+            src={meal.imageUrl}
+            alt={meal.name}
+            fill
+            className="object-cover"
+          />
+        ) : (
           <svg
             className="w-16 h-16 text-orange-400"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
+            role="img"
+            aria-label="Meal placeholder"
           >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={2}
-              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
             />
           </svg>
         )}

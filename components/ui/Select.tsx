@@ -8,14 +8,17 @@ export interface SelectOption {
 
 export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string
-  options: SelectOption[]
+  options?: SelectOption[]
   error?: string
   placeholder?: string
 }
 
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
-  ({ className, label, options, error, id, placeholder, ...props }, ref) => {
+  ({ className, label, options, error, id, placeholder, children, value, ...props }, ref) => {
     const selectId = id || `select-${Math.random().toString(36).substr(2, 9)}`
+    
+    // If value is empty string, add an empty option to support it
+    const needsEmptyOption = value === ''
     
     return (
       <div className="w-full">
@@ -40,6 +43,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           )}
           aria-invalid={error ? 'true' : 'false'}
           aria-describedby={error ? `${selectId}-error` : undefined}
+          value={value}
           {...props}
         >
           {placeholder && (
@@ -47,11 +51,14 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
               {placeholder}
             </option>
           )}
-          {options.map((option) => (
+          {needsEmptyOption && !placeholder && (
+            <option value="">--</option>
+          )}
+          {options && options.length > 0 ? options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
             </option>
-          ))}
+          )) : children}
         </select>
         {error && (
           <p id={`${selectId}-error`} className="mt-1 text-sm text-red-600">

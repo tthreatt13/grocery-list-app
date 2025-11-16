@@ -3,9 +3,11 @@ import PantryItemCard from './PantryItemCard'
 
 interface PantryGridProps {
   items: PantryItem[]
+  onEdit?: (id: string) => void
+  onDelete?: (id: string) => void
 }
 
-export default function PantryGrid({ items }: PantryGridProps) {
+export default function PantryGrid({ items, onEdit, onDelete }: PantryGridProps) {
   if (items.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 px-4">
@@ -37,7 +39,7 @@ export default function PantryGrid({ items }: PantryGridProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {items.map((item) => (
-        <PantryItemCard key={item.id} item={item} />
+        <PantryItemCard key={item.id} item={item} onEdit={onEdit} onDelete={onDelete} />
       ))}
     </div>
   )

@@ -55,14 +55,14 @@ describe('SharedListsView', () => {
 
   it('displays the number of people each list is shared with', () => {
     render(<SharedListsView lists={mockSharedLists} />)
-    expect(screen.getByText('Shared with 2 people')).toBeInTheDocument()
-    expect(screen.getByText('Shared with 1 person')).toBeInTheDocument()
+    expect(screen.getByText(/Shared with 2 people/)).toBeInTheDocument()
+    expect(screen.getByText(/Shared with 1 person/)).toBeInTheDocument()
   })
 
   it('displays correct singular/plural for shared count', () => {
     render(<SharedListsView lists={mockSharedLists} />)
-    expect(screen.getByText('Shared with 1 person')).toBeInTheDocument()
-    expect(screen.getByText('Shared with 2 people')).toBeInTheDocument()
+    expect(screen.getByText(/Shared with 1 person/)).toBeInTheDocument()
+    expect(screen.getByText(/Shared with 2 people/)).toBeInTheDocument()
   })
 
   it('shows item count for each list', () => {

@@ -1,3 +1,12 @@
+/**
+ * LEGACY MOCK DATA - FOR REFERENCE ONLY
+ * 
+ * This file contains mock data that was used during initial UI prototyping.
+ * The application now uses real data from the backend API.
+ * 
+ * This file is kept for reference and can be removed once the API integration is fully tested.
+ */
+
 import { GroceryList, ItemCategory, PantryItem, Meal, MealType, HouseholdMember, MemberRole, Household } from './types'
 
 export const mockGroceryLists: GroceryList[] = [

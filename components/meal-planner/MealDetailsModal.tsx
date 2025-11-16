@@ -48,7 +48,7 @@ export default function MealDetailsModal({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Meal Details">
+    <Modal open={isOpen} onClose={onClose} title="Meal Details">
       <div className="space-y-4">
         {/* Meal Image Placeholder */}
         <div className="w-full h-48 bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg flex items-center justify-center">

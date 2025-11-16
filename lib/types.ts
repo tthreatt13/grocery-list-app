@@ -6,6 +6,7 @@ export interface GroceryItem {
   quantity: number
   unit?: string
   category: ItemCategory
+  mealType?: MealType
   checked: boolean
   notes?: string
   addedBy?: string
@@ -88,5 +89,11 @@ export enum MemberRole {
   ADMIN = 'Admin',
   MEMBER = 'Member',
   VIEWER = 'Viewer',
+}
+
+export enum SortMethod {
+  ENTRY_ORDER = 'Entry Order',
+  CATEGORY = 'Category',
+  MEAL_TIME = 'Meal Time',
 }
 

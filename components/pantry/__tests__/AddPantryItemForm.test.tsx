@@ -52,7 +52,7 @@ describe('AddPantryItemForm', () => {
 
   it('validates quantity cannot be zero', async () => {
     const user = userEvent.setup()
-    const { rerender } = render(<AddPantryItemForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />)
+    render(<AddPantryItemForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />)
     
     const nameInput = screen.getByLabelText(/item name/i)
     const quantityInput = screen.getByLabelText(/quantity/i) as HTMLInputElement

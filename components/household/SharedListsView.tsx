@@ -1,13 +1,25 @@
 'use client'
 
 import Link from 'next/link'
-import { GroceryList } from '@/lib/types'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { formatRelativeTime } from '@/lib/utils'
 
+// Flexible type to handle both API response and full GroceryList
+interface ListItem {
+  id: string | number
+  name: string
+  items?: Array<{ [key: string]: unknown }>
+  item_count?: number
+  sharedWith?: string[]
+  createdBy?: string
+  created_by?: number
+  updatedAt?: Date | string
+  updated_at?: string
+}
+
 interface SharedListsViewProps {
-  lists: GroceryList[]
+  lists: ListItem[]
 }
 
 export default function SharedListsView({ lists }: SharedListsViewProps) {
@@ -25,9 +37,23 @@ export default function SharedListsView({ lists }: SharedListsViewProps) {
   return (
     <div className="space-y-4">
       {lists.map((list) => {
-        const sharedCount = list.sharedWith.length
-        const itemCount = list.items.length
-        const lastEditTime = formatRelativeTime(list.updatedAt)
+        // Handle both API response format (item_count) and full GroceryList format (items array)
+        const itemCount = list.item_count ?? list.items?.length ?? 0
+        
+        // Handle both camelCase and snake_case for timestamps
+        const updatedAt = list.updatedAt || list.updated_at
+        const lastEditTime = updatedAt ? formatRelativeTime(updatedAt) : 'Recently'
+        
+        // Handle creator info
+        const creatorName = list.createdBy || (list.created_by ? `User ${list.created_by}` : 'Unknown')
+        
+        // Handle shared with count
+        const sharedWithCount = list.sharedWith?.length ?? 0
+        const sharedText = sharedWithCount === 1 
+          ? 'Shared with 1 person' 
+          : sharedWithCount > 1 
+            ? `Shared with ${sharedWithCount} people`
+            : 'Shared with household'
 
         return (
           <Link key={list.id} href={`/grocery-lists/${list.id}`}>
@@ -40,7 +66,7 @@ export default function SharedListsView({ lists }: SharedListsViewProps) {
                       {list.name}
                     </h3>
                     <p className="text-sm text-gray-600">
-                      Created by {list.createdBy}
+                      Created by {creatorName}
                     </p>
                   </div>
                   <Badge variant="default">
@@ -51,7 +77,7 @@ export default function SharedListsView({ lists }: SharedListsViewProps) {
                 {/* Footer */}
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-gray-600">
-                    Shared with {sharedCount} {sharedCount === 1 ? 'person' : 'people'}
+                    {sharedText}
                   </span>
                   <span className="text-gray-500">
                     Last edited: {lastEditTime}

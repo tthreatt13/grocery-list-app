@@ -9,15 +9,16 @@ import { ItemCategory, PantryItem } from '@/lib/types'
 interface AddPantryItemFormProps {
   onSubmit: (item: Omit<PantryItem, 'id' | 'addedAt' | 'updatedAt'>) => void
   onCancel: () => void
+  isSubmitting?: boolean
 }
 
-export default function AddPantryItemForm({ onSubmit, onCancel }: AddPantryItemFormProps) {
+export default function AddPantryItemForm({ onSubmit, onCancel, isSubmitting }: AddPantryItemFormProps) {
   const [name, setName] = useState('')
-  const [quantity, setQuantity] = useState(1)
+  const [quantity, setQuantity] = useState<string>('1')
   const [unit, setUnit] = useState('')
   const [category, setCategory] = useState<ItemCategory>(ItemCategory.OTHER)
   const [expirationDate, setExpirationDate] = useState('')
-  const [lowStockThreshold, setLowStockThreshold] = useState<number | undefined>(undefined)
+  const [lowStockThreshold, setLowStockThreshold] = useState<string>('')
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
 
   const validateForm = () => {
@@ -27,8 +28,16 @@ export default function AddPantryItemForm({ onSubmit, onCancel }: AddPantryItemF
       newErrors.name = 'Item name is required'
     }
 
-    if (!quantity || quantity <= 0 || isNaN(quantity)) {
+    const quantityNum = parseFloat(quantity)
+    if (!quantity || isNaN(quantityNum) || quantityNum <= 0) {
       newErrors.quantity = 'Quantity must be greater than 0'
+    }
+
+    if (lowStockThreshold) {
+      const threshold = parseFloat(lowStockThreshold)
+      if (isNaN(threshold) || threshold < 0) {
+        newErrors.lowStockThreshold = 'Low stock threshold must be a positive number'
+      }
     }
 
     setErrors(newErrors)
@@ -42,24 +51,27 @@ export default function AddPantryItemForm({ onSubmit, onCancel }: AddPantryItemF
       return
     }
 
+    const quantityNum = parseFloat(quantity)
+    const thresholdNum = lowStockThreshold ? parseFloat(lowStockThreshold) : undefined
+
     const newItem: Omit<PantryItem, 'id' | 'addedAt' | 'updatedAt'> = {
       name: name.trim(),
-      quantity,
+      quantity: quantityNum,
       unit: unit.trim() || undefined,
       category,
       expirationDate: expirationDate ? new Date(expirationDate) : undefined,
-      lowStockThreshold: lowStockThreshold !== undefined && lowStockThreshold > 0 ? lowStockThreshold : undefined,
+      lowStockThreshold: thresholdNum && thresholdNum > 0 ? thresholdNum : undefined,
     }
 
     onSubmit(newItem)
     
     // Reset form
     setName('')
-    setQuantity(1)
+    setQuantity('1')
     setUnit('')
     setCategory(ItemCategory.OTHER)
     setExpirationDate('')
-    setLowStockThreshold(undefined)
+    setLowStockThreshold('')
     setErrors({})
   }
 
@@ -78,6 +90,7 @@ export default function AddPantryItemForm({ onSubmit, onCancel }: AddPantryItemF
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g., Tomatoes"
           error={errors.name}
+          disabled={isSubmitting}
         />
       </div>
 
@@ -88,9 +101,12 @@ export default function AddPantryItemForm({ onSubmit, onCancel }: AddPantryItemF
             id="quantity"
             type="number"
             value={quantity}
-            onChange={(e) => setQuantity(Number(e.target.value))}
-            min="1"
+            onChange={(e) => setQuantity(e.target.value)}
+            min="0.01"
+            step="0.01"
             error={errors.quantity}
+            disabled={isSubmitting}
+            required
           />
         </div>
         <div>
@@ -100,6 +116,7 @@ export default function AddPantryItemForm({ onSubmit, onCancel }: AddPantryItemF
             value={unit}
             onChange={(e) => setUnit(e.target.value)}
             placeholder="e.g., pcs, lbs"
+            disabled={isSubmitting}
           />
         </div>
       </div>
@@ -111,6 +128,7 @@ export default function AddPantryItemForm({ onSubmit, onCancel }: AddPantryItemF
           value={category}
           onChange={(e) => setCategory(e.target.value as ItemCategory)}
           options={categoryOptions}
+          disabled={isSubmitting}
         />
       </div>
 
@@ -121,6 +139,7 @@ export default function AddPantryItemForm({ onSubmit, onCancel }: AddPantryItemF
           type="date"
           value={expirationDate}
           onChange={(e) => setExpirationDate(e.target.value)}
+          disabled={isSubmitting}
         />
       </div>
 
@@ -129,18 +148,21 @@ export default function AddPantryItemForm({ onSubmit, onCancel }: AddPantryItemF
           label="Low Stock Threshold (Optional)"
           id="lowStockThreshold"
           type="number"
-          value={lowStockThreshold ?? ''}
-          onChange={(e) => setLowStockThreshold(e.target.value ? Number(e.target.value) : undefined)}
+          value={lowStockThreshold}
+          onChange={(e) => setLowStockThreshold(e.target.value)}
           placeholder="Alert when quantity drops below this"
-          min="1"
+          min="0"
+          step="0.01"
+          error={errors.lowStockThreshold}
+          disabled={isSubmitting}
         />
       </div>
 
       <div className="flex gap-3 pt-4">
-        <Button type="submit" variant="primary" className="flex-1">
-          Add Item
+        <Button type="submit" variant="primary" className="flex-1" disabled={isSubmitting}>
+          {isSubmitting ? 'Adding...' : 'Add Item'}
         </Button>
-        <Button type="button" variant="outline" onClick={onCancel} className="flex-1">
+        <Button type="button" variant="outline" onClick={onCancel} className="flex-1" disabled={isSubmitting}>
           Cancel
         </Button>
       </div>

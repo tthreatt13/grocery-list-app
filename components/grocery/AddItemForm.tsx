@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
 import { Button } from '@/components/ui/Button'
-import { ItemCategory } from '@/lib/types'
+import { ItemCategory, MealType } from '@/lib/types'
 
 interface AddItemFormProps {
   onAdd: (item: {
@@ -12,6 +12,7 @@ interface AddItemFormProps {
     quantity: number
     unit: string
     category: ItemCategory
+    mealType?: MealType
     notes: string
   }) => void
   onCancel?: () => void
@@ -22,6 +23,7 @@ export default function AddItemForm({ onAdd, onCancel }: AddItemFormProps) {
   const [quantity, setQuantity] = useState('1')
   const [unit, setUnit] = useState('')
   const [category, setCategory] = useState(ItemCategory.OTHER)
+  const [mealType, setMealType] = useState<MealType | ''>('')
   const [notes, setNotes] = useState('')
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -34,6 +36,7 @@ export default function AddItemForm({ onAdd, onCancel }: AddItemFormProps) {
       quantity: parseFloat(quantity) || 1,
       unit: unit.trim(),
       category,
+      mealType: mealType || undefined,
       notes: notes.trim(),
     })
 
@@ -42,6 +45,7 @@ export default function AddItemForm({ onAdd, onCancel }: AddItemFormProps) {
     setQuantity('1')
     setUnit('')
     setCategory(ItemCategory.OTHER)
+    setMealType('')
     setNotes('')
   }
 
@@ -49,6 +53,14 @@ export default function AddItemForm({ onAdd, onCancel }: AddItemFormProps) {
     value: cat,
     label: cat,
   }))
+
+  const mealTypeOptions = [
+    { value: '', label: 'No meal assignment' },
+    ...Object.values(MealType).map(meal => ({
+      value: meal,
+      label: meal,
+    }))
+  ]
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -80,12 +92,21 @@ export default function AddItemForm({ onAdd, onCancel }: AddItemFormProps) {
         />
       </div>
 
-      <Select
-        label="Category"
-        options={categoryOptions}
-        value={category}
-        onChange={(e) => setCategory(e.target.value as ItemCategory)}
-      />
+      <div className="grid grid-cols-2 gap-4">
+        <Select
+          label="Category"
+          options={categoryOptions}
+          value={category}
+          onChange={(e) => setCategory(e.target.value as ItemCategory)}
+        />
+
+        <Select
+          label="Meal Type"
+          options={mealTypeOptions}
+          value={mealType}
+          onChange={(e) => setMealType(e.target.value as MealType | '')}
+        />
+      </div>
 
       <Input
         label="Notes (optional)"

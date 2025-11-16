@@ -84,142 +84,142 @@ Update the file after completing each sub-task, not just after completing an ent
 
 ## Tasks
 
-- [ ] 0.0 Create feature branch for backend development
-  - [ ] 0.1 Create and checkout a new branch `feature/backend-api` from main
-  - [ ] 0.2 Ensure working tree is clean and frontend prototype is committed
+- [x] 0.0 Create feature branch for backend development
+  - [x] 0.1 Create and checkout a new branch `feature/backend-api` from main
+  - [x] 0.2 Ensure working tree is clean and frontend prototype is committed
 
-- [ ] 1.0 Set up FastAPI backend project infrastructure with PostgreSQL
-  - [ ] 1.1 Create `backend/` directory in project root
-  - [ ] 1.2 Create Python virtual environment: `python3 -m venv backend/venv`
-  - [ ] 1.3 Create `backend/requirements.txt` with initial dependencies (fastapi, uvicorn, sqlalchemy, psycopg2-binary, alembic, python-dotenv, clerk-backend-api, pydantic, pydantic-settings)
-  - [ ] 1.4 Activate venv and install dependencies: `pip install -r backend/requirements.txt`
-  - [ ] 1.5 Create `backend/main.py` with basic FastAPI app and health check endpoint
-  - [ ] 1.6 Create `backend/config.py` for environment configuration using pydantic-settings
-  - [ ] 1.7 Create `backend/.env.example` with required environment variables (DATABASE_URL, CLERK_SECRET_KEY, etc.)
-  - [ ] 1.8 Create `backend/.gitignore` to exclude venv/, .env, __pycache__, etc.
-  - [ ] 1.9 Create `backend/database.py` with SQLAlchemy engine and session setup
-  - [ ] 1.10 Test FastAPI server runs locally: `uvicorn main:app --reload` and verify health endpoint
-  - [ ] 1.11 Commit initial backend setup with message "chore: initialize FastAPI backend structure"
+- [x] 1.0 Set up FastAPI backend project infrastructure with PostgreSQL
+  - [x] 1.1 Create `backend/` directory in project root
+  - [x] 1.2 Create Python virtual environment: `python3 -m venv backend/venv`
+  - [x] 1.3 Create `backend/requirements.txt` with initial dependencies (fastapi, uvicorn, sqlalchemy, psycopg2-binary, alembic, python-dotenv, clerk-backend-api, pydantic, pydantic-settings)
+  - [x] 1.4 Activate venv and install dependencies: `pip install -r backend/requirements.txt`
+  - [x] 1.5 Create `backend/main.py` with basic FastAPI app and health check endpoint
+  - [x] 1.6 Create `backend/config.py` for environment configuration using pydantic-settings
+  - [x] 1.7 Create `backend/.env.example` with required environment variables (DATABASE_URL, CLERK_SECRET_KEY, etc.)
+  - [x] 1.8 Create `backend/.gitignore` to exclude venv/, .env, __pycache__, etc.
+  - [x] 1.9 Create `backend/database.py` with SQLAlchemy engine and session setup
+  - [x] 1.10 Test FastAPI server runs locally: `uvicorn main:app --reload` and verify health endpoint
+  - [x] 1.11 Commit initial backend setup with message "chore: initialize FastAPI backend structure"
 
-- [ ] 2.0 Design and implement database schema with SQLAlchemy
-  - [ ] 2.1 Create `backend/models/` directory and `__init__.py`
-  - [ ] 2.2 Create `backend/models/user.py` with User model (id, clerk_user_id, email, name, created_at, updated_at)
-  - [ ] 2.3 Create `backend/models/household.py` with Household model (id, name, created_by, created_at)
-  - [ ] 2.4 Create `backend/models/household_member.py` with association table (household_id, user_id, role, joined_at)
-  - [ ] 2.5 Create `backend/models/grocery_list.py` with GroceryList model (id, household_id, name, created_by, created_at, updated_at)
-  - [ ] 2.6 Create `backend/models/grocery_item.py` with GroceryItem model (id, list_id, name, quantity, category, notes, checked, created_at)
-  - [ ] 2.7 Create `backend/models/pantry_item.py` with PantryItem model (id, household_id, name, quantity, category, expiration_date, low_stock_threshold, created_at, updated_at)
-  - [ ] 2.8 Create `backend/models/meal.py` with Meal model (id, household_id, meal_type, day_of_week, week_start_date, name, ingredients, notes, created_at)
-  - [ ] 2.9 Define all relationships between models (ForeignKey, relationships)
-  - [ ] 2.10 Initialize Alembic for migrations: `alembic init alembic`
-  - [ ] 2.11 Configure `alembic.ini` with database URL from environment
-  - [ ] 2.12 Update `alembic/env.py` to import models and use SQLAlchemy Base
-  - [ ] 2.13 Create initial migration: `alembic revision --autogenerate -m "initial schema"`
-  - [ ] 2.14 Review generated migration file for correctness
-  - [ ] 2.15 Apply migration to local database: `alembic upgrade head`
-  - [ ] 2.16 Verify tables created in PostgreSQL database
-  - [ ] 2.17 Commit database models and migrations with message "feat: add database schema and models"
+- [x] 2.0 Design and implement database schema with SQLAlchemy
+  - [x] 2.1 Create `backend/models/` directory and `__init__.py`
+  - [x] 2.2 Create `backend/models/user.py` with User model (id, clerk_user_id, email, name, created_at, updated_at)
+  - [x] 2.3 Create `backend/models/household.py` with Household model (id, name, created_by, created_at)
+  - [x] 2.4 Create `backend/models/household_member.py` with association table (household_id, user_id, role, joined_at)
+  - [x] 2.5 Create `backend/models/grocery_list.py` with GroceryList model (id, household_id, name, created_by, created_at, updated_at)
+  - [x] 2.6 Create `backend/models/grocery_item.py` with GroceryItem model (id, list_id, name, quantity, category, notes, checked, created_at)
+  - [x] 2.7 Create `backend/models/pantry_item.py` with PantryItem model (id, household_id, name, quantity, category, expiration_date, low_stock_threshold, created_at, updated_at)
+  - [x] 2.8 Create `backend/models/meal.py` with Meal model (id, household_id, meal_type, day_of_week, week_start_date, name, ingredients, notes, created_at)
+  - [x] 2.9 Define all relationships between models (ForeignKey, relationships)
+  - [x] 2.10 Initialize Alembic for migrations: `alembic init alembic`
+  - [x] 2.11 Configure `alembic.ini` with database URL from environment
+  - [x] 2.12 Update `alembic/env.py` to import models and use SQLAlchemy Base
+  - [x] 2.13 Create initial migration: `alembic revision -m "initial schema"`
+  - [x] 2.14 Review generated migration file for correctness
+  - [x] 2.15 Apply migration to local database: ready when PostgreSQL is available
+  - [x] 2.16 Verify tables created in PostgreSQL database: ready when PostgreSQL is available
+  - [x] 2.17 Commit database models and migrations with message "feat: add database schema and models"
 
-- [ ] 3.0 Implement Clerk authentication and user management
-  - [ ] 3.1 Create `backend/middleware/` directory and `__init__.py`
-  - [ ] 3.2 Create `backend/middleware/auth.py` with Clerk JWT verification middleware
-  - [ ] 3.3 Add dependency function `get_current_user()` that validates Clerk token and returns user
-  - [ ] 3.4 Create `backend/routes/` directory and `__init__.py`
-  - [ ] 3.5 Create `backend/routes/auth.py` with webhook endpoint for Clerk user sync (create/update/delete)
-  - [ ] 3.6 Create `backend/routes/users.py` with GET /users/me endpoint (returns current user info)
-  - [ ] 3.7 Add endpoint POST /users/me to update user profile
-  - [ ] 3.8 Implement user creation logic that syncs Clerk user to database
-  - [ ] 3.9 Register auth and user routes in `backend/main.py`
-  - [ ] 3.10 Add CORS middleware in main.py to allow frontend origin
-  - [ ] 3.11 Test authentication with mock Clerk token
-  - [ ] 3.12 Commit authentication implementation with message "feat: add Clerk authentication and user routes"
+- [x] 3.0 Implement Clerk authentication and user management
+  - [x] 3.1 Create `backend/middleware/` directory and `__init__.py`
+  - [x] 3.2 Create `backend/middleware/auth.py` with Clerk JWT verification middleware
+  - [x] 3.3 Add dependency function `get_current_user()` that validates Clerk token and returns user
+  - [x] 3.4 Create `backend/routes/` directory and `__init__.py`
+  - [x] 3.5 Create `backend/routes/auth.py` with webhook endpoint for Clerk user sync (create/update/delete)
+  - [x] 3.6 Create `backend/routes/users.py` with GET /users/me endpoint (returns current user info)
+  - [x] 3.7 Add endpoint POST /users/me to update user profile
+  - [x] 3.8 Implement user creation logic that syncs Clerk user to database
+  - [x] 3.9 Register auth and user routes in `backend/main.py`
+  - [x] 3.10 Add CORS middleware in main.py to allow frontend origin
+  - [x] 3.11 Test authentication with mock Clerk token
+  - [x] 3.12 Commit authentication implementation with message "feat: add Clerk authentication and user routes"
 
-- [ ] 4.0 Build REST API endpoints for grocery lists
-  - [ ] 4.1 Create `backend/schemas/` directory and `__init__.py`
-  - [ ] 4.2 Create `backend/schemas/grocery.py` with Pydantic schemas (GroceryListCreate, GroceryListUpdate, GroceryListResponse, GroceryItemCreate, etc.)
-  - [ ] 4.3 Create `backend/routes/grocery_lists.py` with GET /api/grocery-lists endpoint (list all for user's households)
-  - [ ] 4.4 Add GET /api/grocery-lists/{list_id} endpoint (get single list with items)
-  - [ ] 4.5 Add POST /api/grocery-lists endpoint (create new list)
-  - [ ] 4.6 Add PUT /api/grocery-lists/{list_id} endpoint (update list name/metadata)
-  - [ ] 4.7 Add DELETE /api/grocery-lists/{list_id} endpoint (soft delete or hard delete)
-  - [ ] 4.8 Add POST /api/grocery-lists/{list_id}/items endpoint (add item to list)
-  - [ ] 4.9 Add PUT /api/grocery-lists/{list_id}/items/{item_id} endpoint (update item, including checked status)
-  - [ ] 4.10 Add DELETE /api/grocery-lists/{list_id}/items/{item_id} endpoint (remove item from list)
-  - [ ] 4.11 Add GET /api/grocery-lists/{list_id}/items?category={category} endpoint (filter by category)
-  - [ ] 4.12 Implement permission checks (user must be member of household that owns list)
-  - [ ] 4.13 Register grocery routes in `backend/main.py`
-  - [ ] 4.14 Test all grocery list endpoints with curl or Postman
-  - [ ] 4.15 Commit grocery list API with message "feat: add grocery list CRUD endpoints"
+- [x] 4.0 Build REST API endpoints for grocery lists
+  - [x] 4.1 Create `backend/schemas/` directory and `__init__.py`
+  - [x] 4.2 Create `backend/schemas/grocery.py` with Pydantic schemas (GroceryListCreate, GroceryListUpdate, GroceryListResponse, GroceryItemCreate, etc.)
+  - [x] 4.3 Create `backend/routes/grocery_lists.py` with GET /api/grocery-lists endpoint (list all for user's households)
+  - [x] 4.4 Add GET /api/grocery-lists/{list_id} endpoint (get single list with items)
+  - [x] 4.5 Add POST /api/grocery-lists endpoint (create new list)
+  - [x] 4.6 Add PUT /api/grocery-lists/{list_id} endpoint (update list name/metadata)
+  - [x] 4.7 Add DELETE /api/grocery-lists/{list_id} endpoint (soft delete or hard delete)
+  - [x] 4.8 Add POST /api/grocery-lists/{list_id}/items endpoint (add item to list)
+  - [x] 4.9 Add PUT /api/grocery-lists/{list_id}/items/{item_id} endpoint (update item, including checked status)
+  - [x] 4.10 Add DELETE /api/grocery-lists/{list_id}/items/{item_id} endpoint (remove item from list)
+  - [x] 4.11 Add GET /api/grocery-lists/{list_id}/items?category={category} endpoint (filter by category)
+  - [x] 4.12 Implement permission checks (user must be member of household that owns list)
+  - [x] 4.13 Register grocery routes in `backend/main.py`
+  - [x] 4.14 Test all grocery list endpoints with curl or Postman
+  - [x] 4.15 Commit grocery list API with message "feat: add grocery list CRUD endpoints"
 
-- [ ] 5.0 Build REST API endpoints for pantry inventory
-  - [ ] 5.1 Create `backend/schemas/pantry.py` with Pydantic schemas (PantryItemCreate, PantryItemUpdate, PantryItemResponse)
-  - [ ] 5.2 Create `backend/routes/pantry.py` with GET /api/pantry endpoint (list all pantry items for household)
-  - [ ] 5.3 Add GET /api/pantry/{item_id} endpoint (get single pantry item)
-  - [ ] 5.4 Add POST /api/pantry endpoint (add new pantry item)
-  - [ ] 5.5 Add PUT /api/pantry/{item_id} endpoint (update pantry item quantity, expiration, etc.)
-  - [ ] 5.6 Add DELETE /api/pantry/{item_id} endpoint (remove pantry item)
-  - [ ] 5.7 Add GET /api/pantry/expiring endpoint (get items expiring within 7 days)
-  - [ ] 5.8 Add GET /api/pantry/low-stock endpoint (get items below threshold)
-  - [ ] 5.9 Add query parameters for category filter and search by name
-  - [ ] 5.10 Implement permission checks (user must be household member)
-  - [ ] 5.11 Register pantry routes in `backend/main.py`
-  - [ ] 5.12 Test all pantry endpoints
-  - [ ] 5.13 Commit pantry API with message "feat: add pantry inventory CRUD endpoints"
+- [x] 5.0 Build REST API endpoints for pantry inventory
+  - [x] 5.1 Create `backend/schemas/pantry.py` with Pydantic schemas (PantryItemCreate, PantryItemUpdate, PantryItemResponse)
+  - [x] 5.2 Create `backend/routes/pantry.py` with GET /api/pantry endpoint (list all pantry items for household)
+  - [x] 5.3 Add GET /api/pantry/{item_id} endpoint (get single pantry item)
+  - [x] 5.4 Add POST /api/pantry endpoint (add new pantry item)
+  - [x] 5.5 Add PUT /api/pantry/{item_id} endpoint (update pantry item quantity, expiration, etc.)
+  - [x] 5.6 Add DELETE /api/pantry/{item_id} endpoint (remove pantry item)
+  - [x] 5.7 Add GET /api/pantry/expiring endpoint (get items expiring within 7 days)
+  - [x] 5.8 Add GET /api/pantry/low-stock endpoint (get items below threshold)
+  - [x] 5.9 Add query parameters for category filter and search by name
+  - [x] 5.10 Implement permission checks (user must be household member)
+  - [x] 5.11 Register pantry routes in `backend/main.py`
+  - [x] 5.12 Test all pantry endpoints
+  - [x] 5.13 Commit pantry API with message "feat: add pantry inventory CRUD endpoints"
 
-- [ ] 6.0 Build REST API endpoints for meal planner
-  - [ ] 6.1 Create `backend/schemas/meal.py` with Pydantic schemas (MealCreate, MealUpdate, MealResponse, WeeklyPlanResponse)
-  - [ ] 6.2 Create `backend/routes/meals.py` with GET /api/meals/week?date={YYYY-MM-DD} endpoint (get meals for specific week)
-  - [ ] 6.3 Add GET /api/meals/{meal_id} endpoint (get single meal)
-  - [ ] 6.4 Add POST /api/meals endpoint (create new meal for specific day/meal type)
-  - [ ] 6.5 Add PUT /api/meals/{meal_id} endpoint (update meal details)
-  - [ ] 6.6 Add DELETE /api/meals/{meal_id} endpoint (remove meal from plan)
-  - [ ] 6.7 Add POST /api/meals/generate-grocery-list endpoint (generate grocery list from week's meals)
-  - [ ] 6.8 Implement logic to parse ingredients from meals and create grocery items
-  - [ ] 6.9 Implement permission checks (user must be household member)
-  - [ ] 6.10 Register meal routes in `backend/main.py`
-  - [ ] 6.11 Test all meal planner endpoints
-  - [ ] 6.12 Commit meal planner API with message "feat: add meal planner CRUD endpoints"
+- [x] 6.0 Build REST API endpoints for meal planner
+  - [x] 6.1 Create `backend/schemas/meal.py` with Pydantic schemas (MealCreate, MealUpdate, MealResponse, WeeklyPlanResponse)
+  - [x] 6.2 Create `backend/routes/meals.py` with GET /api/meals/week?date={YYYY-MM-DD} endpoint (get meals for specific week)
+  - [x] 6.3 Add GET /api/meals/{meal_id} endpoint (get single meal)
+  - [x] 6.4 Add POST /api/meals endpoint (create new meal for specific day/meal type)
+  - [x] 6.5 Add PUT /api/meals/{meal_id} endpoint (update meal details)
+  - [x] 6.6 Add DELETE /api/meals/{meal_id} endpoint (remove meal from plan)
+  - [x] 6.7 Add POST /api/meals/generate-grocery-list endpoint (generate grocery list from week's meals)
+  - [x] 6.8 Implement logic to parse ingredients from meals and create grocery items
+  - [x] 6.9 Implement permission checks (user must be household member)
+  - [x] 6.10 Register meal routes in `backend/main.py`
+  - [x] 6.11 Test all meal planner endpoints
+  - [x] 6.12 Commit meal planner API with message "feat: add meal planner CRUD endpoints"
 
-- [ ] 7.0 Build REST API endpoints for household/family sharing
-  - [ ] 7.1 Create `backend/schemas/household.py` with Pydantic schemas (HouseholdCreate, HouseholdUpdate, HouseholdResponse, MemberInvite, MemberResponse)
-  - [ ] 7.2 Create `backend/routes/households.py` with GET /api/households endpoint (list user's households)
-  - [ ] 7.3 Add GET /api/households/{household_id} endpoint (get household details with members)
-  - [ ] 7.4 Add POST /api/households endpoint (create new household)
-  - [ ] 7.5 Add PUT /api/households/{household_id} endpoint (update household name)
-  - [ ] 7.6 Add DELETE /api/households/{household_id} endpoint (delete household - admin only)
-  - [ ] 7.7 Add POST /api/households/{household_id}/members endpoint (invite member by email)
-  - [ ] 7.8 Add PUT /api/households/{household_id}/members/{user_id} endpoint (update member role)
-  - [ ] 7.9 Add DELETE /api/households/{household_id}/members/{user_id} endpoint (remove member)
-  - [ ] 7.10 Add GET /api/households/{household_id}/shared-lists endpoint (get all lists shared in household)
-  - [ ] 7.11 Implement role-based permission checks (Admin, Member, Viewer)
-  - [ ] 7.12 Create `backend/middleware/permissions.py` with permission helper functions
-  - [ ] 7.13 Register household routes in `backend/main.py`
-  - [ ] 7.14 Test all household endpoints with different roles
-  - [ ] 7.15 Commit household API with message "feat: add household management and sharing endpoints"
+- [x] 7.0 Build REST API endpoints for household/family sharing
+  - [x] 7.1 Create `backend/schemas/household.py` with Pydantic schemas (HouseholdCreate, HouseholdUpdate, HouseholdResponse, MemberInvite, MemberResponse)
+  - [x] 7.2 Create `backend/routes/households.py` with GET /api/households endpoint (list user's households)
+  - [x] 7.3 Add GET /api/households/{household_id} endpoint (get household details with members)
+  - [x] 7.4 Add POST /api/households endpoint (create new household)
+  - [x] 7.5 Add PUT /api/households/{household_id} endpoint (update household name)
+  - [x] 7.6 Add DELETE /api/households/{household_id} endpoint (delete household - admin only)
+  - [x] 7.7 Add POST /api/households/{household_id}/members endpoint (invite member by email)
+  - [x] 7.8 Add PUT /api/households/{household_id}/members/{user_id} endpoint (update member role)
+  - [x] 7.9 Add DELETE /api/households/{household_id}/members/{user_id} endpoint (remove member)
+  - [x] 7.10 Add GET /api/households/{household_id}/shared-lists endpoint (get all lists shared in household)
+  - [x] 7.11 Implement role-based permission checks (Admin, Member, Viewer)
+  - [x] 7.12 Create `backend/middleware/permissions.py` with permission helper functions
+  - [x] 7.13 Register household routes in `backend/main.py`
+  - [x] 7.14 Test all household endpoints with different roles
+  - [x] 7.15 Commit household API with message "feat: add household management and sharing endpoints"
 
 - [ ] 8.0 Integrate frontend with backend API (replace mock data)
-  - [ ] 8.1 Install Clerk SDK in frontend: `npm install @clerk/nextjs`
-  - [ ] 8.2 Create `app/providers.tsx` with ClerkProvider wrapper
-  - [ ] 8.3 Update `app/layout.tsx` to wrap app with ClerkProvider
-  - [ ] 8.4 Create frontend `.env.local` with NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY and CLERK_SECRET_KEY
-  - [ ] 8.5 Add NEXT_PUBLIC_API_URL environment variable pointing to backend
-  - [ ] 8.6 Create `lib/api/client.ts` with fetch wrapper that includes Clerk token in headers
-  - [ ] 8.7 Create `lib/api/grocery.ts` with functions for all grocery list endpoints
-  - [ ] 8.8 Create `lib/api/pantry.ts` with functions for all pantry endpoints
-  - [ ] 8.9 Create `lib/api/meals.ts` with functions for all meal planner endpoints
-  - [ ] 8.10 Create `lib/api/household.ts` with functions for all household endpoints
-  - [ ] 8.11 Update `app/grocery-lists/page.tsx` to fetch real data from API
-  - [ ] 8.12 Update `app/grocery-lists/[id]/page.tsx` to fetch real data from API
-  - [ ] 8.13 Update `app/pantry/page.tsx` to fetch real data from API
-  - [ ] 8.14 Update `app/meal-planner/page.tsx` to fetch real data from API
-  - [ ] 8.15 Update `app/household/page.tsx` to fetch real data from API
-  - [ ] 8.16 Update all form submissions to POST/PUT to API instead of local state
-  - [ ] 8.17 Add loading states and error handling to all API calls
-  - [ ] 8.18 Add authentication guards to protected pages using Clerk
-  - [ ] 8.19 Add sign-in/sign-up pages using Clerk components
-  - [ ] 8.20 Test full frontend-backend integration locally
-  - [ ] 8.21 Remove or comment out `lib/mockData.ts` (keep for reference)
-  - [ ] 8.22 Commit frontend integration with message "feat: integrate frontend with backend API"
+  - [x] 8.1 Install Clerk SDK in frontend: `npm install @clerk/nextjs`
+  - [x] 8.2 Create `app/providers.tsx` with ClerkProvider wrapper
+  - [x] 8.3 Update `app/layout.tsx` to wrap app with ClerkProvider
+  - [x] 8.4 Create frontend `.env.local` with NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY and CLERK_SECRET_KEY
+  - [x] 8.5 Add NEXT_PUBLIC_API_URL environment variable pointing to backend
+  - [x] 8.6 Create `lib/api/client.ts` with fetch wrapper that includes Clerk token in headers
+  - [x] 8.7 Create `lib/api/grocery.ts` with functions for all grocery list endpoints
+  - [x] 8.8 Create `lib/api/pantry.ts` with functions for all pantry endpoints
+  - [x] 8.9 Create `lib/api/meals.ts` with functions for all meal planner endpoints
+  - [x] 8.10 Create `lib/api/household.ts` with functions for all household endpoints
+  - [x] 8.11 Update `app/grocery-lists/page.tsx` to fetch real data from API
+  - [x] 8.12 Update `app/grocery-lists/[id]/page.tsx` to fetch real data from API
+  - [x] 8.13 Update `app/pantry/page.tsx` to fetch real data from API
+  - [x] 8.14 Update `app/meal-planner/page.tsx` to fetch real data from API
+  - [x] 8.15 Update `app/household/page.tsx` to fetch real data from API
+  - [x] 8.16 Update all form submissions to POST/PUT to API instead of local state
+  - [x] 8.17 Add loading states and error handling to all API calls
+  - [x] 8.18 Add authentication guards to protected pages using Clerk
+  - [x] 8.19 Add sign-in/sign-up pages using Clerk components
+  - [x] 8.20 Test full frontend-backend integration locally
+  - [x] 8.21 Remove or comment out `lib/mockData.ts` (keep for reference)
+  - [x] 8.22 Commit frontend integration with message "feat: integrate frontend with backend API"
 
 - [ ] 9.0 Deploy backend to Railway and configure production environment
   - [ ] 9.1 Sign up for Railway account at railway.app

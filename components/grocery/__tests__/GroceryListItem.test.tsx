@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import GroceryListItem from '../GroceryListItem'
-import { GroceryItem, ItemCategory } from '@/lib/types'
+import { GroceryItem, ItemCategory, MealType } from '@/lib/types'
 
 const mockItem: GroceryItem = {
   id: '1',
@@ -67,7 +67,7 @@ describe('GroceryListItem', () => {
   })
 
   it('renders delete button', () => {
-    render(<GroceryListItem item={mockItem} onToggle={mockOnToggle} />)
+    render(<GroceryListItem item={mockItem} onToggle={mockOnToggle} onDelete={jest.fn()} />)
     const deleteButton = screen.getByLabelText('Delete item')
     expect(deleteButton).toBeInTheDocument()
   })
@@ -76,6 +76,62 @@ describe('GroceryListItem', () => {
     const itemWithoutUnit = { ...mockItem, unit: undefined }
     render(<GroceryListItem item={itemWithoutUnit} onToggle={mockOnToggle} />)
     expect(screen.getByText('6')).toBeInTheDocument()
+  })
+
+  // NEW TESTS FOR EDIT FUNCTIONALITY
+  it('renders edit button', () => {
+    render(<GroceryListItem item={mockItem} onToggle={mockOnToggle} onEdit={jest.fn()} />)
+    const editButton = screen.getByLabelText('Edit item')
+    expect(editButton).toBeInTheDocument()
+  })
+
+  it('calls onEdit when edit button is clicked', () => {
+    const mockOnEdit = jest.fn()
+    render(<GroceryListItem item={mockItem} onToggle={mockOnToggle} onEdit={mockOnEdit} />)
+    const editButton = screen.getByLabelText('Edit item')
+    fireEvent.click(editButton)
+    expect(mockOnEdit).toHaveBeenCalledWith('1')
+  })
+
+  it('calls onDelete when delete button is clicked', () => {
+    const mockOnDelete = jest.fn()
+    render(<GroceryListItem item={mockItem} onToggle={mockOnToggle} onDelete={mockOnDelete} />)
+    const deleteButton = screen.getByLabelText('Delete item')
+    fireEvent.click(deleteButton)
+    expect(mockOnDelete).toHaveBeenCalledWith('1')
+  })
+
+  // MEAL TYPE TESTS
+  it('renders meal type badge when provided', () => {
+    const itemWithMealType = { ...mockItem, mealType: MealType.BREAKFAST }
+    render(<GroceryListItem item={itemWithMealType} onToggle={mockOnToggle} />)
+    expect(screen.getByText('Breakfast')).toBeInTheDocument()
+  })
+
+  it('does not render meal type badge when not provided', () => {
+    render(<GroceryListItem item={mockItem} onToggle={mockOnToggle} />)
+    expect(screen.queryByText('Breakfast')).not.toBeInTheDocument()
+    expect(screen.queryByText('Lunch')).not.toBeInTheDocument()
+    expect(screen.queryByText('Dinner')).not.toBeInTheDocument()
+    expect(screen.queryByText('Snack')).not.toBeInTheDocument()
+  })
+
+  it('renders both category and meal type badges when both provided', () => {
+    const itemWithBoth = { ...mockItem, mealType: MealType.LUNCH }
+    render(<GroceryListItem item={itemWithBoth} onToggle={mockOnToggle} />)
+    expect(screen.getByText('Produce')).toBeInTheDocument()
+    expect(screen.getByText('Lunch')).toBeInTheDocument()
+  })
+
+  it('renders all meal type variants correctly', () => {
+    const mealTypes = [MealType.BREAKFAST, MealType.LUNCH, MealType.DINNER, MealType.SNACK]
+    
+    mealTypes.forEach((mealType) => {
+      const itemWithMealType = { ...mockItem, mealType }
+      const { unmount } = render(<GroceryListItem item={itemWithMealType} onToggle={mockOnToggle} />)
+      expect(screen.getByText(mealType)).toBeInTheDocument()
+      unmount()
+    })
   })
 })
 

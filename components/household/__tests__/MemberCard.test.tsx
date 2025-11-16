@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import MemberCard from '../MemberCard'
 import { HouseholdMember, MemberRole } from '@/lib/types'
 
@@ -67,7 +67,109 @@ describe('MemberCard', () => {
     const memberWithAvatar = { ...mockMember, avatarUrl: 'https://example.com/avatar.jpg' }
     const { container } = render(<MemberCard member={memberWithAvatar} />)
     const img = container.querySelector('img')
-    expect(img).toHaveAttribute('src', 'https://example.com/avatar.jpg')
+    // Next.js transforms the src, so we check if it contains the URL
+    expect(img).toBeInTheDocument()
+    expect(img?.src).toContain('avatar.jpg')
+  })
+
+  it('shows "You" badge when member is current user', () => {
+    render(<MemberCard member={mockMember} isCurrentUser={true} />)
+    expect(screen.getByText('You')).toBeInTheDocument()
+  })
+
+  it('shows edit button when current user is admin and not viewing own card', () => {
+    render(
+      <MemberCard 
+        member={mockMember} 
+        isCurrentUserAdmin={true}
+        isCurrentUser={false}
+        onEdit={() => {}}
+      />
+    )
+    expect(screen.getByText('Edit Role')).toBeInTheDocument()
+  })
+
+  it('does not show edit button for current user own card', () => {
+    render(
+      <MemberCard 
+        member={mockMember} 
+        isCurrentUserAdmin={true}
+        isCurrentUser={true}
+        onEdit={() => {}}
+      />
+    )
+    expect(screen.queryByText('Edit Role')).not.toBeInTheDocument()
+  })
+
+  it('shows "Leave" button when viewing own card', () => {
+    render(
+      <MemberCard 
+        member={mockMember} 
+        isCurrentUser={true}
+        onRemove={() => {}}
+      />
+    )
+    expect(screen.getByText('Leave')).toBeInTheDocument()
+  })
+
+  it('shows "Remove" button when admin viewing other members', () => {
+    render(
+      <MemberCard 
+        member={mockMember} 
+        isCurrentUserAdmin={true}
+        isCurrentUser={false}
+        onRemove={() => {}}
+      />
+    )
+    expect(screen.getByText('Remove')).toBeInTheDocument()
+  })
+
+  it('calls onEdit callback when edit button is clicked', () => {
+    const onEditMock = jest.fn()
+    render(
+      <MemberCard 
+        member={mockMember} 
+        isCurrentUserAdmin={true}
+        isCurrentUser={false}
+        onEdit={onEditMock}
+      />
+    )
+    
+    const editButton = screen.getByText('Edit Role')
+    fireEvent.click(editButton)
+    
+    expect(onEditMock).toHaveBeenCalledWith(mockMember)
+  })
+
+  it('calls onRemove callback when remove button is clicked', () => {
+    const onRemoveMock = jest.fn()
+    render(
+      <MemberCard 
+        member={mockMember} 
+        isCurrentUserAdmin={true}
+        isCurrentUser={false}
+        onRemove={onRemoveMock}
+      />
+    )
+    
+    const removeButton = screen.getByText('Remove')
+    fireEvent.click(removeButton)
+    
+    expect(onRemoveMock).toHaveBeenCalledWith(mockMember)
+  })
+
+  it('does not show action buttons when not admin and not current user', () => {
+    render(
+      <MemberCard 
+        member={mockMember} 
+        isCurrentUserAdmin={false}
+        isCurrentUser={false}
+      />
+    )
+    
+    expect(screen.queryByText('Edit Role')).not.toBeInTheDocument()
+    expect(screen.queryByText('Remove')).not.toBeInTheDocument()
+    expect(screen.queryByText('Leave')).not.toBeInTheDocument()
   })
 })
 
