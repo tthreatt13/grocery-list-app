@@ -11,7 +11,7 @@ import { transformGroceryLists } from '@/lib/adapters/groceryAdapters'
 import { GroceryList } from '@/lib/types'
 import { getPantryItems, PantryItemResponse } from '@/lib/api/pantry'
 import { getWeeklyMeals, getWeekStartDate, MealResponse } from '@/lib/api/meals'
-import { getHouseholds, HouseholdResponse } from '@/lib/api/household'
+import { getHouseholds } from '@/lib/api/household'
 
 export default function Home() {
   const { isLoaded, isSignedIn, getToken } = useAuth()
@@ -109,7 +109,6 @@ export default function Home() {
   }).length
 
   // Calculate meal planner stats
-  const totalMeals = weeklyMeals.length
   const mealsThisWeek = weeklyMeals.length
 
   if (isLoading) {

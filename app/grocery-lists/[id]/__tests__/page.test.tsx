@@ -3,7 +3,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@clerk/nextjs'
 import GroceryListDetailPage from '../page'
 import * as groceryApi from '@/lib/api/grocery'
-import { ItemCategory, MealType, SortMethod } from '@/lib/types'
+import { SortMethod } from '@/lib/types'
 
 // Mock dependencies
 jest.mock('next/navigation', () => ({

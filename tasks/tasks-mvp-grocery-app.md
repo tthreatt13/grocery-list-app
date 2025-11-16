@@ -239,7 +239,7 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 9.15 Deploy frontend to Vercel (should already be configured)
   - [x] 9.16 Update Vercel environment variables with production values
   - [x] 9.17 Test production deployment end-to-end
-  - [x] 9.18 Configure Railway domain (optional custom domain)
+  - [ ] 9.18 Configure Railway domain (optional custom domain)
   - [x] 9.19 Set up Railway logs and monitoring
   - [x] 9.20 Commit deployment configuration with message "chore: add Railway deployment configuration"
 

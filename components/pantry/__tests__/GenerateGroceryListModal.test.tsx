@@ -7,7 +7,7 @@ import { GroceryListResponse } from '@/lib/api/grocery'
 
 // Mock the Modal component
 jest.mock('@/components/ui/Modal', () => ({
-  Modal: ({ open, onClose, title, children }: any) => {
+  Modal: ({ open, onClose, title, children }: { open: boolean; onClose: () => void; title: string; children: React.ReactNode }) => {
     if (!open) return null
     return (
       <div data-testid="modal">

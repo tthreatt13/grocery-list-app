@@ -12,9 +12,9 @@ const mockGetToken = jest.fn().mockResolvedValue('mock-token')
 jest.mock('@clerk/nextjs', () => ({
   auth: () => ({ userId: 'user_test123' }),
   currentUser: () => ({ id: 'user_test123', firstName: 'Test', lastName: 'Testuser' }),
-  ClerkProvider: ({ children }: any) => children,
-  SignInButton: ({ children }: any) => children,
-  SignUpButton: ({ children }: any) => children,
+  ClerkProvider: ({ children }: { children: React.ReactNode }) => children,
+  SignInButton: ({ children }: { children: React.ReactNode }) => children,
+  SignUpButton: ({ children }: { children: React.ReactNode }) => children,
   UserButton: () => {
     return React.createElement('div', { 'data-testid': 'user-button' }, 'TT');
   },
@@ -358,7 +358,7 @@ describe('PantryPage - Mobile Responsive Layout', () => {
   })
 
   it('should have buttons container with responsive flex classes to prevent horizontal overflow', async () => {
-    const { container } = render(<PantryPage />)
+    render(<PantryPage />)
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /generate grocery list/i })).toBeInTheDocument()
@@ -366,7 +366,6 @@ describe('PantryPage - Mobile Responsive Layout', () => {
 
     // Find the button container
     const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
-    const addButton = screen.getByRole('button', { name: /add to pantry/i })
     const buttonContainer = generateButton.parentElement
 
     expect(buttonContainer).toBeInTheDocument()
