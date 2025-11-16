@@ -8,11 +8,11 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '@clerk/nextjs'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
-import { getHouseholds, createHousehold, getHousehold, HouseholdWithMembersResponse } from '@/lib/api/household'
+import { getHouseholds, createHousehold, getHousehold, HouseholdWithMembersResponse, HouseholdResponse } from '@/lib/api/household'
 
 export default function HouseholdPage() {
   const { getToken } = useAuth()
-  const [households, setHouseholds] = useState<HouseholdWithMembersResponse[]>([])
+  const [households, setHouseholds] = useState<HouseholdResponse[]>([])
   const [selectedHousehold, setSelectedHousehold] = useState<HouseholdWithMembersResponse | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

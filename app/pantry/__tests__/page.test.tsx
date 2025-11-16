@@ -16,7 +16,6 @@ jest.mock('@clerk/nextjs', () => ({
   SignInButton: ({ children }: any) => children,
   SignUpButton: ({ children }: any) => children,
   UserButton: () => {
-    const React = require('react');
     return React.createElement('div', { 'data-testid': 'user-button' }, 'TT');
   },
   useAuth: () => ({
