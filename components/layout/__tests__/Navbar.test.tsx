@@ -1,9 +1,18 @@
 import { render, screen } from '@testing-library/react'
 import Navbar from '../Navbar'
+import { usePathname } from 'next/navigation'
 
 // Mock next/navigation
 jest.mock('next/navigation', () => ({
   usePathname: jest.fn(() => '/'),
+}))
+
+// Mock Clerk
+const mockUseAuth = jest.fn(() => ({ isSignedIn: false, isLoaded: true }))
+jest.mock('@clerk/nextjs', () => ({
+  SignInButton: ({ children }: any) => <div data-testid="sign-in-button">{children}</div>,
+  useAuth: mockUseAuth,
+  UserButton: () => <div data-testid="user-button">TT</div>,
 }))
 
 describe('Navbar', () => {
@@ -21,14 +30,20 @@ describe('Navbar', () => {
     expect(screen.getByText('Family')).toBeInTheDocument()
   })
 
-  it('renders user avatar with initials', () => {
+  it('renders user avatar with initials when signed in', () => {
+    mockUseAuth.mockReturnValue({ isSignedIn: true, isLoaded: true })
     render(<Navbar />)
     expect(screen.getByText('TT')).toBeInTheDocument()
   })
 
+  it('renders sign in button when not signed in', () => {
+    mockUseAuth.mockReturnValue({ isSignedIn: false, isLoaded: true })
+    render(<Navbar />)
+    expect(screen.getByText('Sign In')).toBeInTheDocument()
+  })
+
   it('highlights active link based on pathname', () => {
-    const { usePathname } = require('next/navigation')
-    usePathname.mockReturnValue('/grocery-lists')
+    (usePathname as jest.Mock).mockReturnValue('/grocery-lists')
     
     render(<Navbar />)
     const listsLink = screen.getByText('Lists').closest('a')

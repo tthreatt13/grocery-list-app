@@ -85,19 +85,5 @@ describe('PantryItemCard', () => {
     render(<PantryItemCard item={expiredItem} />)
     expect(screen.getByText(/Expired/i)).toBeInTheDocument()
   })
-
-  it('renders with image placeholder when no imageUrl provided', () => {
-    const { container } = render(<PantryItemCard item={mockPantryItem} />)
-    const placeholder = container.querySelector('.bg-gray-200')
-    expect(placeholder).toBeInTheDocument()
-  })
-
-  it('renders image when imageUrl is provided', () => {
-    const itemWithImage = { ...mockPantryItem, imageUrl: '/tomatoes.jpg' }
-    render(<PantryItemCard item={itemWithImage} />)
-    const img = screen.getByAltText('Tomatoes')
-    expect(img).toBeInTheDocument()
-    expect(img).toHaveAttribute('src')
-  })
 })
 

@@ -44,7 +44,7 @@ describe('MealCard', () => {
 
   it('renders image placeholder when no image URL is provided', () => {
     render(<MealCard meal={mockMeal} onEdit={mockOnEdit} onDelete={mockOnDelete} />)
-    const placeholderImage = screen.getByRole('img')
+    const placeholderImage = screen.getByLabelText('Meal placeholder')
     expect(placeholderImage).toBeInTheDocument()
   })
 

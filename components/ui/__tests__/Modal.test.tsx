@@ -94,5 +94,51 @@ describe('Modal', () => {
     const modal = container.querySelector('.custom-class')
     expect(modal).toBeInTheDocument()
   })
+
+  it('does not call onClose when backdrop is clicked and closeOnBackdropClick is false', async () => {
+    const handleClose = jest.fn()
+    const user = userEvent.setup()
+    render(
+      <Modal open={true} onClose={handleClose} closeOnBackdropClick={false}>
+        Content
+      </Modal>
+    )
+    
+    const backdrop = screen.getByTestId('modal-backdrop')
+    await user.click(backdrop)
+    expect(handleClose).not.toHaveBeenCalled()
+  })
+
+  it('does not call onClose when Escape key is pressed and closeOnEscape is false', async () => {
+    const handleClose = jest.fn()
+    const user = userEvent.setup()
+    render(
+      <Modal open={true} onClose={handleClose} closeOnEscape={false}>
+        Content
+      </Modal>
+    )
+    
+    await user.keyboard('{Escape}')
+    expect(handleClose).not.toHaveBeenCalled()
+  })
+
+  it('still calls onClose when close button is clicked even with closeOnBackdropClick and closeOnEscape false', async () => {
+    const handleClose = jest.fn()
+    const user = userEvent.setup()
+    render(
+      <Modal 
+        open={true} 
+        onClose={handleClose} 
+        closeOnBackdropClick={false}
+        closeOnEscape={false}
+      >
+        Content
+      </Modal>
+    )
+    
+    const closeButton = screen.getByRole('button', { name: /close/i })
+    await user.click(closeButton)
+    expect(handleClose).toHaveBeenCalledTimes(1)
+  })
 })
 

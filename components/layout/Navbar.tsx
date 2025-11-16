@@ -2,10 +2,12 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { SignInButton, useAuth, UserButton } from '@clerk/nextjs'
 import { cn } from '@/lib/utils'
 
 export default function Navbar() {
   const pathname = usePathname()
+  const { isSignedIn, isLoaded } = useAuth()
 
   const navLinks = [
     { href: '/', label: 'Dashboard' },
@@ -49,11 +51,19 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* User Avatar */}
+          {/* User Menu */}
           <div className="flex items-center">
-            <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center cursor-pointer">
-              <span className="text-white font-semibold">TT</span>
-            </div>
+            {isLoaded && (
+              isSignedIn ? (
+                <UserButton afterSignOutUrl="/" />
+              ) : (
+                <SignInButton mode="modal">
+                  <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium">
+                    Sign In
+                  </button>
+                </SignInButton>
+              )
+            )}
           </div>
         </div>
       </div>

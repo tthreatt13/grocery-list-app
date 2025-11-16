@@ -1,0 +1,3474 @@
+
+> grocery-list-app@0.1.0 test
+> jest --silent
+
+FAIL components/household/__tests__/EditMemberForm.test.tsx
+  ● EditMemberForm › renders the form with member name
+
+    TypeError: Cannot read properties of undefined (reading 'map')
+
+      48 |             </option>
+      49 |           )}
+    > 50 |           {options.map((option) => (
+         |                    ^
+      51 |             <option key={option.value} value={option.value}>
+      52 |               {option.label}
+      53 |             </option>
+
+      at map (components/ui/Select.tsx:50:20)
+      at renderWithHooks (node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+      at updateForwardRef (node_modules/react-dom/cjs/react-dom.development.js:19245:20)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21675:16)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at recoverFromConcurrentError (node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (components/household/__tests__/EditMemberForm.test.tsx:14:11)
+
+  ● EditMemberForm › displays the current role as selected
+
+    TypeError: Cannot read properties of undefined (reading 'map')
+
+      48 |             </option>
+      49 |           )}
+    > 50 |           {options.map((option) => (
+         |                    ^
+      51 |             <option key={option.value} value={option.value}>
+      52 |               {option.label}
+      53 |             </option>
+
+      at map (components/ui/Select.tsx:50:20)
+      at renderWithHooks (node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+      at updateForwardRef (node_modules/react-dom/cjs/react-dom.development.js:19245:20)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21675:16)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at recoverFromConcurrentError (node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (components/household/__tests__/EditMemberForm.test.tsx:28:11)
+
+  ● EditMemberForm › allows changing the role
+
+    TypeError: Cannot read properties of undefined (reading 'map')
+
+      48 |             </option>
+      49 |           )}
+    > 50 |           {options.map((option) => (
+         |                    ^
+      51 |             <option key={option.value} value={option.value}>
+      52 |               {option.label}
+      53 |             </option>
+
+      at map (components/ui/Select.tsx:50:20)
+      at renderWithHooks (node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+      at updateForwardRef (node_modules/react-dom/cjs/react-dom.development.js:19245:20)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21675:16)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at recoverFromConcurrentError (node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (components/household/__tests__/EditMemberForm.test.tsx:42:11)
+
+  ● EditMemberForm › displays role description for Admin
+
+    TypeError: Cannot read properties of undefined (reading 'map')
+
+      48 |             </option>
+      49 |           )}
+    > 50 |           {options.map((option) => (
+         |                    ^
+      51 |             <option key={option.value} value={option.value}>
+      52 |               {option.label}
+      53 |             </option>
+
+      at map (components/ui/Select.tsx:50:20)
+      at renderWithHooks (node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+      at updateForwardRef (node_modules/react-dom/cjs/react-dom.development.js:19245:20)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21675:16)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at recoverFromConcurrentError (node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (components/household/__tests__/EditMemberForm.test.tsx:58:11)
+
+  ● EditMemberForm › displays role description for Member
+
+    TypeError: Cannot read properties of undefined (reading 'map')
+
+      48 |             </option>
+      49 |           )}
+    > 50 |           {options.map((option) => (
+         |                    ^
+      51 |             <option key={option.value} value={option.value}>
+      52 |               {option.label}
+      53 |             </option>
+
+      at map (components/ui/Select.tsx:50:20)
+      at renderWithHooks (node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+      at updateForwardRef (node_modules/react-dom/cjs/react-dom.development.js:19245:20)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21675:16)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at recoverFromConcurrentError (node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (components/household/__tests__/EditMemberForm.test.tsx:71:11)
+
+  ● EditMemberForm › displays role description for Viewer
+
+    TypeError: Cannot read properties of undefined (reading 'map')
+
+      48 |             </option>
+      49 |           )}
+    > 50 |           {options.map((option) => (
+         |                    ^
+      51 |             <option key={option.value} value={option.value}>
+      52 |               {option.label}
+      53 |             </option>
+
+      at map (components/ui/Select.tsx:50:20)
+      at renderWithHooks (node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+      at updateForwardRef (node_modules/react-dom/cjs/react-dom.development.js:19245:20)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21675:16)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at recoverFromConcurrentError (node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (components/household/__tests__/EditMemberForm.test.tsx:84:11)
+
+  ● EditMemberForm › calls onSubmit with selected role when form is submitted
+
+    TypeError: Cannot read properties of undefined (reading 'map')
+
+      48 |             </option>
+      49 |           )}
+    > 50 |           {options.map((option) => (
+         |                    ^
+      51 |             <option key={option.value} value={option.value}>
+      52 |               {option.label}
+      53 |             </option>
+
+      at map (components/ui/Select.tsx:50:20)
+      at renderWithHooks (node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+      at updateForwardRef (node_modules/react-dom/cjs/react-dom.development.js:19245:20)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21675:16)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at recoverFromConcurrentError (node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (components/household/__tests__/EditMemberForm.test.tsx:97:11)
+
+  ● EditMemberForm › calls onCancel when cancel button is clicked
+
+    TypeError: Cannot read properties of undefined (reading 'map')
+
+      48 |             </option>
+      49 |           )}
+    > 50 |           {options.map((option) => (
+         |                    ^
+      51 |             <option key={option.value} value={option.value}>
+      52 |               {option.label}
+      53 |             </option>
+
+      at map (components/ui/Select.tsx:50:20)
+      at renderWithHooks (node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+      at updateForwardRef (node_modules/react-dom/cjs/react-dom.development.js:19245:20)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21675:16)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at recoverFromConcurrentError (node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (components/household/__tests__/EditMemberForm.test.tsx:116:11)
+
+  ● EditMemberForm › prevents default form submission
+
+    TypeError: Cannot read properties of undefined (reading 'map')
+
+      48 |             </option>
+      49 |           )}
+    > 50 |           {options.map((option) => (
+         |                    ^
+      51 |             <option key={option.value} value={option.value}>
+      52 |               {option.label}
+      53 |             </option>
+
+      at map (components/ui/Select.tsx:50:20)
+      at renderWithHooks (node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+      at updateForwardRef (node_modules/react-dom/cjs/react-dom.development.js:19245:20)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21675:16)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at recoverFromConcurrentError (node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (components/household/__tests__/EditMemberForm.test.tsx:133:11)
+
+  ● EditMemberForm › has all three role options available
+
+    TypeError: Cannot read properties of undefined (reading 'map')
+
+      48 |             </option>
+      49 |           )}
+    > 50 |           {options.map((option) => (
+         |                    ^
+      51 |             <option key={option.value} value={option.value}>
+      52 |               {option.label}
+      53 |             </option>
+
+      at map (components/ui/Select.tsx:50:20)
+      at renderWithHooks (node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+      at updateForwardRef (node_modules/react-dom/cjs/react-dom.development.js:19245:20)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21675:16)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at recoverFromConcurrentError (node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (components/household/__tests__/EditMemberForm.test.tsx:150:11)
+
+FAIL components/household/__tests__/MemberCard.test.tsx
+  ● MemberCard › displays avatar image when avatarUrl is provided
+
+    expect(element).toHaveAttribute("src", "https://example.com/avatar.jpg") // element.getAttribute("src") === "https://example.com/avatar.jpg"
+
+    Expected the element to have attribute:
+      src="https://example.com/avatar.jpg"
+    Received:
+      src="/_next/image?url=https%3A%2F%2Fexample.com%2Favatar.jpg&w=3840&q=75"
+
+      68 |     const { container } = render(<MemberCard member={memberWithAvatar} />)
+      69 |     const img = container.querySelector('img')
+    > 70 |     expect(img).toHaveAttribute('src', 'https://example.com/avatar.jpg')
+         |                 ^
+      71 |   })
+      72 |
+      73 |   it('shows "You" badge when member is current user', () => {
+
+      at Object.toHaveAttribute (components/household/__tests__/MemberCard.test.tsx:70:17)
+
+FAIL components/household/__tests__/SharedListsView.test.tsx
+  ● SharedListsView › displays the number of people each list is shared with
+
+    TestingLibraryElementError: Unable to find an element with the text: Shared with 2 people. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-4"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mhref[39m=[32m"/grocery-lists/1"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-white rounded-lg shadow border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"px-6 py-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"p-4"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"flex items-start justify-between mb-3"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"flex-1"[39m
+                    [36m>[39m
+                      [36m<h3[39m
+                        [33mclass[39m=[32m"text-lg font-semibold text-gray-900 mb-1"[39m
+                      [36m>[39m
+                        [0mWeekly Shopping[0m
+                      [36m</h3>[39m
+                      [36m<p[39m
+                        [33mclass[39m=[32m"text-sm text-gray-600"[39m
+                      [36m>[39m
+                        [0mCreated by [0m
+                        [0mJohn Parent[0m
+                      [36m</p>[39m
+                    [36m</div>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"[39m
+                    [36m>[39m
+                      [0m1[0m
+                      [0m [0m
+                      [0mitem[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"flex items-center justify-between text-sm"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"text-gray-600"[39m
+                    [36m>[39m
+                      [0mShared with household[0m
+                    [36m</span>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"text-gray-500"[39m
+                    [36m>[39m
+                      [0mLast edited: [0m
+                      [0mNov 10, 2024[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</a>[39m
+          [36m<a[39m
+            [33mhref[39m=[32m"/grocery-lists/2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-white rounded-lg shadow border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"px-6 py-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"p-4"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"flex items-start justify-between mb-3"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"flex-1"[39m
+                    [36m>[39m
+                      [36m<h3[39m
+                        [33mclass[39m=[32m"text-lg font-semibold text-gray-900 mb-1"[39m
+                      [36m>[39m
+                        [0mParty Supplies[0m
+                      [36m</h3>[39m
+                      [36m<p[39m
+                        [33mclass[39m=[32m"text-sm text-gray-600"[39m
+                      [36m>[39m
+                        [0mCreated by [0m
+                        [0mJane Parent[0m
+                      [36m</p>[39m
+                    [36m</div>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"[39m
+                    [36m>[39m
+                      [0m0[0m
+                      [0m [0m
+                      [0mitems[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"flex items-center justify-between text-sm"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"text-gray-600"[39m
+                    [36m>[39m
+                      [0mShared with household[0m
+                    [36m</span>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"text-gray-500"[39m
+                    [36m>[39m
+                      [0mLast edited: [0m
+                      [0mNov 9, 2024[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</a>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      56 |   it('displays the number of people each list is shared with', () => {
+      57 |     render(<SharedListsView lists={mockSharedLists} />)
+    > 58 |     expect(screen.getByText('Shared with 2 people')).toBeInTheDocument()
+         |                   ^
+      59 |     expect(screen.getByText('Shared with 1 person')).toBeInTheDocument()
+      60 |   })
+      61 |
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByText (components/household/__tests__/SharedListsView.test.tsx:58:19)
+
+  ● SharedListsView › displays correct singular/plural for shared count
+
+    TestingLibraryElementError: Unable to find an element with the text: Shared with 1 person. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-4"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mhref[39m=[32m"/grocery-lists/1"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-white rounded-lg shadow border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"px-6 py-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"p-4"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"flex items-start justify-between mb-3"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"flex-1"[39m
+                    [36m>[39m
+                      [36m<h3[39m
+                        [33mclass[39m=[32m"text-lg font-semibold text-gray-900 mb-1"[39m
+                      [36m>[39m
+                        [0mWeekly Shopping[0m
+                      [36m</h3>[39m
+                      [36m<p[39m
+                        [33mclass[39m=[32m"text-sm text-gray-600"[39m
+                      [36m>[39m
+                        [0mCreated by [0m
+                        [0mJohn Parent[0m
+                      [36m</p>[39m
+                    [36m</div>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"[39m
+                    [36m>[39m
+                      [0m1[0m
+                      [0m [0m
+                      [0mitem[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"flex items-center justify-between text-sm"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"text-gray-600"[39m
+                    [36m>[39m
+                      [0mShared with household[0m
+                    [36m</span>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"text-gray-500"[39m
+                    [36m>[39m
+                      [0mLast edited: [0m
+                      [0mNov 10, 2024[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</a>[39m
+          [36m<a[39m
+            [33mhref[39m=[32m"/grocery-lists/2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-white rounded-lg shadow border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"px-6 py-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"p-4"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"flex items-start justify-between mb-3"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"flex-1"[39m
+                    [36m>[39m
+                      [36m<h3[39m
+                        [33mclass[39m=[32m"text-lg font-semibold text-gray-900 mb-1"[39m
+                      [36m>[39m
+                        [0mParty Supplies[0m
+                      [36m</h3>[39m
+                      [36m<p[39m
+                        [33mclass[39m=[32m"text-sm text-gray-600"[39m
+                      [36m>[39m
+                        [0mCreated by [0m
+                        [0mJane Parent[0m
+                      [36m</p>[39m
+                    [36m</div>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"[39m
+                    [36m>[39m
+                      [0m0[0m
+                      [0m [0m
+                      [0mitems[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"flex items-center justify-between text-sm"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"text-gray-600"[39m
+                    [36m>[39m
+                      [0mShared with household[0m
+                    [36m</span>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"text-gray-500"[39m
+                    [36m>[39m
+                      [0mLast edited: [0m
+                      [0mNov 9, 2024[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</a>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      62 |   it('displays correct singular/plural for shared count', () => {
+      63 |     render(<SharedListsView lists={mockSharedLists} />)
+    > 64 |     expect(screen.getByText('Shared with 1 person')).toBeInTheDocument()
+         |                   ^
+      65 |     expect(screen.getByText('Shared with 2 people')).toBeInTheDocument()
+      66 |   })
+      67 |
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByText (components/household/__tests__/SharedListsView.test.tsx:64:19)
+
+FAIL components/meal-planner/__tests__/MealCard.test.tsx
+  ● MealCard › renders image placeholder when no image URL is provided
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "img"
+
+    Here are the accessible roles:
+
+      heading:
+
+      Name "Spaghetti Bolognese":
+      [36m<h3[39m
+        [33mclass[39m=[32m"font-semibold text-gray-900 flex-1"[39m
+      [36m/>[39m
+
+      --------------------------------------------------
+      button:
+
+      Name "Edit meal":
+      [36m<button[39m
+        [33maria-label[39m=[32m"Edit meal"[39m
+        [33mclass[39m=[32m"flex-1 px-3 py-1.5 text-sm text-blue-600 hover:bg-blue-50 rounded transition-colors"[39m
+      [36m/>[39m
+
+      Name "Delete meal":
+      [36m<button[39m
+        [33maria-label[39m=[32m"Delete meal"[39m
+        [33mclass[39m=[32m"px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded transition-colors"[39m
+      [36m/>[39m
+
+      --------------------------------------------------
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"w-full h-32 bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center relative"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mclass[39m=[32m"w-16 h-16 text-orange-400"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"p-4"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-start justify-between mb-2"[39m
+            [36m>[39m
+              [36m<h3[39m
+                [33mclass[39m=[32m"font-semibold text-gray-900 flex-1"[39m
+              [36m>[39m
+                [0mSpaghetti Bolognese[0m
+              [36m</h3>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"[39m
+              [36m>[39m
+                [0mDinner[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-sm text-gray-600 mb-3 line-clamp-2"[39m
+            [36m>[39m
+              [0mKids favorite![0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-xs text-gray-500 mb-3"[39m
+            [36m>[39m
+              [0m3[0m
+              [0m ingredient[0m
+              [0ms[0m
+            [36m</p>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center space-x-2 pt-3 border-t border-gray-100"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Edit meal"[39m
+                [33mclass[39m=[32m"flex-1 px-3 py-1.5 text-sm text-blue-600 hover:bg-blue-50 rounded transition-colors"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33mclass[39m=[32m"w-4 h-4 inline mr-1"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"[39m
+                    [33mstroke-linecap[39m=[32m"round"[39m
+                    [33mstroke-linejoin[39m=[32m"round"[39m
+                    [33mstroke-width[39m=[32m"2"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mEdit[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Delete meal"[39m
+                [33mclass[39m=[32m"px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded transition-colors"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33mclass[39m=[32m"w-4 h-4 inline"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"[39m
+                    [33mstroke-linecap[39m=[32m"round"[39m
+                    [33mstroke-linejoin[39m=[32m"round"[39m
+                    [33mstroke-width[39m=[32m"2"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      45 |   it('renders image placeholder when no image URL is provided', () => {
+      46 |     render(<MealCard meal={mockMeal} onEdit={mockOnEdit} onDelete={mockOnDelete} />)
+    > 47 |     const placeholderImage = screen.getByRole('img')
+         |                                     ^
+      48 |     expect(placeholderImage).toBeInTheDocument()
+      49 |   })
+      50 |
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByRole (components/meal-planner/__tests__/MealCard.test.tsx:47:37)
+
+FAIL components/meal-planner/__tests__/GenerateGroceryListFromMealsModal.test.tsx
+  ● Test suite failed to run
+
+    Cannot find module '../GenerateGroceryListFromMealsModal' from 'components/meal-planner/__tests__/GenerateGroceryListFromMealsModal.test.tsx'
+
+      28 |       name: 'Weekly Shopping',
+      29 |       created_by: 1,
+    > 30 |       created_at: '2024-01-01T00:00:00Z',
+         |                                          ^
+      31 |       updated_at: '2024-01-01T00:00:00Z',
+      32 |     },
+      33 |     {
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.<anonymous> (components/meal-planner/__tests__/GenerateGroceryListFromMealsModal.test.tsx:30:83)
+
+FAIL components/ui/__tests__/Select.test.tsx
+  ● Select Component › handles empty string value
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: ""
+    Received: "option1"
+
+       96 |     render(<Select label="Test" id="test" options={options} value="" onChange={() => {}} />)
+       97 |     const select = screen.getByLabelText('Test') as HTMLSelectElement
+    >  98 |     expect(select.value).toBe('')
+          |                          ^
+       99 |   })
+      100 |
+      101 |   it('links error message with aria-describedby', () => {
+
+      at Object.toBe (components/ui/__tests__/Select.test.tsx:98:26)
+
+FAIL components/ui/__tests__/Button.test.tsx
+  ● Button › applies small size styles
+
+    expect(element).toHaveClass("text-sm px-3 py-1.5")
+
+    Expected the element to have class:
+      text-sm px-3 py-1.5
+    Received:
+      inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 text-sm px-3 py-2 min-h-[44px]
+
+      50 |     render(<Button size="sm">Small</Button>)
+      51 |     const button = screen.getByRole('button')
+    > 52 |     expect(button).toHaveClass('text-sm', 'px-3', 'py-1.5')
+         |                    ^
+      53 |   })
+      54 |
+      55 |   it('applies medium size styles', () => {
+
+      at Object.toHaveClass (components/ui/__tests__/Button.test.tsx:52:20)
+
+  ● Button › applies medium size styles
+
+    expect(element).toHaveClass("text-base px-4 py-2")
+
+    Expected the element to have class:
+      text-base px-4 py-2
+    Received:
+      inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 text-base px-4 py-2.5 min-h-[44px]
+
+      56 |     render(<Button size="md">Medium</Button>)
+      57 |     const button = screen.getByRole('button')
+    > 58 |     expect(button).toHaveClass('text-base', 'px-4', 'py-2')
+         |                    ^
+      59 |   })
+      60 |
+      61 |   it('applies large size styles', () => {
+
+      at Object.toHaveClass (components/ui/__tests__/Button.test.tsx:58:20)
+
+FAIL app/__tests__/page.test.tsx
+  ● Dashboard Page › should fetch and display grocery list stats from API
+
+    TestingLibraryElementError: Found multiple elements with the text: Total Items
+
+    Here are the matching elements:
+
+    Ignored nodes: comments, script, style
+    [36m<p[39m
+      [33mclass[39m=[32m"text-sm font-medium text-gray-600"[39m
+    [36m>[39m
+      [0mTotal Items[0m
+    [36m</p>[39m
+
+    Ignored nodes: comments, script, style
+    [36m<p[39m
+      [33mclass[39m=[32m"text-sm font-medium text-gray-600"[39m
+    [36m>[39m
+      [0mTotal Items[0m
+    [36m</p>[39m
+
+    (If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<main[39m
+          [33mclass[39m=[32m"min-h-screen bg-gray-50"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"mb-8"[39m
+            [36m>[39m
+              [36m<h1[39m
+                [33mclass[39m=[32m"text-2xl sm:text-3xl font-bold text-gray-900 mb-2"[39m
+              [36m>[39m
+                [0mWelcome back, Tony! 👋[0m
+              [36m</h1>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"text-sm sm:text-base text-gray-600"[39m
+              [36m>[39m
+                [0mHere's what's happening with your grocery planning today.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"mb-8"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"text-lg sm:text-xl font-bold text-gray-900 mb-4"[39m
+              [36m>[39m
+                [0mGrocery Lists[0m
+              [36m</h2>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"grid grid-cols-1 sm:grid-cols-3 gap-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"bg-white rounded-lg shadow border border-gray-200"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"px-6 py-4"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"p-6"[39m
+                    [36m>[39m
+                      [36m<div[39m
+                        [33mclass[39m=[32m"flex items-center justify-between"[39m
+                      [36m>[39m
+                        [36m<div>[39m
+                          [36m<p[39m
+                            [33mclass[39m=[32m"text-sm font-medium text-gray-600"[39m
+                          [36m>[39m
+                            [0mActive Lists[0m
+                          [36m</p>[39m
+                          [36m<p[39m
+                            [33mclass[39m=[32m"text-3xl font-bold text-gray-900 mt-2"[39m
+                          [36m>[39m
+                            [0m2[0m
+                          [36m</p>[39m
+                        [36m</div>[39m
+                        [36m<div[39m
+                          [33mclass[39m=[32m"w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center"[39m
+                        [36m>[39m
+                          [36m<svg[39m
+                            [33mclass[39m=[32m"w-6 h-6 text-green-600"[39m
+                            [33mfill[39m=[32m"none"[39m
+                            [33mstroke[39m=[32m"currentColor"[39m
+                            [33mviewBox[39m=[32m"0 0 24 24"[39m
+                          [36m>[39m
+                            [36m<path[39m
+                              [33md[39m=[32m"M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"[39m
+                              [33mstroke-linecap[39m=[32m"round"[39m
+                              [33mstroke-linejoin[39m=[32m"round"[39m
+                              [33mstroke-width[39m=[32m"2"[39m
+                            [36m/>[39m
+                          [36m</svg>[39m
+                        [36m</div>[39m
+                      [36m</div>[39m
+                    [36m</div>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"bg-white rounded-lg shadow border border-gray-200"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"px-6 py-4"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"p-6"[39m
+                    [36m>[39m
+                      [36m<div[39m
+                        [33mclass[39m=[32m"flex items-center justify-between"[39m
+                      [36m>[39m
+                        [36m<div>[39m
+                          [36m<p[39m
+                            [33mclass[39m=[32m"text-sm font-medium text-gray-600"[39m
+                          [36m>[39m
+                            [0mTotal Items[0m
+                          [36m</p>[39m
+                          [36m<p[39m
+                            [33mclass[39m=[32m"text-3xl font-bold text-gray-900 mt-2"[39m
+                          [36m>[39m
+                            [0m4[0m
+                          [36m</p>[39m
+                        [36m</div>[39m
+                        [36m<div[39m
+                          [33mclass[39m=[32m"w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center"[39m
+                        [36m>[39m
+                          [36m<svg[39m
+                            [33mclass[39m=[32m"w-6 h-6 text-blue-600"[39m
+                            [33mfill[39m=[32m"none"[39m
+                            [33mstroke[39m=[32m"currentColor"[39m
+                            [33mviewBox[39m=[32m"0 0 24 24"[39m
+                          [36m>[39m
+                            [36m<path[39m
+                              [33md[39m=[32m"M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"[39m
+                              [33mstroke-linecap[39m=[32m"round"[39m
+                              [33mstroke-linejoin[39m=[32m"round"[39m
+                              [33mstroke-width[39m=[32m"2"[39m
+                            [36m/>[39m
+                          [36m</svg>[39m
+                        [36m</div>[39m
+                      [36m</div>[39m
+                    [36m</div>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"bg-white rounded-lg shadow border border-gray-200"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"px-6 py-4"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"p-6"[39m
+                    [36m>[39m
+                      [36m<div[39m
+                        [33mclass[39m=[32m"flex items-center justify-between"[39m
+                      [36m>[39m
+                        [36m<div>[39m
+                          [36m<p[39m
+                            [33mclass[39m=[32m"text-sm font-medium text-gray-600"[39m
+                          [36m>[39m
+                            [0mCompleted[0m
+                          [36m</p>[39m
+                          [36m<p[39m
+                            [33mclass[39m=[32m"text-3xl font-bold text-gray-900 mt-2"[39m
+                          [36m>[39m
+                            [0m1[0m
+                          [36m</p>[39m
+                        [36m</div>[39m
+                        [36m<div[39m
+                          [33mclass[39m=[32m"w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center"[39m
+                        [36m>[39m
+                          [36m<svg[39m
+                            [33mclass[39m=[32m"w-6 h-6 text-purple-600"[39m
+                            [33mfill[39m=[32m"none"[39m
+                            [33mstroke[39m=[32m"curren...
+
+      112 |     // 4 total items (3 from first list, 1 from second)
+      113 |     expect(screen.getByText('4')).toBeInTheDocument()
+    > 114 |     expect(screen.getByText('Total Items')).toBeInTheDocument()
+          |                   ^
+      115 |
+      116 |     // 1 completed item
+      117 |     expect(screen.getByText('1')).toBeInTheDocument()
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:20:35)
+      at getMultipleElementsFoundError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:23:10)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:55:13
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByText (app/__tests__/page.test.tsx:114:19)
+
+FAIL components/grocery/__tests__/GroceryListItem.test.tsx
+  ● GroceryListItem › renders delete button
+
+    TestingLibraryElementError: Unable to find a label with the text of: Delete item
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex items-center space-x-3 p-4 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center"[39m
+          [36m>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"h-5 w-5 rounded border-gray-300 text-primary-600 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors cursor-pointer"[39m
+              [33mid[39m=[32m"item-1"[39m
+              [33mtype[39m=[32m"checkbox"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex-1 min-w-0"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center space-x-2"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"font-medium text-gray-900 cursor-pointer"[39m
+                [33mfor[39m=[32m"item-1"[39m
+              [36m>[39m
+                [0mBananas[0m
+              [36m</label>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"[39m
+              [36m>[39m
+                [0mProduce[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center space-x-3 mt-1 text-sm text-gray-600"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0m6 pcs[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"text-gray-400"[39m
+              [36m>[39m
+                [0m•[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"truncate"[39m
+              [36m>[39m
+                [0mGet ripe ones[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center space-x-2"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      69 |   it('renders delete button', () => {
+      70 |     render(<GroceryListItem item={mockItem} onToggle={mockOnToggle} />)
+    > 71 |     const deleteButton = screen.getByLabelText('Delete item')
+         |                                 ^
+      72 |     expect(deleteButton).toBeInTheDocument()
+      73 |   })
+      74 |
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at getAllByLabelText (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/queries/label-text.js:111:38)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByLabelText (components/grocery/__tests__/GroceryListItem.test.tsx:71:33)
+
+  ● GroceryListItem › renders edit button
+
+    TestingLibraryElementError: Unable to find a label with the text of: Edit item
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex items-center space-x-3 p-4 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center"[39m
+          [36m>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"h-5 w-5 rounded border-gray-300 text-primary-600 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors cursor-pointer"[39m
+              [33mid[39m=[32m"item-1"[39m
+              [33mtype[39m=[32m"checkbox"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex-1 min-w-0"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center space-x-2"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"font-medium text-gray-900 cursor-pointer"[39m
+                [33mfor[39m=[32m"item-1"[39m
+              [36m>[39m
+                [0mBananas[0m
+              [36m</label>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"[39m
+              [36m>[39m
+                [0mProduce[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center space-x-3 mt-1 text-sm text-gray-600"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0m6 pcs[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"text-gray-400"[39m
+              [36m>[39m
+                [0m•[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"truncate"[39m
+              [36m>[39m
+                [0mGet ripe ones[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center space-x-2"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      82 |   it('renders edit button', () => {
+      83 |     render(<GroceryListItem item={mockItem} onToggle={mockOnToggle} />)
+    > 84 |     const editButton = screen.getByLabelText('Edit item')
+         |                               ^
+      85 |     expect(editButton).toBeInTheDocument()
+      86 |   })
+      87 |
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at getAllByLabelText (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/queries/label-text.js:111:38)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByLabelText (components/grocery/__tests__/GroceryListItem.test.tsx:84:31)
+
+PASS components/ui/__tests__/Input.test.tsx
+PASS components/meal-planner/__tests__/AddMealModal.test.tsx
+PASS components/meal-planner/__tests__/WeeklyCalendar.test.tsx
+PASS components/ui/__tests__/Modal.test.tsx
+PASS components/household/__tests__/InviteMemberForm.test.tsx
+PASS app/grocery-lists/[id]/__tests__/page.test.tsx
+PASS components/pantry/__tests__/GenerateGroceryListModal.test.tsx
+PASS components/pantry/__tests__/PantryItemCard.test.tsx
+PASS components/layout/__tests__/MobileNav.test.tsx
+PASS components/grocery/__tests__/CategoryFilter.test.tsx
+PASS components/grocery/__tests__/GroceryListCard.test.tsx
+PASS components/grocery/__tests__/AddItemForm.test.tsx
+PASS components/ui/__tests__/Card.test.tsx
+PASS components/ui/__tests__/Badge.test.tsx
+PASS lib/__tests__/utils.test.ts
+PASS components/pantry/__tests__/PantryGrid.test.tsx
+PASS components/ui/__tests__/Checkbox.test.tsx
+PASS components/pantry/__tests__/AddPantryItemForm.test.tsx
+FAIL components/layout/__tests__/Navbar.test.tsx
+  ● Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    Jest failed to parse a file. This happens e.g. when your code or its dependencies use non-standard JavaScript syntax, or when Jest is not configured to support such syntax.
+
+    Out of the box Jest supports Babel, which will be used to transform your files into valid JS based on your Babel configuration.
+
+    By default "node_modules" folder is ignored by transformers.
+
+    Here's what you can do:
+     • If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/ecmascript-modules for how to enable it.
+     • If you are trying to use TypeScript, see https://jestjs.io/docs/getting-started#using-typescript
+     • To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     • If you need a custom transformation specify a "transform" option in your config.
+     • If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/configuration
+    For information about custom transformations, see:
+    https://jestjs.io/docs/code-transformation
+
+    Details:
+
+    /Users/tonythreatt/git/grocery-list-app/node_modules/@clerk/backend/dist/runtime/browser/crypto.mjs:1
+    ({"Object.<anonymous>":function(module,exports,require,__dirname,__filename,jest){export const webcrypto = crypto;
+                                                                                      ^^^^^^
+
+    SyntaxError: Unexpected token 'export'
+
+      13 |     { href: '/', label: 'Dashboard' },
+      14 |     { href: '/grocery-lists', label: 'Lists' },
+    > 15 |     { href: '/pantry', label: 'Pantry' },
+         |                 ^
+      16 |     { href: '/meal-planner', label: 'Planner' },
+      17 |     { href: '/household', label: 'Family' },
+      18 |   ]
+
+      at Runtime.createScriptFromCode (node_modules/jest-runtime/build/index.js:1505:14)
+      at Object.<anonymous> (node_modules/@clerk/backend/src/runtime.ts:16:37)
+      at Object.<anonymous> (node_modules/@clerk/nextjs/src/server/headers-utils.ts:1:27)
+      at Object.<anonymous> (node_modules/@clerk/nextjs/dist/cjs/app-router/keyless-actions.js:41:28)
+      at Object.<anonymous> (node_modules/@clerk/nextjs/src/app-router/client/ClerkProvider.tsx:18:45)
+      at Object.<anonymous> (node_modules/@clerk/nextjs/src/client-boundary/ClerkProvider.tsx:6:37)
+      at Object.<anonymous> (node_modules/@clerk/nextjs/src/components.client.ts:1:31)
+      at Object.<anonymous> (node_modules/@clerk/nextjs/src/index.ts:70:35)
+      at Object.<anonymous> (components/layout/Navbar.tsx:15:17)
+      at Object.<anonymous> (components/layout/__tests__/Navbar.test.tsx:11:56)
+
+FAIL app/pantry/__tests__/page.test.tsx
+  ● PantryPage - Generate Grocery List › should show low stock count in stats
+
+    Unable to find an element with the text: 2. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m"overflow: unset;"[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"min-h-screen bg-gray-50 flex items-center justify-center"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"text-center"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"[39m
+            [36m/>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-gray-600"[39m
+            [36m>[39m
+              [0mLoading pantry...[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      91 |     render(<PantryPage />)
+      92 |
+    > 93 |     await waitFor(() => {
+         |                  ^
+      94 |       // Milk (0.5 <= 1) and Bread (0 <= 1) are low stock
+      95 |       expect(screen.getByText('2')).toBeInTheDocument()
+      96 |       expect(screen.getByText('Low Stock')).toBeInTheDocument()
+
+      at waitForWrapper (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at Object.<anonymous> (app/pantry/__tests__/page.test.tsx:93:18)
+
+  ● PantryPage - Generate Grocery List › should open generate grocery list modal when button is clicked
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/generate grocery list/i`
+
+    There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m"overflow: unset;"[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"min-h-screen bg-gray-50 flex items-center justify-center"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"text-center"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"[39m
+            [36m/>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-gray-600"[39m
+            [36m>[39m
+              [0mLoading pantry...[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      105 |     })
+      106 |
+    > 107 |     const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+          |                                   ^
+      108 |     fireEvent.click(generateButton)
+      109 |
+      110 |     await waitFor(() => {
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByRole (app/pantry/__tests__/page.test.tsx:107:35)
+
+  ● PantryPage - Generate Grocery List › should display low stock items in the modal
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/generate grocery list/i`
+
+    There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m"overflow: unset;"[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"min-h-screen bg-gray-50 flex items-center justify-center"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"text-center"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"[39m
+            [36m/>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-gray-600"[39m
+            [36m>[39m
+              [0mLoading pantry...[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      120 |     })
+      121 |
+    > 122 |     const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+          |                                   ^
+      123 |     fireEvent.click(generateButton)
+      124 |
+      125 |     await waitFor(() => {
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByRole (app/pantry/__tests__/page.test.tsx:122:35)
+
+  ● PantryPage - Generate Grocery List › should create grocery list with selected items
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/generate grocery list/i`
+
+    There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m"overflow: unset;"[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"min-h-screen bg-gray-50 flex items-center justify-center"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"text-center"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"[39m
+            [36m/>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-gray-600"[39m
+            [36m>[39m
+              [0mLoading pantry...[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      164 |
+      165 |     // Open modal
+    > 166 |     const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+          |                                   ^
+      167 |     fireEvent.click(generateButton)
+      168 |
+      169 |     await waitFor(() => {
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByRole (app/pantry/__tests__/page.test.tsx:166:35)
+
+  ● PantryPage - Generate Grocery List › should show success message after creating grocery list
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/generate grocery list/i`
+
+    There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m"overflow: unset;"[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"min-h-screen bg-gray-50 flex items-center justify-center"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"text-center"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"[39m
+            [36m/>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-gray-600"[39m
+            [36m>[39m
+              [0mLoading pantry...[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      215 |
+      216 |     // Open modal
+    > 217 |     const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+          |                                   ^
+      218 |     fireEvent.click(generateButton)
+      219 |
+      220 |     await waitFor(() => {
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByRole (app/pantry/__tests__/page.test.tsx:217:35)
+
+  ● PantryPage - Generate Grocery List › should close modal after successful creation
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/generate grocery list/i`
+
+    There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m"overflow: unset;"[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"min-h-screen bg-gray-50 flex items-center justify-center"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"text-center"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"[39m
+            [36m/>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-gray-600"[39m
+            [36m>[39m
+              [0mLoading pantry...[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      260 |
+      261 |     // Open modal
+    > 262 |     const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+          |                                   ^
+      263 |     fireEvent.click(generateButton)
+      264 |
+      265 |     await waitFor(() => {
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByRole (app/pantry/__tests__/page.test.tsx:262:35)
+
+  ● PantryPage - Generate Grocery List › should handle errors when creating grocery list
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/generate grocery list/i`
+
+    There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m"overflow: unset;"[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"min-h-screen bg-gray-50 flex items-center justify-center"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"text-center"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"[39m
+            [36m/>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-gray-600"[39m
+            [36m>[39m
+              [0mLoading pantry...[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      286 |
+      287 |     // Open modal
+    > 288 |     const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+          |                                   ^
+      289 |     fireEvent.click(generateButton)
+      290 |
+      291 |     await waitFor(() => {
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByRole (app/pantry/__tests__/page.test.tsx:288:35)
+
+FAIL components/pantry/__tests__/EditPantryItemForm.test.tsx
+  ● EditPantryItemForm › validates quantity cannot be zero or negative
+
+    Unable to find an element with the text: /quantity must be greater than 0/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<form[39m
+          [33mclass[39m=[32m"space-y-4"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"block text-sm font-medium text-gray-700 mb-1"[39m
+                [33mfor[39m=[32m"name"[39m
+              [36m>[39m
+                [0mItem Name[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33maria-invalid[39m=[32m"false"[39m
+                [33mclass[39m=[32m"w-full px-3 py-2.5 border rounded-lg shadow-sm min-h-[44px] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors border-gray-300"[39m
+                [33mid[39m=[32m"name"[39m
+                [33mplaceholder[39m=[32m"e.g., Tomatoes"[39m
+                [33mvalue[39m=[32m"Test Item"[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-2 gap-4"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"w-full"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"block text-sm font-medium text-gray-700 mb-1"[39m
+                  [33mfor[39m=[32m"quantity"[39m
+                [36m>[39m
+                  [0mQuantity[0m
+                [36m</label>[39m
+                [36m<input[39m
+                  [33maria-invalid[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"w-full px-3 py-2.5 border rounded-lg shadow-sm min-h-[44px] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors border-gray-300"[39m
+                  [33mid[39m=[32m"quantity"[39m
+                  [33mmin[39m=[32m"0.01"[39m
+                  [33mrequired[39m=[32m""[39m
+                  [33mstep[39m=[32m"0.01"[39m
+                  [33mtype[39m=[32m"number"[39m
+                  [33mvalue[39m=[32m"0"[39m
+                [36m/>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"w-full"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"block text-sm font-medium text-gray-700 mb-1"[39m
+                  [33mfor[39m=[32m"unit"[39m
+                [36m>[39m
+                  [0mUnit[0m
+                [36m</label>[39m
+                [36m<input[39m
+                  [33maria-invalid[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"w-full px-3 py-2.5 border rounded-lg shadow-sm min-h-[44px] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors border-gray-300"[39m
+                  [33mid[39m=[32m"unit"[39m
+                  [33mplaceholder[39m=[32m"e.g., pcs, lbs"[39m
+                  [33mvalue[39m=[32m"pcs"[39m
+                [36m/>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"block text-sm font-medium text-gray-700 mb-1"[39m
+                [33mfor[39m=[32m"category"[39m
+              [36m>[39m
+                [0mCategory[0m
+              [36m</label>[39m
+              [36m<select[39m
+                [33maria-invalid[39m=[32m"false"[39m
+                [33mclass[39m=[32m"w-full px-3 py-2 border rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors cursor-pointer border-gray-300"[39m
+                [33mid[39m=[32m"category"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"Produce"[39m
+                [36m>[39m
+                  [0mProduce[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"Dairy"[39m
+                [36m>[39m
+                  [0mDairy[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"Meat"[39m
+                [36m>[39m
+                  [0mMeat[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"Bakery"[39m
+                [36m>[39m
+                  [0mBakery[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"Pantry"[39m
+                [36m>[39m
+                  [0mPantry[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"Frozen"[39m
+                [36m>[39m
+                  [0mFrozen[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"Beverages"[39m
+                [36m>[39m
+                  [0mBeverages[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"Snacks"[39m
+                [36m>[39m
+                  [0mSnacks[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"Other"[39m
+                [36m>[39m
+                  [0mOther[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"block text-sm font-medium text-gray-700 mb-1"[39m
+                [33mfor[39m=[32m"expirationDate"[39m
+              [36m>[39m
+                [0mExpiration Date (Optional)[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33maria-invalid[39m=[32m"false"[39m
+                [33mclass[39m=[32m"w-full px-3 py-2.5 border rounded-lg shadow-sm min-h-[44px] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors border-gray-300"[39m
+                [33mid[39m=[32m"expirationDate"[39m
+                [33mtype[39m=[32m"date"[39m
+                [33mvalue[39m=[32m"2025-12-31"[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"block text-sm font-medium text-gray-700 mb-1"[39m
+                [33mfor[39m=[32m"lowStockThreshold"[39m
+              [36m>[39m
+                [0mLow Stock Threshold (Optional)[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33maria-invalid[39m=[32m"false"[39m
+                [33mclass[39m=[32m"w-full px-3 py-2.5 border rounded-lg shadow-sm min-h-[44px] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors border-gray-300"[39m
+                [33mid[39m=[32m"lowStockThreshold"[39m
+                [33mmin[39m=[32m"0"[39m
+                [33mplaceholder[39m=[32m"Alert when quantity drops below this"[39m
+                [33mstep[39m=[32m"0.01"[39m
+                [33mtype[39m=[32m"number"[39m
+                [33mvalue[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex gap-3 pt-4"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 text-base px-4 py-2.5 min-h-[44px] flex-1"[39m
+              [33mtype[39m=[32m"submit"[39m
+            [36m>[39m
+              [0mSave Changes[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none border border-gray-300 bg-transparent hover:bg-gray-50 text-gray-700 focus:ring-gray-500 text-base px-4 py-2.5 min-h-[44px] flex-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mCancel[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</form>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      106 |     await user.click(screen.getByRole('button', { name: /save changes/i }))
+      107 |     
+    > 108 |     await waitFor(() => {
+          |                  ^
+      109 |       expect(screen.getByText(/quantity must be greater than 0/i)).toBeInTheDocument()
+      110 |     })
+      111 |     expect(mockOnSubmit).not.toHaveBeenCalled()
+
+      at waitForWrapper (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at Object.<anonymous> (components/pantry/__tests__/EditPantryItemForm.test.tsx:108:18)
+
+Summary of all failing tests
+FAIL components/household/__tests__/EditMemberForm.test.tsx
+  ● EditMemberForm › renders the form with member name
+
+    TypeError: Cannot read properties of undefined (reading 'map')
+
+      48 |             </option>
+      49 |           )}
+    > 50 |           {options.map((option) => (
+         |                    ^
+      51 |             <option key={option.value} value={option.value}>
+      52 |               {option.label}
+      53 |             </option>
+
+      at map (components/ui/Select.tsx:50:20)
+      at renderWithHooks (node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+      at updateForwardRef (node_modules/react-dom/cjs/react-dom.development.js:19245:20)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21675:16)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at recoverFromConcurrentError (node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (components/household/__tests__/EditMemberForm.test.tsx:14:11)
+
+  ● EditMemberForm › displays the current role as selected
+
+    TypeError: Cannot read properties of undefined (reading 'map')
+
+      48 |             </option>
+      49 |           )}
+    > 50 |           {options.map((option) => (
+         |                    ^
+      51 |             <option key={option.value} value={option.value}>
+      52 |               {option.label}
+      53 |             </option>
+
+      at map (components/ui/Select.tsx:50:20)
+      at renderWithHooks (node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+      at updateForwardRef (node_modules/react-dom/cjs/react-dom.development.js:19245:20)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21675:16)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at recoverFromConcurrentError (node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (components/household/__tests__/EditMemberForm.test.tsx:28:11)
+
+  ● EditMemberForm › allows changing the role
+
+    TypeError: Cannot read properties of undefined (reading 'map')
+
+      48 |             </option>
+      49 |           )}
+    > 50 |           {options.map((option) => (
+         |                    ^
+      51 |             <option key={option.value} value={option.value}>
+      52 |               {option.label}
+      53 |             </option>
+
+      at map (components/ui/Select.tsx:50:20)
+      at renderWithHooks (node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+      at updateForwardRef (node_modules/react-dom/cjs/react-dom.development.js:19245:20)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21675:16)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at recoverFromConcurrentError (node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (components/household/__tests__/EditMemberForm.test.tsx:42:11)
+
+  ● EditMemberForm › displays role description for Admin
+
+    TypeError: Cannot read properties of undefined (reading 'map')
+
+      48 |             </option>
+      49 |           )}
+    > 50 |           {options.map((option) => (
+         |                    ^
+      51 |             <option key={option.value} value={option.value}>
+      52 |               {option.label}
+      53 |             </option>
+
+      at map (components/ui/Select.tsx:50:20)
+      at renderWithHooks (node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+      at updateForwardRef (node_modules/react-dom/cjs/react-dom.development.js:19245:20)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21675:16)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at recoverFromConcurrentError (node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (components/household/__tests__/EditMemberForm.test.tsx:58:11)
+
+  ● EditMemberForm › displays role description for Member
+
+    TypeError: Cannot read properties of undefined (reading 'map')
+
+      48 |             </option>
+      49 |           )}
+    > 50 |           {options.map((option) => (
+         |                    ^
+      51 |             <option key={option.value} value={option.value}>
+      52 |               {option.label}
+      53 |             </option>
+
+      at map (components/ui/Select.tsx:50:20)
+      at renderWithHooks (node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+      at updateForwardRef (node_modules/react-dom/cjs/react-dom.development.js:19245:20)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21675:16)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at recoverFromConcurrentError (node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (components/household/__tests__/EditMemberForm.test.tsx:71:11)
+
+  ● EditMemberForm › displays role description for Viewer
+
+    TypeError: Cannot read properties of undefined (reading 'map')
+
+      48 |             </option>
+      49 |           )}
+    > 50 |           {options.map((option) => (
+         |                    ^
+      51 |             <option key={option.value} value={option.value}>
+      52 |               {option.label}
+      53 |             </option>
+
+      at map (components/ui/Select.tsx:50:20)
+      at renderWithHooks (node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+      at updateForwardRef (node_modules/react-dom/cjs/react-dom.development.js:19245:20)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21675:16)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at recoverFromConcurrentError (node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (components/household/__tests__/EditMemberForm.test.tsx:84:11)
+
+  ● EditMemberForm › calls onSubmit with selected role when form is submitted
+
+    TypeError: Cannot read properties of undefined (reading 'map')
+
+      48 |             </option>
+      49 |           )}
+    > 50 |           {options.map((option) => (
+         |                    ^
+      51 |             <option key={option.value} value={option.value}>
+      52 |               {option.label}
+      53 |             </option>
+
+      at map (components/ui/Select.tsx:50:20)
+      at renderWithHooks (node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+      at updateForwardRef (node_modules/react-dom/cjs/react-dom.development.js:19245:20)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21675:16)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at recoverFromConcurrentError (node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (components/household/__tests__/EditMemberForm.test.tsx:97:11)
+
+  ● EditMemberForm › calls onCancel when cancel button is clicked
+
+    TypeError: Cannot read properties of undefined (reading 'map')
+
+      48 |             </option>
+      49 |           )}
+    > 50 |           {options.map((option) => (
+         |                    ^
+      51 |             <option key={option.value} value={option.value}>
+      52 |               {option.label}
+      53 |             </option>
+
+      at map (components/ui/Select.tsx:50:20)
+      at renderWithHooks (node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+      at updateForwardRef (node_modules/react-dom/cjs/react-dom.development.js:19245:20)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21675:16)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at recoverFromConcurrentError (node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (components/household/__tests__/EditMemberForm.test.tsx:116:11)
+
+  ● EditMemberForm › prevents default form submission
+
+    TypeError: Cannot read properties of undefined (reading 'map')
+
+      48 |             </option>
+      49 |           )}
+    > 50 |           {options.map((option) => (
+         |                    ^
+      51 |             <option key={option.value} value={option.value}>
+      52 |               {option.label}
+      53 |             </option>
+
+      at map (components/ui/Select.tsx:50:20)
+      at renderWithHooks (node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+      at updateForwardRef (node_modules/react-dom/cjs/react-dom.development.js:19245:20)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21675:16)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at recoverFromConcurrentError (node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (components/household/__tests__/EditMemberForm.test.tsx:133:11)
+
+  ● EditMemberForm › has all three role options available
+
+    TypeError: Cannot read properties of undefined (reading 'map')
+
+      48 |             </option>
+      49 |           )}
+    > 50 |           {options.map((option) => (
+         |                    ^
+      51 |             <option key={option.value} value={option.value}>
+      52 |               {option.label}
+      53 |             </option>
+
+      at map (components/ui/Select.tsx:50:20)
+      at renderWithHooks (node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+      at updateForwardRef (node_modules/react-dom/cjs/react-dom.development.js:19245:20)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21675:16)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at recoverFromConcurrentError (node_modules/react-dom/cjs/react-dom.development.js:25889:20)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25789:22)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:180:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:271:10)
+      at Object.<anonymous> (components/household/__tests__/EditMemberForm.test.tsx:150:11)
+
+FAIL components/household/__tests__/MemberCard.test.tsx
+  ● MemberCard › displays avatar image when avatarUrl is provided
+
+    expect(element).toHaveAttribute("src", "https://example.com/avatar.jpg") // element.getAttribute("src") === "https://example.com/avatar.jpg"
+
+    Expected the element to have attribute:
+      src="https://example.com/avatar.jpg"
+    Received:
+      src="/_next/image?url=https%3A%2F%2Fexample.com%2Favatar.jpg&w=3840&q=75"
+
+      68 |     const { container } = render(<MemberCard member={memberWithAvatar} />)
+      69 |     const img = container.querySelector('img')
+    > 70 |     expect(img).toHaveAttribute('src', 'https://example.com/avatar.jpg')
+         |                 ^
+      71 |   })
+      72 |
+      73 |   it('shows "You" badge when member is current user', () => {
+
+      at Object.toHaveAttribute (components/household/__tests__/MemberCard.test.tsx:70:17)
+
+FAIL components/household/__tests__/SharedListsView.test.tsx
+  ● SharedListsView › displays the number of people each list is shared with
+
+    TestingLibraryElementError: Unable to find an element with the text: Shared with 2 people. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-4"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mhref[39m=[32m"/grocery-lists/1"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-white rounded-lg shadow border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"px-6 py-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"p-4"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"flex items-start justify-between mb-3"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"flex-1"[39m
+                    [36m>[39m
+                      [36m<h3[39m
+                        [33mclass[39m=[32m"text-lg font-semibold text-gray-900 mb-1"[39m
+                      [36m>[39m
+                        [0mWeekly Shopping[0m
+                      [36m</h3>[39m
+                      [36m<p[39m
+                        [33mclass[39m=[32m"text-sm text-gray-600"[39m
+                      [36m>[39m
+                        [0mCreated by [0m
+                        [0mJohn Parent[0m
+                      [36m</p>[39m
+                    [36m</div>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"[39m
+                    [36m>[39m
+                      [0m1[0m
+                      [0m [0m
+                      [0mitem[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"flex items-center justify-between text-sm"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"text-gray-600"[39m
+                    [36m>[39m
+                      [0mShared with household[0m
+                    [36m</span>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"text-gray-500"[39m
+                    [36m>[39m
+                      [0mLast edited: [0m
+                      [0mNov 10, 2024[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</a>[39m
+          [36m<a[39m
+            [33mhref[39m=[32m"/grocery-lists/2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-white rounded-lg shadow border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"px-6 py-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"p-4"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"flex items-start justify-between mb-3"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"flex-1"[39m
+                    [36m>[39m
+                      [36m<h3[39m
+                        [33mclass[39m=[32m"text-lg font-semibold text-gray-900 mb-1"[39m
+                      [36m>[39m
+                        [0mParty Supplies[0m
+                      [36m</h3>[39m
+                      [36m<p[39m
+                        [33mclass[39m=[32m"text-sm text-gray-600"[39m
+                      [36m>[39m
+                        [0mCreated by [0m
+                        [0mJane Parent[0m
+                      [36m</p>[39m
+                    [36m</div>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"[39m
+                    [36m>[39m
+                      [0m0[0m
+                      [0m [0m
+                      [0mitems[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"flex items-center justify-between text-sm"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"text-gray-600"[39m
+                    [36m>[39m
+                      [0mShared with household[0m
+                    [36m</span>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"text-gray-500"[39m
+                    [36m>[39m
+                      [0mLast edited: [0m
+                      [0mNov 9, 2024[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</a>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      56 |   it('displays the number of people each list is shared with', () => {
+      57 |     render(<SharedListsView lists={mockSharedLists} />)
+    > 58 |     expect(screen.getByText('Shared with 2 people')).toBeInTheDocument()
+         |                   ^
+      59 |     expect(screen.getByText('Shared with 1 person')).toBeInTheDocument()
+      60 |   })
+      61 |
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByText (components/household/__tests__/SharedListsView.test.tsx:58:19)
+
+  ● SharedListsView › displays correct singular/plural for shared count
+
+    TestingLibraryElementError: Unable to find an element with the text: Shared with 1 person. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-4"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mhref[39m=[32m"/grocery-lists/1"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-white rounded-lg shadow border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"px-6 py-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"p-4"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"flex items-start justify-between mb-3"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"flex-1"[39m
+                    [36m>[39m
+                      [36m<h3[39m
+                        [33mclass[39m=[32m"text-lg font-semibold text-gray-900 mb-1"[39m
+                      [36m>[39m
+                        [0mWeekly Shopping[0m
+                      [36m</h3>[39m
+                      [36m<p[39m
+                        [33mclass[39m=[32m"text-sm text-gray-600"[39m
+                      [36m>[39m
+                        [0mCreated by [0m
+                        [0mJohn Parent[0m
+                      [36m</p>[39m
+                    [36m</div>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"[39m
+                    [36m>[39m
+                      [0m1[0m
+                      [0m [0m
+                      [0mitem[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"flex items-center justify-between text-sm"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"text-gray-600"[39m
+                    [36m>[39m
+                      [0mShared with household[0m
+                    [36m</span>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"text-gray-500"[39m
+                    [36m>[39m
+                      [0mLast edited: [0m
+                      [0mNov 10, 2024[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</a>[39m
+          [36m<a[39m
+            [33mhref[39m=[32m"/grocery-lists/2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-white rounded-lg shadow border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"px-6 py-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"p-4"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"flex items-start justify-between mb-3"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"flex-1"[39m
+                    [36m>[39m
+                      [36m<h3[39m
+                        [33mclass[39m=[32m"text-lg font-semibold text-gray-900 mb-1"[39m
+                      [36m>[39m
+                        [0mParty Supplies[0m
+                      [36m</h3>[39m
+                      [36m<p[39m
+                        [33mclass[39m=[32m"text-sm text-gray-600"[39m
+                      [36m>[39m
+                        [0mCreated by [0m
+                        [0mJane Parent[0m
+                      [36m</p>[39m
+                    [36m</div>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"[39m
+                    [36m>[39m
+                      [0m0[0m
+                      [0m [0m
+                      [0mitems[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"flex items-center justify-between text-sm"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"text-gray-600"[39m
+                    [36m>[39m
+                      [0mShared with household[0m
+                    [36m</span>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"text-gray-500"[39m
+                    [36m>[39m
+                      [0mLast edited: [0m
+                      [0mNov 9, 2024[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</a>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      62 |   it('displays correct singular/plural for shared count', () => {
+      63 |     render(<SharedListsView lists={mockSharedLists} />)
+    > 64 |     expect(screen.getByText('Shared with 1 person')).toBeInTheDocument()
+         |                   ^
+      65 |     expect(screen.getByText('Shared with 2 people')).toBeInTheDocument()
+      66 |   })
+      67 |
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByText (components/household/__tests__/SharedListsView.test.tsx:64:19)
+
+FAIL components/meal-planner/__tests__/MealCard.test.tsx
+  ● MealCard › renders image placeholder when no image URL is provided
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "img"
+
+    Here are the accessible roles:
+
+      heading:
+
+      Name "Spaghetti Bolognese":
+      [36m<h3[39m
+        [33mclass[39m=[32m"font-semibold text-gray-900 flex-1"[39m
+      [36m/>[39m
+
+      --------------------------------------------------
+      button:
+
+      Name "Edit meal":
+      [36m<button[39m
+        [33maria-label[39m=[32m"Edit meal"[39m
+        [33mclass[39m=[32m"flex-1 px-3 py-1.5 text-sm text-blue-600 hover:bg-blue-50 rounded transition-colors"[39m
+      [36m/>[39m
+
+      Name "Delete meal":
+      [36m<button[39m
+        [33maria-label[39m=[32m"Delete meal"[39m
+        [33mclass[39m=[32m"px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded transition-colors"[39m
+      [36m/>[39m
+
+      --------------------------------------------------
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"w-full h-32 bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center relative"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mclass[39m=[32m"w-16 h-16 text-orange-400"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"p-4"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-start justify-between mb-2"[39m
+            [36m>[39m
+              [36m<h3[39m
+                [33mclass[39m=[32m"font-semibold text-gray-900 flex-1"[39m
+              [36m>[39m
+                [0mSpaghetti Bolognese[0m
+              [36m</h3>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"[39m
+              [36m>[39m
+                [0mDinner[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-sm text-gray-600 mb-3 line-clamp-2"[39m
+            [36m>[39m
+              [0mKids favorite![0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-xs text-gray-500 mb-3"[39m
+            [36m>[39m
+              [0m3[0m
+              [0m ingredient[0m
+              [0ms[0m
+            [36m</p>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center space-x-2 pt-3 border-t border-gray-100"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Edit meal"[39m
+                [33mclass[39m=[32m"flex-1 px-3 py-1.5 text-sm text-blue-600 hover:bg-blue-50 rounded transition-colors"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33mclass[39m=[32m"w-4 h-4 inline mr-1"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"[39m
+                    [33mstroke-linecap[39m=[32m"round"[39m
+                    [33mstroke-linejoin[39m=[32m"round"[39m
+                    [33mstroke-width[39m=[32m"2"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mEdit[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Delete meal"[39m
+                [33mclass[39m=[32m"px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded transition-colors"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33mclass[39m=[32m"w-4 h-4 inline"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"[39m
+                    [33mstroke-linecap[39m=[32m"round"[39m
+                    [33mstroke-linejoin[39m=[32m"round"[39m
+                    [33mstroke-width[39m=[32m"2"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      45 |   it('renders image placeholder when no image URL is provided', () => {
+      46 |     render(<MealCard meal={mockMeal} onEdit={mockOnEdit} onDelete={mockOnDelete} />)
+    > 47 |     const placeholderImage = screen.getByRole('img')
+         |                                     ^
+      48 |     expect(placeholderImage).toBeInTheDocument()
+      49 |   })
+      50 |
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByRole (components/meal-planner/__tests__/MealCard.test.tsx:47:37)
+
+FAIL components/meal-planner/__tests__/GenerateGroceryListFromMealsModal.test.tsx
+  ● Test suite failed to run
+
+    Cannot find module '../GenerateGroceryListFromMealsModal' from 'components/meal-planner/__tests__/GenerateGroceryListFromMealsModal.test.tsx'
+
+      28 |       name: 'Weekly Shopping',
+      29 |       created_by: 1,
+    > 30 |       created_at: '2024-01-01T00:00:00Z',
+         |                                          ^
+      31 |       updated_at: '2024-01-01T00:00:00Z',
+      32 |     },
+      33 |     {
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.<anonymous> (components/meal-planner/__tests__/GenerateGroceryListFromMealsModal.test.tsx:30:83)
+
+FAIL components/ui/__tests__/Select.test.tsx
+  ● Select Component › handles empty string value
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: ""
+    Received: "option1"
+
+       96 |     render(<Select label="Test" id="test" options={options} value="" onChange={() => {}} />)
+       97 |     const select = screen.getByLabelText('Test') as HTMLSelectElement
+    >  98 |     expect(select.value).toBe('')
+          |                          ^
+       99 |   })
+      100 |
+      101 |   it('links error message with aria-describedby', () => {
+
+      at Object.toBe (components/ui/__tests__/Select.test.tsx:98:26)
+
+FAIL components/ui/__tests__/Button.test.tsx
+  ● Button › applies small size styles
+
+    expect(element).toHaveClass("text-sm px-3 py-1.5")
+
+    Expected the element to have class:
+      text-sm px-3 py-1.5
+    Received:
+      inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 text-sm px-3 py-2 min-h-[44px]
+
+      50 |     render(<Button size="sm">Small</Button>)
+      51 |     const button = screen.getByRole('button')
+    > 52 |     expect(button).toHaveClass('text-sm', 'px-3', 'py-1.5')
+         |                    ^
+      53 |   })
+      54 |
+      55 |   it('applies medium size styles', () => {
+
+      at Object.toHaveClass (components/ui/__tests__/Button.test.tsx:52:20)
+
+  ● Button › applies medium size styles
+
+    expect(element).toHaveClass("text-base px-4 py-2")
+
+    Expected the element to have class:
+      text-base px-4 py-2
+    Received:
+      inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 text-base px-4 py-2.5 min-h-[44px]
+
+      56 |     render(<Button size="md">Medium</Button>)
+      57 |     const button = screen.getByRole('button')
+    > 58 |     expect(button).toHaveClass('text-base', 'px-4', 'py-2')
+         |                    ^
+      59 |   })
+      60 |
+      61 |   it('applies large size styles', () => {
+
+      at Object.toHaveClass (components/ui/__tests__/Button.test.tsx:58:20)
+
+FAIL app/__tests__/page.test.tsx
+  ● Dashboard Page › should fetch and display grocery list stats from API
+
+    TestingLibraryElementError: Found multiple elements with the text: Total Items
+
+    Here are the matching elements:
+
+    Ignored nodes: comments, script, style
+    [36m<p[39m
+      [33mclass[39m=[32m"text-sm font-medium text-gray-600"[39m
+    [36m>[39m
+      [0mTotal Items[0m
+    [36m</p>[39m
+
+    Ignored nodes: comments, script, style
+    [36m<p[39m
+      [33mclass[39m=[32m"text-sm font-medium text-gray-600"[39m
+    [36m>[39m
+      [0mTotal Items[0m
+    [36m</p>[39m
+
+    (If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<main[39m
+          [33mclass[39m=[32m"min-h-screen bg-gray-50"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"mb-8"[39m
+            [36m>[39m
+              [36m<h1[39m
+                [33mclass[39m=[32m"text-2xl sm:text-3xl font-bold text-gray-900 mb-2"[39m
+              [36m>[39m
+                [0mWelcome back, Tony! ��[0m
+              [36m</h1>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"text-sm sm:text-base text-gray-600"[39m
+              [36m>[39m
+                [0mHere's what's happening with your grocery planning today.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"mb-8"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"text-lg sm:text-xl font-bold text-gray-900 mb-4"[39m
+              [36m>[39m
+                [0mGrocery Lists[0m
+              [36m</h2>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"grid grid-cols-1 sm:grid-cols-3 gap-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"bg-white rounded-lg shadow border border-gray-200"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"px-6 py-4"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"p-6"[39m
+                    [36m>[39m
+                      [36m<div[39m
+                        [33mclass[39m=[32m"flex items-center justify-between"[39m
+                      [36m>[39m
+                        [36m<div>[39m
+                          [36m<p[39m
+                            [33mclass[39m=[32m"text-sm font-medium text-gray-600"[39m
+                          [36m>[39m
+                            [0mActive Lists[0m
+                          [36m</p>[39m
+                          [36m<p[39m
+                            [33mclass[39m=[32m"text-3xl font-bold text-gray-900 mt-2"[39m
+                          [36m>[39m
+                            [0m2[0m
+                          [36m</p>[39m
+                        [36m</div>[39m
+                        [36m<div[39m
+                          [33mclass[39m=[32m"w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center"[39m
+                        [36m>[39m
+                          [36m<svg[39m
+                            [33mclass[39m=[32m"w-6 h-6 text-green-600"[39m
+                            [33mfill[39m=[32m"none"[39m
+                            [33mstroke[39m=[32m"currentColor"[39m
+                            [33mviewBox[39m=[32m"0 0 24 24"[39m
+                          [36m>[39m
+                            [36m<path[39m
+                              [33md[39m=[32m"M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"[39m
+                              [33mstroke-linecap[39m=[32m"round"[39m
+                              [33mstroke-linejoin[39m=[32m"round"[39m
+                              [33mstroke-width[39m=[32m"2"[39m
+                            [36m/>[39m
+                          [36m</svg>[39m
+                        [36m</div>[39m
+                      [36m</div>[39m
+                    [36m</div>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"bg-white rounded-lg shadow border border-gray-200"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"px-6 py-4"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"p-6"[39m
+                    [36m>[39m
+                      [36m<div[39m
+                        [33mclass[39m=[32m"flex items-center justify-between"[39m
+                      [36m>[39m
+                        [36m<div>[39m
+                          [36m<p[39m
+                            [33mclass[39m=[32m"text-sm font-medium text-gray-600"[39m
+                          [36m>[39m
+                            [0mTotal Items[0m
+                          [36m</p>[39m
+                          [36m<p[39m
+                            [33mclass[39m=[32m"text-3xl font-bold text-gray-900 mt-2"[39m
+                          [36m>[39m
+                            [0m4[0m
+                          [36m</p>[39m
+                        [36m</div>[39m
+                        [36m<div[39m
+                          [33mclass[39m=[32m"w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center"[39m
+                        [36m>[39m
+                          [36m<svg[39m
+                            [33mclass[39m=[32m"w-6 h-6 text-blue-600"[39m
+                            [33mfill[39m=[32m"none"[39m
+                            [33mstroke[39m=[32m"currentColor"[39m
+                            [33mviewBox[39m=[32m"0 0 24 24"[39m
+                          [36m>[39m
+                            [36m<path[39m
+                              [33md[39m=[32m"M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"[39m
+                              [33mstroke-linecap[39m=[32m"round"[39m
+                              [33mstroke-linejoin[39m=[32m"round"[39m
+                              [33mstroke-width[39m=[32m"2"[39m
+                            [36m/>[39m
+                          [36m</svg>[39m
+                        [36m</div>[39m
+                      [36m</div>[39m
+                    [36m</div>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"bg-white rounded-lg shadow border border-gray-200"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"px-6 py-4"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"p-6"[39m
+                    [36m>[39m
+                      [36m<div[39m
+                        [33mclass[39m=[32m"flex items-center justify-between"[39m
+                      [36m>[39m
+                        [36m<div>[39m
+                          [36m<p[39m
+                            [33mclass[39m=[32m"text-sm font-medium text-gray-600"[39m
+                          [36m>[39m
+                            [0mCompleted[0m
+                          [36m</p>[39m
+                          [36m<p[39m
+                            [33mclass[39m=[32m"text-3xl font-bold text-gray-900 mt-2"[39m
+                          [36m>[39m
+                            [0m1[0m
+                          [36m</p>[39m
+                        [36m</div>[39m
+                        [36m<div[39m
+                          [33mclass[39m=[32m"w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center"[39m
+                        [36m>[39m
+                          [36m<svg[39m
+                            [33mclass[39m=[32m"w-6 h-6 text-purple-600"[39m
+                            [33mfill[39m=[32m"none"[39m
+                            [33mstroke[39m=[32m"curren...
+
+      112 |     // 4 total items (3 from first list, 1 from second)
+      113 |     expect(screen.getByText('4')).toBeInTheDocument()
+    > 114 |     expect(screen.getByText('Total Items')).toBeInTheDocument()
+          |                   ^
+      115 |
+      116 |     // 1 completed item
+      117 |     expect(screen.getByText('1')).toBeInTheDocument()
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:20:35)
+      at getMultipleElementsFoundError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:23:10)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:55:13
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByText (app/__tests__/page.test.tsx:114:19)
+
+FAIL components/grocery/__tests__/GroceryListItem.test.tsx
+  ● GroceryListItem › renders delete button
+
+    TestingLibraryElementError: Unable to find a label with the text of: Delete item
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex items-center space-x-3 p-4 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center"[39m
+          [36m>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"h-5 w-5 rounded border-gray-300 text-primary-600 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors cursor-pointer"[39m
+              [33mid[39m=[32m"item-1"[39m
+              [33mtype[39m=[32m"checkbox"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex-1 min-w-0"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center space-x-2"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"font-medium text-gray-900 cursor-pointer"[39m
+                [33mfor[39m=[32m"item-1"[39m
+              [36m>[39m
+                [0mBananas[0m
+              [36m</label>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"[39m
+              [36m>[39m
+                [0mProduce[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center space-x-3 mt-1 text-sm text-gray-600"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0m6 pcs[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"text-gray-400"[39m
+              [36m>[39m
+                [0m•[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"truncate"[39m
+              [36m>[39m
+                [0mGet ripe ones[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center space-x-2"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      69 |   it('renders delete button', () => {
+      70 |     render(<GroceryListItem item={mockItem} onToggle={mockOnToggle} />)
+    > 71 |     const deleteButton = screen.getByLabelText('Delete item')
+         |                                 ^
+      72 |     expect(deleteButton).toBeInTheDocument()
+      73 |   })
+      74 |
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at getAllByLabelText (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/queries/label-text.js:111:38)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByLabelText (components/grocery/__tests__/GroceryListItem.test.tsx:71:33)
+
+  ● GroceryListItem › renders edit button
+
+    TestingLibraryElementError: Unable to find a label with the text of: Edit item
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex items-center space-x-3 p-4 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center"[39m
+          [36m>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"h-5 w-5 rounded border-gray-300 text-primary-600 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors cursor-pointer"[39m
+              [33mid[39m=[32m"item-1"[39m
+              [33mtype[39m=[32m"checkbox"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex-1 min-w-0"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center space-x-2"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"font-medium text-gray-900 cursor-pointer"[39m
+                [33mfor[39m=[32m"item-1"[39m
+              [36m>[39m
+                [0mBananas[0m
+              [36m</label>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"[39m
+              [36m>[39m
+                [0mProduce[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center space-x-3 mt-1 text-sm text-gray-600"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0m6 pcs[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"text-gray-400"[39m
+              [36m>[39m
+                [0m•[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"truncate"[39m
+              [36m>[39m
+                [0mGet ripe ones[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center space-x-2"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      82 |   it('renders edit button', () => {
+      83 |     render(<GroceryListItem item={mockItem} onToggle={mockOnToggle} />)
+    > 84 |     const editButton = screen.getByLabelText('Edit item')
+         |                               ^
+      85 |     expect(editButton).toBeInTheDocument()
+      86 |   })
+      87 |
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at getAllByLabelText (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/queries/label-text.js:111:38)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByLabelText (components/grocery/__tests__/GroceryListItem.test.tsx:84:31)
+
+FAIL components/layout/__tests__/Navbar.test.tsx
+  ● Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    Jest failed to parse a file. This happens e.g. when your code or its dependencies use non-standard JavaScript syntax, or when Jest is not configured to support such syntax.
+
+    Out of the box Jest supports Babel, which will be used to transform your files into valid JS based on your Babel configuration.
+
+    By default "node_modules" folder is ignored by transformers.
+
+    Here's what you can do:
+     • If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/ecmascript-modules for how to enable it.
+     • If you are trying to use TypeScript, see https://jestjs.io/docs/getting-started#using-typescript
+     • To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     • If you need a custom transformation specify a "transform" option in your config.
+     • If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/configuration
+    For information about custom transformations, see:
+    https://jestjs.io/docs/code-transformation
+
+    Details:
+
+    /Users/tonythreatt/git/grocery-list-app/node_modules/@clerk/backend/dist/runtime/browser/crypto.mjs:1
+    ({"Object.<anonymous>":function(module,exports,require,__dirname,__filename,jest){export const webcrypto = crypto;
+                                                                                      ^^^^^^
+
+    SyntaxError: Unexpected token 'export'
+
+      13 |     { href: '/', label: 'Dashboard' },
+      14 |     { href: '/grocery-lists', label: 'Lists' },
+    > 15 |     { href: '/pantry', label: 'Pantry' },
+         |                 ^
+      16 |     { href: '/meal-planner', label: 'Planner' },
+      17 |     { href: '/household', label: 'Family' },
+      18 |   ]
+
+      at Runtime.createScriptFromCode (node_modules/jest-runtime/build/index.js:1505:14)
+      at Object.<anonymous> (node_modules/@clerk/backend/src/runtime.ts:16:37)
+      at Object.<anonymous> (node_modules/@clerk/nextjs/src/server/headers-utils.ts:1:27)
+      at Object.<anonymous> (node_modules/@clerk/nextjs/dist/cjs/app-router/keyless-actions.js:41:28)
+      at Object.<anonymous> (node_modules/@clerk/nextjs/src/app-router/client/ClerkProvider.tsx:18:45)
+      at Object.<anonymous> (node_modules/@clerk/nextjs/src/client-boundary/ClerkProvider.tsx:6:37)
+      at Object.<anonymous> (node_modules/@clerk/nextjs/src/components.client.ts:1:31)
+      at Object.<anonymous> (node_modules/@clerk/nextjs/src/index.ts:70:35)
+      at Object.<anonymous> (components/layout/Navbar.tsx:15:17)
+      at Object.<anonymous> (components/layout/__tests__/Navbar.test.tsx:11:56)
+
+FAIL app/pantry/__tests__/page.test.tsx
+  ● PantryPage - Generate Grocery List › should show low stock count in stats
+
+    Unable to find an element with the text: 2. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m"overflow: unset;"[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"min-h-screen bg-gray-50 flex items-center justify-center"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"text-center"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"[39m
+            [36m/>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-gray-600"[39m
+            [36m>[39m
+              [0mLoading pantry...[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      91 |     render(<PantryPage />)
+      92 |
+    > 93 |     await waitFor(() => {
+         |                  ^
+      94 |       // Milk (0.5 <= 1) and Bread (0 <= 1) are low stock
+      95 |       expect(screen.getByText('2')).toBeInTheDocument()
+      96 |       expect(screen.getByText('Low Stock')).toBeInTheDocument()
+
+      at waitForWrapper (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at Object.<anonymous> (app/pantry/__tests__/page.test.tsx:93:18)
+
+  ● PantryPage - Generate Grocery List › should open generate grocery list modal when button is clicked
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/generate grocery list/i`
+
+    There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m"overflow: unset;"[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"min-h-screen bg-gray-50 flex items-center justify-center"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"text-center"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"[39m
+            [36m/>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-gray-600"[39m
+            [36m>[39m
+              [0mLoading pantry...[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      105 |     })
+      106 |
+    > 107 |     const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+          |                                   ^
+      108 |     fireEvent.click(generateButton)
+      109 |
+      110 |     await waitFor(() => {
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByRole (app/pantry/__tests__/page.test.tsx:107:35)
+
+  ● PantryPage - Generate Grocery List › should display low stock items in the modal
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/generate grocery list/i`
+
+    There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m"overflow: unset;"[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"min-h-screen bg-gray-50 flex items-center justify-center"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"text-center"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"[39m
+            [36m/>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-gray-600"[39m
+            [36m>[39m
+              [0mLoading pantry...[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      120 |     })
+      121 |
+    > 122 |     const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+          |                                   ^
+      123 |     fireEvent.click(generateButton)
+      124 |
+      125 |     await waitFor(() => {
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByRole (app/pantry/__tests__/page.test.tsx:122:35)
+
+  ● PantryPage - Generate Grocery List › should create grocery list with selected items
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/generate grocery list/i`
+
+    There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m"overflow: unset;"[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"min-h-screen bg-gray-50 flex items-center justify-center"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"text-center"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"[39m
+            [36m/>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-gray-600"[39m
+            [36m>[39m
+              [0mLoading pantry...[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      164 |
+      165 |     // Open modal
+    > 166 |     const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+          |                                   ^
+      167 |     fireEvent.click(generateButton)
+      168 |
+      169 |     await waitFor(() => {
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByRole (app/pantry/__tests__/page.test.tsx:166:35)
+
+  ● PantryPage - Generate Grocery List › should show success message after creating grocery list
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/generate grocery list/i`
+
+    There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m"overflow: unset;"[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"min-h-screen bg-gray-50 flex items-center justify-center"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"text-center"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"[39m
+            [36m/>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-gray-600"[39m
+            [36m>[39m
+              [0mLoading pantry...[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      215 |
+      216 |     // Open modal
+    > 217 |     const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+          |                                   ^
+      218 |     fireEvent.click(generateButton)
+      219 |
+      220 |     await waitFor(() => {
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByRole (app/pantry/__tests__/page.test.tsx:217:35)
+
+  ● PantryPage - Generate Grocery List › should close modal after successful creation
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/generate grocery list/i`
+
+    There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m"overflow: unset;"[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"min-h-screen bg-gray-50 flex items-center justify-center"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"text-center"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"[39m
+            [36m/>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-gray-600"[39m
+            [36m>[39m
+              [0mLoading pantry...[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      260 |
+      261 |     // Open modal
+    > 262 |     const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+          |                                   ^
+      263 |     fireEvent.click(generateButton)
+      264 |
+      265 |     await waitFor(() => {
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByRole (app/pantry/__tests__/page.test.tsx:262:35)
+
+  ● PantryPage - Generate Grocery List › should handle errors when creating grocery list
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/generate grocery list/i`
+
+    There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m"overflow: unset;"[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"min-h-screen bg-gray-50 flex items-center justify-center"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"text-center"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"[39m
+            [36m/>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-gray-600"[39m
+            [36m>[39m
+              [0mLoading pantry...[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      286 |
+      287 |     // Open modal
+    > 288 |     const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+          |                                   ^
+      289 |     fireEvent.click(generateButton)
+      290 |
+      291 |     await waitFor(() => {
+
+      at Object.getElementError (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByRole (app/pantry/__tests__/page.test.tsx:288:35)
+
+FAIL components/pantry/__tests__/EditPantryItemForm.test.tsx
+  ● EditPantryItemForm › validates quantity cannot be zero or negative
+
+    Unable to find an element with the text: /quantity must be greater than 0/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<form[39m
+          [33mclass[39m=[32m"space-y-4"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"block text-sm font-medium text-gray-700 mb-1"[39m
+                [33mfor[39m=[32m"name"[39m
+              [36m>[39m
+                [0mItem Name[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33maria-invalid[39m=[32m"false"[39m
+                [33mclass[39m=[32m"w-full px-3 py-2.5 border rounded-lg shadow-sm min-h-[44px] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors border-gray-300"[39m
+                [33mid[39m=[32m"name"[39m
+                [33mplaceholder[39m=[32m"e.g., Tomatoes"[39m
+                [33mvalue[39m=[32m"Test Item"[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-2 gap-4"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"w-full"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"block text-sm font-medium text-gray-700 mb-1"[39m
+                  [33mfor[39m=[32m"quantity"[39m
+                [36m>[39m
+                  [0mQuantity[0m
+                [36m</label>[39m
+                [36m<input[39m
+                  [33maria-invalid[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"w-full px-3 py-2.5 border rounded-lg shadow-sm min-h-[44px] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors border-gray-300"[39m
+                  [33mid[39m=[32m"quantity"[39m
+                  [33mmin[39m=[32m"0.01"[39m
+                  [33mrequired[39m=[32m""[39m
+                  [33mstep[39m=[32m"0.01"[39m
+                  [33mtype[39m=[32m"number"[39m
+                  [33mvalue[39m=[32m"0"[39m
+                [36m/>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"w-full"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"block text-sm font-medium text-gray-700 mb-1"[39m
+                  [33mfor[39m=[32m"unit"[39m
+                [36m>[39m
+                  [0mUnit[0m
+                [36m</label>[39m
+                [36m<input[39m
+                  [33maria-invalid[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"w-full px-3 py-2.5 border rounded-lg shadow-sm min-h-[44px] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors border-gray-300"[39m
+                  [33mid[39m=[32m"unit"[39m
+                  [33mplaceholder[39m=[32m"e.g., pcs, lbs"[39m
+                  [33mvalue[39m=[32m"pcs"[39m
+                [36m/>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"block text-sm font-medium text-gray-700 mb-1"[39m
+                [33mfor[39m=[32m"category"[39m
+              [36m>[39m
+                [0mCategory[0m
+              [36m</label>[39m
+              [36m<select[39m
+                [33maria-invalid[39m=[32m"false"[39m
+                [33mclass[39m=[32m"w-full px-3 py-2 border rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors cursor-pointer border-gray-300"[39m
+                [33mid[39m=[32m"category"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"Produce"[39m
+                [36m>[39m
+                  [0mProduce[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"Dairy"[39m
+                [36m>[39m
+                  [0mDairy[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"Meat"[39m
+                [36m>[39m
+                  [0mMeat[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"Bakery"[39m
+                [36m>[39m
+                  [0mBakery[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"Pantry"[39m
+                [36m>[39m
+                  [0mPantry[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"Frozen"[39m
+                [36m>[39m
+                  [0mFrozen[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"Beverages"[39m
+                [36m>[39m
+                  [0mBeverages[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"Snacks"[39m
+                [36m>[39m
+                  [0mSnacks[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"Other"[39m
+                [36m>[39m
+                  [0mOther[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"block text-sm font-medium text-gray-700 mb-1"[39m
+                [33mfor[39m=[32m"expirationDate"[39m
+              [36m>[39m
+                [0mExpiration Date (Optional)[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33maria-invalid[39m=[32m"false"[39m
+                [33mclass[39m=[32m"w-full px-3 py-2.5 border rounded-lg shadow-sm min-h-[44px] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors border-gray-300"[39m
+                [33mid[39m=[32m"expirationDate"[39m
+                [33mtype[39m=[32m"date"[39m
+                [33mvalue[39m=[32m"2025-12-31"[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"block text-sm font-medium text-gray-700 mb-1"[39m
+                [33mfor[39m=[32m"lowStockThreshold"[39m
+              [36m>[39m
+                [0mLow Stock Threshold (Optional)[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33maria-invalid[39m=[32m"false"[39m
+                [33mclass[39m=[32m"w-full px-3 py-2.5 border rounded-lg shadow-sm min-h-[44px] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors border-gray-300"[39m
+                [33mid[39m=[32m"lowStockThreshold"[39m
+                [33mmin[39m=[32m"0"[39m
+                [33mplaceholder[39m=[32m"Alert when quantity drops below this"[39m
+                [33mstep[39m=[32m"0.01"[39m
+                [33mtype[39m=[32m"number"[39m
+                [33mvalue[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex gap-3 pt-4"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 text-base px-4 py-2.5 min-h-[44px] flex-1"[39m
+              [33mtype[39m=[32m"submit"[39m
+            [36m>[39m
+              [0mSave Changes[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none border border-gray-300 bg-transparent hover:bg-gray-50 text-gray-700 focus:ring-gray-500 text-base px-4 py-2.5 min-h-[44px] flex-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mCancel[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</form>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      106 |     await user.click(screen.getByRole('button', { name: /save changes/i }))
+      107 |     
+    > 108 |     await waitFor(() => {
+          |                  ^
+      109 |       expect(screen.getByText(/quantity must be greater than 0/i)).toBeInTheDocument()
+      110 |     })
+      111 |     expect(mockOnSubmit).not.toHaveBeenCalled()
+
+      at waitForWrapper (node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at Object.<anonymous> (components/pantry/__tests__/EditPantryItemForm.test.tsx:108:18)
+
+
+Test Suites: 12 failed, 18 passed, 30 total
+Tests:       28 failed, 277 passed, 305 total
+Snapshots:   0 total
+Time:        3.559 s
