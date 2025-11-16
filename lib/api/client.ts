@@ -3,7 +3,7 @@
  * Handles authentication, request/response formatting, and error handling
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://grocery-list-app-production-c0f1.up.railway.app'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://grocery-list-app-production-3744.up.railway.app'
 
 export interface ApiError {
   message: string
