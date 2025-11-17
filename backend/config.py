@@ -26,7 +26,8 @@ class Settings(BaseSettings):
         "http://localhost:3000",
         "http://localhost:3001",
         "https://grocery-list-app-seven.vercel.app",  # Production frontend
-        "https://*.vercel.app",  # Vercel preview deployments
+        "https://grocery-list-app-seven.vercel.app/",  # With trailing slash
+        "*",  # Temporary: allow all origins for debugging
     ]
     
     # Server Configuration (for Railway deployment)
