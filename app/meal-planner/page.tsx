@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useAuth, useUser } from '@clerk/nextjs'
 import { Meal, MealType } from '@/lib/types'
-import WeeklyCalendar from '@/components/meal-planner/WeeklyCalendar'
-import MobileWeeklyCalendar from '@/components/meal-planner/MobileWeeklyCalendar'
+import WeeklyCalendar, { WeeklyCalendarRef } from '@/components/meal-planner/WeeklyCalendar'
+import MobileWeeklyCalendar, { MobileWeeklyCalendarRef } from '@/components/meal-planner/MobileWeeklyCalendar'
 import AddMealModal from '@/components/meal-planner/AddMealModal'
 import GenerateGroceryListFromMealsModal from '@/components/meal-planner/GenerateGroceryListFromMealsModal'
 import { Button } from '@/components/ui/Button'
@@ -76,10 +76,18 @@ export default function MealPlannerPage() {
   const [selectedMealType, setSelectedMealType] = useState<MealType>(MealType.DINNER)
   const [editingMeal, setEditingMeal] = useState<Meal | null>(null)
   
+  // State for meal details modal
+  const [isMealDetailsOpen, setIsMealDetailsOpen] = useState(false)
+  const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null)
+  
   // State for generate grocery list modal
   const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false)
   const [groceryLists, setGroceryLists] = useState<GroceryListResponse[]>([])
   const [isCreatingList, setIsCreatingList] = useState(false)
+
+  // Refs for calendar components to trigger scroll
+  const desktopCalendarRef = useRef<WeeklyCalendarRef>(null)
+  const mobileCalendarRef = useRef<MobileWeeklyCalendarRef>(null)
 
   // Sync user to backend on mount
   useEffect(() => {
@@ -202,7 +210,7 @@ export default function MealPlannerPage() {
     setCurrentWeekStart(newStart)
   }
 
-  // Jump to current week
+  // Jump to current week and scroll to today
   const handleToday = () => {
     const today = new Date()
     const dayOfWeek = today.getDay()
@@ -211,6 +219,12 @@ export default function MealPlannerPage() {
     const startDate = new Date(today)
     startDate.setDate(today.getDate() - daysSinceMonday) // Start on Monday
     setCurrentWeekStart(startDate)
+    
+    // Scroll to today's date after a brief delay to allow the calendar to update
+    setTimeout(() => {
+      desktopCalendarRef.current?.scrollToToday()
+      mobileCalendarRef.current?.scrollToToday()
+    }, 100)
   }
 
   // Handle clicking on empty slot
@@ -633,6 +647,7 @@ export default function MealPlannerPage() {
         {households.length > 0 && (
           <div className="hidden md:block bg-white rounded-lg shadow-sm border border-gray-200 p-4">
           <WeeklyCalendar
+            ref={desktopCalendarRef}
             startDate={currentWeekStart}
             meals={meals}
             onMealClick={handleMealClick}
@@ -647,6 +662,7 @@ export default function MealPlannerPage() {
         {households.length > 0 && (
           <div className="md:hidden px-4 pb-20">
           <MobileWeeklyCalendar
+            ref={mobileCalendarRef}
             startDate={currentWeekStart}
             meals={meals}
             onEmptySlotClick={handleEmptySlotClick}
