@@ -2,6 +2,7 @@
 
 import { Meal, MealType } from '@/lib/types'
 import { formatDate, cn } from '@/lib/utils'
+import { useRef, forwardRef, useImperativeHandle } from 'react'
 
 interface MobileWeeklyCalendarProps {
   startDate: Date
@@ -10,12 +11,28 @@ interface MobileWeeklyCalendarProps {
   onMealClick: (meal: Meal) => void
 }
 
-export default function MobileWeeklyCalendar({
+export interface MobileWeeklyCalendarRef {
+  scrollToToday: () => void
+}
+
+const MobileWeeklyCalendar = forwardRef<MobileWeeklyCalendarRef, MobileWeeklyCalendarProps>(({
   startDate,
   meals,
   onEmptySlotClick,
   onMealClick,
-}: MobileWeeklyCalendarProps) {
+}, ref) => {
+  const todayCardRef = useRef<HTMLDivElement>(null)
+
+  useImperativeHandle(ref, () => ({
+    scrollToToday: () => {
+      if (todayCardRef.current) {
+        todayCardRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        })
+      }
+    }
+  }), [])
   // Generate 7 days starting from startDate
   const weekDays = Array.from({ length: 7 }, (_, i) => {
     const date = new Date(startDate)
@@ -95,6 +112,7 @@ export default function MobileWeeklyCalendar({
         return (
           <div
             key={day.toISOString()}
+            ref={today ? todayCardRef : null}
             className={cn(
               'bg-white rounded-xl border-2 overflow-hidden',
               today ? 'border-blue-500 shadow-md' : 'border-gray-200'
@@ -213,5 +231,9 @@ export default function MobileWeeklyCalendar({
       })}
     </div>
   )
-}
+})
+
+MobileWeeklyCalendar.displayName = 'MobileWeeklyCalendar'
+
+export default MobileWeeklyCalendar
 

@@ -3,6 +3,7 @@
 import { Meal, MealType } from '@/lib/types'
 import MealCard from './MealCard'
 import { formatDate, cn } from '@/lib/utils'
+import { useEffect, useRef, forwardRef, useImperativeHandle } from 'react'
 
 interface WeeklyCalendarProps {
   startDate: Date
@@ -13,14 +14,31 @@ interface WeeklyCalendarProps {
   onMealDelete: (mealId: string) => void
 }
 
-export default function WeeklyCalendar({
+export interface WeeklyCalendarRef {
+  scrollToToday: () => void
+}
+
+const WeeklyCalendar = forwardRef<WeeklyCalendarRef, WeeklyCalendarProps>(({
   startDate,
   meals,
   onMealClick,
   onEmptySlotClick,
   onMealEdit,
   onMealDelete,
-}: WeeklyCalendarProps) {
+}, ref) => {
+  const todayColumnRef = useRef<HTMLTableCellElement>(null)
+
+  useImperativeHandle(ref, () => ({
+    scrollToToday: () => {
+      if (todayColumnRef.current) {
+        todayColumnRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'center'
+        })
+      }
+    }
+  }), [])
   // Generate 7 days starting from startDate
   const weekDays = Array.from({ length: 7 }, (_, i) => {
     const date = new Date(startDate)
@@ -66,6 +84,7 @@ export default function WeeklyCalendar({
             {weekDays.map((day) => (
               <th
                 key={day.toISOString()}
+                ref={isToday(day) ? todayColumnRef : null}
                 className={cn(
                   'p-3 text-center border border-gray-200',
                   isToday(day) ? 'bg-blue-50' : 'bg-gray-50'
@@ -162,5 +181,9 @@ export default function WeeklyCalendar({
       </div>
     </div>
   )
-}
+})
+
+WeeklyCalendar.displayName = 'WeeklyCalendar'
+
+export default WeeklyCalendar
 
