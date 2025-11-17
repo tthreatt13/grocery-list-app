@@ -24,7 +24,7 @@ import {
   getGroceryLists, 
   GroceryListResponse 
 } from '@/lib/api/grocery'
-import { getCategoryOrder, sortItemsByCategory } from '@/lib/utils'
+import { getCategoryOrder, sortPantryItemsByCategory } from '@/lib/utils'
 import PantryItemCard from '@/components/pantry/PantryItemCard'
 
 export default function PantryPage() {
@@ -130,7 +130,7 @@ export default function PantryPage() {
         return [...filteredItems].sort((a, b) => new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime())
       case SortMethod.CATEGORY:
       default:
-        return sortItemsByCategory(filteredItems)
+        return sortPantryItemsByCategory(filteredItems)
     }
   })()
 

@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { ItemCategory, GroceryItem, MealType } from './types'
+import { ItemCategory, GroceryItem, PantryItem, MealType } from './types'
 
 /**
  * Merges Tailwind CSS classes with clsx and tailwind-merge
@@ -134,6 +134,27 @@ export function getCategoryOrder(category: ItemCategory): number {
  * then alphabetically by name within each category
  */
 export function sortItemsByCategory(items: GroceryItem[]): GroceryItem[] {
+  return [...items].sort((a, b) => {
+    // First, sort by category order
+    const categoryA = a.category || ItemCategory.OTHER
+    const categoryB = b.category || ItemCategory.OTHER
+    const categoryOrderA = getCategoryOrder(categoryA)
+    const categoryOrderB = getCategoryOrder(categoryB)
+    
+    if (categoryOrderA !== categoryOrderB) {
+      return categoryOrderA - categoryOrderB
+    }
+    
+    // If same category, sort alphabetically by name
+    return a.name.localeCompare(b.name)
+  })
+}
+
+/**
+ * Sorts pantry items by category in grocery store layout order,
+ * then alphabetically by name within each category
+ */
+export function sortPantryItemsByCategory(items: PantryItem[]): PantryItem[] {
   return [...items].sort((a, b) => {
     // First, sort by category order
     const categoryA = a.category || ItemCategory.OTHER
