@@ -1,4 +1,4 @@
-import { cn, formatDate, formatRelativeTime, isWithinDays, isPastDate, formatQuantity, generateId, sortItemsByCategory, getCategoryOrder, sortItemsByMealTime, sortItemsByEntryOrder, getMealOrder } from '../utils'
+import { cn, formatDate, formatRelativeTime, isWithinDays, isPastDate, formatQuantity, generateId, sortItemsByCategory, sortPantryItemsByCategory, getCategoryOrder, sortItemsByMealTime, sortItemsByEntryOrder, getMealOrder } from '../utils'
 import { ItemCategory, MealType } from '../types'
 
 describe('utils', () => {
@@ -226,6 +226,86 @@ describe('utils', () => {
       // Should maintain original order for same name/category
       expect(sorted[0].id).toBe('1')
       expect(sorted[1].id).toBe('2')
+    })
+  })
+
+  describe('sortPantryItemsByCategory', () => {
+    const mockPantryItems = [
+      {
+        id: '1',
+        name: 'Chicken Breast',
+        quantity: 2,
+        unit: 'lbs',
+        category: ItemCategory.MEAT,
+        addedAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-01-01'),
+      },
+      {
+        id: '2',
+        name: 'Apples',
+        quantity: 6,
+        category: ItemCategory.PRODUCE,
+        addedAt: new Date('2024-01-02'),
+        updatedAt: new Date('2024-01-02'),
+      },
+      {
+        id: '3',
+        name: 'Milk',
+        quantity: 1,
+        unit: 'gallon',
+        category: ItemCategory.DAIRY,
+        addedAt: new Date('2024-01-03'),
+        updatedAt: new Date('2024-01-03'),
+      },
+      {
+        id: '4',
+        name: 'Bananas',
+        quantity: 1,
+        unit: 'bunch',
+        category: ItemCategory.PRODUCE,
+        addedAt: new Date('2024-01-04'),
+        updatedAt: new Date('2024-01-04'),
+      },
+      {
+        id: '5',
+        name: 'Bread',
+        quantity: 1,
+        unit: 'loaf',
+        category: ItemCategory.BAKERY,
+        addedAt: new Date('2024-01-05'),
+        updatedAt: new Date('2024-01-05'),
+      },
+    ]
+
+    it('sorts pantry items by category order first', () => {
+      const sorted = sortPantryItemsByCategory(mockPantryItems)
+      
+      // Should be: Produce (Apples, Bananas), Dairy (Milk), Meat (Chicken), Bakery (Bread)
+      expect(sorted[0].category).toBe(ItemCategory.PRODUCE)
+      expect(sorted[1].category).toBe(ItemCategory.PRODUCE)
+      expect(sorted[2].category).toBe(ItemCategory.DAIRY)
+      expect(sorted[3].category).toBe(ItemCategory.MEAT)
+      expect(sorted[4].category).toBe(ItemCategory.BAKERY)
+    })
+
+    it('sorts pantry items alphabetically within each category', () => {
+      const sorted = sortPantryItemsByCategory(mockPantryItems)
+      
+      // Within Produce category: Apples should come before Bananas
+      const produceItems = sorted.filter(item => item.category === ItemCategory.PRODUCE)
+      expect(produceItems[0].name).toBe('Apples')
+      expect(produceItems[1].name).toBe('Bananas')
+    })
+
+    it('handles empty array', () => {
+      const sorted = sortPantryItemsByCategory([])
+      expect(sorted).toEqual([])
+    })
+
+    it('does not mutate original array', () => {
+      const originalItems = [...mockPantryItems]
+      sortPantryItemsByCategory(mockPantryItems)
+      expect(mockPantryItems).toEqual(originalItems)
     })
   })
 

@@ -6,11 +6,10 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
 import { Modal } from '@/components/ui/Modal'
-import PantryGrid from '@/components/pantry/PantryGrid'
 import AddPantryItemForm from '@/components/pantry/AddPantryItemForm'
 import EditPantryItemForm from '@/components/pantry/EditPantryItemForm'
 import GenerateGroceryListModal from '@/components/pantry/GenerateGroceryListModal'
-import { PantryItem, ItemCategory } from '@/lib/types'
+import { PantryItem, ItemCategory, SortMethod } from '@/lib/types'
 import {
   getPantryItems,
   createPantryItem,
@@ -25,6 +24,8 @@ import {
   getGroceryLists, 
   GroceryListResponse 
 } from '@/lib/api/grocery'
+import { getCategoryOrder, sortPantryItemsByCategory } from '@/lib/utils'
+import PantryItemCard from '@/components/pantry/PantryItemCard'
 
 export default function PantryPage() {
   const { getToken } = useAuth()
@@ -45,6 +46,7 @@ export default function PantryPage() {
   const [, setIsDeleting] = useState(false)
   const [isCreatingList, setIsCreatingList] = useState(false)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [sortMethod, setSortMethod] = useState<SortMethod>(SortMethod.CATEGORY)
 
   // Fetch households and pantry items
   useEffect(() => {
@@ -120,6 +122,87 @@ export default function PantryPage() {
     const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter
     return matchesSearch && matchesCategory
   })
+
+  // Sort items based on selected sort method
+  const sortedItems = (() => {
+    switch (sortMethod) {
+      case SortMethod.ENTRY_ORDER:
+        return [...filteredItems].sort((a, b) => new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime())
+      case SortMethod.CATEGORY:
+      default:
+        return sortPantryItemsByCategory(filteredItems)
+    }
+  })()
+
+  // Helper function to render items grouped by category
+  const renderItemsByCategory = (items: PantryItem[]) => {
+    // Group items by category
+    const itemsByCategory = items.reduce((acc, item) => {
+      const category = item.category
+      if (!acc[category]) {
+        acc[category] = []
+      }
+      acc[category].push(item)
+      return acc
+    }, {} as Record<ItemCategory, PantryItem[]>)
+
+    // Get categories in the correct order
+    const categories = Object.keys(itemsByCategory) as ItemCategory[]
+    const sortedCategories = categories.sort((a, b) => {
+      const orderA = getCategoryOrder(a)
+      const orderB = getCategoryOrder(b)
+      return orderA - orderB
+    })
+
+    return (
+      <div className="space-y-8">
+        {sortedCategories.map((category) => (
+          <div key={category} className="space-y-4">
+            <h3 className="text-lg font-medium text-gray-700 border-b border-gray-200 pb-2">
+              {category} ({itemsByCategory[category].length})
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {itemsByCategory[category].map((item) => (
+                <PantryItemCard
+                  key={item.id}
+                  item={item}
+                  onEdit={handleEditClick}
+                  onDelete={handleDeleteItem}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  // Helper function to render items in entry order (no grouping)
+  const renderItemsByEntryOrder = (items: PantryItem[]) => {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {items.map((item) => (
+          <PantryItemCard
+            key={item.id}
+            item={item}
+            onEdit={handleEditClick}
+            onDelete={handleDeleteItem}
+          />
+        ))}
+      </div>
+    )
+  }
+
+  // Helper function to render items based on current sort method
+  const renderItems = (items: PantryItem[]) => {
+    switch (sortMethod) {
+      case SortMethod.ENTRY_ORDER:
+        return renderItemsByEntryOrder(items)
+      case SortMethod.CATEGORY:
+      default:
+        return renderItemsByCategory(items)
+    }
+  }
 
   // Handle adding new item
   const handleAddItem = async (newItem: Omit<PantryItem, 'id' | 'addedAt' | 'updatedAt'>) => {
@@ -522,31 +605,46 @@ export default function PantryPage() {
         </div>
       </div>
 
-      {/* Actions and Filters */}
+      {/* Filters and Actions */}
       <div className="bg-white rounded-lg shadow p-6 mb-6">
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1">
-            <Input
-              id="search"
-              type="text"
-              placeholder="Search items by name..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+        <div className="flex flex-col gap-4">
+          {/* Filters Row */}
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1">
+              <Input
+                id="search"
+                type="text"
+                placeholder="Search items by name..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <div className="w-full md:w-64">
+              <Select
+                id="category-filter"
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                options={categoryOptions}
+              />
+            </div>
+            <div className="w-full md:w-48">
+              <Select
+                label="Sort by"
+                value={sortMethod}
+                onChange={(e) => setSortMethod(e.target.value as SortMethod)}
+              >
+                <option value={SortMethod.CATEGORY}>Category</option>
+                <option value={SortMethod.ENTRY_ORDER}>Entry Order</option>
+              </Select>
+            </div>
           </div>
-          <div className="w-full md:w-64">
-            <Select
-              id="category-filter"
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              options={categoryOptions}
-            />
-          </div>
-          <div className="flex flex-col sm:flex-row gap-2">
+          
+          {/* Actions Row */}
+          <div className="flex flex-col sm:flex-row gap-3">
             <Button 
               variant="secondary" 
               onClick={() => setIsGenerateModalOpen(true)} 
-              className="w-full sm:w-auto whitespace-nowrap"
+              className="w-full sm:w-auto"
               disabled={lowStockItems === 0}
             >
               <svg
@@ -564,7 +662,7 @@ export default function PantryPage() {
               </svg>
               Generate Grocery List
             </Button>
-            <Button variant="primary" onClick={() => setIsModalOpen(true)} className="w-full sm:w-auto whitespace-nowrap">
+            <Button variant="primary" onClick={() => setIsModalOpen(true)} className="w-full sm:w-auto">
               <svg
                 className="w-5 h-5 mr-2"
                 fill="none"
@@ -584,8 +682,37 @@ export default function PantryPage() {
         </div>
       </div>
 
-      {/* Items Grid */}
-      <PantryGrid items={filteredItems} onEdit={handleEditClick} onDelete={handleDeleteItem} />
+      {/* Items Display */}
+      {sortedItems.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-12 px-4">
+          <div className="text-center">
+            <svg
+              className="mx-auto h-24 w-24 text-gray-400 mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+              />
+            </svg>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              {items.length === 0 ? "No items in your pantry" : "No matching items"}
+            </h3>
+            <p className="text-gray-500">
+              {items.length === 0 
+                ? "Start adding items to keep track of your pantry inventory"
+                : "Try adjusting your search or filter criteria"
+              }
+            </p>
+          </div>
+        </div>
+      ) : (
+        renderItems(sortedItems)
+      )}
 
       {/* Add Item Modal */}
       <Modal
