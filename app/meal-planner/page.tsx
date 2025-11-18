@@ -64,6 +64,8 @@ export default function MealPlannerPage() {
     const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1
     const startDate = new Date(today)
     startDate.setDate(today.getDate() - daysSinceMonday) // Start on Monday
+    // Normalize to start of day (midnight) to avoid time comparison issues
+    startDate.setHours(0, 0, 0, 0)
     return startDate
   })
 
@@ -333,8 +335,21 @@ export default function MealPlannerPage() {
 
     const weekMeals = meals.filter((meal) => {
       const mealDate = new Date(meal.date)
+      // Normalize meal date to start of day for comparison
+      mealDate.setHours(0, 0, 0, 0)
       return mealDate >= currentWeekStart && mealDate < weekEnd
     })
+
+    // Return empty array if no meals found for the week
+    if (weekMeals.length === 0) {
+      return []
+    }
+
+    // Filter to only meals that have ingredients
+    const mealsWithIngredients = weekMeals.filter(meal => meal.ingredients && meal.ingredients.length > 0)
+    if (mealsWithIngredients.length === 0) {
+      return []
+    }
 
     const ingredientsWithMealType = weekMeals
       .flatMap((meal) => 
@@ -393,8 +408,15 @@ export default function MealPlannerPage() {
 
   // Handle adding ingredients to existing grocery list
   const handleAddToGroceryList = async (data: { listId: number; ingredients: { ingredient: string; mealType: string }[] }) => {
+    if (!data.ingredients || data.ingredients.length === 0) {
+      setError('No ingredients selected to add')
+      return
+    }
+
     try {
       setIsCreatingList(true)
+      setError(null) // Clear any previous errors
+      
       const token = await getToken()
       if (!token) {
         setError('Authentication required')
@@ -402,24 +424,35 @@ export default function MealPlannerPage() {
       }
 
       // Add each ingredient as an item with meal type information
+      let successCount = 0
       for (const item of data.ingredients) {
-        await addGroceryItem(
-          data.listId,
-          {
-            name: item.ingredient,
-            meal_type: item.mealType,
-            checked: false,
-          },
-          token
-        )
+        try {
+          await addGroceryItem(
+            data.listId,
+            {
+              name: item.ingredient,
+              meal_type: item.mealType,
+              checked: false,
+            },
+            token
+          )
+          successCount++
+        } catch (itemError) {
+          console.error(`Failed to add ingredient "${item.ingredient}":`, itemError)
+          // Continue with other ingredients
+        }
       }
 
       // Close modal
       setIsGenerateModalOpen(false)
       setIsCreatingList(false)
 
-      // Show success message (optional)
-      alert(`Added ${data.ingredients.length} ingredients to grocery list!`)
+      // Show success message
+      if (successCount > 0) {
+        alert(`Successfully added ${successCount} of ${data.ingredients.length} ingredients to grocery list!`)
+      } else {
+        setError('Failed to add any ingredients to the grocery list')
+      }
     } catch (err) {
       console.error('Error adding to grocery list:', err)
       setError(err instanceof Error ? err.message : 'Failed to add to grocery list')
