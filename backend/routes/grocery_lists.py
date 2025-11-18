@@ -5,9 +5,12 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session, joinedload
 
 from database import get_db
+from middleware.auth import get_current_user
+from middleware.permissions import require_household_member
 from models.grocery_list import GroceryList
 from models.grocery_item import GroceryItem
 from models.household import Household
+from models.user import User
 from schemas.grocery import (
     GroceryListCreate,
     GroceryListUpdate,
@@ -204,7 +207,8 @@ def delete_grocery_list(
 def create_grocery_item(
     list_id: int,
     item_data: GroceryItemCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     """
     Add an item to a grocery list.
@@ -226,6 +230,9 @@ def create_grocery_item(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Grocery list with id {list_id} not found"
         )
+    
+    # Check permission: user must be a household member
+    require_household_member(db, grocery_list.household_id, current_user)
     
     grocery_item = GroceryItem(
         list_id=list_id,
