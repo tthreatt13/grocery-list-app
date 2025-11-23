@@ -128,6 +128,16 @@ export default function PantryPage() {
     switch (sortMethod) {
       case SortMethod.ENTRY_ORDER:
         return [...filteredItems].sort((a, b) => new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime())
+      case SortMethod.LOW_STOCK:
+        // Separate items into low stock and not low stock
+        const lowStockItems = filteredItems.filter(
+          (item) => item.lowStockThreshold !== undefined && item.quantity <= item.lowStockThreshold
+        )
+        const notLowStockItems = filteredItems.filter(
+          (item) => !item.lowStockThreshold || item.quantity > item.lowStockThreshold
+        )
+        // Sort each group by category, then combine with low stock items first
+        return [...sortPantryItemsByCategory(lowStockItems), ...sortPantryItemsByCategory(notLowStockItems)]
       case SortMethod.CATEGORY:
       default:
         return sortPantryItemsByCategory(filteredItems)
@@ -193,11 +203,47 @@ export default function PantryPage() {
     )
   }
 
+  // Helper function to render items with low stock items first
+  const renderItemsByLowStock = (items: PantryItem[]) => {
+    // Separate items into low stock and not low stock
+    const lowStockItems = items.filter(
+      (item) => item.lowStockThreshold !== undefined && item.quantity <= item.lowStockThreshold
+    )
+    const notLowStockItems = items.filter(
+      (item) => !item.lowStockThreshold || item.quantity > item.lowStockThreshold
+    )
+
+    return (
+      <div className="space-y-8">
+        {lowStockItems.length > 0 && (
+          <div>
+            <h2 className="text-xl font-semibold text-yellow-700 mb-4 border-b-2 border-yellow-500 pb-2">
+              Low Stock Items ({lowStockItems.length})
+            </h2>
+            {renderItemsByCategory(lowStockItems)}
+          </div>
+        )}
+        {notLowStockItems.length > 0 && (
+          <div>
+            {lowStockItems.length > 0 && (
+              <h2 className="text-xl font-semibold text-gray-700 mb-4 border-b-2 border-gray-300 pb-2 mt-8">
+                Other Items ({notLowStockItems.length})
+              </h2>
+            )}
+            {renderItemsByCategory(notLowStockItems)}
+          </div>
+        )}
+      </div>
+    )
+  }
+
   // Helper function to render items based on current sort method
   const renderItems = (items: PantryItem[]) => {
     switch (sortMethod) {
       case SortMethod.ENTRY_ORDER:
         return renderItemsByEntryOrder(items)
+      case SortMethod.LOW_STOCK:
+        return renderItemsByLowStock(items)
       case SortMethod.CATEGORY:
       default:
         return renderItemsByCategory(items)
@@ -635,6 +681,7 @@ export default function PantryPage() {
               >
                 <option value={SortMethod.CATEGORY}>Category</option>
                 <option value={SortMethod.ENTRY_ORDER}>Entry Order</option>
+                <option value={SortMethod.LOW_STOCK}>Low Stock</option>
               </Select>
             </div>
           </div>

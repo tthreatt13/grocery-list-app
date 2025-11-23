@@ -102,8 +102,8 @@ export default function AddPantryItemForm({ onSubmit, onCancel, isSubmitting }: 
             type="number"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
-            min="0.01"
-            step="0.01"
+            min="0"
+            step="0.25"
             error={errors.quantity}
             disabled={isSubmitting}
             required
@@ -152,7 +152,7 @@ export default function AddPantryItemForm({ onSubmit, onCancel, isSubmitting }: 
           onChange={(e) => setLowStockThreshold(e.target.value)}
           placeholder="Alert when quantity drops below this"
           min="0"
-          step="0.01"
+          step="0.25"
           error={errors.lowStockThreshold}
           disabled={isSubmitting}
         />
