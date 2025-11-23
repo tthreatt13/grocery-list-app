@@ -5,7 +5,7 @@ import PantryPage from '../page'
 import * as pantryApi from '@/lib/api/pantry'
 import * as householdApi from '@/lib/api/household'
 import * as groceryApi from '@/lib/api/grocery'
-import { ItemCategory } from '@/lib/types'
+import { ItemCategory, SortMethod } from '@/lib/types'
 
 // Mock Clerk auth
 const mockGetToken = jest.fn().mockResolvedValue('mock-token')
@@ -412,6 +412,175 @@ describe('PantryPage - Mobile Responsive Layout', () => {
     // The container should have appropriate padding
     const classes = mainContent?.className || ''
     expect(classes).toMatch(/px-4/)
+  })
+})
+
+describe('PantryPage - Sort Functionality', () => {
+  const mockHouseholds = [
+    {
+      id: 1,
+      name: 'Test Household',
+      created_at: '2024-01-01T00:00:00Z',
+      updated_at: '2024-01-01T00:00:00Z',
+    },
+  ]
+
+  const mockPantryItems = [
+    {
+      id: 1,
+      household_id: 1,
+      name: 'Milk',
+      quantity: '0.5 gallon',
+      category: ItemCategory.DAIRY,
+      low_stock_threshold: 1,
+      expiration_date: null,
+      created_at: '2024-01-01T00:00:00Z',
+      updated_at: '2024-01-01T00:00:00Z',
+    },
+    {
+      id: 2,
+      household_id: 1,
+      name: 'Bread',
+      quantity: '0 loaf',
+      category: ItemCategory.BAKERY,
+      low_stock_threshold: 1,
+      expiration_date: null,
+      created_at: '2024-01-02T00:00:00Z',
+      updated_at: '2024-01-02T00:00:00Z',
+    },
+    {
+      id: 3,
+      household_id: 1,
+      name: 'Rice',
+      quantity: '5 lbs',
+      category: ItemCategory.PANTRY,
+      low_stock_threshold: 2,
+      expiration_date: null,
+      created_at: '2024-01-03T00:00:00Z',
+      updated_at: '2024-01-03T00:00:00Z',
+    },
+    {
+      id: 4,
+      household_id: 1,
+      name: 'Pasta',
+      quantity: '3 boxes',
+      category: ItemCategory.PANTRY,
+      low_stock_threshold: null,
+      expiration_date: null,
+      created_at: '2024-01-04T00:00:00Z',
+      updated_at: '2024-01-04T00:00:00Z',
+    },
+  ]
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+    mockGetHouseholds.mockResolvedValue(mockHouseholds)
+    mockGetPantryItems.mockResolvedValue(mockPantryItems)
+    mockGetGroceryLists.mockResolvedValue([])
+  })
+
+  it('should display sort dropdown with all sort options including Low Stock', async () => {
+    render(<PantryPage />)
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/sort by/i)).toBeInTheDocument()
+    })
+
+    const sortSelect = screen.getByLabelText(/sort by/i) as HTMLSelectElement
+    const options = Array.from(sortSelect.options)
+
+    expect(options.some(opt => opt.value === SortMethod.CATEGORY)).toBe(true)
+    expect(options.some(opt => opt.value === SortMethod.ENTRY_ORDER)).toBe(true)
+    expect(options.some(opt => opt.value === SortMethod.LOW_STOCK)).toBe(true)
+  })
+
+  it('should sort items by low stock when Low Stock option is selected', async () => {
+    render(<PantryPage />)
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/sort by/i)).toBeInTheDocument()
+    })
+
+    const sortSelect = screen.getByLabelText(/sort by/i) as HTMLSelectElement
+    fireEvent.change(sortSelect, { target: { value: SortMethod.LOW_STOCK } })
+
+    await waitFor(() => {
+      // Low stock items (Milk: 0.5 <= 1, Bread: 0 <= 1) should appear first
+      // Rice (5 > 2) and Pasta (no threshold) should appear after
+      expect(screen.getByText(/low stock items/i)).toBeInTheDocument()
+      
+      // Check that low stock section shows the count
+      const lowStockSection = screen.getByText(/low stock items/i)
+      expect(lowStockSection).toHaveTextContent('2')
+    })
+
+    // Verify items are displayed (they should all be visible)
+    expect(screen.getByText('Milk')).toBeInTheDocument()
+    expect(screen.getByText('Bread')).toBeInTheDocument()
+    expect(screen.getByText('Rice')).toBeInTheDocument()
+    expect(screen.getByText('Pasta')).toBeInTheDocument()
+  })
+
+  it('should display "Other Items" section when Low Stock sort is selected and there are non-low-stock items', async () => {
+    render(<PantryPage />)
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/sort by/i)).toBeInTheDocument()
+    })
+
+    const sortSelect = screen.getByLabelText(/sort by/i) as HTMLSelectElement
+    fireEvent.change(sortSelect, { target: { value: SortMethod.LOW_STOCK } })
+
+    await waitFor(() => {
+      expect(screen.getByText(/other items/i)).toBeInTheDocument()
+      const otherItemsSection = screen.getByText(/other items/i)
+      expect(otherItemsSection).toHaveTextContent('2')
+    })
+  })
+
+  it('should not display "Other Items" section when all items are low stock', async () => {
+    const allLowStockItems = [
+      {
+        id: 1,
+        household_id: 1,
+        name: 'Milk',
+        quantity: '0.5 gallon',
+        category: ItemCategory.DAIRY,
+        low_stock_threshold: 1,
+        expiration_date: null,
+        created_at: '2024-01-01T00:00:00Z',
+        updated_at: '2024-01-01T00:00:00Z',
+      },
+      {
+        id: 2,
+        household_id: 1,
+        name: 'Bread',
+        quantity: '0 loaf',
+        category: ItemCategory.BAKERY,
+        low_stock_threshold: 1,
+        expiration_date: null,
+        created_at: '2024-01-02T00:00:00Z',
+        updated_at: '2024-01-02T00:00:00Z',
+      },
+    ]
+
+    mockGetPantryItems.mockResolvedValue(allLowStockItems)
+
+    render(<PantryPage />)
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/sort by/i)).toBeInTheDocument()
+    })
+
+    const sortSelect = screen.getByLabelText(/sort by/i) as HTMLSelectElement
+    fireEvent.change(sortSelect, { target: { value: SortMethod.LOW_STOCK } })
+
+    await waitFor(() => {
+      expect(screen.getByText(/low stock items/i)).toBeInTheDocument()
+    })
+
+    // Should not show "Other Items" section when all items are low stock
+    expect(screen.queryByText(/other items/i)).not.toBeInTheDocument()
   })
 })
 

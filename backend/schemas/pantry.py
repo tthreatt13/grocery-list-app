@@ -11,7 +11,7 @@ class PantryItemBase(BaseModel):
     quantity: Optional[str] = None
     category: Optional[str] = None
     expiration_date: Optional[datetime] = None
-    low_stock_threshold: Optional[int] = Field(None, ge=0)
+    low_stock_threshold: Optional[float] = Field(None, ge=0)
 
 
 class PantryItemCreate(PantryItemBase):
@@ -25,7 +25,7 @@ class PantryItemUpdate(BaseModel):
     quantity: Optional[str] = None
     category: Optional[str] = None
     expiration_date: Optional[datetime] = None
-    low_stock_threshold: Optional[int] = Field(None, ge=0)
+    low_stock_threshold: Optional[float] = Field(None, ge=0)
 
 
 class PantryItemResponse(PantryItemBase):
