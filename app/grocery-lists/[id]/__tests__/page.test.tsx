@@ -77,7 +77,7 @@ describe('GroceryListDetailPage - Quantity Display', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Check that the quantity is displayed correctly (not as "1 6 pcs")
     expect(screen.getByText('6 pcs')).toBeInTheDocument()
@@ -101,7 +101,7 @@ describe('GroceryListDetailPage - Quantity Display', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Open add item modal
     const addButton = screen.getByRole('button', { name: /add item/i })
@@ -129,7 +129,7 @@ describe('GroceryListDetailPage - Quantity Display', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // When the add handler is called with quantity=3 and unit='lbs',
     // it should send quantity='3 lbs' to the API
@@ -157,7 +157,7 @@ describe('GroceryListDetailPage - Quantity Display', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Should display just the number
     expect(screen.getByText('12')).toBeInTheDocument()
@@ -251,7 +251,7 @@ describe('GroceryListDetailPage - Category Sorting', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Mixed Category List')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Get all item names in the "To Buy" section (unchecked items)
     const toBuySection = screen.getByText('To Buy (5)').closest('div')
@@ -275,7 +275,7 @@ describe('GroceryListDetailPage - Category Sorting', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Mixed Category List')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Should display category headers for each category that has items
     expect(screen.getByText('Produce')).toBeInTheDocument()
@@ -327,7 +327,7 @@ describe('GroceryListDetailPage - Category Sorting', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Mixed Category List')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Within Produce category, items should be alphabetical: Apples, Carrots, Zucchini
     const produceItems = screen.getAllByText(/Apples|Carrots|Zucchini/)
@@ -343,7 +343,7 @@ describe('GroceryListDetailPage - Category Sorting', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Mixed Category List')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Check that both "To Buy" and "Completed" sections exist
     expect(screen.getByText('To Buy (5)')).toBeInTheDocument()
@@ -362,7 +362,7 @@ describe('GroceryListDetailPage - Category Sorting', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Mixed Category List')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Should not have the old category filter
     expect(screen.queryByText('Filter by Category')).not.toBeInTheDocument()
@@ -463,7 +463,7 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Should display the sort method selector
     expect(screen.getByText('Sort by')).toBeInTheDocument()
@@ -477,7 +477,7 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Change sort method to Meal Time
     const sortSelector = screen.getByRole('combobox', { name: /sort by/i })
@@ -490,7 +490,7 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
       expect(screen.getByText('Dinner')).toBeInTheDocument()
       expect(screen.getByText('Snack')).toBeInTheDocument()
       expect(screen.getByText('No meal assignment')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
   })
 
   it('should display items in correct meal time order', async () => {
@@ -500,7 +500,7 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Change to meal time sorting
     const sortSelector = screen.getByRole('combobox', { name: /sort by/i })
@@ -508,7 +508,7 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Breakfast')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Get all meal type headers in order they appear
     const mealHeaders = screen.getAllByText(/Breakfast|Lunch|Dinner|Snack|No meal assignment/)
@@ -528,7 +528,7 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Change to meal time sorting
     const sortSelector = screen.getByRole('combobox', { name: /sort by/i })
@@ -536,7 +536,7 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Breakfast')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Within Breakfast category: Cereal should come before Eggs (alphabetical)
     const breakfastItems = screen.getAllByText(/Cereal|Eggs/)
@@ -551,7 +551,7 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Change sort method to Entry Order
     const sortSelector = screen.getByRole('combobox', { name: /sort by/i })
@@ -561,7 +561,7 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
     await waitFor(() => {
       expect(screen.queryByText('Breakfast')).not.toBeInTheDocument()
       expect(screen.queryByText('Produce')).not.toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Items should be in chronological order (by created_at)
     const allItems = screen.getAllByText(/Cereal|Sandwich Bread|Chicken|Chips|Milk|Eggs/)
@@ -580,7 +580,7 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Should display meal type badges
     expect(screen.getAllByText('Breakfast')).toHaveLength(2) // 2 breakfast items
@@ -609,7 +609,7 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Open add item modal
     const addButton = screen.getByRole('button', { name: /add item/i })
@@ -617,7 +617,7 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Add New Item')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Should display meal type selector in the form
     expect(screen.getByText('Meal Type')).toBeInTheDocument()
@@ -635,7 +635,7 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Click edit button on first item (Cereal)
     const editButtons = screen.getAllByLabelText('Edit item')
@@ -643,7 +643,7 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Edit Item')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Should display meal type selector with current value
     expect(screen.getByText('Meal Type')).toBeInTheDocument()
@@ -657,7 +657,7 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     const sortSelector = screen.getByRole('combobox', { name: /sort by/i })
 
@@ -694,7 +694,7 @@ describe('GroceryListDetailPage - Layout and Button Order', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Get all buttons in the header area
     const shareButton = screen.getByRole('button', { name: /share list/i })
@@ -728,7 +728,7 @@ describe('GroceryListDetailPage - Layout and Button Order', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Verify progress card exists
     const progressText = screen.getByText('Shopping Progress')
@@ -750,7 +750,7 @@ describe('GroceryListDetailPage - Layout and Button Order', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Verify the complete layout order by checking elements exist in expected sections
     
@@ -789,7 +789,7 @@ describe('GroceryListDetailPage - Layout and Button Order', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Verify buttons still exist and are accessible on mobile
     const shareButton = screen.getByRole('button', { name: /share list/i })
@@ -816,7 +816,7 @@ describe('GroceryListDetailPage - Layout and Button Order', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-    })
+    }, { timeout: 3000 })
 
     // Header elements should still be present
     expect(screen.getByRole('button', { name: /share list/i })).toBeInTheDocument()

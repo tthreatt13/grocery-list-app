@@ -11,16 +11,18 @@ import GroceryListItem from '@/components/grocery/GroceryListItem'
 import AddItemForm from '@/components/grocery/AddItemForm'
 import EditItemForm from '@/components/grocery/EditItemForm'
 import SortMethodSelector from '@/components/grocery/SortMethodSelector'
+import ReuseListModal from '@/components/grocery/ReuseListModal'
 import { ItemCategory, GroceryItem, MealType, SortMethod, GroceryList } from '@/lib/types'
 import { formatRelativeTime, sortItemsByCategory, sortItemsByMealTime, sortItemsByEntryOrder, getCategoryOrder, getMealOrder } from '@/lib/utils'
 import {
   getGroceryList,
+  getGroceryListsWithItems,
   addGroceryItem,
   updateGroceryItem,
   deleteGroceryItem,
   updateGroceryList,
 } from '@/lib/api/grocery'
-import { transformGroceryItem, transformGroceryList } from '@/lib/adapters/groceryAdapters'
+import { transformGroceryItem, transformGroceryList, transformGroceryLists } from '@/lib/adapters/groceryAdapters'
 
 // Helper function to parse quantity string (e.g., "2 lbs" -> { quantity: 2, unit: "lbs" })
 function parseQuantityString(quantityStr?: string): { quantity: number; unit: string } {
@@ -64,6 +66,9 @@ export default function GroceryListDetailPage() {
   const [isEditTitleModalOpen, setIsEditTitleModalOpen] = useState(false)
   const [editedTitle, setEditedTitle] = useState('')
   const [isUpdatingTitle, setIsUpdatingTitle] = useState(false)
+  const [isReuseModalOpen, setIsReuseModalOpen] = useState(false)
+  const [availableLists, setAvailableLists] = useState<GroceryList[]>([])
+  const [isLoadingAvailableLists, setIsLoadingAvailableLists] = useState(false)
 
   // Fetch list data
   useEffect(() => {
@@ -350,6 +355,86 @@ export default function GroceryListDetailPage() {
     }
   }
 
+  const handleOpenReuseModal = async () => {
+    setIsReuseModalOpen(true)
+    setIsLoadingAvailableLists(true)
+    setError(null)
+
+    try {
+      const token = await getToken()
+      if (!token) {
+        setError('Authentication required')
+        return
+      }
+
+      const listsDataResponse = await getGroceryListsWithItems(token)
+      const listsData = transformGroceryLists(listsDataResponse)
+      // Sort by createdAt descending (newest first)
+      listsData.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      setAvailableLists(listsData)
+    } catch (err) {
+      console.error('Error fetching available lists:', err)
+      setError(err instanceof Error ? err.message : 'Failed to load lists')
+    } finally {
+      setIsLoadingAvailableLists(false)
+    }
+  }
+
+  const handleAddItemsFromPreviousList = async (items: GroceryItem[]) => {
+    if (!list) return
+
+    try {
+      setError(null)
+      const token = await getToken()
+      if (!token) {
+        setError('Authentication required')
+        return
+      }
+
+      // Add each item to the current list
+      const newItems: GroceryItem[] = []
+      for (const item of items) {
+        // Format quantity string: combine quantity and unit
+        let quantityStr: string | undefined
+        if (item.unit && item.unit.trim()) {
+          quantityStr = `${item.quantity} ${item.unit.trim()}`
+        } else if (item.quantity !== 1) {
+          quantityStr = item.quantity.toString()
+        }
+
+        const newItemResponse = await addGroceryItem(
+          listId,
+          {
+            name: item.name,
+            quantity: quantityStr,
+            category: item.category,
+            meal_type: item.mealType?.toLowerCase(),
+            notes: item.notes || undefined,
+            checked: false, // Always add as unchecked
+          },
+          token
+        )
+
+        const newItem = transformGroceryItem(newItemResponse)
+        newItems.push(newItem)
+      }
+
+      // Update local list state
+      setList({
+        ...list,
+        items: [...list.items, ...newItems],
+      })
+
+      // Refresh the list to get updated data
+      const listDataResponse = await getGroceryList(listId, token)
+      const listData = transformGroceryList(listDataResponse)
+      setList(listData)
+    } catch (err) {
+      console.error('Error adding items from previous list:', err)
+      throw err // Re-throw to let the modal handle the error
+    }
+  }
+
   // Loading state
   if (isLoading) {
     return (
@@ -597,6 +682,16 @@ export default function GroceryListDetailPage() {
               </svg>
               Add Item
             </Button>
+            <Button 
+              onClick={handleOpenReuseModal} 
+              variant="outline" 
+              className="w-full sm:w-auto"
+            >
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Reuse from Previous List
+            </Button>
             <div className="w-full sm:w-48">
               <SortMethodSelector
                 value={sortMethod}
@@ -719,6 +814,23 @@ export default function GroceryListDetailPage() {
               </Button>
             </div>
           </div>
+        </Modal>
+
+        {/* Reuse from Previous List Modal */}
+        <Modal
+          open={isReuseModalOpen}
+          onClose={() => !isLoadingAvailableLists && setIsReuseModalOpen(false)}
+          title="Reuse Items from Previous List"
+          closeOnBackdropClick={false}
+          closeOnEscape={false}
+        >
+          <ReuseListModal
+            currentListId={listId}
+            availableLists={availableLists}
+            onAddItems={handleAddItemsFromPreviousList}
+            onClose={() => setIsReuseModalOpen(false)}
+            isLoading={isLoadingAvailableLists}
+          />
         </Modal>
       </div>
     </div>
