@@ -54,6 +54,8 @@ export default function GroceryListsPage() {
         // Fetch grocery lists with items
         const listsDataResponse = await getGroceryListsWithItems(token)
         const listsData = transformGroceryLists(listsDataResponse)
+        // Sort by createdAt descending (newest first)
+        listsData.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
         setLists(listsData)
       } catch (err) {
         console.error('Error fetching data:', err)

@@ -6,19 +6,23 @@ import { useAuth } from '@clerk/nextjs'
 import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
 import { Card } from '@/components/ui/Card'
+import { Input } from '@/components/ui/Input'
 import GroceryListItem from '@/components/grocery/GroceryListItem'
 import AddItemForm from '@/components/grocery/AddItemForm'
 import EditItemForm from '@/components/grocery/EditItemForm'
 import SortMethodSelector from '@/components/grocery/SortMethodSelector'
+import ReuseListModal from '@/components/grocery/ReuseListModal'
 import { ItemCategory, GroceryItem, MealType, SortMethod, GroceryList } from '@/lib/types'
 import { formatRelativeTime, sortItemsByCategory, sortItemsByMealTime, sortItemsByEntryOrder, getCategoryOrder, getMealOrder } from '@/lib/utils'
 import {
   getGroceryList,
+  getGroceryListsWithItems,
   addGroceryItem,
   updateGroceryItem,
   deleteGroceryItem,
+  updateGroceryList,
 } from '@/lib/api/grocery'
-import { transformGroceryItem, transformGroceryList } from '@/lib/adapters/groceryAdapters'
+import { transformGroceryItem, transformGroceryList, transformGroceryLists } from '@/lib/adapters/groceryAdapters'
 
 // Helper function to parse quantity string (e.g., "2 lbs" -> { quantity: 2, unit: "lbs" })
 function parseQuantityString(quantityStr?: string): { quantity: number; unit: string } {
@@ -59,6 +63,12 @@ export default function GroceryListDetailPage() {
   const [isAddingItem, setIsAddingItem] = useState(false)
   const [isSavingItem, setIsSavingItem] = useState(false)
   const [sortMethod, setSortMethod] = useState<SortMethod>(SortMethod.CATEGORY)
+  const [isEditTitleModalOpen, setIsEditTitleModalOpen] = useState(false)
+  const [editedTitle, setEditedTitle] = useState('')
+  const [isUpdatingTitle, setIsUpdatingTitle] = useState(false)
+  const [isReuseModalOpen, setIsReuseModalOpen] = useState(false)
+  const [availableLists, setAvailableLists] = useState<GroceryList[]>([])
+  const [isLoadingAvailableLists, setIsLoadingAvailableLists] = useState(false)
 
   // Fetch list data
   useEffect(() => {
@@ -305,6 +315,126 @@ export default function GroceryListDetailPage() {
     }
   }
 
+  const handleEditTitleClick = () => {
+    if (!list) return
+    setEditedTitle(list.name)
+    setIsEditTitleModalOpen(true)
+  }
+
+  const handleUpdateTitle = async () => {
+    if (!list || !editedTitle.trim()) return
+
+    try {
+      setIsUpdatingTitle(true)
+      setError(null)
+      const token = await getToken()
+      if (!token) {
+        setError('Authentication required')
+        return
+      }
+
+      await updateGroceryList(
+        listId,
+        { name: editedTitle.trim() },
+        token
+      )
+
+      // Update local state
+      setList({
+        ...list,
+        name: editedTitle.trim(),
+      })
+
+      setIsEditTitleModalOpen(false)
+      setEditedTitle('')
+    } catch (err) {
+      console.error('Error updating title:', err)
+      setError(err instanceof Error ? err.message : 'Failed to update title')
+    } finally {
+      setIsUpdatingTitle(false)
+    }
+  }
+
+  const handleOpenReuseModal = async () => {
+    setIsReuseModalOpen(true)
+    setIsLoadingAvailableLists(true)
+    setError(null)
+
+    try {
+      const token = await getToken()
+      if (!token) {
+        setError('Authentication required')
+        return
+      }
+
+      const listsDataResponse = await getGroceryListsWithItems(token)
+      const listsData = transformGroceryLists(listsDataResponse)
+      // Sort by createdAt descending (newest first)
+      listsData.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      setAvailableLists(listsData)
+    } catch (err) {
+      console.error('Error fetching available lists:', err)
+      setError(err instanceof Error ? err.message : 'Failed to load lists')
+    } finally {
+      setIsLoadingAvailableLists(false)
+    }
+  }
+
+  const handleAddItemsFromPreviousList = async (items: GroceryItem[]) => {
+    if (!list) return
+
+    try {
+      setError(null)
+      const token = await getToken()
+      if (!token) {
+        setError('Authentication required')
+        return
+      }
+
+      // Add each item to the current list
+      const newItems: GroceryItem[] = []
+      for (const item of items) {
+        // Format quantity string: combine quantity and unit
+        let quantityStr: string | undefined
+        if (item.unit && item.unit.trim()) {
+          quantityStr = `${item.quantity} ${item.unit.trim()}`
+        } else if (item.quantity !== 1) {
+          quantityStr = item.quantity.toString()
+        }
+
+        const newItemResponse = await addGroceryItem(
+          listId,
+          {
+            name: item.name,
+            quantity: quantityStr,
+            category: item.category,
+            meal_type: item.mealType?.toLowerCase(),
+            notes: item.notes || undefined,
+            checked: false, // Always add as unchecked
+          },
+          token
+        )
+
+        const newItem = transformGroceryItem(newItemResponse)
+        newItems.push(newItem)
+      }
+
+      // Update local list state
+      setList({
+        ...list,
+        items: [...list.items, ...newItems],
+      })
+
+      // Refresh the list to get updated data
+      const listDataResponse = await getGroceryList(listId, token)
+      const listData = transformGroceryList(listDataResponse)
+      setList(listData)
+    } catch (err) {
+      console.error('Error adding items from previous list:', err)
+      throw err // Re-throw to let the modal handle the error
+    }
+  }
+
   // Loading state
   if (isLoading) {
     return (
@@ -497,7 +627,19 @@ export default function GroceryListDetailPage() {
 
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{list.name}</h1>
+              <div className="flex items-center gap-2 mb-2">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{list.name}</h1>
+                <button
+                  onClick={handleEditTitleClick}
+                  className="p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-md hover:bg-gray-100"
+                  aria-label="Edit list title"
+                  title="Edit list title"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </button>
+              </div>
               <p className="text-sm sm:text-base text-gray-600">
                 {list.items.length} items • Updated {formatRelativeTime(list.updatedAt)}
               </p>
@@ -539,6 +681,16 @@ export default function GroceryListDetailPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
               Add Item
+            </Button>
+            <Button 
+              onClick={handleOpenReuseModal} 
+              variant="outline" 
+              className="w-full sm:w-auto"
+            >
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Reuse from Previous List
             </Button>
             <div className="w-full sm:w-48">
               <SortMethodSelector
@@ -621,6 +773,65 @@ export default function GroceryListDetailPage() {
             />
           </Modal>
         )}
+
+        {/* Edit Title Modal */}
+        <Modal
+          open={isEditTitleModalOpen}
+          onClose={() => !isUpdatingTitle && setIsEditTitleModalOpen(false)}
+          title="Edit List Title"
+          closeOnBackdropClick={false}
+          closeOnEscape={false}
+        >
+          <div className="space-y-4">
+            <Input
+              label="List Name"
+              placeholder="e.g., Weekly Shopping, Party Supplies"
+              value={editedTitle}
+              onChange={(e) => setEditedTitle(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' && !isUpdatingTitle && editedTitle.trim()) {
+                  handleUpdateTitle()
+                }
+              }}
+              autoFocus
+            />
+            <div className="flex space-x-3 justify-end">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsEditTitleModalOpen(false)
+                  setEditedTitle('')
+                }}
+                disabled={isUpdatingTitle}
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleUpdateTitle} 
+                disabled={!editedTitle.trim() || isUpdatingTitle}
+              >
+                {isUpdatingTitle ? 'Saving...' : 'Save Changes'}
+              </Button>
+            </div>
+          </div>
+        </Modal>
+
+        {/* Reuse from Previous List Modal */}
+        <Modal
+          open={isReuseModalOpen}
+          onClose={() => !isLoadingAvailableLists && setIsReuseModalOpen(false)}
+          title="Reuse Items from Previous List"
+          closeOnBackdropClick={false}
+          closeOnEscape={false}
+        >
+          <ReuseListModal
+            currentListId={listId}
+            availableLists={availableLists}
+            onAddItems={handleAddItemsFromPreviousList}
+            onClose={() => setIsReuseModalOpen(false)}
+            isLoading={isLoadingAvailableLists}
+          />
+        </Modal>
       </div>
     </div>
   )
