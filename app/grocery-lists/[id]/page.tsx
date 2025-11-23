@@ -6,6 +6,7 @@ import { useAuth } from '@clerk/nextjs'
 import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
 import { Card } from '@/components/ui/Card'
+import { Input } from '@/components/ui/Input'
 import GroceryListItem from '@/components/grocery/GroceryListItem'
 import AddItemForm from '@/components/grocery/AddItemForm'
 import EditItemForm from '@/components/grocery/EditItemForm'
@@ -17,6 +18,7 @@ import {
   addGroceryItem,
   updateGroceryItem,
   deleteGroceryItem,
+  updateGroceryList,
 } from '@/lib/api/grocery'
 import { transformGroceryItem, transformGroceryList } from '@/lib/adapters/groceryAdapters'
 
@@ -59,6 +61,9 @@ export default function GroceryListDetailPage() {
   const [isAddingItem, setIsAddingItem] = useState(false)
   const [isSavingItem, setIsSavingItem] = useState(false)
   const [sortMethod, setSortMethod] = useState<SortMethod>(SortMethod.CATEGORY)
+  const [isEditTitleModalOpen, setIsEditTitleModalOpen] = useState(false)
+  const [editedTitle, setEditedTitle] = useState('')
+  const [isUpdatingTitle, setIsUpdatingTitle] = useState(false)
 
   // Fetch list data
   useEffect(() => {
@@ -305,6 +310,46 @@ export default function GroceryListDetailPage() {
     }
   }
 
+  const handleEditTitleClick = () => {
+    if (!list) return
+    setEditedTitle(list.name)
+    setIsEditTitleModalOpen(true)
+  }
+
+  const handleUpdateTitle = async () => {
+    if (!list || !editedTitle.trim()) return
+
+    try {
+      setIsUpdatingTitle(true)
+      setError(null)
+      const token = await getToken()
+      if (!token) {
+        setError('Authentication required')
+        return
+      }
+
+      await updateGroceryList(
+        listId,
+        { name: editedTitle.trim() },
+        token
+      )
+
+      // Update local state
+      setList({
+        ...list,
+        name: editedTitle.trim(),
+      })
+
+      setIsEditTitleModalOpen(false)
+      setEditedTitle('')
+    } catch (err) {
+      console.error('Error updating title:', err)
+      setError(err instanceof Error ? err.message : 'Failed to update title')
+    } finally {
+      setIsUpdatingTitle(false)
+    }
+  }
+
   // Loading state
   if (isLoading) {
     return (
@@ -497,7 +542,19 @@ export default function GroceryListDetailPage() {
 
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{list.name}</h1>
+              <div className="flex items-center gap-2 mb-2">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{list.name}</h1>
+                <button
+                  onClick={handleEditTitleClick}
+                  className="p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-md hover:bg-gray-100"
+                  aria-label="Edit list title"
+                  title="Edit list title"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </button>
+              </div>
               <p className="text-sm sm:text-base text-gray-600">
                 {list.items.length} items • Updated {formatRelativeTime(list.updatedAt)}
               </p>
@@ -621,6 +678,48 @@ export default function GroceryListDetailPage() {
             />
           </Modal>
         )}
+
+        {/* Edit Title Modal */}
+        <Modal
+          open={isEditTitleModalOpen}
+          onClose={() => !isUpdatingTitle && setIsEditTitleModalOpen(false)}
+          title="Edit List Title"
+          closeOnBackdropClick={false}
+          closeOnEscape={false}
+        >
+          <div className="space-y-4">
+            <Input
+              label="List Name"
+              placeholder="e.g., Weekly Shopping, Party Supplies"
+              value={editedTitle}
+              onChange={(e) => setEditedTitle(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' && !isUpdatingTitle && editedTitle.trim()) {
+                  handleUpdateTitle()
+                }
+              }}
+              autoFocus
+            />
+            <div className="flex space-x-3 justify-end">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsEditTitleModalOpen(false)
+                  setEditedTitle('')
+                }}
+                disabled={isUpdatingTitle}
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleUpdateTitle} 
+                disabled={!editedTitle.trim() || isUpdatingTitle}
+              >
+                {isUpdatingTitle ? 'Saving...' : 'Save Changes'}
+              </Button>
+            </div>
+          </div>
+        </Modal>
       </div>
     </div>
   )
