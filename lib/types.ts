@@ -95,5 +95,6 @@ export enum SortMethod {
   ENTRY_ORDER = 'Entry Order',
   CATEGORY = 'Category',
   MEAL_TIME = 'Meal Time',
+  LOW_STOCK = 'Low Stock',
 }
 

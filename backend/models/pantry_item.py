@@ -1,7 +1,7 @@
 """PantryItem model for household pantry inventory."""
 
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Float
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -18,7 +18,7 @@ class PantryItem(Base):
     quantity = Column(String, nullable=True)
     category = Column(String, nullable=True, index=True)
     expiration_date = Column(DateTime, nullable=True, index=True)
-    low_stock_threshold = Column(Integer, nullable=True)
+    low_stock_threshold = Column(Float, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(
         DateTime,
