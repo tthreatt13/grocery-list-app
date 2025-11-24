@@ -104,32 +104,7 @@ describe('AddMealModal - Delete Functionality', () => {
       expect(screen.getByDisplayValue('Quick breakfast')).toBeInTheDocument()
     })
 
-    it('shows confirmation dialog when delete is clicked', async () => {
-      mockConfirm.mockReturnValue(false) // User cancels
-
-      render(
-        <AddMealModal
-          isOpen={true}
-          onClose={mockOnClose}
-          onAdd={mockOnAdd}
-          onDelete={mockOnDelete}
-          mealType={MealType.BREAKFAST}
-          date={new Date('2024-11-10')}
-          meal={mockMeal}
-        />
-      )
-
-      const deleteButton = screen.getByText('Delete')
-      fireEvent.click(deleteButton)
-
-      expect(mockConfirm).toHaveBeenCalledWith(
-        'Are you sure you want to delete this meal?'
-      )
-      expect(mockOnDelete).not.toHaveBeenCalled()
-    })
-
-    it('calls onDelete when user confirms deletion', async () => {
-      mockConfirm.mockReturnValue(true) // User confirms
+    it('calls onDelete when delete is clicked', async () => {
       mockOnDelete.mockResolvedValue(undefined)
 
       render(
@@ -147,10 +122,44 @@ describe('AddMealModal - Delete Functionality', () => {
       const deleteButton = screen.getByText('Delete')
       fireEvent.click(deleteButton)
 
+      // Modal calls onDelete directly - confirmation is handled in page component
+      await waitFor(() => {
+        expect(mockOnDelete).toHaveBeenCalledWith(mockMeal.id)
+      })
+      // window.confirm is not called by the modal
+      expect(mockConfirm).not.toHaveBeenCalled()
+    })
+
+    it('calls onDelete and closes modal when delete succeeds', async () => {
+      mockOnDelete.mockResolvedValue(undefined)
+
+      render(
+        <AddMealModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onAdd={mockOnAdd}
+          onDelete={mockOnDelete}
+          mealType={MealType.BREAKFAST}
+          date={new Date('2024-11-10')}
+          meal={mockMeal}
+        />
+      )
+
+      const deleteButton = screen.getByText('Delete')
+      fireEvent.click(deleteButton)
+
+      // Modal calls onDelete directly - confirmation is handled in page component
       await waitFor(() => {
         expect(mockOnDelete).toHaveBeenCalledWith('m1')
+      })
+
+      // Modal should close after successful deletion
+      await waitFor(() => {
         expect(mockOnClose).toHaveBeenCalled()
       })
+
+      // window.confirm is not called by the modal
+      expect(mockConfirm).not.toHaveBeenCalled()
     })
 
     it('shows loading state during deletion', async () => {

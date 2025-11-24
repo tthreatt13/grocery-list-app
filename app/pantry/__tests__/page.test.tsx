@@ -109,6 +109,7 @@ describe('PantryPage - Generate Grocery List', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    mockGetToken.mockResolvedValue('mock-token')
     mockGetHouseholds.mockResolvedValue(mockHouseholds)
     mockGetPantryItems.mockResolvedValue(mockPantryItems)
     mockGetGroceryLists.mockResolvedValue([])
@@ -121,6 +122,14 @@ describe('PantryPage - Generate Grocery List', () => {
     await waitFor(
       () => {
         expect(screen.queryByText('Loading pantry...')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
+    // Wait for households to load (ensure "No Household Found" is not shown)
+    await waitFor(
+      () => {
+        expect(screen.queryByText('No Household Found')).not.toBeInTheDocument()
       },
       { timeout: 3000 }
     )
@@ -139,18 +148,52 @@ describe('PantryPage - Generate Grocery List', () => {
   it('should show low stock count in stats', async () => {
     render(<PantryPage />)
 
+    // Wait for loading to complete
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Loading pantry...')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
+    // Wait for households to load
+    await waitFor(
+      () => {
+        expect(screen.queryByText('No Household Found')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
     await waitFor(() => {
       // Milk (0.5 <= 1) and Bread (0 <= 1) are low stock
       // Look for the number 2 in the context of low stock
-      expect(screen.getByText('Low Stock')).toBeInTheDocument()
+      // There may be multiple "Low Stock" texts, so get all and check the stat card
+      const lowStockTexts = screen.getAllByText('Low Stock')
+      expect(lowStockTexts.length).toBeGreaterThan(0)
       // Find the stat card that contains both "2" and "Low Stock"
-      const lowStockSection = screen.getByText('Low Stock').closest('div')
+      const lowStockSection = lowStockTexts[0].closest('div')
       expect(lowStockSection).toHaveTextContent('2')
     })
   })
 
   it('should open generate grocery list modal when button is clicked', async () => {
     render(<PantryPage />)
+
+    // Wait for loading to complete
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Loading pantry...')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
+    // Wait for households to load
+    await waitFor(
+      () => {
+        expect(screen.queryByText('No Household Found')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     await waitFor(() => {
       expect(
@@ -170,6 +213,22 @@ describe('PantryPage - Generate Grocery List', () => {
 
   it('should display low stock items in the modal', async () => {
     render(<PantryPage />)
+
+    // Wait for loading to complete
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Loading pantry...')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
+    // Wait for households to load
+    await waitFor(
+      () => {
+        expect(screen.queryByText('No Household Found')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     await waitFor(() => {
       expect(
@@ -216,6 +275,22 @@ describe('PantryPage - Generate Grocery List', () => {
     mockAddGroceryItem.mockResolvedValue(mockGroceryItem)
 
     render(<PantryPage />)
+
+    // Wait for loading to complete
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Loading pantry...')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
+    // Wait for households to load
+    await waitFor(
+      () => {
+        expect(screen.queryByText('No Household Found')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     await waitFor(() => {
       expect(
@@ -276,6 +351,14 @@ describe('PantryPage - Generate Grocery List', () => {
 
     render(<PantryPage />)
 
+    // Wait for households to load
+    await waitFor(
+      () => {
+        expect(screen.queryByText('No Household Found')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
     await waitFor(() => {
       expect(
         screen.getByRole('button', { name: /generate grocery list/i })
@@ -331,6 +414,22 @@ describe('PantryPage - Generate Grocery List', () => {
 
     render(<PantryPage />)
 
+    // Wait for loading to complete
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Loading pantry...')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
+    // Wait for households to load
+    await waitFor(
+      () => {
+        expect(screen.queryByText('No Household Found')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
     await waitFor(() => {
       expect(
         screen.getByRole('button', { name: /generate grocery list/i })
@@ -366,6 +465,22 @@ describe('PantryPage - Generate Grocery List', () => {
     mockCreateGroceryList.mockRejectedValue(new Error('Failed to create list'))
 
     render(<PantryPage />)
+
+    // Wait for loading to complete
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Loading pantry...')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
+    // Wait for households to load
+    await waitFor(
+      () => {
+        expect(screen.queryByText('No Household Found')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     await waitFor(() => {
       expect(
@@ -423,6 +538,7 @@ describe('PantryPage - Mobile Responsive Layout', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    mockGetToken.mockResolvedValue('mock-token')
     mockGetHouseholds.mockResolvedValue(mockHouseholds)
     mockGetPantryItems.mockResolvedValue(mockPantryItems)
     mockGetGroceryLists.mockResolvedValue([])
@@ -430,6 +546,22 @@ describe('PantryPage - Mobile Responsive Layout', () => {
 
   it('should have buttons container with responsive flex classes to prevent horizontal overflow', async () => {
     render(<PantryPage />)
+
+    // Wait for loading to complete
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Loading pantry...')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
+    // Wait for households to load
+    await waitFor(
+      () => {
+        expect(screen.queryByText('No Household Found')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     await waitFor(() => {
       expect(
@@ -456,6 +588,22 @@ describe('PantryPage - Mobile Responsive Layout', () => {
   it('should have buttons that are full width on mobile', async () => {
     render(<PantryPage />)
 
+    // Wait for loading to complete
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Loading pantry...')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
+    // Wait for households to load
+    await waitFor(
+      () => {
+        expect(screen.queryByText('No Household Found')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
     await waitFor(() => {
       expect(
         screen.getByRole('button', { name: /generate grocery list/i })
@@ -479,6 +627,22 @@ describe('PantryPage - Mobile Responsive Layout', () => {
 
   it('should not have horizontal overflow on mobile due to button size', async () => {
     const { container } = render(<PantryPage />)
+
+    // Wait for loading to complete
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Loading pantry...')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
+    // Wait for households to load
+    await waitFor(
+      () => {
+        expect(screen.queryByText('No Household Found')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     await waitFor(() => {
       expect(
@@ -555,6 +719,7 @@ describe('PantryPage - Sort Functionality', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    mockGetToken.mockResolvedValue('mock-token')
     mockGetHouseholds.mockResolvedValue(mockHouseholds)
     mockGetPantryItems.mockResolvedValue(mockPantryItems)
     mockGetGroceryLists.mockResolvedValue([])
@@ -562,6 +727,22 @@ describe('PantryPage - Sort Functionality', () => {
 
   it('should display sort dropdown with all sort options including Low Stock', async () => {
     render(<PantryPage />)
+
+    // Wait for loading to complete
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Loading pantry...')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
+    // Wait for households to load
+    await waitFor(
+      () => {
+        expect(screen.queryByText('No Household Found')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     await waitFor(() => {
       expect(screen.getByLabelText(/sort by/i)).toBeInTheDocument()
@@ -579,6 +760,22 @@ describe('PantryPage - Sort Functionality', () => {
 
   it('should sort items by low stock when Low Stock option is selected', async () => {
     render(<PantryPage />)
+
+    // Wait for loading to complete
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Loading pantry...')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
+    // Wait for households to load
+    await waitFor(
+      () => {
+        expect(screen.queryByText('No Household Found')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     await waitFor(() => {
       expect(screen.getByLabelText(/sort by/i)).toBeInTheDocument()
@@ -606,6 +803,14 @@ describe('PantryPage - Sort Functionality', () => {
 
   it('should display "Other Items" section when Low Stock sort is selected and there are non-low-stock items', async () => {
     render(<PantryPage />)
+
+    // Wait for households to load
+    await waitFor(
+      () => {
+        expect(screen.queryByText('No Household Found')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     await waitFor(() => {
       expect(screen.getByLabelText(/sort by/i)).toBeInTheDocument()
@@ -650,6 +855,14 @@ describe('PantryPage - Sort Functionality', () => {
     mockGetPantryItems.mockResolvedValue(allLowStockItems)
 
     render(<PantryPage />)
+
+    // Wait for households to load
+    await waitFor(
+      () => {
+        expect(screen.queryByText('No Household Found')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     await waitFor(() => {
       expect(screen.getByLabelText(/sort by/i)).toBeInTheDocument()
