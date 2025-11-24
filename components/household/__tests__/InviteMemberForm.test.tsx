@@ -20,7 +20,7 @@ describe('InviteMemberForm', () => {
     render(<InviteMemberForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />)
     const select = screen.getByLabelText(/role/i)
     expect(select).toBeInTheDocument()
-    
+
     const options = screen.getAllByRole('option')
     expect(options).toHaveLength(3)
     expect(options[0]).toHaveTextContent('Admin')
@@ -77,7 +77,7 @@ describe('InviteMemberForm', () => {
     await user.type(emailInput, 'invalid-email')
 
     const submitButton = screen.getByText(/send invite/i)
-    
+
     // Submit button should be disabled for invalid email
     expect(submitButton).toBeDisabled()
     expect(mockOnSubmit).not.toHaveBeenCalled()
@@ -87,7 +87,7 @@ describe('InviteMemberForm', () => {
     render(<InviteMemberForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />)
 
     const submitButton = screen.getByText(/send invite/i)
-    
+
     // Submit button should be disabled when email is empty
     expect(submitButton).toBeDisabled()
     expect(mockOnSubmit).not.toHaveBeenCalled()
@@ -110,9 +110,8 @@ describe('InviteMemberForm', () => {
 
   it('disables submit button when form is invalid', async () => {
     render(<InviteMemberForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />)
-    
+
     const submitButton = screen.getByText(/send invite/i)
     expect(submitButton).toBeDisabled()
   })
 })
-

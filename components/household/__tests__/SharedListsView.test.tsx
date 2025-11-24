@@ -90,4 +90,3 @@ describe('SharedListsView', () => {
     expect(lastEditedElements.length).toBeGreaterThan(0)
   })
 })
-

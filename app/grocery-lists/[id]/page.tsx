@@ -12,8 +12,21 @@ import AddItemForm from '@/components/grocery/AddItemForm'
 import EditItemForm from '@/components/grocery/EditItemForm'
 import SortMethodSelector from '@/components/grocery/SortMethodSelector'
 import ReuseListModal from '@/components/grocery/ReuseListModal'
-import { ItemCategory, GroceryItem, MealType, SortMethod, GroceryList } from '@/lib/types'
-import { formatRelativeTime, sortItemsByCategory, sortItemsByMealTime, sortItemsByEntryOrder, getCategoryOrder, getMealOrder } from '@/lib/utils'
+import {
+  ItemCategory,
+  GroceryItem,
+  MealType,
+  SortMethod,
+  GroceryList,
+} from '@/lib/types'
+import {
+  formatRelativeTime,
+  sortItemsByCategory,
+  sortItemsByMealTime,
+  sortItemsByEntryOrder,
+  getCategoryOrder,
+  getMealOrder,
+} from '@/lib/utils'
 import {
   getGroceryList,
   getGroceryListsWithItems,
@@ -22,27 +35,34 @@ import {
   deleteGroceryItem,
   updateGroceryList,
 } from '@/lib/api/grocery'
-import { transformGroceryItem, transformGroceryList, transformGroceryLists } from '@/lib/adapters/groceryAdapters'
+import {
+  transformGroceryItem,
+  transformGroceryList,
+  transformGroceryLists,
+} from '@/lib/adapters/groceryAdapters'
 
 // Helper function to parse quantity string (e.g., "2 lbs" -> { quantity: 2, unit: "lbs" })
-function parseQuantityString(quantityStr?: string): { quantity: number; unit: string } {
+function parseQuantityString(quantityStr?: string): {
+  quantity: number
+  unit: string
+} {
   if (!quantityStr) {
     return { quantity: 1, unit: '' }
   }
-  
+
   const parts = quantityStr.trim().split(/\s+/)
   if (parts.length === 0) {
     return { quantity: 1, unit: '' }
   }
-  
+
   const numStr = parts[0]
   const num = parseFloat(numStr)
-  
+
   if (isNaN(num)) {
     // If first part is not a number, treat entire string as unit
     return { quantity: 1, unit: quantityStr }
   }
-  
+
   // Join remaining parts as unit
   const unit = parts.slice(1).join(' ')
   return { quantity: num, unit }
@@ -100,8 +120,8 @@ export default function GroceryListDetailPage() {
 
   const handleToggleItem = async (itemId: string) => {
     if (!list) return
-    
-    const item = list.items.find(i => i.id === itemId)
+
+    const item = list.items.find((i) => i.id === itemId)
     if (!item) return
 
     try {
@@ -114,7 +134,7 @@ export default function GroceryListDetailPage() {
       // Optimistic update
       setList({
         ...list,
-        items: list.items.map(i =>
+        items: list.items.map((i) =>
           i.id === itemId ? { ...i, checked: !i.checked } : i
         ),
       })
@@ -132,7 +152,7 @@ export default function GroceryListDetailPage() {
       // Revert optimistic update on error
       setList({
         ...list,
-        items: list.items.map(i =>
+        items: list.items.map((i) =>
           i.id === itemId ? { ...i, checked: item.checked } : i
         ),
       })
@@ -198,12 +218,12 @@ export default function GroceryListDetailPage() {
 
   const handleEditItem = (itemId: string) => {
     if (!list) return
-    
-    const item = list.items.find(i => i.id === itemId)
+
+    const item = list.items.find((i) => i.id === itemId)
     if (!item) return
 
     const { quantity, unit } = parseQuantityString(item.quantity?.toString())
-    
+
     setEditingItem({
       id: item.id,
       name: item.name,
@@ -266,7 +286,7 @@ export default function GroceryListDetailPage() {
 
       setList({
         ...list,
-        items: list.items.map(i => i.id === itemId ? updatedItem : i),
+        items: list.items.map((i) => (i.id === itemId ? updatedItem : i)),
       })
 
       setIsEditModalOpen(false)
@@ -281,7 +301,7 @@ export default function GroceryListDetailPage() {
 
   const handleDeleteItem = async (itemId: string) => {
     if (!list) return
-    
+
     if (!confirm('Are you sure you want to delete this item?')) {
       return
     }
@@ -297,7 +317,7 @@ export default function GroceryListDetailPage() {
       // Optimistic update
       setList({
         ...list,
-        items: list.items.filter(i => i.id !== itemId),
+        items: list.items.filter((i) => i.id !== itemId),
       })
 
       // Delete on server
@@ -333,11 +353,7 @@ export default function GroceryListDetailPage() {
         return
       }
 
-      await updateGroceryList(
-        listId,
-        { name: editedTitle.trim() },
-        token
-      )
+      await updateGroceryList(listId, { name: editedTitle.trim() }, token)
 
       // Update local state
       setList({
@@ -452,8 +468,18 @@ export default function GroceryListDetailPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center max-w-md px-4">
-          <svg className="w-16 h-16 mx-auto text-red-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <svg
+            className="w-16 h-16 mx-auto text-red-400 mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
             {error ? 'Error Loading List' : 'List Not Found'}
@@ -482,20 +508,23 @@ export default function GroceryListDetailPage() {
     }
   })()
 
-  const uncheckedItems = sortedItems.filter(item => !item.checked)
-  const checkedItems = sortedItems.filter(item => item.checked)
+  const uncheckedItems = sortedItems.filter((item) => !item.checked)
+  const checkedItems = sortedItems.filter((item) => item.checked)
 
   // Helper function to render items grouped by category
   const renderItemsByCategory = (items: GroceryItem[]) => {
     // Group items by category
-    const itemsByCategory = items.reduce((acc, item) => {
-      const category = item.category
-      if (!acc[category]) {
-        acc[category] = []
-      }
-      acc[category].push(item)
-      return acc
-    }, {} as Record<ItemCategory, GroceryItem[]>)
+    const itemsByCategory = items.reduce(
+      (acc, item) => {
+        const category = item.category
+        if (!acc[category]) {
+          acc[category] = []
+        }
+        acc[category].push(item)
+        return acc
+      },
+      {} as Record<ItemCategory, GroceryItem[]>
+    )
 
     // Get categories in the correct order
     const categories = Object.keys(itemsByCategory) as ItemCategory[]
@@ -532,20 +561,25 @@ export default function GroceryListDetailPage() {
   // Helper function to render items grouped by meal type
   const renderItemsByMealType = (items: GroceryItem[]) => {
     // Group items by meal type
-    const itemsByMealType = items.reduce((acc, item) => {
-      const mealType = item.mealType || 'No meal assignment'
-      if (!acc[mealType]) {
-        acc[mealType] = []
-      }
-      acc[mealType].push(item)
-      return acc
-    }, {} as Record<string, GroceryItem[]>)
+    const itemsByMealType = items.reduce(
+      (acc, item) => {
+        const mealType = item.mealType || 'No meal assignment'
+        if (!acc[mealType]) {
+          acc[mealType] = []
+        }
+        acc[mealType].push(item)
+        return acc
+      },
+      {} as Record<string, GroceryItem[]>
+    )
 
     // Get meal types in the correct order
     const mealTypes = Object.keys(itemsByMealType)
     const sortedMealTypes = mealTypes.sort((a, b) => {
-      const orderA = a === 'No meal assignment' ? 999 : getMealOrder(a as MealType)
-      const orderB = b === 'No meal assignment' ? 999 : getMealOrder(b as MealType)
+      const orderA =
+        a === 'No meal assignment' ? 999 : getMealOrder(a as MealType)
+      const orderB =
+        b === 'No meal assignment' ? 999 : getMealOrder(b as MealType)
       return orderA - orderB
     })
 
@@ -619,8 +653,18 @@ export default function GroceryListDetailPage() {
             onClick={() => router.push('/grocery-lists')}
             className="flex items-center text-gray-600 hover:text-gray-900 mb-4"
           >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <svg
+              className="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
             Back to Lists
           </button>
@@ -628,20 +672,33 @@ export default function GroceryListDetailPage() {
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{list.name}</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                  {list.name}
+                </h1>
                 <button
                   onClick={handleEditTitleClick}
                   className="p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-md hover:bg-gray-100"
                   aria-label="Edit list title"
                   title="Edit list title"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
                   </svg>
                 </button>
               </div>
               <p className="text-sm sm:text-base text-gray-600">
-                {list.items.length} items • Updated {formatRelativeTime(list.updatedAt)}
+                {list.items.length} items • Updated{' '}
+                {formatRelativeTime(list.updatedAt)}
               </p>
             </div>
             {/* Share List button - hidden until functionality is implemented */}
@@ -659,7 +716,9 @@ export default function GroceryListDetailPage() {
           <Card className="mt-4">
             <div className="p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-600">Shopping Progress</span>
+                <span className="text-sm font-medium text-gray-600">
+                  Shopping Progress
+                </span>
                 <span className="text-sm font-semibold text-gray-900">
                   {checkedItems.length} / {list.items.length} items
                 </span>
@@ -668,7 +727,7 @@ export default function GroceryListDetailPage() {
                 <div
                   className="bg-green-600 h-3 rounded-full transition-all"
                   style={{
-                    width: `${list.items.length > 0 ? (checkedItems.length / list.items.length) * 100 : 0}%`
+                    width: `${list.items.length > 0 ? (checkedItems.length / list.items.length) * 100 : 0}%`,
                   }}
                 />
               </div>
@@ -677,67 +736,101 @@ export default function GroceryListDetailPage() {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 mt-4">
-            <Button onClick={() => setIsAddModalOpen(true)} className="w-full sm:w-auto">
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            <Button
+              onClick={() => setIsAddModalOpen(true)}
+              className="w-full sm:w-auto"
+            >
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v16m8-8H4"
+                />
               </svg>
               Add Item
             </Button>
-            <Button 
-              onClick={handleOpenReuseModal} 
-              variant="outline" 
+            <Button
+              onClick={handleOpenReuseModal}
+              variant="outline"
               className="w-full sm:w-auto"
             >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
               </svg>
               Reuse from Previous List
             </Button>
             <div className="w-full sm:w-48">
-              <SortMethodSelector
-                value={sortMethod}
-                onChange={setSortMethod}
-              />
+              <SortMethodSelector value={sortMethod} onChange={setSortMethod} />
             </div>
           </div>
         </div>
 
         {/* Items List */}
         <div>
-            {sortedItems.length === 0 ? (
-              <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-                <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                </svg>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No items yet</h3>
-                <p className="text-gray-600 mb-4">Add items to your grocery list to get started</p>
-                <Button onClick={() => setIsAddModalOpen(true)}>Add First Item</Button>
-              </div>
-            ) : (
-              <div className="space-y-6">
-                {/* Active Items */}
-                {uncheckedItems.length > 0 && (
-                  <div>
-                    <h2 className="text-lg font-semibold text-gray-900 mb-3">
-                      To Buy ({uncheckedItems.length})
-                    </h2>
-                    {renderItems(uncheckedItems)}
-                  </div>
-                )}
+          {sortedItems.length === 0 ? (
+            <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
+              <svg
+                className="w-16 h-16 mx-auto text-gray-400 mb-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                />
+              </svg>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No items yet
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Add items to your grocery list to get started
+              </p>
+              <Button onClick={() => setIsAddModalOpen(true)}>
+                Add First Item
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {/* Active Items */}
+              {uncheckedItems.length > 0 && (
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900 mb-3">
+                    To Buy ({uncheckedItems.length})
+                  </h2>
+                  {renderItems(uncheckedItems)}
+                </div>
+              )}
 
-                {/* Checked Items */}
-                {checkedItems.length > 0 && (
-                  <div>
-                    <h2 className="text-lg font-semibold text-gray-500 mb-3">
-                      Completed ({checkedItems.length})
-                    </h2>
-                    <div className="opacity-60">
-                      {renderItems(checkedItems)}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
+              {/* Checked Items */}
+              {checkedItems.length > 0 && (
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-500 mb-3">
+                    Completed ({checkedItems.length})
+                  </h2>
+                  <div className="opacity-60">{renderItems(checkedItems)}</div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Add Item Modal */}
@@ -790,7 +883,11 @@ export default function GroceryListDetailPage() {
               value={editedTitle}
               onChange={(e) => setEditedTitle(e.target.value)}
               onKeyPress={(e) => {
-                if (e.key === 'Enter' && !isUpdatingTitle && editedTitle.trim()) {
+                if (
+                  e.key === 'Enter' &&
+                  !isUpdatingTitle &&
+                  editedTitle.trim()
+                ) {
                   handleUpdateTitle()
                 }
               }}
@@ -807,8 +904,8 @@ export default function GroceryListDetailPage() {
               >
                 Cancel
               </Button>
-              <Button 
-                onClick={handleUpdateTitle} 
+              <Button
+                onClick={handleUpdateTitle}
                 disabled={!editedTitle.trim() || isUpdatingTitle}
               >
                 {isUpdatingTitle ? 'Saving...' : 'Save Changes'}

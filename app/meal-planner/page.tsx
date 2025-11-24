@@ -3,27 +3,31 @@
 import { useState, useEffect, useRef } from 'react'
 import { useAuth, useUser } from '@clerk/nextjs'
 import { Meal, MealType } from '@/lib/types'
-import WeeklyCalendar, { WeeklyCalendarRef } from '@/components/meal-planner/WeeklyCalendar'
-import MobileWeeklyCalendar, { MobileWeeklyCalendarRef } from '@/components/meal-planner/MobileWeeklyCalendar'
+import WeeklyCalendar, {
+  WeeklyCalendarRef,
+} from '@/components/meal-planner/WeeklyCalendar'
+import MobileWeeklyCalendar, {
+  MobileWeeklyCalendarRef,
+} from '@/components/meal-planner/MobileWeeklyCalendar'
 import AddMealModal from '@/components/meal-planner/AddMealModal'
 import GenerateGroceryListFromMealsModal from '@/components/meal-planner/GenerateGroceryListFromMealsModal'
 import { Button } from '@/components/ui/Button'
 import { formatDate } from '@/lib/utils'
-import { 
-  getWeeklyMeals, 
-  createMeal, 
+import {
+  getWeeklyMeals,
+  createMeal,
   updateMeal,
   deleteMeal as deleteMealAPI,
   formatDateForAPI,
   generateGroceryList,
-  MealResponse 
+  MealResponse,
 } from '@/lib/api/meals'
 import { getHouseholds, HouseholdResponse } from '@/lib/api/household'
 import { syncUser } from '@/lib/api/client'
-import { 
-  getGroceryLists, 
+import {
+  getGroceryLists,
   addGroceryItem,
-  GroceryListResponse 
+  GroceryListResponse,
 } from '@/lib/api/grocery'
 
 // Helper to convert API response to Meal type
@@ -35,15 +39,18 @@ function convertMealResponse(meal: MealResponse): Meal {
   const weekStart = new Date(year, month - 1, day) // month is 0-indexed in JS
   const mealDate = new Date(weekStart)
   mealDate.setDate(weekStart.getDate() + meal.day_of_week)
-  
+
   return {
     id: meal.id.toString(),
     name: meal.name,
-    mealType: meal.meal_type.charAt(0).toUpperCase() + meal.meal_type.slice(1) as MealType,
+    mealType: (meal.meal_type.charAt(0).toUpperCase() +
+      meal.meal_type.slice(1)) as MealType,
     date: mealDate,
-    ingredients: meal.ingredients ? meal.ingredients.split(',').map(i => i.trim()) : [],
+    ingredients: meal.ingredients
+      ? meal.ingredients.split(',').map((i) => i.trim())
+      : [],
     notes: meal.notes,
-    createdBy: 'User'
+    createdBy: 'User',
   }
 }
 
@@ -51,11 +58,13 @@ export default function MealPlannerPage() {
   const { getToken } = useAuth()
   const { user } = useUser()
   const [households, setHouseholds] = useState<HouseholdResponse[]>([])
-  const [selectedHouseholdId, setSelectedHouseholdId] = useState<number | null>(null)
+  const [selectedHouseholdId, setSelectedHouseholdId] = useState<number | null>(
+    null
+  )
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [userSynced, setUserSynced] = useState(false)
-  
+
   // State for the current week's start date
   const [currentWeekStart, setCurrentWeekStart] = useState(() => {
     const today = new Date()
@@ -75,13 +84,15 @@ export default function MealPlannerPage() {
   // State for add/edit meal modal
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
-  const [selectedMealType, setSelectedMealType] = useState<MealType>(MealType.DINNER)
+  const [selectedMealType, setSelectedMealType] = useState<MealType>(
+    MealType.DINNER
+  )
   const [editingMeal, setEditingMeal] = useState<Meal | null>(null)
-  
+
   // State for meal details modal
   const [isMealDetailsOpen, setIsMealDetailsOpen] = useState(false)
   const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null)
-  
+
   // State for generate grocery list modal
   const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false)
   const [groceryLists, setGroceryLists] = useState<GroceryListResponse[]>([])
@@ -98,8 +109,10 @@ export default function MealPlannerPage() {
 
       try {
         const email = user.primaryEmailAddress?.emailAddress
-        const name = user.fullName || `${user.firstName || ''} ${user.lastName || ''}`.trim()
-        
+        const name =
+          user.fullName ||
+          `${user.firstName || ''} ${user.lastName || ''}`.trim()
+
         if (!email) {
           console.error('No email found for user')
           return
@@ -108,9 +121,9 @@ export default function MealPlannerPage() {
         await syncUser({
           clerk_user_id: user.id,
           email: email,
-          name: name || undefined
+          name: name || undefined,
         })
-        
+
         setUserSynced(true)
       } catch (err) {
         console.error('Error syncing user:', err)
@@ -133,16 +146,18 @@ export default function MealPlannerPage() {
           setIsLoading(false)
           return
         }
-        
+
         const householdsData = await getHouseholds(token)
         setHouseholds(householdsData)
-        
+
         if (householdsData.length > 0) {
           setSelectedHouseholdId(householdsData[0].id)
         }
       } catch (err) {
         console.error('Error fetching households:', err)
-        setError(err instanceof Error ? err.message : 'Failed to load households')
+        setError(
+          err instanceof Error ? err.message : 'Failed to load households'
+        )
       } finally {
         setIsLoading(false)
       }
@@ -166,8 +181,12 @@ export default function MealPlannerPage() {
 
         // currentWeekStart is now Monday-based, matching the backend
         const weekDate = formatDateForAPI(currentWeekStart)
-        const response = await getWeeklyMeals(weekDate, selectedHouseholdId, token)
-        
+        const response = await getWeeklyMeals(
+          weekDate,
+          selectedHouseholdId,
+          token
+        )
+
         const convertedMeals = response.meals.map(convertMealResponse)
         setMeals(convertedMeals)
       } catch (err) {
@@ -221,7 +240,7 @@ export default function MealPlannerPage() {
     const startDate = new Date(today)
     startDate.setDate(today.getDate() - daysSinceMonday) // Start on Monday
     setCurrentWeekStart(startDate)
-    
+
     // Scroll to today's date after a brief delay to allow the calendar to update
     setTimeout(() => {
       desktopCalendarRef.current?.scrollToToday()
@@ -238,7 +257,11 @@ export default function MealPlannerPage() {
   }
 
   // Handle adding or updating a meal
-  const handleAddMeal = async (mealData: { name: string; notes?: string; ingredients?: string }) => {
+  const handleAddMeal = async (mealData: {
+    name: string
+    notes?: string
+    ingredients?: string
+  }) => {
     if (!selectedHouseholdId) {
       throw new Error('No household selected')
     }
@@ -266,14 +289,19 @@ export default function MealPlannerPage() {
     } else {
       // Creating a new meal
       // Calculate day of week (0=Monday in backend)
-      const dayOfWeek = selectedDate.getDay() === 0 ? 6 : selectedDate.getDay() - 1
+      const dayOfWeek =
+        selectedDate.getDay() === 0 ? 6 : selectedDate.getDay() - 1
 
       // currentWeekStart is now Monday-based, matching the backend
       const newMealResponse = await createMeal(
         {
           household_id: selectedHouseholdId,
           name: mealData.name,
-          meal_type: selectedMealType.toLowerCase() as 'breakfast' | 'lunch' | 'dinner' | 'snack',
+          meal_type: selectedMealType.toLowerCase() as
+            | 'breakfast'
+            | 'lunch'
+            | 'dinner'
+            | 'snack',
           day_of_week: dayOfWeek,
           week_start_date: formatDateForAPI(currentWeekStart),
           notes: mealData.notes,
@@ -346,28 +374,35 @@ export default function MealPlannerPage() {
     }
 
     // Filter to only meals that have ingredients
-    const mealsWithIngredients = weekMeals.filter(meal => meal.ingredients && meal.ingredients.length > 0)
+    const mealsWithIngredients = weekMeals.filter(
+      (meal) => meal.ingredients && meal.ingredients.length > 0
+    )
     if (mealsWithIngredients.length === 0) {
       return []
     }
 
     const ingredientsWithMealType = weekMeals
-      .flatMap((meal) => 
-        (meal.ingredients || []).map(ingredient => ({
+      .flatMap((meal) =>
+        (meal.ingredients || []).map((ingredient) => ({
           ingredient,
-          mealType: meal.mealType.toLowerCase()
+          mealType: meal.mealType.toLowerCase(),
         }))
       )
       // Remove duplicates by ingredient name (keep first occurrence)
-      .filter((item, index, self) => 
-        self.findIndex(other => other.ingredient === item.ingredient) === index
+      .filter(
+        (item, index, self) =>
+          self.findIndex((other) => other.ingredient === item.ingredient) ===
+          index
       )
 
     return ingredientsWithMealType
   }
 
   // Handle creating new grocery list from meal ingredients
-  const handleCreateGroceryList = async (data: { listName: string; ingredients: { ingredient: string; mealType: string }[] }) => {
+  const handleCreateGroceryList = async (data: {
+    listName: string
+    ingredients: { ingredient: string; mealType: string }[]
+  }) => {
     if (!selectedHouseholdId) return
 
     try {
@@ -401,13 +436,18 @@ export default function MealPlannerPage() {
       alert(`${result.message}`)
     } catch (err) {
       console.error('Error creating grocery list:', err)
-      setError(err instanceof Error ? err.message : 'Failed to create grocery list')
+      setError(
+        err instanceof Error ? err.message : 'Failed to create grocery list'
+      )
       setIsCreatingList(false)
     }
   }
 
   // Handle adding ingredients to existing grocery list
-  const handleAddToGroceryList = async (data: { listId: number; ingredients: { ingredient: string; mealType: string }[] }) => {
+  const handleAddToGroceryList = async (data: {
+    listId: number
+    ingredients: { ingredient: string; mealType: string }[]
+  }) => {
     if (!data.ingredients || data.ingredients.length === 0) {
       setError('No ingredients selected to add')
       return
@@ -416,7 +456,7 @@ export default function MealPlannerPage() {
     try {
       setIsCreatingList(true)
       setError(null) // Clear any previous errors
-      
+
       const token = await getToken()
       if (!token) {
         setError('Authentication required')
@@ -438,7 +478,10 @@ export default function MealPlannerPage() {
           )
           successCount++
         } catch (itemError) {
-          console.error(`Failed to add ingredient "${item.ingredient}":`, itemError)
+          console.error(
+            `Failed to add ingredient "${item.ingredient}":`,
+            itemError
+          )
           // Continue with other ingredients
         }
       }
@@ -449,13 +492,17 @@ export default function MealPlannerPage() {
 
       // Show success message
       if (successCount > 0) {
-        alert(`Successfully added ${successCount} of ${data.ingredients.length} ingredients to grocery list!`)
+        alert(
+          `Successfully added ${successCount} of ${data.ingredients.length} ingredients to grocery list!`
+        )
       } else {
         setError('Failed to add any ingredients to the grocery list')
       }
     } catch (err) {
       console.error('Error adding to grocery list:', err)
-      setError(err instanceof Error ? err.message : 'Failed to add to grocery list')
+      setError(
+        err instanceof Error ? err.message : 'Failed to add to grocery list'
+      )
       setIsCreatingList(false)
     }
   }
@@ -492,20 +539,40 @@ export default function MealPlannerPage() {
         {/* No household message */}
         {households.length === 0 && !isLoading && (
           <div className="text-center py-12">
-            <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            <svg
+              className="w-16 h-16 mx-auto text-gray-400 mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+              />
             </svg>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No Household Found</h3>
-            <p className="text-gray-600 mb-4">Create or join a household to start planning meals</p>
-            <Button onClick={() => window.location.href = '/household'}>Go to Household</Button>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No Household Found
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Create or join a household to start planning meals
+            </p>
+            <Button onClick={() => (window.location.href = '/household')}>
+              Go to Household
+            </Button>
           </div>
         )}
 
         {/* Header - Desktop */}
         {households.length > 0 && (
           <div className="hidden md:block mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Meal Planner</h1>
-            <p className="text-gray-600">Plan your meals for the week and generate grocery lists</p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Meal Planner
+            </h1>
+            <p className="text-gray-600">
+              Plan your meals for the week and generate grocery lists
+            </p>
           </div>
         )}
 
@@ -519,11 +586,90 @@ export default function MealPlannerPage() {
         {/* Week Navigation - Desktop */}
         {households.length > 0 && (
           <div className="hidden md:flex bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-          <div className="flex items-center justify-between flex-wrap gap-4 w-full">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center justify-between flex-wrap gap-4 w-full">
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={handlePreviousWeek}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  aria-label="Previous week"
+                >
+                  <svg
+                    className="w-6 h-6 text-gray-700"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </button>
+
+                <div className="text-center">
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    {getWeekRange()}
+                  </h2>
+                </div>
+
+                <button
+                  onClick={handleNextWeek}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  aria-label="Next week"
+                >
+                  <svg
+                    className="w-6 h-6 text-gray-700"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+
+                <Button variant="outline" size="sm" onClick={handleToday}>
+                  Today
+                </Button>
+              </div>
+
+              <Button
+                variant="primary"
+                onClick={handleGenerateGroceryList}
+                className="flex items-center"
+              >
+                <svg
+                  className="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                  />
+                </svg>
+                Generate Grocery List
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Week Navigation - Mobile (Compact) */}
+        {households.length > 0 && (
+          <div className="md:hidden bg-white border-b border-gray-200 px-4 py-3 mb-4">
+            <div className="flex items-center justify-between mb-3">
               <button
                 onClick={handlePreviousWeek}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 rounded-full active:bg-gray-200 transition-colors"
                 aria-label="Previous week"
               >
                 <svg
@@ -541,13 +687,15 @@ export default function MealPlannerPage() {
                 </svg>
               </button>
 
-              <div className="text-center">
-                <h2 className="text-xl font-semibold text-gray-900">{getWeekRange()}</h2>
+              <div className="text-center flex-1">
+                <h2 className="text-base font-semibold text-gray-900">
+                  {getWeekRange()}
+                </h2>
               </div>
 
               <button
                 onClick={handleNextWeek}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 rounded-full active:bg-gray-200 transition-colors"
                 aria-label="Next week"
               >
                 <svg
@@ -564,251 +712,176 @@ export default function MealPlannerPage() {
                   />
                 </svg>
               </button>
+            </div>
 
-              <Button variant="outline" size="sm" onClick={handleToday}>
+            <div className="flex space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleToday}
+                className="flex-shrink-0"
+              >
                 Today
               </Button>
+              <Button
+                variant="primary"
+                onClick={handleGenerateGroceryList}
+                className="flex-1 flex items-center justify-center"
+              >
+                <svg
+                  className="w-4 h-4 mr-1.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                  />
+                </svg>
+                Generate List
+              </Button>
             </div>
-
-            <Button
-              variant="primary"
-              onClick={handleGenerateGroceryList}
-              className="flex items-center"
-            >
-              <svg
-                className="w-5 h-5 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                />
-              </svg>
-              Generate Grocery List
-            </Button>
           </div>
-        </div>
-        )}
-
-        {/* Week Navigation - Mobile (Compact) */}
-        {households.length > 0 && (
-          <div className="md:hidden bg-white border-b border-gray-200 px-4 py-3 mb-4">
-          <div className="flex items-center justify-between mb-3">
-            <button
-              onClick={handlePreviousWeek}
-              className="p-2 hover:bg-gray-100 rounded-full active:bg-gray-200 transition-colors"
-              aria-label="Previous week"
-            >
-              <svg
-                className="w-6 h-6 text-gray-700"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </button>
-
-            <div className="text-center flex-1">
-              <h2 className="text-base font-semibold text-gray-900">{getWeekRange()}</h2>
-            </div>
-
-            <button
-              onClick={handleNextWeek}
-              className="p-2 hover:bg-gray-100 rounded-full active:bg-gray-200 transition-colors"
-              aria-label="Next week"
-            >
-              <svg
-                className="w-6 h-6 text-gray-700"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
-          </div>
-          
-          <div className="flex space-x-2">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={handleToday}
-              className="flex-shrink-0"
-            >
-              Today
-            </Button>
-            <Button
-              variant="primary"
-              onClick={handleGenerateGroceryList}
-              className="flex-1 flex items-center justify-center"
-            >
-              <svg
-                className="w-4 h-4 mr-1.5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                />
-              </svg>
-              Generate List
-            </Button>
-          </div>
-        </div>
         )}
 
         {/* Weekly Calendar - Desktop View */}
         {households.length > 0 && (
           <div className="hidden md:block bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <WeeklyCalendar
-            ref={desktopCalendarRef}
-            startDate={currentWeekStart}
-            meals={meals}
-            onMealClick={handleMealClick}
-            onEmptySlotClick={handleEmptySlotClick}
-            onMealEdit={handleMealEdit}
-            onMealDelete={handleMealDelete}
-          />
-        </div>
+            <WeeklyCalendar
+              ref={desktopCalendarRef}
+              startDate={currentWeekStart}
+              meals={meals}
+              onMealClick={handleMealClick}
+              onEmptySlotClick={handleEmptySlotClick}
+              onMealEdit={handleMealEdit}
+              onMealDelete={handleMealDelete}
+            />
+          </div>
         )}
 
         {/* Mobile Weekly Calendar - Mobile View */}
         {households.length > 0 && (
           <div className="md:hidden px-4 pb-20">
-          <MobileWeeklyCalendar
-            ref={mobileCalendarRef}
-            startDate={currentWeekStart}
-            meals={meals}
-            onEmptySlotClick={handleEmptySlotClick}
-            onMealClick={handleMealClick}
-          />
-        </div>
+            <MobileWeeklyCalendar
+              ref={mobileCalendarRef}
+              startDate={currentWeekStart}
+              meals={meals}
+              onEmptySlotClick={handleEmptySlotClick}
+              onMealClick={handleMealClick}
+            />
+          </div>
         )}
 
         {/* Quick Stats - Desktop Only */}
         {households.length > 0 && (
           <div className="hidden md:grid mt-6 grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
-            <div className="flex items-center">
-              <div className="p-3 bg-green-100 rounded-lg">
-                <svg
-                  className="w-6 h-6 text-green-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm text-gray-600">Meals Planned</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {
-                    meals.filter((m) => {
-                      const date = new Date(m.date)
-                      const weekEnd = new Date(currentWeekStart)
-                      weekEnd.setDate(weekEnd.getDate() + 7)
-                      return date >= currentWeekStart && date < weekEnd
-                    }).length
-                  }
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
-            <div className="flex items-center">
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <svg
-                  className="w-6 h-6 text-blue-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                  />
-                </svg>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm text-gray-600">Empty Slots</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {21 -
-                    meals.filter((m) => {
-                      const date = new Date(m.date)
-                      const weekEnd = new Date(currentWeekStart)
-                      weekEnd.setDate(weekEnd.getDate() + 7)
-                      return date >= currentWeekStart && date < weekEnd
-                    }).length}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
-            <div className="flex items-center">
-              <div className="p-3 bg-orange-100 rounded-lg">
-                <svg
-                  className="w-6 h-6 text-orange-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                  />
-                </svg>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm text-gray-600">Unique Ingredients</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {
-                    meals
-                      .filter((m) => {
+            <div className="bg-white rounded-lg border border-gray-200 p-4">
+              <div className="flex items-center">
+                <div className="p-3 bg-green-100 rounded-lg">
+                  <svg
+                    className="w-6 h-6 text-green-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm text-gray-600">Meals Planned</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {
+                      meals.filter((m) => {
                         const date = new Date(m.date)
                         const weekEnd = new Date(currentWeekStart)
                         weekEnd.setDate(weekEnd.getDate() + 7)
                         return date >= currentWeekStart && date < weekEnd
-                      })
-                      .flatMap((m) => m.ingredients || [])
-                      .filter((ingredient, index, self) => self.indexOf(ingredient) === index)
-                      .length
-                  }
-                </p>
+                      }).length
+                    }
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg border border-gray-200 p-4">
+              <div className="flex items-center">
+                <div className="p-3 bg-blue-100 rounded-lg">
+                  <svg
+                    className="w-6 h-6 text-blue-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                    />
+                  </svg>
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm text-gray-600">Empty Slots</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {21 -
+                      meals.filter((m) => {
+                        const date = new Date(m.date)
+                        const weekEnd = new Date(currentWeekStart)
+                        weekEnd.setDate(weekEnd.getDate() + 7)
+                        return date >= currentWeekStart && date < weekEnd
+                      }).length}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg border border-gray-200 p-4">
+              <div className="flex items-center">
+                <div className="p-3 bg-orange-100 rounded-lg">
+                  <svg
+                    className="w-6 h-6 text-orange-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                    />
+                  </svg>
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm text-gray-600">Unique Ingredients</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {
+                      meals
+                        .filter((m) => {
+                          const date = new Date(m.date)
+                          const weekEnd = new Date(currentWeekStart)
+                          weekEnd.setDate(weekEnd.getDate() + 7)
+                          return date >= currentWeekStart && date < weekEnd
+                        })
+                        .flatMap((m) => m.ingredients || [])
+                        .filter(
+                          (ingredient, index, self) =>
+                            self.indexOf(ingredient) === index
+                        ).length
+                    }
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
         )}
       </div>
 
@@ -839,4 +912,3 @@ export default function MealPlannerPage() {
     </div>
   )
 }
-

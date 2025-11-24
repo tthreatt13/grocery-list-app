@@ -17,8 +17,14 @@ interface GenerateGroceryListFromMealsModalProps {
   open: boolean
   onClose: () => void
   ingredients: IngredientWithMealType[]
-  onCreateList: (data: { listName: string; ingredients: IngredientWithMealType[] }) => void | Promise<void>
-  onAddToList?: (data: { listId: number; ingredients: IngredientWithMealType[] }) => void | Promise<void>
+  onCreateList: (data: {
+    listName: string
+    ingredients: IngredientWithMealType[]
+  }) => void | Promise<void>
+  onAddToList?: (data: {
+    listId: number
+    ingredients: IngredientWithMealType[]
+  }) => void | Promise<void>
   existingLists?: GroceryListResponse[]
   isCreating?: boolean
 }
@@ -35,14 +41,18 @@ export default function GenerateGroceryListFromMealsModal({
   const [mode, setMode] = useState<'create' | 'add'>('create')
   const [listName, setListName] = useState('Weekly Meal Plan')
   const [selectedListId, setSelectedListId] = useState<number | null>(null)
-  const [selectedIngredients, setSelectedIngredients] = useState<Set<string>>(new Set())
+  const [selectedIngredients, setSelectedIngredients] = useState<Set<string>>(
+    new Set()
+  )
 
   const hasExistingLists = existingLists.length > 0
 
   // Initialize all ingredients as selected when modal opens
   useEffect(() => {
     if (open) {
-      setSelectedIngredients(new Set(ingredients.map(item => item.ingredient)))
+      setSelectedIngredients(
+        new Set(ingredients.map((item) => item.ingredient))
+      )
       setListName('Weekly Meal Plan')
       setMode('create')
       setSelectedListId(null)
@@ -60,8 +70,10 @@ export default function GenerateGroceryListFromMealsModal({
   }
 
   const handleSubmit = async () => {
-    const selectedItems = ingredients.filter(item => selectedIngredients.has(item.ingredient))
-    
+    const selectedItems = ingredients.filter((item) =>
+      selectedIngredients.has(item.ingredient)
+    )
+
     if (mode === 'create') {
       await onCreateList({ listName, ingredients: selectedItems })
     } else if (mode === 'add' && onAddToList && selectedListId !== null) {
@@ -70,11 +82,10 @@ export default function GenerateGroceryListFromMealsModal({
   }
 
   const selectedCount = selectedIngredients.size
-  const canSubmit = selectedCount > 0 && !isCreating && (
-    mode === 'create' 
-      ? listName.trim().length > 0 
-      : selectedListId !== null
-  )
+  const canSubmit =
+    selectedCount > 0 &&
+    !isCreating &&
+    (mode === 'create' ? listName.trim().length > 0 : selectedListId !== null)
 
   return (
     <Modal
@@ -103,8 +114,12 @@ export default function GenerateGroceryListFromMealsModal({
                   aria-label="Create new list"
                 />
                 <div>
-                  <div className="font-medium text-gray-900">Create New List</div>
-                  <div className="text-sm text-gray-500">Start a fresh grocery list from meal ingredients</div>
+                  <div className="font-medium text-gray-900">
+                    Create New List
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    Start a fresh grocery list from meal ingredients
+                  </div>
                 </div>
               </label>
               <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
@@ -119,8 +134,12 @@ export default function GenerateGroceryListFromMealsModal({
                   aria-label="Add to existing list"
                 />
                 <div>
-                  <div className="font-medium text-gray-900">Add to Existing List</div>
-                  <div className="text-sm text-gray-500">Add ingredients to one of your current lists</div>
+                  <div className="font-medium text-gray-900">
+                    Add to Existing List
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    Add ingredients to one of your current lists
+                  </div>
                 </div>
               </label>
             </div>
@@ -130,7 +149,10 @@ export default function GenerateGroceryListFromMealsModal({
         {/* List Name Input (Create Mode) */}
         {mode === 'create' && (
           <div>
-            <label htmlFor="list-name" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="list-name"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               List Name
             </label>
             <Input
@@ -147,13 +169,20 @@ export default function GenerateGroceryListFromMealsModal({
         {/* Existing List Selector (Add Mode) */}
         {mode === 'add' && hasExistingLists && (
           <div>
-            <label htmlFor="select-list" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="select-list"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Select List
             </label>
             <Select
               id="select-list"
               value={selectedListId?.toString() || ''}
-              onChange={(e) => setSelectedListId(e.target.value ? Number(e.target.value) : null)}
+              onChange={(e) =>
+                setSelectedListId(
+                  e.target.value ? Number(e.target.value) : null
+                )
+              }
               disabled={isCreating}
               aria-label="Select list"
             >
@@ -174,7 +203,8 @@ export default function GenerateGroceryListFromMealsModal({
               Meal Ingredients
             </h3>
             <span className="text-sm text-gray-500">
-              {selectedCount} {selectedCount === 1 ? 'ingredient' : 'ingredients'} selected
+              {selectedCount}{' '}
+              {selectedCount === 1 ? 'ingredient' : 'ingredients'} selected
             </span>
           </div>
 
@@ -212,8 +242,12 @@ export default function GenerateGroceryListFromMealsModal({
                     disabled={isCreating}
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-900">{item.ingredient}</p>
-                    <p className="text-sm text-gray-500 capitalize">{item.mealType}</p>
+                    <p className="font-medium text-gray-900">
+                      {item.ingredient}
+                    </p>
+                    <p className="text-sm text-gray-500 capitalize">
+                      {item.mealType}
+                    </p>
                   </div>
                 </label>
               ))}
@@ -238,7 +272,9 @@ export default function GenerateGroceryListFromMealsModal({
               </svg>
               <div className="text-sm text-blue-700">
                 <p className="font-medium mb-1">
-                  {mode === 'create' ? 'Create a grocery list from meal ingredients' : 'Add ingredients to your grocery list'}
+                  {mode === 'create'
+                    ? 'Create a grocery list from meal ingredients'
+                    : 'Add ingredients to your grocery list'}
                 </p>
                 <p>
                   {mode === 'create'
@@ -252,11 +288,7 @@ export default function GenerateGroceryListFromMealsModal({
 
         {/* Action Buttons */}
         <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
-          <Button
-            variant="secondary"
-            onClick={onClose}
-            disabled={isCreating}
-          >
+          <Button variant="secondary" onClick={onClose} disabled={isCreating}>
             Cancel
           </Button>
           <Button
@@ -311,4 +343,3 @@ export default function GenerateGroceryListFromMealsModal({
     </Modal>
   )
 }
-

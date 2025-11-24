@@ -27,12 +27,14 @@ This document details the complete deployment of the Grocery List App FastAPI ba
 ### 1. Railway Project Setup
 
 **Project Details:**
+
 - Project Name: `renewed-ambition`
 - Service Name: `grocery-list-app`
 - Region: US West (California, USA)
 - GitHub Repository: `tthreatt/grocery-list-app`
 
 **Database Configuration:**
+
 - PostgreSQL managed database with automatic volume creation
 - Volume: `postgres-volume` for data persistence
 - Automatic connection via `DATABASE_URL` environment variable
@@ -40,6 +42,7 @@ This document details the complete deployment of the Grocery List App FastAPI ba
 ### 2. Backend Configuration Files
 
 #### Dockerfile (`backend/Dockerfile`)
+
 ```dockerfile
 # Use Python 3.11 slim image for smaller size
 FROM python:3.11-slim
@@ -77,6 +80,7 @@ CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
 ```
 
 #### Railway Configuration (`railway.json`)
+
 ```json
 {
   "$schema": "https://railway.app/railway.schema.json",
@@ -96,10 +100,11 @@ CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
 ```
 
 #### Production Configuration Updates (`backend/config.py`)
+
 ```python
 class Settings(BaseSettings):
     # ... existing settings ...
-    
+
     # Production CORS origins
     allowed_origins: list[str] = [
         "http://localhost:3000",
@@ -107,7 +112,7 @@ class Settings(BaseSettings):
         "https://grocery-list-app.vercel.app",  # Production frontend
         "https://*.vercel.app",  # Vercel preview deployments
     ]
-    
+
     # Server Configuration (for Railway deployment)
     host: str = "0.0.0.0"
     port: int = 8000
@@ -116,23 +121,27 @@ class Settings(BaseSettings):
 ### 3. Environment Variables Configuration
 
 **Railway Environment Variables:**
+
 - `DATABASE_URL`: `${{Postgres.DATABASE_URL}}` (auto-connected to PostgreSQL)
 - `ENVIRONMENT`: `production`
 - `CLERK_SECRET_KEY`: `sk_test_PLACEHOLDER_REPLACE_WITH_ACTUAL_CLERK_SECRET_KEY`
 
 **Required Updates:**
+
 - Replace `CLERK_SECRET_KEY` with actual Clerk secret key from dashboard
 - Add any additional environment-specific variables as needed
 
 ### 4. GitHub Integration
 
 **Automatic Deployment Setup:**
+
 - Connected to `main` branch for production deployments
 - Root directory set to `backend` for monorepo structure
 - Automatic deployments triggered on push to main branch
 - Railway GitHub App installed with repository access
 
 **Deployment Trigger Process:**
+
 1. Code pushed to `main` branch
 2. Railway detects changes
 3. Builds Docker image from `backend/Dockerfile`
@@ -142,6 +151,7 @@ class Settings(BaseSettings):
 ## Deployment Results
 
 ### Successful Deployment Metrics
+
 - **Build Time**: 01:07 (1 minute 7 seconds)
 - **Deploy Time**: 00:09 (9 seconds)
 - **Total Deployment Time**: ~1 minute 16 seconds
@@ -150,18 +160,21 @@ class Settings(BaseSettings):
 ### API Endpoints Verification
 
 **Health Check Endpoint:**
+
 ```bash
 curl https://grocery-list-app-production-c0f1.up.railway.app/health
 # Response: {"status":"healthy","service":"grocery-app-api"}
 ```
 
 **Root Endpoint:**
+
 ```bash
 curl https://grocery-list-app-production-c0f1.up.railway.app/
 # Response: {"message":"Welcome to Grocery App API","version":"1.0.0","docs":"/docs"}
 ```
 
 **API Documentation:**
+
 - Available at: `https://grocery-list-app-production-c0f1.up.railway.app/docs`
 - Swagger UI loads successfully with all endpoints documented
 
@@ -170,11 +183,15 @@ curl https://grocery-list-app-production-c0f1.up.railway.app/
 ### API Client Configuration Update
 
 Updated `lib/api/client.ts` to use Railway backend:
+
 ```typescript
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://grocery-list-app-production-c0f1.up.railway.app'
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  'https://grocery-list-app-production-c0f1.up.railway.app'
 ```
 
 **Environment Variable Options:**
+
 - Development: Uses `NEXT_PUBLIC_API_URL=http://localhost:8000`
 - Production: Falls back to Railway URL if not set
 - Vercel Deployment: Set `NEXT_PUBLIC_API_URL` in Vercel dashboard
@@ -182,12 +199,14 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://grocery-list-ap
 ## Database Management
 
 ### PostgreSQL Setup
+
 - **Type**: Railway Managed PostgreSQL
 - **Version**: Latest stable
 - **Storage**: Persistent volume (`postgres-volume`)
 - **Connection**: Automatic via Railway's `DATABASE_URL`
 
 ### Migration Process
+
 ```bash
 # Install Railway CLI
 npm install -g @railway/cli
@@ -203,7 +222,9 @@ railway run alembic upgrade head
 ```
 
 ### Database Schema
+
 All existing Alembic migrations are included:
+
 - `90f091a98d1c_initial_schema.py` - Initial database schema
 - `b1f2c3d4e5f6_add_meal_type_to_grocery_items.py` - Meal type tagging
 - `4801cb88f9d6_fix_meal_type_capitalization.py` - Meal type fixes
@@ -211,22 +232,26 @@ All existing Alembic migrations are included:
 ## Monitoring and Observability
 
 ### Health Monitoring
+
 - **Health Endpoint**: `/health`
 - **Expected Response**: `{"status":"healthy","service":"grocery-app-api"}`
 - **Railway Health Checks**: Configured with 100s timeout
 
 ### Logging
+
 - **Railway Logs**: Available in Railway dashboard
 - **Application Logs**: Structured logging with timestamps
 - **Request Logging**: All HTTP requests logged with timing
 
 ### Metrics
+
 - **Railway Metrics**: CPU, Memory, Network usage
 - **Custom Metrics**: Available via `/metrics` endpoint (if implemented)
 
 ## Security Configuration
 
 ### CORS Policy
+
 ```python
 allowed_origins = [
     "http://localhost:3000",      # Local development
@@ -237,6 +262,7 @@ allowed_origins = [
 ```
 
 ### Authentication
+
 - **Clerk Integration**: JWT token validation
 - **API Key**: Clerk secret key for backend verification
 - **Middleware**: Authentication middleware on protected routes
@@ -246,21 +272,25 @@ allowed_origins = [
 ### Common Issues
 
 **1. Build Failures**
+
 - Ensure `backend/Dockerfile` exists in repository
 - Verify `requirements.txt` has all dependencies
 - Check Railway build logs for specific errors
 
 **2. Database Connection Issues**
+
 - Verify `DATABASE_URL` environment variable is set
 - Check PostgreSQL service status in Railway dashboard
 - Ensure database migrations have been run
 
 **3. CORS Errors**
+
 - Update `allowed_origins` in `config.py`
 - Verify frontend URL is included in CORS policy
 - Check browser network tab for specific CORS errors
 
 **4. Authentication Issues**
+
 - Verify `CLERK_SECRET_KEY` is set correctly
 - Check Clerk dashboard for API key validity
 - Ensure JWT tokens are being sent in requests
@@ -287,12 +317,14 @@ railway shell
 ## Performance Optimization
 
 ### Current Configuration
+
 - **CPU**: 2 vCPU (plan limit)
 - **Memory**: 1 GB (plan limit)
 - **Replicas**: 1 instance
 - **Region**: US West (California)
 
 ### Scaling Considerations
+
 - **Horizontal Scaling**: Increase replica count (Pro plan required)
 - **Vertical Scaling**: Upgrade Railway plan for more resources
 - **Database Scaling**: PostgreSQL automatically managed by Railway
@@ -301,12 +333,14 @@ railway shell
 ## Cost Management
 
 ### Railway Pricing
+
 - **Starter Plan**: Current usage
 - **Resource Limits**: 2 vCPU, 1 GB RAM
 - **Database**: Included PostgreSQL
 - **Bandwidth**: Generous limits for MVP usage
 
 ### Optimization Tips
+
 - Monitor resource usage in Railway dashboard
 - Optimize Docker image size for faster builds
 - Use Railway's sleep mode for development environments
@@ -315,12 +349,14 @@ railway shell
 ## Next Steps
 
 ### Immediate Actions Required
+
 1. **Update Clerk Secret Key**: Replace placeholder with actual key
 2. **Run Database Migrations**: Execute Alembic migrations on production
 3. **Deploy Frontend**: Deploy to Vercel with Railway backend URL
 4. **End-to-End Testing**: Test all application features
 
 ### Future Enhancements
+
 1. **Custom Domain**: Configure custom domain for API
 2. **SSL Certificate**: Automatic HTTPS (included with Railway)
 3. **Monitoring**: Add application performance monitoring
@@ -330,6 +366,7 @@ railway shell
 ## Conclusion
 
 The Railway backend deployment has been successfully completed with:
+
 - ✅ Production-ready FastAPI backend
 - ✅ Managed PostgreSQL database
 - ✅ Automatic GitHub deployments
@@ -348,6 +385,7 @@ The backend is now live at `https://grocery-list-app-production-c0f1.up.railway.
 - [Clerk Authentication](https://clerk.com/docs)
 
 ---
-*Document created: November 16, 2025*
-*Last updated: November 16, 2025*
-*Status: ✅ Deployment Complete*
+
+_Document created: November 16, 2025_
+_Last updated: November 16, 2025_
+_Status: ✅ Deployment Complete_

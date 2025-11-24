@@ -28,7 +28,7 @@ export default function AddItemForm({ onAdd, onCancel }: AddItemFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!name.trim()) return
 
     onAdd({
@@ -49,17 +49,17 @@ export default function AddItemForm({ onAdd, onCancel }: AddItemFormProps) {
     setNotes('')
   }
 
-  const categoryOptions = Object.values(ItemCategory).map(cat => ({
+  const categoryOptions = Object.values(ItemCategory).map((cat) => ({
     value: cat,
     label: cat,
   }))
 
   const mealTypeOptions = [
     { value: '', label: 'No meal assignment' },
-    ...Object.values(MealType).map(meal => ({
+    ...Object.values(MealType).map((meal) => ({
       value: meal,
       label: meal,
-    }))
+    })),
   ]
 
   return (
@@ -128,4 +128,3 @@ export default function AddItemForm({ onAdd, onCancel }: AddItemFormProps) {
     </form>
   )
 }
-

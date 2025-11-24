@@ -1,12 +1,15 @@
 # Task List: MVP Grocery App for Busy Parents
 
 ## Feature Overview
+
 Build a full-stack web application with React + Next.js frontend and Python FastAPI backend that helps busy parents create weekly grocery lists, manage pantry inventory, plan meals, and share lists with household members. This task list focuses on backend API development, database setup, authentication integration, and connecting the existing frontend to the new backend.
 
 ## Target User
+
 Busy parents who need to efficiently plan weekly meals and manage grocery shopping for their family.
 
 ## Tech Stack
+
 - **Frontend**: Next.js 14 + TypeScript (✅ already built)
 - **Backend**: FastAPI + Python 3.11+
 - **Database**: PostgreSQL 15+
@@ -18,6 +21,7 @@ Busy parents who need to efficiently plan weekly meals and manage grocery shoppi
 ## Relevant Files
 
 ### Backend Structure (New)
+
 - `backend/` - Root directory for FastAPI backend
 - `backend/requirements.txt` - Python dependencies
 - `backend/main.py` - FastAPI application entry point
@@ -29,6 +33,7 @@ Busy parents who need to efficiently plan weekly meals and manage grocery shoppi
 - `backend/alembic/versions/` - Database migration files
 
 ### Database Models
+
 - `backend/models/__init__.py` - Model exports
 - `backend/models/user.py` - User model (linked to Clerk)
 - `backend/models/grocery_list.py` - Grocery list model
@@ -39,6 +44,7 @@ Busy parents who need to efficiently plan weekly meals and manage grocery shoppi
 - `backend/models/household_member.py` - Household member association model
 
 ### API Routes
+
 - `backend/routes/__init__.py` - Route exports
 - `backend/routes/auth.py` - Authentication routes (Clerk integration)
 - `backend/routes/users.py` - User management routes
@@ -49,6 +55,7 @@ Busy parents who need to efficiently plan weekly meals and manage grocery shoppi
 - `backend/routes/households.py` - Household management endpoints
 
 ### Middleware & Utils
+
 - `backend/middleware/auth.py` - Clerk authentication middleware
 - `backend/middleware/permissions.py` - Permission checking middleware
 - `backend/schemas/__init__.py` - Pydantic schema exports
@@ -60,6 +67,7 @@ Busy parents who need to efficiently plan weekly meals and manage grocery shoppi
 - `backend/tests/` - Backend test files
 
 ### Frontend Updates (Existing)
+
 - `lib/api/client.ts` - API client with fetch wrapper
 - `lib/api/grocery.ts` - Grocery list API functions
 - `lib/api/pantry.ts` - Pantry API functions
@@ -69,6 +77,7 @@ Busy parents who need to efficiently plan weekly meals and manage grocery shoppi
 - `.env.local` - Frontend environment variables
 
 ### Deployment
+
 - `backend/Dockerfile` - Docker configuration for Railway
 - `backend/railway.json` - Railway deployment configuration
 - `.github/workflows/deploy.yml` - CI/CD pipeline (optional)
@@ -78,6 +87,7 @@ Busy parents who need to efficiently plan weekly meals and manage grocery shoppi
 **IMPORTANT:** As you complete each task, you must check it off in this markdown file by changing `- [ ]` to `- [x]`. This helps track progress and ensures you don't skip any steps.
 
 Example:
+
 - `- [ ] 1.1 Read file` → `- [x] 1.1 Read file` (after completing)
 
 Update the file after completing each sub-task, not just after completing an entire parent task.
@@ -96,7 +106,7 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 1.5 Create `backend/main.py` with basic FastAPI app and health check endpoint
   - [x] 1.6 Create `backend/config.py` for environment configuration using pydantic-settings
   - [x] 1.7 Create `backend/.env.example` with required environment variables (DATABASE_URL, CLERK_SECRET_KEY, etc.)
-  - [x] 1.8 Create `backend/.gitignore` to exclude venv/, .env, __pycache__, etc.
+  - [x] 1.8 Create `backend/.gitignore` to exclude venv/, .env, **pycache**, etc.
   - [x] 1.9 Create `backend/database.py` with SQLAlchemy engine and session setup
   - [x] 1.10 Test FastAPI server runs locally: `uvicorn main:app --reload` and verify health endpoint
   - [x] 1.11 Commit initial backend setup with message "chore: initialize FastAPI backend structure"
@@ -267,4 +277,3 @@ Update the file after completing each sub-task, not just after completing an ent
   - [ ] 10.21 Update README with production URLs and setup instructions
   - [ ] 10.22 Create pull request to merge feature branch to main
   - [ ] 10.23 Merge feature branch after review and testing complete
-

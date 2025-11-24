@@ -13,6 +13,7 @@ A modern, full-stack grocery list and meal planning application built for busy p
 ## ✨ Features
 
 ### 🛒 Grocery Lists
+
 - Create and manage multiple grocery lists
 - Add items with quantities, categories, and notes
 - Check off items as you shop with satisfying strike-through
@@ -21,6 +22,7 @@ A modern, full-stack grocery list and meal planning application built for busy p
 - Track shopping progress with visual progress bars
 
 ### 🍳 Weekly Meal Planner
+
 - Plan meals for the entire week (Breakfast, Lunch, Dinner)
 - Visual calendar view with easy navigation between weeks
 - Add meals with ingredients and notes
@@ -29,6 +31,7 @@ A modern, full-stack grocery list and meal planning application built for busy p
 - Quick stats showing meals planned and ingredients needed
 
 ### 🏺 Pantry Inventory
+
 - Keep track of all pantry items in one place
 - Set expiration dates and get alerts for items expiring soon
 - Low stock warnings with customizable thresholds
@@ -37,6 +40,7 @@ A modern, full-stack grocery list and meal planning application built for busy p
 - Track when items were added and last updated
 
 ### 👨‍👩‍👧‍👦 Household Management
+
 - Invite family members to collaborate
 - Assign roles (Admin, Member, Viewer)
 - See who last edited shared lists
@@ -48,10 +52,12 @@ A modern, full-stack grocery list and meal planning application built for busy p
 ### Prerequisites
 
 **Frontend:**
+
 - Node.js 18.0 or higher
 - npm or yarn package manager
 
 **Backend:**
+
 - Python 3.9 or higher
 - PostgreSQL 15+ (or SQLite for development)
 - Virtual environment (venv or conda)
@@ -59,12 +65,14 @@ A modern, full-stack grocery list and meal planning application built for busy p
 ### Installation
 
 1. **Clone the repository:**
+
 ```bash
 git clone https://github.com/yourusername/grocery-list-app.git
 cd grocery-list-app
 ```
 
 2. **Set up the backend:**
+
 ```bash
 cd backend
 python -m venv venv
@@ -79,6 +87,7 @@ uvicorn main:app --reload
 ```
 
 3. **Set up the frontend:**
+
 ```bash
 # In a new terminal, from the project root
 npm install
@@ -91,6 +100,7 @@ npm run dev
 ```
 
 4. **Access the application:**
+
 - Frontend: [http://localhost:3000](http://localhost:3000)
 - Backend API: [http://localhost:8000](http://localhost:8000)
 - API Documentation: [http://localhost:8000/docs](http://localhost:8000/docs)
@@ -134,6 +144,7 @@ grocery-list-app/
 ## 🎨 Design System
 
 ### Color Palette
+
 - **Primary (Green)**: `#059669` - Actions, active states
 - **Secondary (Blue)**: `#3B82F6` - Accents, information
 - **Success (Green)**: `#10B981` - Success messages, Produce category
@@ -141,11 +152,13 @@ grocery-list-app/
 - **Danger (Red)**: `#EF4444` - Errors, Meat category
 
 ### Typography
+
 - **Font Family**: Inter (Google Fonts)
 - **Headings**: Bold, 2xl-3xl on mobile, 3xl-4xl on desktop
 - **Body**: Regular, 14px-16px
 
 ### Touch Targets
+
 - All interactive elements meet WCAG 2.1 minimum touch target size of 44×44px
 - Optimized for mobile-first experience
 - Large, easy-to-tap checkboxes and buttons
@@ -153,11 +166,13 @@ grocery-list-app/
 ## 📱 Responsive Design
 
 The app is fully responsive and optimized for:
+
 - **Mobile**: 375px+ (iPhone SE and up)
 - **Tablet**: 768px+ (iPad and similar)
 - **Desktop**: 1024px+ (laptops and desktops)
 
 ### Mobile-First Features
+
 - Bottom navigation bar for easy thumb access
 - Full-width buttons on mobile
 - Stacked layouts that expand on larger screens
@@ -180,12 +195,14 @@ npm run test:coverage
 ```
 
 ### Test Coverage
+
 - **Frontend**: UI components, feature components, API adapters, utility functions
 - **Backend**: Models, routes, middleware, database operations
 - **Integration**: End-to-end API communication with type safety
 - **TDD Approach**: Tests written first, then implementation follows
 
 ### Backend Testing
+
 ```bash
 # Run backend tests
 cd backend
@@ -199,6 +216,7 @@ pytest --cov=. --cov-report=html
 ## 🛠️ Built With
 
 ### Frontend
+
 - **[Next.js 14](https://nextjs.org/)** - React framework with App Router
 - **[TypeScript](https://www.typescriptlang.org/)** - Type safety and better DX
 - **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
@@ -208,6 +226,7 @@ pytest --cov=. --cov-report=html
 - **[React Testing Library](https://testing-library.com/react)** - Component testing
 
 ### Backend
+
 - **[FastAPI](https://fastapi.tiangolo.com/)** - Modern Python web framework
 - **[SQLAlchemy](https://www.sqlalchemy.org/)** - SQL toolkit and ORM
 - **[PostgreSQL](https://www.postgresql.org/)** - Production database
@@ -218,6 +237,7 @@ pytest --cov=. --cov-report=html
 ## 🏛️ Architecture
 
 ### API Design
+
 - **RESTful API** with FastAPI and automatic OpenAPI documentation
 - **Type-safe** communication between frontend and backend
 - **Adapter Pattern** for data transformation between API and UI layers
@@ -225,12 +245,14 @@ pytest --cov=. --cov-report=html
 - **Database** migrations with Alembic for schema evolution
 
 ### Data Flow
+
 ```
 Frontend (Next.js) → API Client → Backend (FastAPI) → Database (PostgreSQL)
                   ↖ Adapters ↗
 ```
 
 ### Key Design Patterns
+
 - **Repository Pattern**: Clean data access layer
 - **Adapter Pattern**: Transform API responses to frontend types
 - **Middleware Pattern**: Authentication and permission handling
@@ -241,6 +263,7 @@ Frontend (Next.js) → API Client → Backend (FastAPI) → Database (PostgreSQL
 This is a **full-stack application** with backend integration in progress. Current implementation status:
 
 ### ✅ Completed Features
+
 - **Backend API**: Complete FastAPI backend with PostgreSQL database
 - **Authentication**: Clerk integration for user management
 - **Dashboard**: Fully integrated with backend API (✅ All tests passing)
@@ -249,12 +272,14 @@ This is a **full-stack application** with backend integration in progress. Curre
 - **Testing**: Comprehensive test suites for both frontend and backend
 
 ### 🚧 In Progress
+
 - **Grocery Lists**: Partial backend integration
-- **Meal Planner**: Partial backend integration  
+- **Meal Planner**: Partial backend integration
 - **Household Management**: Partial backend integration
 - **Pantry**: Using mock data, backend ready
 
 ### 🎯 Next Steps
+
 - [ ] Complete integration for remaining pages
 - [ ] Real-time collaboration with WebSockets
 - [ ] Push notifications for expiring items
@@ -266,6 +291,7 @@ This is a **full-stack application** with backend integration in progress. Curre
 ## 🎯 Target Users
 
 **Busy parents** who need to:
+
 - Efficiently plan weekly meals for their family
 - Manage grocery shopping without forgetting items
 - Keep track of pantry inventory to reduce waste
@@ -276,6 +302,7 @@ This is a **full-stack application** with backend integration in progress. Curre
 Contributions are welcome! This is an active full-stack project with both frontend and backend components.
 
 ### Development Workflow
+
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Set up both frontend and backend development environments
@@ -286,6 +313,7 @@ Contributions are welcome! This is an active full-stack project with both fronte
 8. Open a Pull Request
 
 ### Code Quality Standards
+
 - **Frontend**: TypeScript, ESLint, Jest tests required
 - **Backend**: Python type hints, Black formatting, Pytest tests required
 - **TDD Approach**: Write tests first, then implement features
@@ -309,4 +337,3 @@ For questions or feedback, please open an issue on GitHub.
 ---
 
 **Note**: This is a full-stack application with backend integration. The dashboard is fully integrated with the backend API, and other pages are in various stages of integration. See the [Integration Status](docs/INTEGRATION_STATUS.md) for detailed progress.
-

@@ -129,9 +129,11 @@ describe('ReuseListModal', () => {
       />
     )
 
-    const select = screen.getByLabelText(/select previous list/i) as HTMLSelectElement
-    const options = Array.from(select.options).map(opt => opt.text)
-    
+    const select = screen.getByLabelText(
+      /select previous list/i
+    ) as HTMLSelectElement
+    const options = Array.from(select.options).map((opt) => opt.text)
+
     expect(options).not.toContain('Current List (0 items)')
     expect(options).toContain('Previous Week List (3 items)')
     expect(options).toContain('Another List (1 items)')
@@ -175,12 +177,12 @@ describe('ReuseListModal', () => {
     await waitFor(() => {
       const checkboxes = screen.getAllByRole('checkbox')
       // All item checkboxes should be checked (plus the select all checkbox if present)
-      const itemCheckboxes = checkboxes.filter(cb => {
+      const itemCheckboxes = checkboxes.filter((cb) => {
         const id = cb.getAttribute('id')
         return id && id.startsWith('reuse-item-')
       })
       expect(itemCheckboxes).toHaveLength(3)
-      itemCheckboxes.forEach(checkbox => {
+      itemCheckboxes.forEach((checkbox) => {
         expect(checkbox).toBeChecked()
       })
     })
@@ -205,19 +207,19 @@ describe('ReuseListModal', () => {
     })
 
     const checkboxes = screen.getAllByRole('checkbox')
-    const appleCheckbox = checkboxes.find(cb => {
+    const appleCheckbox = checkboxes.find((cb) => {
       const id = cb.getAttribute('id')
       return id === 'reuse-item-1'
     })
 
     expect(appleCheckbox).toBeChecked()
-    
+
     if (appleCheckbox) {
       await user.click(appleCheckbox)
       await waitFor(() => {
         expect(appleCheckbox).not.toBeChecked()
       })
-      
+
       // Click again to verify it toggles back
       await user.click(appleCheckbox)
       await waitFor(() => {
@@ -245,17 +247,17 @@ describe('ReuseListModal', () => {
     })
 
     const checkboxes = screen.getAllByRole('checkbox')
-    const appleCheckbox = checkboxes.find(cb => {
+    const appleCheckbox = checkboxes.find((cb) => {
       const id = cb.getAttribute('id')
       return id === 'reuse-item-1'
     })
 
     expect(appleCheckbox).toBeChecked()
-    
+
     // Click the label instead of the checkbox
     const appleLabel = screen.getByText('Apples')
     await user.click(appleLabel)
-    
+
     await waitFor(() => {
       expect(appleCheckbox).not.toBeChecked()
     })
@@ -281,17 +283,19 @@ describe('ReuseListModal', () => {
 
     // Uncheck one item
     const checkboxes = screen.getAllByRole('checkbox')
-    const appleCheckbox = checkboxes.find(cb => {
+    const appleCheckbox = checkboxes.find((cb) => {
       const id = cb.getAttribute('id')
       return id === 'reuse-item-1'
     })
-    
+
     if (appleCheckbox) {
       await user.click(appleCheckbox)
     }
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /select all/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /select all/i })
+      ).toBeInTheDocument()
     })
   })
 
@@ -310,7 +314,9 @@ describe('ReuseListModal', () => {
     await user.selectOptions(select, '10')
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /deselect all/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /deselect all/i })
+      ).toBeInTheDocument()
     })
   })
 
@@ -334,7 +340,7 @@ describe('ReuseListModal', () => {
 
     // Uncheck all items first
     const checkboxes = screen.getAllByRole('checkbox')
-    const itemCheckboxes = checkboxes.filter(cb => {
+    const itemCheckboxes = checkboxes.filter((cb) => {
       const id = cb.getAttribute('id')
       return id && id.startsWith('reuse-item-')
     })
@@ -350,7 +356,7 @@ describe('ReuseListModal', () => {
     await user.click(selectAllButton)
 
     await waitFor(() => {
-      itemCheckboxes.forEach(checkbox => {
+      itemCheckboxes.forEach((checkbox) => {
         expect(checkbox).toBeChecked()
       })
     })
@@ -375,16 +381,18 @@ describe('ReuseListModal', () => {
     })
 
     // Click Deselect All
-    const deselectAllButton = screen.getByRole('button', { name: /deselect all/i })
+    const deselectAllButton = screen.getByRole('button', {
+      name: /deselect all/i,
+    })
     await user.click(deselectAllButton)
 
     await waitFor(() => {
       const checkboxes = screen.getAllByRole('checkbox')
-      const itemCheckboxes = checkboxes.filter(cb => {
+      const itemCheckboxes = checkboxes.filter((cb) => {
         const id = cb.getAttribute('id')
         return id && id.startsWith('reuse-item-')
       })
-      itemCheckboxes.forEach(checkbox => {
+      itemCheckboxes.forEach((checkbox) => {
         expect(checkbox).not.toBeChecked()
       })
     })
@@ -410,11 +418,11 @@ describe('ReuseListModal', () => {
 
     // Uncheck one item
     const checkboxes = screen.getAllByRole('checkbox')
-    const appleCheckbox = checkboxes.find(cb => {
+    const appleCheckbox = checkboxes.find((cb) => {
       const id = cb.getAttribute('id')
       return id === 'reuse-item-1'
     })
-    
+
     if (appleCheckbox) {
       await user.click(appleCheckbox)
     }
@@ -443,11 +451,15 @@ describe('ReuseListModal', () => {
     })
 
     // Deselect all items
-    const deselectAllButton = screen.getByRole('button', { name: /deselect all/i })
+    const deselectAllButton = screen.getByRole('button', {
+      name: /deselect all/i,
+    })
     await user.click(deselectAllButton)
 
     await waitFor(() => {
-      const addButton = screen.getByRole('button', { name: /add selected items/i })
+      const addButton = screen.getByRole('button', {
+        name: /add selected items/i,
+      })
       expect(addButton).toBeDisabled()
     })
   })
@@ -472,17 +484,19 @@ describe('ReuseListModal', () => {
 
     // Uncheck one item (only add 2 items)
     const checkboxes = screen.getAllByRole('checkbox')
-    const appleCheckbox = checkboxes.find(cb => {
+    const appleCheckbox = checkboxes.find((cb) => {
       const id = cb.getAttribute('id')
       return id === 'reuse-item-1'
     })
-    
+
     if (appleCheckbox) {
       await user.click(appleCheckbox)
     }
 
     // Click Add Selected Items
-    const addButton = screen.getByRole('button', { name: /add selected items/i })
+    const addButton = screen.getByRole('button', {
+      name: /add selected items/i,
+    })
     await user.click(addButton)
 
     await waitFor(() => {
@@ -494,7 +508,7 @@ describe('ReuseListModal', () => {
   it('handles errors during item addition', async () => {
     const errorMessage = 'Failed to add items'
     mockOnAddItems.mockRejectedValueOnce(new Error(errorMessage))
-    
+
     const user = userEvent.setup()
     render(
       <ReuseListModal
@@ -512,7 +526,9 @@ describe('ReuseListModal', () => {
       expect(screen.getByText('Apples')).toBeInTheDocument()
     })
 
-    const addButton = screen.getByRole('button', { name: /add selected items/i })
+    const addButton = screen.getByRole('button', {
+      name: /add selected items/i,
+    })
     await user.click(addButton)
 
     await waitFor(() => {
@@ -541,7 +557,9 @@ describe('ReuseListModal', () => {
       expect(screen.getByText('Apples')).toBeInTheDocument()
     })
 
-    const addButton = screen.getByRole('button', { name: /add selected items/i })
+    const addButton = screen.getByRole('button', {
+      name: /add selected items/i,
+    })
     await user.click(addButton)
 
     await waitFor(() => {
@@ -560,13 +578,15 @@ describe('ReuseListModal', () => {
     )
 
     // List selection should be reset
-    const selectAfter = screen.getByLabelText(/select previous list/i) as HTMLSelectElement
+    const selectAfter = screen.getByLabelText(
+      /select previous list/i
+    ) as HTMLSelectElement
     expect(selectAfter.value).toBe('')
   })
 
   it('shows loading state during item addition', async () => {
     let resolveAddItems: () => void
-    const addItemsPromise = new Promise<void>(resolve => {
+    const addItemsPromise = new Promise<void>((resolve) => {
       resolveAddItems = resolve
     })
     mockOnAddItems.mockReturnValueOnce(addItemsPromise)
@@ -588,17 +608,23 @@ describe('ReuseListModal', () => {
       expect(screen.getByText('Apples')).toBeInTheDocument()
     })
 
-    const addButton = screen.getByRole('button', { name: /add selected items/i })
+    const addButton = screen.getByRole('button', {
+      name: /add selected items/i,
+    })
     await user.click(addButton)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /adding items/i })).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: /adding items/i })).toBeDisabled()
+      expect(
+        screen.getByRole('button', { name: /adding items/i })
+      ).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /adding items/i })
+      ).toBeDisabled()
     })
 
     // Resolve the promise
     resolveAddItems!()
-    
+
     await waitFor(() => {
       expect(mockOnClose).toHaveBeenCalled()
     })
@@ -658,16 +684,16 @@ describe('ReuseListModal', () => {
       expect(screen.getByText('Apples')).toBeInTheDocument()
       expect(screen.getByText('Milk')).toBeInTheDocument()
       expect(screen.getByText('Bread')).toBeInTheDocument()
-      
+
       // Check quantities
       expect(screen.getByText('2 pcs')).toBeInTheDocument()
       expect(screen.getByText('1 gallon')).toBeInTheDocument()
       expect(screen.getByText('1 loaf')).toBeInTheDocument()
-      
+
       // Check notes
       expect(screen.getByText('Get red ones')).toBeInTheDocument()
       expect(screen.getByText('Whole wheat')).toBeInTheDocument()
-      
+
       // Check categories
       expect(screen.getByText('Produce')).toBeInTheDocument()
       expect(screen.getByText('Dairy')).toBeInTheDocument()
@@ -675,4 +701,3 @@ describe('ReuseListModal', () => {
     })
   })
 })
-

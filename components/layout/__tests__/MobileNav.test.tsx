@@ -30,8 +30,8 @@ describe('MobileNav', () => {
   })
 
   it('highlights active navigation item', () => {
-    (usePathname as jest.Mock).mockReturnValue('/grocery-lists')
-    
+    ;(usePathname as jest.Mock).mockReturnValue('/grocery-lists')
+
     render(<MobileNav />)
     const listsLink = screen.getByText('Lists').closest('a')
     expect(listsLink).toHaveClass('text-green-600')
@@ -44,44 +44,43 @@ describe('MobileNav', () => {
   })
 
   it('highlights Lists navigation when on a specific list detail page', () => {
-    (usePathname as jest.Mock).mockReturnValue('/grocery-lists/123')
-    
+    ;(usePathname as jest.Mock).mockReturnValue('/grocery-lists/123')
+
     render(<MobileNav />)
     const listsLink = screen.getByText('Lists').closest('a')
     expect(listsLink).toHaveClass('text-green-600')
   })
 
   it('highlights Lists navigation when on the lists page', () => {
-    (usePathname as jest.Mock).mockReturnValue('/grocery-lists')
-    
+    ;(usePathname as jest.Mock).mockReturnValue('/grocery-lists')
+
     render(<MobileNav />)
     const listsLink = screen.getByText('Lists').closest('a')
     expect(listsLink).toHaveClass('text-green-600')
   })
 
   it('highlights Pantry navigation when on pantry page', () => {
-    (usePathname as jest.Mock).mockReturnValue('/pantry')
-    
+    ;(usePathname as jest.Mock).mockReturnValue('/pantry')
+
     render(<MobileNav />)
     const pantryLink = screen.getByText('Pantry').closest('a')
     expect(pantryLink).toHaveClass('text-green-600')
   })
 
   it('highlights Home navigation only when on exact home page', () => {
-    (usePathname as jest.Mock).mockReturnValue('/')
-    
+    ;(usePathname as jest.Mock).mockReturnValue('/')
+
     render(<MobileNav />)
     const homeLink = screen.getByText('Home').closest('a')
     expect(homeLink).toHaveClass('text-green-600')
   })
 
   it('does not highlight Home when on other pages', () => {
-    (usePathname as jest.Mock).mockReturnValue('/grocery-lists')
-    
+    ;(usePathname as jest.Mock).mockReturnValue('/grocery-lists')
+
     render(<MobileNav />)
     const homeLink = screen.getByText('Home').closest('a')
     expect(homeLink).not.toHaveClass('text-green-600')
     expect(homeLink).toHaveClass('text-gray-500')
   })
 })
-

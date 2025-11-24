@@ -10,7 +10,11 @@ import { formatDate } from '@/lib/utils'
 interface AddMealModalProps {
   isOpen: boolean
   onClose: () => void
-  onAdd: (mealData: { name: string; notes?: string; ingredients?: string }) => Promise<void>
+  onAdd: (mealData: {
+    name: string
+    notes?: string
+    ingredients?: string
+  }) => Promise<void>
   onDelete?: (mealId: string) => Promise<void> // Optional delete handler for edit mode
   mealType: MealType
   date: Date
@@ -57,7 +61,7 @@ export default function AddMealModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!name.trim()) {
       return
     }
@@ -78,7 +82,11 @@ export default function AddMealModal({
       setIngredients('')
       onClose()
     } catch (err) {
-      setError(err instanceof Error ? err.message : `Failed to ${isEditMode ? 'update' : 'add'} meal`)
+      setError(
+        err instanceof Error
+          ? err.message
+          : `Failed to ${isEditMode ? 'update' : 'add'} meal`
+      )
     } finally {
       setIsSubmitting(false)
     }
@@ -86,7 +94,7 @@ export default function AddMealModal({
 
   const handleDelete = async () => {
     if (!meal || !onDelete) return
-    
+
     if (!confirm('Are you sure you want to delete this meal?')) return
 
     setIsDeleting(true)
@@ -105,7 +113,12 @@ export default function AddMealModal({
   if (!isOpen) return null
 
   return (
-    <Modal open={isOpen} onClose={onClose} closeOnBackdropClick={false} closeOnEscape={false}>
+    <Modal
+      open={isOpen}
+      onClose={onClose}
+      closeOnBackdropClick={false}
+      closeOnEscape={false}
+    >
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
           {isEditMode ? 'Edit Meal' : 'Add Meal'}
@@ -199,7 +212,7 @@ export default function AddMealModal({
                 {isDeleting ? 'Deleting...' : 'Delete'}
               </Button>
             )}
-            
+
             {/* Cancel and Save buttons */}
             <div className="flex space-x-3 ml-auto">
               <Button
@@ -215,7 +228,13 @@ export default function AddMealModal({
                 variant="primary"
                 disabled={!name.trim() || isSubmitting || isDeleting}
               >
-                {isSubmitting ? (isEditMode ? 'Updating...' : 'Adding...') : (isEditMode ? 'Update Meal' : 'Add Meal')}
+                {isSubmitting
+                  ? isEditMode
+                    ? 'Updating...'
+                    : 'Adding...'
+                  : isEditMode
+                    ? 'Update Meal'
+                    : 'Add Meal'}
               </Button>
             </div>
           </div>
@@ -224,4 +243,3 @@ export default function AddMealModal({
     </Modal>
   )
 }
-

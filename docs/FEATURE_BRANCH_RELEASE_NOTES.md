@@ -110,4 +110,3 @@ None. All changes are backward compatible.
 - Manual testing of all three features
 - User acceptance testing
 - Consider adding keyboard shortcuts for common actions
-

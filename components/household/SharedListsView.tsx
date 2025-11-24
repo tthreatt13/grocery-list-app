@@ -39,21 +39,26 @@ export default function SharedListsView({ lists }: SharedListsViewProps) {
       {lists.map((list) => {
         // Handle both API response format (item_count) and full GroceryList format (items array)
         const itemCount = list.item_count ?? list.items?.length ?? 0
-        
+
         // Handle both camelCase and snake_case for timestamps
         const updatedAt = list.updatedAt || list.updated_at
-        const lastEditTime = updatedAt ? formatRelativeTime(updatedAt) : 'Recently'
-        
+        const lastEditTime = updatedAt
+          ? formatRelativeTime(updatedAt)
+          : 'Recently'
+
         // Handle creator info
-        const creatorName = list.createdBy || (list.created_by ? `User ${list.created_by}` : 'Unknown')
-        
+        const creatorName =
+          list.createdBy ||
+          (list.created_by ? `User ${list.created_by}` : 'Unknown')
+
         // Handle shared with count
         const sharedWithCount = list.sharedWith?.length ?? 0
-        const sharedText = sharedWithCount === 1 
-          ? 'Shared with 1 person' 
-          : sharedWithCount > 1 
-            ? `Shared with ${sharedWithCount} people`
-            : 'Shared with household'
+        const sharedText =
+          sharedWithCount === 1
+            ? 'Shared with 1 person'
+            : sharedWithCount > 1
+              ? `Shared with ${sharedWithCount} people`
+              : 'Shared with household'
 
         return (
           <Link key={list.id} href={`/grocery-lists/${list.id}`}>
@@ -76,9 +81,7 @@ export default function SharedListsView({ lists }: SharedListsViewProps) {
 
                 {/* Footer */}
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">
-                    {sharedText}
-                  </span>
+                  <span className="text-gray-600">{sharedText}</span>
                   <span className="text-gray-500">
                     Last edited: {lastEditTime}
                   </span>
@@ -91,4 +94,3 @@ export default function SharedListsView({ lists }: SharedListsViewProps) {
     </div>
   )
 }
-

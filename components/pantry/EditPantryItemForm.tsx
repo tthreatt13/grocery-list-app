@@ -13,13 +13,20 @@ interface EditPantryItemFormProps {
   isSubmitting?: boolean
 }
 
-export default function EditPantryItemForm({ item, onSubmit, onCancel, isSubmitting }: EditPantryItemFormProps) {
+export default function EditPantryItemForm({
+  item,
+  onSubmit,
+  onCancel,
+  isSubmitting,
+}: EditPantryItemFormProps) {
   const [name, setName] = useState(item.name)
   const [quantity, setQuantity] = useState<string>(item.quantity.toString())
   const [unit, setUnit] = useState(item.unit || '')
   const [category, setCategory] = useState<ItemCategory>(item.category)
   const [expirationDate, setExpirationDate] = useState(
-    item.expirationDate ? new Date(item.expirationDate).toISOString().split('T')[0] : ''
+    item.expirationDate
+      ? new Date(item.expirationDate).toISOString().split('T')[0]
+      : ''
   )
   const [lowStockThreshold, setLowStockThreshold] = useState<string>(
     item.lowStockThreshold ? item.lowStockThreshold.toString() : ''
@@ -32,9 +39,13 @@ export default function EditPantryItemForm({ item, onSubmit, onCancel, isSubmitt
     setUnit(item.unit || '')
     setCategory(item.category)
     setExpirationDate(
-      item.expirationDate ? new Date(item.expirationDate).toISOString().split('T')[0] : ''
+      item.expirationDate
+        ? new Date(item.expirationDate).toISOString().split('T')[0]
+        : ''
     )
-    setLowStockThreshold(item.lowStockThreshold ? item.lowStockThreshold.toString() : '')
+    setLowStockThreshold(
+      item.lowStockThreshold ? item.lowStockThreshold.toString() : ''
+    )
   }, [item])
 
   const validateForm = () => {
@@ -52,7 +63,8 @@ export default function EditPantryItemForm({ item, onSubmit, onCancel, isSubmitt
     if (lowStockThreshold) {
       const threshold = parseFloat(lowStockThreshold)
       if (isNaN(threshold) || threshold < 0) {
-        newErrors.lowStockThreshold = 'Low stock threshold must be a positive number'
+        newErrors.lowStockThreshold =
+          'Low stock threshold must be a positive number'
       }
     }
 
@@ -68,7 +80,9 @@ export default function EditPantryItemForm({ item, onSubmit, onCancel, isSubmitt
     }
 
     const quantityNum = parseFloat(quantity)
-    const thresholdNum = lowStockThreshold ? parseFloat(lowStockThreshold) : undefined
+    const thresholdNum = lowStockThreshold
+      ? parseFloat(lowStockThreshold)
+      : undefined
 
     const updatedItem: Omit<PantryItem, 'id' | 'addedAt' | 'updatedAt'> = {
       name: name.trim(),
@@ -76,13 +90,14 @@ export default function EditPantryItemForm({ item, onSubmit, onCancel, isSubmitt
       unit: unit.trim() || undefined,
       category,
       expirationDate: expirationDate ? new Date(expirationDate) : undefined,
-      lowStockThreshold: thresholdNum && thresholdNum > 0 ? thresholdNum : undefined,
+      lowStockThreshold:
+        thresholdNum && thresholdNum > 0 ? thresholdNum : undefined,
     }
 
     onSubmit(updatedItem)
   }
 
-  const categoryOptions = Object.values(ItemCategory).map(cat => ({
+  const categoryOptions = Object.values(ItemCategory).map((cat) => ({
     value: cat,
     label: cat,
   }))
@@ -166,14 +181,24 @@ export default function EditPantryItemForm({ item, onSubmit, onCancel, isSubmitt
       </div>
 
       <div className="flex gap-3 pt-4">
-        <Button type="submit" variant="primary" className="flex-1" disabled={isSubmitting}>
+        <Button
+          type="submit"
+          variant="primary"
+          className="flex-1"
+          disabled={isSubmitting}
+        >
           {isSubmitting ? 'Saving...' : 'Save Changes'}
         </Button>
-        <Button type="button" variant="outline" onClick={onCancel} className="flex-1" disabled={isSubmitting}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onCancel}
+          className="flex-1"
+          disabled={isSubmitting}
+        >
           Cancel
         </Button>
       </div>
     </form>
   )
 }
-

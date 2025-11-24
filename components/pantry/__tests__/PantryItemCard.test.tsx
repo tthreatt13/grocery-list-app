@@ -86,4 +86,3 @@ describe('PantryItemCard', () => {
     expect(screen.getByText(/Expired/i)).toBeInTheDocument()
   })
 })
-

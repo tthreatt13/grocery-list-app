@@ -64,7 +64,10 @@ describe('MemberCard', () => {
   })
 
   it('displays avatar image when avatarUrl is provided', () => {
-    const memberWithAvatar = { ...mockMember, avatarUrl: 'https://example.com/avatar.jpg' }
+    const memberWithAvatar = {
+      ...mockMember,
+      avatarUrl: 'https://example.com/avatar.jpg',
+    }
     const { container } = render(<MemberCard member={memberWithAvatar} />)
     const img = container.querySelector('img')
     // Next.js transforms the src, so we check if it contains the URL
@@ -79,8 +82,8 @@ describe('MemberCard', () => {
 
   it('shows edit button when current user is admin and not viewing own card', () => {
     render(
-      <MemberCard 
-        member={mockMember} 
+      <MemberCard
+        member={mockMember}
         isCurrentUserAdmin={true}
         isCurrentUser={false}
         onEdit={() => {}}
@@ -91,8 +94,8 @@ describe('MemberCard', () => {
 
   it('does not show edit button for current user own card', () => {
     render(
-      <MemberCard 
-        member={mockMember} 
+      <MemberCard
+        member={mockMember}
         isCurrentUserAdmin={true}
         isCurrentUser={true}
         onEdit={() => {}}
@@ -103,8 +106,8 @@ describe('MemberCard', () => {
 
   it('shows "Leave" button when viewing own card', () => {
     render(
-      <MemberCard 
-        member={mockMember} 
+      <MemberCard
+        member={mockMember}
         isCurrentUser={true}
         onRemove={() => {}}
       />
@@ -114,8 +117,8 @@ describe('MemberCard', () => {
 
   it('shows "Remove" button when admin viewing other members', () => {
     render(
-      <MemberCard 
-        member={mockMember} 
+      <MemberCard
+        member={mockMember}
         isCurrentUserAdmin={true}
         isCurrentUser={false}
         onRemove={() => {}}
@@ -127,49 +130,48 @@ describe('MemberCard', () => {
   it('calls onEdit callback when edit button is clicked', () => {
     const onEditMock = jest.fn()
     render(
-      <MemberCard 
-        member={mockMember} 
+      <MemberCard
+        member={mockMember}
         isCurrentUserAdmin={true}
         isCurrentUser={false}
         onEdit={onEditMock}
       />
     )
-    
+
     const editButton = screen.getByText('Edit Role')
     fireEvent.click(editButton)
-    
+
     expect(onEditMock).toHaveBeenCalledWith(mockMember)
   })
 
   it('calls onRemove callback when remove button is clicked', () => {
     const onRemoveMock = jest.fn()
     render(
-      <MemberCard 
-        member={mockMember} 
+      <MemberCard
+        member={mockMember}
         isCurrentUserAdmin={true}
         isCurrentUser={false}
         onRemove={onRemoveMock}
       />
     )
-    
+
     const removeButton = screen.getByText('Remove')
     fireEvent.click(removeButton)
-    
+
     expect(onRemoveMock).toHaveBeenCalledWith(mockMember)
   })
 
   it('does not show action buttons when not admin and not current user', () => {
     render(
-      <MemberCard 
-        member={mockMember} 
+      <MemberCard
+        member={mockMember}
         isCurrentUserAdmin={false}
         isCurrentUser={false}
       />
     )
-    
+
     expect(screen.queryByText('Edit Role')).not.toBeInTheDocument()
     expect(screen.queryByText('Remove')).not.toBeInTheDocument()
     expect(screen.queryByText('Leave')).not.toBeInTheDocument()
   })
 })
-

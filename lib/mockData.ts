@@ -1,13 +1,22 @@
 /**
  * LEGACY MOCK DATA - FOR REFERENCE ONLY
- * 
+ *
  * This file contains mock data that was used during initial UI prototyping.
  * The application now uses real data from the backend API.
- * 
+ *
  * This file is kept for reference and can be removed once the API integration is fully tested.
  */
 
-import { GroceryList, ItemCategory, PantryItem, Meal, MealType, HouseholdMember, MemberRole, Household } from './types'
+import {
+  GroceryList,
+  ItemCategory,
+  PantryItem,
+  Meal,
+  MealType,
+  HouseholdMember,
+  MemberRole,
+  Household,
+} from './types'
 
 export const mockGroceryLists: GroceryList[] = [
   {
@@ -376,7 +385,13 @@ export const mockMeals: Meal[] = [
     name: 'Grilled Chicken Salad',
     mealType: MealType.LUNCH,
     date: getDaysFromNow(0),
-    ingredients: ['Chicken Breast', 'Lettuce', 'Tomatoes', 'Cucumber', 'Olive Oil'],
+    ingredients: [
+      'Chicken Breast',
+      'Lettuce',
+      'Tomatoes',
+      'Cucumber',
+      'Olive Oil',
+    ],
     createdBy: 'Jane Parent',
   },
   {
@@ -482,4 +497,3 @@ export const mockHousehold: Household = {
   members: mockHouseholdMembers,
   createdAt: new Date('2024-01-01'),
 }
-

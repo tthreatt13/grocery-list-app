@@ -30,11 +30,22 @@ jest.mock('@/lib/api/household')
 jest.mock('@/lib/api/grocery')
 jest.mock('@/lib/api/client')
 
-const mockGetWeeklyMeals = mealsApi.getWeeklyMeals as jest.MockedFunction<typeof mealsApi.getWeeklyMeals>
-const mockGenerateGroceryList = mealsApi.generateGroceryList as jest.MockedFunction<typeof mealsApi.generateGroceryList>
-const mockGetHouseholds = householdApi.getHouseholds as jest.MockedFunction<typeof householdApi.getHouseholds>
-const mockGetGroceryLists = groceryApi.getGroceryLists as jest.MockedFunction<typeof groceryApi.getGroceryLists>
-const mockSyncUser = clientApi.syncUser as jest.MockedFunction<typeof clientApi.syncUser>
+const mockGetWeeklyMeals = mealsApi.getWeeklyMeals as jest.MockedFunction<
+  typeof mealsApi.getWeeklyMeals
+>
+const mockGenerateGroceryList =
+  mealsApi.generateGroceryList as jest.MockedFunction<
+    typeof mealsApi.generateGroceryList
+  >
+const mockGetHouseholds = householdApi.getHouseholds as jest.MockedFunction<
+  typeof householdApi.getHouseholds
+>
+const mockGetGroceryLists = groceryApi.getGroceryLists as jest.MockedFunction<
+  typeof groceryApi.getGroceryLists
+>
+const mockSyncUser = clientApi.syncUser as jest.MockedFunction<
+  typeof clientApi.syncUser
+>
 
 describe('MealPlannerPage - Generate List Button', () => {
   const mockHouseholds = [
@@ -58,7 +69,7 @@ describe('MealPlannerPage - Generate List Button', () => {
     mockGenerateGroceryList.mockResolvedValue({
       grocery_list_id: 1,
       items_count: 5,
-      message: 'Successfully generated grocery list with 5 items from 3 meals'
+      message: 'Successfully generated grocery list with 5 items from 3 meals',
     })
     mockSyncUser.mockResolvedValue(undefined)
   })
@@ -68,9 +79,11 @@ describe('MealPlannerPage - Generate List Button', () => {
 
     await waitFor(() => {
       // Find the desktop "Generate Grocery List" button
-      const desktopButton = screen.getByRole('button', { name: /generate grocery list/i })
+      const desktopButton = screen.getByRole('button', {
+        name: /generate grocery list/i,
+      })
       expect(desktopButton).toBeInTheDocument()
-      
+
       // Check that it has text-base class (from size="md" or default)
       // The button should NOT have text-sm class (which comes from size="sm")
       expect(desktopButton).toHaveClass('text-base')
@@ -82,7 +95,7 @@ describe('MealPlannerPage - Generate List Button', () => {
     // Mock window.matchMedia to simulate mobile view
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
-      value: jest.fn().mockImplementation(query => ({
+      value: jest.fn().mockImplementation((query) => ({
         matches: query === '(max-width: 768px)',
         media: query,
         onchange: null,
@@ -98,9 +111,11 @@ describe('MealPlannerPage - Generate List Button', () => {
 
     await waitFor(() => {
       // Find the mobile "Generate List" button
-      const mobileButton = screen.getByRole('button', { name: /generate list/i })
+      const mobileButton = screen.getByRole('button', {
+        name: /generate list/i,
+      })
       expect(mobileButton).toBeInTheDocument()
-      
+
       // Check that it has text-base class (should match other primary buttons)
       // The button should NOT have text-sm class (which comes from size="sm")
       expect(mobileButton).toHaveClass('text-base')
@@ -154,23 +169,27 @@ describe('MealPlannerPage - Meal Type Functionality', () => {
     mockGenerateGroceryList.mockResolvedValue({
       grocery_list_id: 1,
       items_count: 7,
-      message: 'Successfully generated grocery list with 7 items from 2 meals'
+      message: 'Successfully generated grocery list with 7 items from 2 meals',
     })
     mockSyncUser.mockResolvedValue(undefined)
   })
 
   it('should call generateGroceryList API with correct parameters when creating grocery list', async () => {
     const { fireEvent, waitFor } = await import('@testing-library/react')
-    
+
     render(<MealPlannerPage />)
 
     // Wait for component to load
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /generate grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /generate grocery list/i })
+      ).toBeInTheDocument()
     })
 
     // Click the generate grocery list button
-    const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+    const generateButton = screen.getByRole('button', {
+      name: /generate grocery list/i,
+    })
     fireEvent.click(generateButton)
 
     // Wait for modal to appear
@@ -201,7 +220,7 @@ describe('MealPlannerPage - Meal Type Functionality', () => {
 
   it('should display success message after generating grocery list', async () => {
     const { fireEvent, waitFor } = await import('@testing-library/react')
-    
+
     // Mock window.alert
     const mockAlert = jest.fn()
     window.alert = mockAlert
@@ -210,16 +229,22 @@ describe('MealPlannerPage - Meal Type Functionality', () => {
 
     // Wait for component to load
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /generate grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /generate grocery list/i })
+      ).toBeInTheDocument()
     })
 
     // Click the generate grocery list button
-    const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+    const generateButton = screen.getByRole('button', {
+      name: /generate grocery list/i,
+    })
     fireEvent.click(generateButton)
 
     // Wait for modal to appear
     await waitFor(() => {
-      expect(screen.getByText(/generate grocery list from meals/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/generate grocery list from meals/i)
+      ).toBeInTheDocument()
     })
 
     // Fill in the list name
@@ -232,30 +257,38 @@ describe('MealPlannerPage - Meal Type Functionality', () => {
 
     // Verify success message is shown
     await waitFor(() => {
-      expect(mockAlert).toHaveBeenCalledWith('Successfully generated grocery list with 7 items from 2 meals')
+      expect(mockAlert).toHaveBeenCalledWith(
+        'Successfully generated grocery list with 7 items from 2 meals'
+      )
     })
   })
 
   it('should refresh grocery lists after generating from meals', async () => {
     const { fireEvent, waitFor } = await import('@testing-library/react')
-    
+
     render(<MealPlannerPage />)
 
     // Wait for component to load
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /generate grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /generate grocery list/i })
+      ).toBeInTheDocument()
     })
 
     // Clear previous calls
     mockGetGroceryLists.mockClear()
 
     // Click the generate grocery list button
-    const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+    const generateButton = screen.getByRole('button', {
+      name: /generate grocery list/i,
+    })
     fireEvent.click(generateButton)
 
     // Wait for modal to appear
     await waitFor(() => {
-      expect(screen.getByText(/generate grocery list from meals/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/generate grocery list from meals/i)
+      ).toBeInTheDocument()
     })
 
     // Fill in the list name
@@ -274,27 +307,35 @@ describe('MealPlannerPage - Meal Type Functionality', () => {
 
   it('should handle errors when generating grocery list fails', async () => {
     const { fireEvent, waitFor } = await import('@testing-library/react')
-    
+
     // Mock generateGroceryList to throw an error
     mockGenerateGroceryList.mockRejectedValueOnce(new Error('API Error'))
-    
+
     // Mock console.error to avoid noise in test output
-    const mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {})
+    const mockConsoleError = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {})
 
     render(<MealPlannerPage />)
 
     // Wait for component to load
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /generate grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /generate grocery list/i })
+      ).toBeInTheDocument()
     })
 
     // Click the generate grocery list button
-    const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+    const generateButton = screen.getByRole('button', {
+      name: /generate grocery list/i,
+    })
     fireEvent.click(generateButton)
 
     // Wait for modal to appear
     await waitFor(() => {
-      expect(screen.getByText(/generate grocery list from meals/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/generate grocery list from meals/i)
+      ).toBeInTheDocument()
     })
 
     // Fill in the list name
@@ -307,11 +348,13 @@ describe('MealPlannerPage - Meal Type Functionality', () => {
 
     // Verify error is logged
     await waitFor(() => {
-      expect(mockConsoleError).toHaveBeenCalledWith('Error creating grocery list:', expect.any(Error))
+      expect(mockConsoleError).toHaveBeenCalledWith(
+        'Error creating grocery list:',
+        expect.any(Error)
+      )
     })
 
     // Cleanup
     mockConsoleError.mockRestore()
   })
 })
-

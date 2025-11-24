@@ -165,4 +165,3 @@ describe('EditMemberForm', () => {
     expect(options[2]).toHaveValue(MemberRole.VIEWER)
   })
 })
-

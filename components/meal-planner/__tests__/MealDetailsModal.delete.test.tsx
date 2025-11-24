@@ -9,7 +9,7 @@ const mockMeal: Meal = {
   date: new Date('2024-11-10'),
   createdBy: 'John',
   ingredients: ['eggs', 'butter', 'salt'],
-  notes: 'Quick breakfast'
+  notes: 'Quick breakfast',
 }
 
 const mockOnEdit = jest.fn()
@@ -101,7 +101,9 @@ describe('MealDetailsModal - Delete Functionality', () => {
     const deleteButton = screen.getByText('Delete')
     fireEvent.click(deleteButton)
 
-    expect(mockConfirm).toHaveBeenCalledWith('Are you sure you want to delete this meal?')
+    expect(mockConfirm).toHaveBeenCalledWith(
+      'Are you sure you want to delete this meal?'
+    )
     expect(mockOnDelete).not.toHaveBeenCalled()
     expect(mockOnClose).not.toHaveBeenCalled()
   })
@@ -158,7 +160,7 @@ describe('MealDetailsModal - Delete Functionality', () => {
   it('handles meal without ingredients', () => {
     const mealWithoutIngredients = {
       ...mockMeal,
-      ingredients: undefined
+      ingredients: undefined,
     }
 
     render(
@@ -177,7 +179,7 @@ describe('MealDetailsModal - Delete Functionality', () => {
   it('handles meal without notes', () => {
     const mealWithoutNotes = {
       ...mockMeal,
-      notes: undefined
+      notes: undefined,
     }
 
     render(
@@ -197,7 +199,7 @@ describe('MealDetailsModal - Delete Functionality', () => {
   it('handles meal without createdBy', () => {
     const mealWithoutCreatedBy = {
       ...mockMeal,
-      createdBy: undefined
+      createdBy: undefined,
     }
 
     render(
@@ -216,7 +218,7 @@ describe('MealDetailsModal - Delete Functionality', () => {
   it('displays correct meal type colors', () => {
     const lunchMeal = {
       ...mockMeal,
-      mealType: MealType.LUNCH
+      mealType: MealType.LUNCH,
     }
 
     render(

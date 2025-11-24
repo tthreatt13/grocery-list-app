@@ -79,54 +79,58 @@ describe('GroceryListCard', () => {
     it('renders delete button when onDelete prop is provided', () => {
       const mockOnDelete = jest.fn()
       render(<GroceryListCard list={mockList} onDelete={mockOnDelete} />)
-      
+
       const deleteButton = screen.getByRole('button', { name: /delete list/i })
       expect(deleteButton).toBeInTheDocument()
     })
 
     it('does not render delete button when onDelete prop is not provided', () => {
       render(<GroceryListCard list={mockList} />)
-      
-      const deleteButton = screen.queryByRole('button', { name: /delete list/i })
+
+      const deleteButton = screen.queryByRole('button', {
+        name: /delete list/i,
+      })
       expect(deleteButton).not.toBeInTheDocument()
     })
 
     it('calls onDelete with list id when delete button is clicked', () => {
       const mockOnDelete = jest.fn()
       render(<GroceryListCard list={mockList} onDelete={mockOnDelete} />)
-      
+
       const deleteButton = screen.getByRole('button', { name: /delete list/i })
       fireEvent.click(deleteButton)
-      
+
       expect(mockOnDelete).toHaveBeenCalledWith('1')
     })
 
     it('prevents navigation when delete button is clicked', () => {
       const mockOnDelete = jest.fn()
       render(<GroceryListCard list={mockList} onDelete={mockOnDelete} />)
-      
+
       const deleteButton = screen.getByRole('button', { name: /delete list/i })
       fireEvent.click(deleteButton)
-      
+
       expect(mockOnDelete).toHaveBeenCalled()
     })
 
     it('has proper accessibility attributes for delete button', () => {
       const mockOnDelete = jest.fn()
       render(<GroceryListCard list={mockList} onDelete={mockOnDelete} />)
-      
+
       const deleteButton = screen.getByRole('button', { name: /delete list/i })
-      expect(deleteButton).toHaveAttribute('aria-label', 'Delete list Weekly Shopping')
+      expect(deleteButton).toHaveAttribute(
+        'aria-label',
+        'Delete list Weekly Shopping'
+      )
     })
 
     it('shows delete button with trash icon', () => {
       const mockOnDelete = jest.fn()
       render(<GroceryListCard list={mockList} onDelete={mockOnDelete} />)
-      
+
       const deleteButton = screen.getByRole('button', { name: /delete list/i })
       const trashIcon = deleteButton.querySelector('svg')
       expect(trashIcon).toBeInTheDocument()
     })
   })
 })
-

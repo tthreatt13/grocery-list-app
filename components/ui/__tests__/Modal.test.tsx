@@ -38,7 +38,7 @@ describe('Modal', () => {
         Content
       </Modal>
     )
-    
+
     const closeButton = screen.getByRole('button', { name: /close/i })
     await user.click(closeButton)
     expect(handleClose).toHaveBeenCalledTimes(1)
@@ -52,7 +52,7 @@ describe('Modal', () => {
         Content
       </Modal>
     )
-    
+
     const backdrop = screen.getByTestId('modal-backdrop')
     await user.click(backdrop)
     expect(handleClose).toHaveBeenCalledTimes(1)
@@ -66,7 +66,7 @@ describe('Modal', () => {
         Content
       </Modal>
     )
-    
+
     await user.keyboard('{Escape}')
     expect(handleClose).toHaveBeenCalledTimes(1)
   })
@@ -79,7 +79,7 @@ describe('Modal', () => {
         <div data-testid="modal-content">Content</div>
       </Modal>
     )
-    
+
     const content = screen.getByTestId('modal-content')
     await user.click(content)
     expect(handleClose).not.toHaveBeenCalled()
@@ -103,7 +103,7 @@ describe('Modal', () => {
         Content
       </Modal>
     )
-    
+
     const backdrop = screen.getByTestId('modal-backdrop')
     await user.click(backdrop)
     expect(handleClose).not.toHaveBeenCalled()
@@ -117,7 +117,7 @@ describe('Modal', () => {
         Content
       </Modal>
     )
-    
+
     await user.keyboard('{Escape}')
     expect(handleClose).not.toHaveBeenCalled()
   })
@@ -126,19 +126,18 @@ describe('Modal', () => {
     const handleClose = jest.fn()
     const user = userEvent.setup()
     render(
-      <Modal 
-        open={true} 
-        onClose={handleClose} 
+      <Modal
+        open={true}
+        onClose={handleClose}
         closeOnBackdropClick={false}
         closeOnEscape={false}
       >
         Content
       </Modal>
     )
-    
+
     const closeButton = screen.getByRole('button', { name: /close/i })
     await user.click(closeButton)
     expect(handleClose).toHaveBeenCalledTimes(1)
   })
 })
-

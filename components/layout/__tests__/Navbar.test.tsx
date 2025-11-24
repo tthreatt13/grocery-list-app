@@ -10,7 +10,9 @@ jest.mock('next/navigation', () => ({
 // Mock Clerk
 const mockUseAuth = jest.fn(() => ({ isSignedIn: false, isLoaded: true }))
 jest.mock('@clerk/nextjs', () => ({
-  SignInButton: ({ children }: { children: React.ReactNode }) => <div data-testid="sign-in-button">{children}</div>,
+  SignInButton: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="sign-in-button">{children}</div>
+  ),
   useAuth: mockUseAuth,
   UserButton: () => <div data-testid="user-button">TT</div>,
 }))
@@ -43,8 +45,8 @@ describe('Navbar', () => {
   })
 
   it('highlights active link based on pathname', () => {
-    (usePathname as jest.Mock).mockReturnValue('/grocery-lists')
-    
+    ;(usePathname as jest.Mock).mockReturnValue('/grocery-lists')
+
     render(<Navbar />)
     const listsLink = screen.getByText('Lists').closest('a')
     expect(listsLink).toHaveClass('bg-green-50', 'text-green-700')
@@ -53,7 +55,12 @@ describe('Navbar', () => {
   it('applies correct styling to navbar container', () => {
     const { container } = render(<Navbar />)
     const nav = container.querySelector('nav')
-    expect(nav).toHaveClass('bg-white', 'border-b', 'border-gray-200', 'sticky', 'top-0')
+    expect(nav).toHaveClass(
+      'bg-white',
+      'border-b',
+      'border-gray-200',
+      'sticky',
+      'top-0'
+    )
   })
 })
-

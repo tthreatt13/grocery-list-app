@@ -30,11 +30,21 @@ jest.mock('@/lib/api/household')
 jest.mock('@/lib/api/grocery')
 jest.mock('@/lib/api/client')
 
-const mockGetWeeklyMeals = mealsApi.getWeeklyMeals as jest.MockedFunction<typeof mealsApi.getWeeklyMeals>
-const mockDeleteMeal = mealsApi.deleteMeal as jest.MockedFunction<typeof mealsApi.deleteMeal>
-const mockGetHouseholds = householdApi.getHouseholds as jest.MockedFunction<typeof householdApi.getHouseholds>
-const mockGetGroceryLists = groceryApi.getGroceryLists as jest.MockedFunction<typeof groceryApi.getGroceryLists>
-const mockSyncUser = clientApi.syncUser as jest.MockedFunction<typeof clientApi.syncUser>
+const mockGetWeeklyMeals = mealsApi.getWeeklyMeals as jest.MockedFunction<
+  typeof mealsApi.getWeeklyMeals
+>
+const mockDeleteMeal = mealsApi.deleteMeal as jest.MockedFunction<
+  typeof mealsApi.deleteMeal
+>
+const mockGetHouseholds = householdApi.getHouseholds as jest.MockedFunction<
+  typeof householdApi.getHouseholds
+>
+const mockGetGroceryLists = groceryApi.getGroceryLists as jest.MockedFunction<
+  typeof groceryApi.getGroceryLists
+>
+const mockSyncUser = clientApi.syncUser as jest.MockedFunction<
+  typeof clientApi.syncUser
+>
 
 // Mock window.confirm
 const mockConfirm = jest.fn()
@@ -139,7 +149,9 @@ describe('MealPlannerPage - Mobile Delete Flow', () => {
     fireEvent.click(deleteButton)
 
     // Should show confirmation dialog
-    expect(mockConfirm).toHaveBeenCalledWith('Are you sure you want to delete this meal?')
+    expect(mockConfirm).toHaveBeenCalledWith(
+      'Are you sure you want to delete this meal?'
+    )
 
     // Should call delete API
     await waitFor(() => {
@@ -218,7 +230,9 @@ describe('MealPlannerPage - Mobile Delete Flow', () => {
     fireEvent.click(deleteButton)
 
     // Should show confirmation dialog
-    expect(mockConfirm).toHaveBeenCalledWith('Are you sure you want to delete this meal?')
+    expect(mockConfirm).toHaveBeenCalledWith(
+      'Are you sure you want to delete this meal?'
+    )
 
     // Should call delete API
     await waitFor(() => {
@@ -236,7 +250,9 @@ describe('MealPlannerPage - Mobile Delete Flow', () => {
     mockDeleteMeal.mockRejectedValue(new Error('Network error'))
 
     // Mock console.error to avoid noise in test output
-    const mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {})
+    const mockConsoleError = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {})
 
     render(<MealPlannerPage />)
 
@@ -260,7 +276,10 @@ describe('MealPlannerPage - Mobile Delete Flow', () => {
 
     // Should handle error
     await waitFor(() => {
-      expect(mockConsoleError).toHaveBeenCalledWith('Error deleting meal:', expect.any(Error))
+      expect(mockConsoleError).toHaveBeenCalledWith(
+        'Error deleting meal:',
+        expect.any(Error)
+      )
     })
 
     // Should show error message
@@ -294,7 +313,9 @@ describe('MealPlannerPage - Mobile Delete Flow', () => {
     fireEvent.click(deleteButton)
 
     // Should show confirmation dialog
-    expect(mockConfirm).toHaveBeenCalledWith('Are you sure you want to delete this meal?')
+    expect(mockConfirm).toHaveBeenCalledWith(
+      'Are you sure you want to delete this meal?'
+    )
 
     // Should NOT call delete API
     expect(mockDeleteMeal).not.toHaveBeenCalled()

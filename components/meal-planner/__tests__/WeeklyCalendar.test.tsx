@@ -43,7 +43,7 @@ describe('WeeklyCalendar', () => {
         onMealDelete={mockOnMealDelete}
       />
     )
-    
+
     // Check for day headers (7 days + 1 for the meal type column)
     const dayHeaders = screen.getAllByRole('columnheader')
     expect(dayHeaders).toHaveLength(8)
@@ -60,7 +60,7 @@ describe('WeeklyCalendar', () => {
         onMealDelete={mockOnMealDelete}
       />
     )
-    
+
     expect(screen.getByText('Breakfast')).toBeInTheDocument()
     expect(screen.getByText('Lunch')).toBeInTheDocument()
     expect(screen.getByText('Dinner')).toBeInTheDocument()
@@ -77,7 +77,7 @@ describe('WeeklyCalendar', () => {
         onMealDelete={mockOnMealDelete}
       />
     )
-    
+
     expect(screen.getByText('Scrambled Eggs')).toBeInTheDocument()
     expect(screen.getByText('Spaghetti')).toBeInTheDocument()
   })
@@ -93,10 +93,10 @@ describe('WeeklyCalendar', () => {
         onMealDelete={mockOnMealDelete}
       />
     )
-    
+
     const emptySlots = screen.getAllByRole('button', { name: /add meal/i })
     expect(emptySlots.length).toBeGreaterThan(0)
-    
+
     fireEvent.click(emptySlots[0])
     expect(mockOnEmptySlotClick).toHaveBeenCalled()
   })
@@ -112,7 +112,7 @@ describe('WeeklyCalendar', () => {
         onMealDelete={mockOnMealDelete}
       />
     )
-    
+
     const addButtons = screen.getAllByRole('button', { name: /add meal/i })
     // Should have 7 days × 3 meal types = 21 empty slots
     expect(addButtons.length).toBe(21)
@@ -130,7 +130,7 @@ describe('WeeklyCalendar', () => {
         onMealDelete={mockOnMealDelete}
       />
     )
-    
+
     // Should have a "Today" indicator or highlighted column
     const todayElement = screen.getByText('Today')
     expect(todayElement).toBeInTheDocument()
@@ -147,14 +147,13 @@ describe('WeeklyCalendar', () => {
         onMealDelete={mockOnMealDelete}
       />
     )
-    
+
     // Should show day names (Sun, Mon, Tue, etc.)
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     const currentDate = new Date('2024-11-10')
     const dayOfWeek = currentDate.getDay()
-    
+
     // Check that at least the first day is shown
     expect(screen.getByText(dayNames[dayOfWeek])).toBeInTheDocument()
   })
 })
-

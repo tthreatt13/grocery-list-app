@@ -1,4 +1,10 @@
-import { render, screen, fireEvent, waitFor, within } from '@testing-library/react'
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  within,
+} from '@testing-library/react'
 import { useAuth } from '@clerk/nextjs'
 import GroceryListsPage from '../page'
 import * as groceryApi from '@/lib/api/grocery'
@@ -21,8 +27,8 @@ const mockHouseholds: householdApi.HouseholdResponse[] = [
     created_by: 1,
     created_at: '2024-11-10T10:00:00Z',
     updated_at: '2024-11-10T10:00:00Z',
-    members: []
-  }
+    members: [],
+  },
 ]
 
 const mockGroceryLists: groceryApi.GroceryListWithItems[] = [
@@ -53,8 +59,8 @@ const mockGroceryLists: groceryApi.GroceryListWithItems[] = [
         notes: undefined,
         checked: false,
         created_at: '2024-11-10T10:05:00Z',
-      }
-    ]
+      },
+    ],
   },
   {
     id: 2,
@@ -63,8 +69,8 @@ const mockGroceryLists: groceryApi.GroceryListWithItems[] = [
     created_by: 1,
     created_at: '2024-11-09T10:00:00Z',
     updated_at: '2024-11-09T15:00:00Z',
-    items: []
-  }
+    items: [],
+  },
 ]
 
 describe('GroceryListsPage', () => {
@@ -76,19 +82,25 @@ describe('GroceryListsPage', () => {
 
   it('should render page title and description', async () => {
     ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(mockHouseholds)
-    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(mockGroceryLists)
+    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+      mockGroceryLists
+    )
 
     render(<GroceryListsPage />)
 
     await waitFor(() => {
       expect(screen.getByText('Grocery Lists')).toBeInTheDocument()
-      expect(screen.getByText('Manage your shopping lists and track items')).toBeInTheDocument()
+      expect(
+        screen.getByText('Manage your shopping lists and track items')
+      ).toBeInTheDocument()
     })
   })
 
   it('should display New List button in header', async () => {
     ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(mockHouseholds)
-    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(mockGroceryLists)
+    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+      mockGroceryLists
+    )
 
     render(<GroceryListsPage />)
 
@@ -103,7 +115,9 @@ describe('GroceryListsPage', () => {
 
   it('should display grocery list cards when lists exist', async () => {
     ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(mockHouseholds)
-    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(mockGroceryLists)
+    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+      mockGroceryLists
+    )
 
     render(<GroceryListsPage />)
 
@@ -124,8 +138,12 @@ describe('GroceryListsPage', () => {
       expect(screen.getByText('No lists yet')).toBeInTheDocument()
     })
 
-    expect(screen.getByText('Create your first grocery list to get started')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /create list/i })).toBeInTheDocument()
+    expect(
+      screen.getByText('Create your first grocery list to get started')
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /create list/i })
+    ).toBeInTheDocument()
   })
 
   it('should show no household message when no households exist', async () => {
@@ -138,9 +156,15 @@ describe('GroceryListsPage', () => {
       expect(screen.getByText('No Household Found')).toBeInTheDocument()
     })
 
-    expect(screen.getByText('Create or join a household to start managing grocery lists')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /go to household/i })).toBeInTheDocument()
-    
+    expect(
+      screen.getByText(
+        'Create or join a household to start managing grocery lists'
+      )
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /go to household/i })
+    ).toBeInTheDocument()
+
     // New List button should be disabled
     const newListButton = screen.getByRole('button', { name: /new list/i })
     expect(newListButton).toBeDisabled()
@@ -148,7 +172,9 @@ describe('GroceryListsPage', () => {
 
   it('should open create list modal when New List button is clicked', async () => {
     ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(mockHouseholds)
-    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(mockGroceryLists)
+    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+      mockGroceryLists
+    )
 
     render(<GroceryListsPage />)
 
@@ -164,25 +190,37 @@ describe('GroceryListsPage', () => {
     })
 
     expect(screen.getByLabelText('List Name')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /create list/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /create list/i })
+    ).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /cancel/i })).toBeInTheDocument()
   })
 
   it('should handle loading state', async () => {
-    ;(householdApi.getHouseholds as jest.Mock).mockImplementation(() => new Promise(() => {})) // Never resolves
-    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockImplementation(() => new Promise(() => {}))
+    ;(householdApi.getHouseholds as jest.Mock).mockImplementation(
+      () => new Promise(() => {})
+    ) // Never resolves
+    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockImplementation(
+      () => new Promise(() => {})
+    )
 
     render(<GroceryListsPage />)
 
-    expect(screen.getByText('Loading your grocery lists...')).toBeInTheDocument()
+    expect(
+      screen.getByText('Loading your grocery lists...')
+    ).toBeInTheDocument()
     // Check for loading spinner by class instead of role
     const spinner = document.querySelector('.animate-spin')
     expect(spinner).toBeInTheDocument()
   })
 
   it('should handle error state', async () => {
-    ;(householdApi.getHouseholds as jest.Mock).mockRejectedValue(new Error('Failed to fetch households'))
-    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockRejectedValue(new Error('Failed to fetch lists'))
+    ;(householdApi.getHouseholds as jest.Mock).mockRejectedValue(
+      new Error('Failed to fetch households')
+    )
+    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockRejectedValue(
+      new Error('Failed to fetch lists')
+    )
 
     render(<GroceryListsPage />)
 
@@ -191,7 +229,9 @@ describe('GroceryListsPage', () => {
     })
 
     expect(screen.getByText('Failed to fetch households')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /try again/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /try again/i })
+    ).toBeInTheDocument()
   })
 
   it('should create new list when form is submitted', async () => {
@@ -202,11 +242,13 @@ describe('GroceryListsPage', () => {
       created_by: 1,
       created_at: '2024-11-10T14:00:00Z',
       updated_at: '2024-11-10T14:00:00Z',
-      items: []
+      items: [],
     }
 
     ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(mockHouseholds)
-    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(mockGroceryLists)
+    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+      mockGroceryLists
+    )
     ;(groceryApi.createGroceryList as jest.Mock).mockResolvedValue(newList)
 
     render(<GroceryListsPage />)
@@ -244,7 +286,9 @@ describe('GroceryListsPage', () => {
 
   it('should display lists in grid layout', async () => {
     ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(mockHouseholds)
-    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(mockGroceryLists)
+    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+      mockGroceryLists
+    )
 
     render(<GroceryListsPage />)
 
@@ -254,7 +298,11 @@ describe('GroceryListsPage', () => {
 
     // Check that lists are displayed in a grid
     const gridContainer = screen.getByText('Weekly Shopping').closest('.grid')
-    expect(gridContainer).toHaveClass('grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3')
+    expect(gridContainer).toHaveClass(
+      'grid-cols-1',
+      'md:grid-cols-2',
+      'lg:grid-cols-3'
+    )
   })
 
   it('should show household selector when multiple households exist', async () => {
@@ -266,12 +314,16 @@ describe('GroceryListsPage', () => {
         created_by: 1,
         created_at: '2024-11-09T10:00:00Z',
         updated_at: '2024-11-09T10:00:00Z',
-        members: []
-      }
+        members: [],
+      },
     ]
 
-    ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(multipleHouseholds)
-    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(mockGroceryLists)
+    ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
+      multipleHouseholds
+    )
+    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+      mockGroceryLists
+    )
 
     render(<GroceryListsPage />)
 
@@ -295,8 +347,12 @@ describe('GroceryListsPage', () => {
 
   describe('Delete functionality', () => {
     it('should show delete buttons on grocery list cards', async () => {
-      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(mockHouseholds)
-      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(mockGroceryLists)
+      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
+        mockHouseholds
+      )
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+        mockGroceryLists
+      )
 
       render(<GroceryListsPage />)
 
@@ -305,13 +361,19 @@ describe('GroceryListsPage', () => {
       })
 
       // Should show delete buttons for each list
-      const deleteButtons = screen.getAllByRole('button', { name: /delete list/i })
+      const deleteButtons = screen.getAllByRole('button', {
+        name: /delete list/i,
+      })
       expect(deleteButtons).toHaveLength(2)
     })
 
     it('should open confirmation modal when delete button is clicked', async () => {
-      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(mockHouseholds)
-      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(mockGroceryLists)
+      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
+        mockHouseholds
+      )
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+        mockGroceryLists
+      )
 
       render(<GroceryListsPage />)
 
@@ -320,7 +382,9 @@ describe('GroceryListsPage', () => {
       })
 
       // Click delete button for first list
-      const deleteButtons = screen.getAllByRole('button', { name: /delete list/i })
+      const deleteButtons = screen.getAllByRole('button', {
+        name: /delete list/i,
+      })
       fireEvent.click(deleteButtons[0])
 
       // Should show confirmation modal
@@ -328,19 +392,29 @@ describe('GroceryListsPage', () => {
         expect(screen.getByText('Delete Grocery List')).toBeInTheDocument()
       })
 
-      expect(screen.getByText(/are you sure you want to delete/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/are you sure you want to delete/i)
+      ).toBeInTheDocument()
       // Check for the list name in the modal specifically
       const modal = screen.getByRole('dialog')
       expect(modal).toHaveTextContent('Weekly Shopping')
-      expect(screen.getByRole('button', { name: /cancel/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /cancel/i })
+      ).toBeInTheDocument()
       // Look for the delete button specifically in the modal
-      const deleteButton = within(modal).getByRole('button', { name: /^delete$/i })
+      const deleteButton = within(modal).getByRole('button', {
+        name: /^delete$/i,
+      })
       expect(deleteButton).toBeInTheDocument()
     })
 
     it('should close confirmation modal when cancel is clicked', async () => {
-      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(mockHouseholds)
-      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(mockGroceryLists)
+      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
+        mockHouseholds
+      )
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+        mockGroceryLists
+      )
 
       render(<GroceryListsPage />)
 
@@ -349,7 +423,9 @@ describe('GroceryListsPage', () => {
       })
 
       // Open confirmation modal
-      const deleteButtons = screen.getAllByRole('button', { name: /delete list/i })
+      const deleteButtons = screen.getAllByRole('button', {
+        name: /delete list/i,
+      })
       fireEvent.click(deleteButtons[0])
 
       await waitFor(() => {
@@ -362,13 +438,19 @@ describe('GroceryListsPage', () => {
 
       // Modal should be closed
       await waitFor(() => {
-        expect(screen.queryByText('Delete Grocery List')).not.toBeInTheDocument()
+        expect(
+          screen.queryByText('Delete Grocery List')
+        ).not.toBeInTheDocument()
       })
     })
 
     it('should delete list when confirmed', async () => {
-      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(mockHouseholds)
-      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(mockGroceryLists)
+      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
+        mockHouseholds
+      )
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+        mockGroceryLists
+      )
       ;(groceryApi.deleteGroceryList as jest.Mock).mockResolvedValue(undefined)
 
       render(<GroceryListsPage />)
@@ -378,7 +460,9 @@ describe('GroceryListsPage', () => {
       })
 
       // Open confirmation modal
-      const deleteButtons = screen.getAllByRole('button', { name: /delete list/i })
+      const deleteButtons = screen.getAllByRole('button', {
+        name: /delete list/i,
+      })
       fireEvent.click(deleteButtons[0])
 
       await waitFor(() => {
@@ -391,7 +475,10 @@ describe('GroceryListsPage', () => {
 
       // Should call API
       await waitFor(() => {
-        expect(groceryApi.deleteGroceryList).toHaveBeenCalledWith(1, 'mock-token')
+        expect(groceryApi.deleteGroceryList).toHaveBeenCalledWith(
+          1,
+          'mock-token'
+        )
       })
 
       // List should be removed from UI
@@ -404,9 +491,15 @@ describe('GroceryListsPage', () => {
     })
 
     it('should handle delete error', async () => {
-      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(mockHouseholds)
-      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(mockGroceryLists)
-      ;(groceryApi.deleteGroceryList as jest.Mock).mockRejectedValue(new Error('Failed to delete list'))
+      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
+        mockHouseholds
+      )
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+        mockGroceryLists
+      )
+      ;(groceryApi.deleteGroceryList as jest.Mock).mockRejectedValue(
+        new Error('Failed to delete list')
+      )
 
       render(<GroceryListsPage />)
 
@@ -415,7 +508,9 @@ describe('GroceryListsPage', () => {
       })
 
       // Open confirmation modal
-      const deleteButtons = screen.getAllByRole('button', { name: /delete list/i })
+      const deleteButtons = screen.getAllByRole('button', {
+        name: /delete list/i,
+      })
       fireEvent.click(deleteButtons[0])
 
       await waitFor(() => {
@@ -442,9 +537,15 @@ describe('GroceryListsPage', () => {
         resolveDelete = resolve
       })
 
-      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(mockHouseholds)
-      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(mockGroceryLists)
-      ;(groceryApi.deleteGroceryList as jest.Mock).mockReturnValue(deletePromise)
+      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
+        mockHouseholds
+      )
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+        mockGroceryLists
+      )
+      ;(groceryApi.deleteGroceryList as jest.Mock).mockReturnValue(
+        deletePromise
+      )
 
       render(<GroceryListsPage />)
 
@@ -453,7 +554,9 @@ describe('GroceryListsPage', () => {
       })
 
       // Open confirmation modal
-      const deleteButtons = screen.getAllByRole('button', { name: /delete list/i })
+      const deleteButtons = screen.getAllByRole('button', {
+        name: /delete list/i,
+      })
       fireEvent.click(deleteButtons[0])
 
       await waitFor(() => {

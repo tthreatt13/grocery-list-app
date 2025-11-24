@@ -35,10 +35,10 @@ describe('Input Component', () => {
     const user = userEvent.setup()
     const handleChange = jest.fn()
     render(<Input label="Name" id="name" onChange={handleChange} />)
-    
+
     const input = screen.getByLabelText('Name')
     await user.type(input, 'test')
-    
+
     expect(handleChange).toHaveBeenCalled()
   })
 
@@ -46,10 +46,10 @@ describe('Input Component', () => {
     const user = userEvent.setup()
     const handleChange = jest.fn()
     render(<Input label="Age" id="age" type="number" onChange={handleChange} />)
-    
+
     const input = screen.getByLabelText('Age')
     await user.type(input, '25')
-    
+
     expect(handleChange).toHaveBeenCalled()
   })
 
@@ -91,7 +91,14 @@ describe('Input Component', () => {
   })
 
   it('handles value prop for controlled component', () => {
-    render(<Input label="Test" id="test" value="controlled value" onChange={() => {}} />)
+    render(
+      <Input
+        label="Test"
+        id="test"
+        value="controlled value"
+        onChange={() => {}}
+      />
+    )
     const input = screen.getByLabelText('Test') as HTMLInputElement
     expect(input.value).toBe('controlled value')
   })
@@ -145,7 +152,7 @@ describe('Input Component', () => {
     const handleBlur = jest.fn()
     render(<Input label="Test" id="test" onBlur={handleBlur} />)
     const input = screen.getByLabelText('Test')
-    
+
     fireEvent.blur(input)
     expect(handleBlur).toHaveBeenCalledTimes(1)
   })
@@ -154,7 +161,7 @@ describe('Input Component', () => {
     const handleFocus = jest.fn()
     render(<Input label="Test" id="test" onFocus={handleFocus} />)
     const input = screen.getByLabelText('Test')
-    
+
     fireEvent.focus(input)
     expect(handleFocus).toHaveBeenCalledTimes(1)
   })

@@ -43,4 +43,3 @@ describe('Card', () => {
     expect(card).toHaveClass('bg-white', 'rounded-lg', 'shadow')
   })
 })
-

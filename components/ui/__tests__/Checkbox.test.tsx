@@ -22,7 +22,7 @@ describe('Checkbox', () => {
     const handleChange = jest.fn()
     const user = userEvent.setup()
     render(<Checkbox onChange={handleChange} />)
-    
+
     await user.click(screen.getByRole('checkbox'))
     expect(handleChange).toHaveBeenCalledTimes(1)
   })
@@ -38,4 +38,3 @@ describe('Checkbox', () => {
     expect(wrapper).toBeInTheDocument()
   })
 })
-
