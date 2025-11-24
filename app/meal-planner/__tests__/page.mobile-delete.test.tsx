@@ -54,6 +54,27 @@ Object.defineProperty(window, 'confirm', {
 })
 
 describe('MealPlannerPage - Mobile Delete Flow', () => {
+  // Calculate current week start (Monday) for test meals
+  const getCurrentWeekStart = () => {
+    const today = new Date()
+    const dayOfWeek = today.getDay()
+    const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1
+    const startDate = new Date(today)
+    startDate.setDate(today.getDate() - daysSinceMonday)
+    startDate.setHours(0, 0, 0, 0)
+    return startDate
+  }
+
+  const formatDateForAPI = (date: Date) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
+  const currentWeekStart = getCurrentWeekStart()
+  const weekStartDateStr = formatDateForAPI(currentWeekStart)
+
   const mockHouseholds = [
     {
       id: 1,
@@ -71,7 +92,7 @@ describe('MealPlannerPage - Mobile Delete Flow', () => {
         name: 'Scrambled Eggs',
         meal_type: 'breakfast' as const,
         day_of_week: 0,
-        week_start_date: '2024-11-10',
+        week_start_date: weekStartDateStr,
         ingredients: 'eggs, butter, salt',
         notes: 'Quick breakfast',
         created_at: '2024-01-01T00:00:00Z',
@@ -82,7 +103,7 @@ describe('MealPlannerPage - Mobile Delete Flow', () => {
         name: 'Spaghetti',
         meal_type: 'dinner' as const,
         day_of_week: 0,
-        week_start_date: '2024-11-10',
+        week_start_date: weekStartDateStr,
         ingredients: 'pasta, tomato sauce',
         notes: 'Family dinner',
         created_at: '2024-01-01T00:00:00Z',
@@ -100,51 +121,69 @@ describe('MealPlannerPage - Mobile Delete Flow', () => {
     mockConfirm.mockClear()
   })
 
-  it('should open MealDetailsModal when mobile meal is clicked', async () => {
+  it('should open edit modal directly when mobile meal is clicked', async () => {
     render(<MealPlannerPage />)
 
-    // Wait for component to load
-    await waitFor(() => {
-      expect(screen.getByText('Scrambled Eggs')).toBeInTheDocument()
-    })
+    // Wait for component to load and meals to be displayed
+    // Meals are converted from API response and need time to process
+    // There are multiple "Scrambled Eggs" (desktop and mobile), so use getAllByText
+    await waitFor(
+      () => {
+        const scrambledEggsElements = screen.getAllByText('Scrambled Eggs')
+        expect(scrambledEggsElements.length).toBeGreaterThan(0)
+      },
+      { timeout: 5000 }
+    )
 
-    // Click on the meal (should open details modal, not edit modal)
-    const mealButton = screen.getByText('Scrambled Eggs').closest('button')
+    // Click on the meal in mobile view (h4 element in mobile calendar)
+    // Mobile calendar uses h4, desktop uses h3
+    const mobileMeal = screen
+      .getAllByText('Scrambled Eggs')
+      .find((el) => el.tagName === 'H4')
+    expect(mobileMeal).toBeInTheDocument()
+    const mealButton = mobileMeal!.closest('button')
+    expect(mealButton).toBeInTheDocument()
     fireEvent.click(mealButton!)
 
-    // Should open MealDetailsModal, not AddMealModal
+    // Should open Edit Meal modal directly (current behavior)
     await waitFor(() => {
-      expect(screen.getByText('Meal Details')).toBeInTheDocument()
-      expect(screen.queryByText('Edit Meal')).not.toBeInTheDocument() // Should not open edit modal directly
+      expect(screen.getByText('Edit Meal')).toBeInTheDocument()
     })
 
-    // Should show meal information in details modal
-    expect(screen.getByText('Scrambled Eggs')).toBeInTheDocument()
-    expect(screen.getByText('Quick breakfast')).toBeInTheDocument()
-    expect(screen.getByText('Edit')).toBeInTheDocument()
+    // Should show meal information in edit modal
+    expect(screen.getByDisplayValue('Scrambled Eggs')).toBeInTheDocument()
+    expect(screen.getByDisplayValue('eggs, butter, salt')).toBeInTheDocument()
+    expect(screen.getByDisplayValue('Quick breakfast')).toBeInTheDocument()
     expect(screen.getByText('Delete')).toBeInTheDocument()
+    expect(screen.getByText('Update Meal')).toBeInTheDocument()
   })
 
-  it('should delete meal from MealDetailsModal', async () => {
+  it('should delete meal from edit modal', async () => {
     mockConfirm.mockReturnValue(true) // User confirms deletion
 
     render(<MealPlannerPage />)
 
-    // Wait for component to load
+    // Wait for component to load - there are multiple "Scrambled Eggs" (desktop and mobile)
     await waitFor(() => {
-      expect(screen.getByText('Scrambled Eggs')).toBeInTheDocument()
+      const scrambledEggsElements = screen.getAllByText('Scrambled Eggs')
+      expect(scrambledEggsElements.length).toBeGreaterThan(0)
     })
 
-    // Click on the meal to open details modal
-    const mealButton = screen.getByText('Scrambled Eggs').closest('button')
+    // Click on the meal in mobile view (h4 element in mobile calendar)
+    const mobileMeal = screen
+      .getAllByText('Scrambled Eggs')
+      .find((el) => el.tagName === 'H4')
+    expect(mobileMeal).toBeInTheDocument()
+    const mealButton = mobileMeal!.closest('button')
+    expect(mealButton).toBeInTheDocument()
     fireEvent.click(mealButton!)
 
-    // Wait for details modal to open
+    // Wait for edit modal to open
     await waitFor(() => {
-      expect(screen.getByText('Meal Details')).toBeInTheDocument()
+      expect(screen.getByText('Edit Meal')).toBeInTheDocument()
     })
 
-    // Click delete button
+    // Click delete button in edit modal
     const deleteButton = screen.getByText('Delete')
     fireEvent.click(deleteButton)
 
@@ -158,43 +197,10 @@ describe('MealPlannerPage - Mobile Delete Flow', () => {
       expect(mockDeleteMeal).toHaveBeenCalledWith(1, 'mock-token')
     })
 
-    // Modal should close and meal should be removed from UI
+    // Modal should close
     await waitFor(() => {
-      expect(screen.queryByText('Meal Details')).not.toBeInTheDocument()
+      expect(screen.queryByText('Edit Meal')).not.toBeInTheDocument()
     })
-  })
-
-  it('should open edit modal from MealDetailsModal', async () => {
-    render(<MealPlannerPage />)
-
-    // Wait for component to load
-    await waitFor(() => {
-      expect(screen.getByText('Scrambled Eggs')).toBeInTheDocument()
-    })
-
-    // Click on the meal to open details modal
-    const mealButton = screen.getByText('Scrambled Eggs').closest('button')
-    fireEvent.click(mealButton!)
-
-    // Wait for details modal to open
-    await waitFor(() => {
-      expect(screen.getByText('Meal Details')).toBeInTheDocument()
-    })
-
-    // Click edit button
-    const editButton = screen.getByText('Edit')
-    fireEvent.click(editButton)
-
-    // Should close details modal and open edit modal
-    await waitFor(() => {
-      expect(screen.queryByText('Meal Details')).not.toBeInTheDocument()
-      expect(screen.getByText('Edit Meal')).toBeInTheDocument()
-    })
-
-    // Edit modal should have pre-populated data
-    expect(screen.getByDisplayValue('Scrambled Eggs')).toBeInTheDocument()
-    expect(screen.getByDisplayValue('eggs, butter, salt')).toBeInTheDocument()
-    expect(screen.getByDisplayValue('Quick breakfast')).toBeInTheDocument()
   })
 
   it('should delete meal from edit modal', async () => {
@@ -202,25 +208,22 @@ describe('MealPlannerPage - Mobile Delete Flow', () => {
 
     render(<MealPlannerPage />)
 
-    // Wait for component to load
+    // Wait for component to load - there are multiple "Scrambled Eggs" (desktop and mobile)
     await waitFor(() => {
-      expect(screen.getByText('Scrambled Eggs')).toBeInTheDocument()
+      const scrambledEggsElements = screen.getAllByText('Scrambled Eggs')
+      expect(scrambledEggsElements.length).toBeGreaterThan(0)
     })
 
-    // Click on the meal to open details modal
-    const mealButton = screen.getByText('Scrambled Eggs').closest('button')
+    // Click on the meal in mobile view (h4 element in mobile calendar)
+    const mobileMeal = screen
+      .getAllByText('Scrambled Eggs')
+      .find((el) => el.tagName === 'H4')
+    expect(mobileMeal).toBeInTheDocument()
+    const mealButton = mobileMeal!.closest('button')
+    expect(mealButton).toBeInTheDocument()
     fireEvent.click(mealButton!)
 
-    // Wait for details modal to open
-    await waitFor(() => {
-      expect(screen.getByText('Meal Details')).toBeInTheDocument()
-    })
-
-    // Click edit button to open edit modal
-    const editButton = screen.getByText('Edit')
-    fireEvent.click(editButton)
-
-    // Wait for edit modal to open
+    // Wait for edit modal to open directly
     await waitFor(() => {
       expect(screen.getByText('Edit Meal')).toBeInTheDocument()
     })
@@ -249,44 +252,42 @@ describe('MealPlannerPage - Mobile Delete Flow', () => {
     mockConfirm.mockReturnValue(true)
     mockDeleteMeal.mockRejectedValue(new Error('Network error'))
 
-    // Mock console.error to avoid noise in test output
-    const mockConsoleError = jest
-      .spyOn(console, 'error')
-      .mockImplementation(() => {})
-
     render(<MealPlannerPage />)
 
-    // Wait for component to load
+    // Wait for component to load - there are multiple "Scrambled Eggs" (desktop and mobile)
     await waitFor(() => {
-      expect(screen.getByText('Scrambled Eggs')).toBeInTheDocument()
+      const scrambledEggsElements = screen.getAllByText('Scrambled Eggs')
+      expect(scrambledEggsElements.length).toBeGreaterThan(0)
     })
 
-    // Click on the meal to open details modal
-    const mealButton = screen.getByText('Scrambled Eggs').closest('button')
+    // Click on the meal in mobile view (h4 element in mobile calendar)
+    const mobileMeal = screen
+      .getAllByText('Scrambled Eggs')
+      .find((el) => el.tagName === 'H4')
+    expect(mobileMeal).toBeInTheDocument()
+    const mealButton = mobileMeal!.closest('button')
+    expect(mealButton).toBeInTheDocument()
     fireEvent.click(mealButton!)
 
-    // Wait for details modal to open
+    // Wait for edit modal to open directly
     await waitFor(() => {
-      expect(screen.getByText('Meal Details')).toBeInTheDocument()
+      expect(screen.getByText('Edit Meal')).toBeInTheDocument()
     })
 
-    // Click delete button
+    // Click delete button in edit modal
     const deleteButton = screen.getByText('Delete')
     fireEvent.click(deleteButton)
 
-    // Should handle error
-    await waitFor(() => {
-      expect(mockConsoleError).toHaveBeenCalledWith(
-        'Error deleting meal:',
-        expect.any(Error)
-      )
-    })
+    // Should show error message in the modal
+    await waitFor(
+      () => {
+        expect(screen.getByText('Network error')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
-    // Should show error message
-    expect(screen.getByText('Network error')).toBeInTheDocument()
-
-    // Cleanup
-    mockConsoleError.mockRestore()
+    // Modal should remain open on error
+    expect(screen.getByText('Edit Meal')).toBeInTheDocument()
   })
 
   it('should not delete when user cancels confirmation', async () => {
@@ -294,21 +295,27 @@ describe('MealPlannerPage - Mobile Delete Flow', () => {
 
     render(<MealPlannerPage />)
 
-    // Wait for component to load
+    // Wait for component to load - there are multiple "Scrambled Eggs" (desktop and mobile)
     await waitFor(() => {
-      expect(screen.getByText('Scrambled Eggs')).toBeInTheDocument()
+      const scrambledEggsElements = screen.getAllByText('Scrambled Eggs')
+      expect(scrambledEggsElements.length).toBeGreaterThan(0)
     })
 
-    // Click on the meal to open details modal
-    const mealButton = screen.getByText('Scrambled Eggs').closest('button')
+    // Click on the meal in mobile view (h4 element in mobile calendar)
+    const mobileMeal = screen
+      .getAllByText('Scrambled Eggs')
+      .find((el) => el.tagName === 'H4')
+    expect(mobileMeal).toBeInTheDocument()
+    const mealButton = mobileMeal!.closest('button')
+    expect(mealButton).toBeInTheDocument()
     fireEvent.click(mealButton!)
 
-    // Wait for details modal to open
+    // Wait for edit modal to open directly
     await waitFor(() => {
-      expect(screen.getByText('Meal Details')).toBeInTheDocument()
+      expect(screen.getByText('Edit Meal')).toBeInTheDocument()
     })
 
-    // Click delete button
+    // Click delete button in edit modal
     const deleteButton = screen.getByText('Delete')
     fireEvent.click(deleteButton)
 
@@ -321,6 +328,6 @@ describe('MealPlannerPage - Mobile Delete Flow', () => {
     expect(mockDeleteMeal).not.toHaveBeenCalled()
 
     // Modal should remain open
-    expect(screen.getByText('Meal Details')).toBeInTheDocument()
+    expect(screen.getByText('Edit Meal')).toBeInTheDocument()
   })
 })

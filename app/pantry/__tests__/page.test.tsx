@@ -117,11 +117,23 @@ describe('PantryPage - Generate Grocery List', () => {
   it('should display "Generate Grocery List" button', async () => {
     render(<PantryPage />)
 
-    await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /generate grocery list/i })
-      ).toBeInTheDocument()
-    })
+    // Wait for loading to complete (check that loading text disappears)
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Loading pantry...')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
+    // Wait for the button to appear
+    await waitFor(
+      () => {
+        expect(
+          screen.getByRole('button', { name: /generate grocery list/i })
+        ).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
   })
 
   it('should show low stock count in stats', async () => {

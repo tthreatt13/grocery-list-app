@@ -69,12 +69,13 @@ export function transformGroceryItem(apiItem: ApiGroceryItem): GroceryItem {
 }
 
 /**
- * Extract unit from quantity string (e.g., "2 gallons" -> "gallons")
+ * Extract unit from quantity string (e.g., "2 gallons" -> "gallons", "2.5 lbs" -> "lbs")
  */
 function extractUnit(quantity?: string): string | undefined {
   if (!quantity) return undefined
 
-  const match = quantity.match(/\d+\s*(.+)/)
+  // Match decimal numbers followed by whitespace and unit
+  const match = quantity.match(/\d+(?:\.\d+)?\s*(.+)/)
   return match ? match[1].trim() : undefined
 }
 

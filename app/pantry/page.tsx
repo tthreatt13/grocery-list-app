@@ -606,8 +606,8 @@ export default function PantryPage() {
     )
   }
 
-  // No household state
-  if (households.length === 0) {
+  // No household state (only show after loading completes)
+  if (!isLoading && households.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

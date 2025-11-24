@@ -113,7 +113,9 @@ describe('Dashboard Page', () => {
 
     // 4 total items (3 from first list, 1 from second)
     expect(screen.getByText('4')).toBeInTheDocument()
-    expect(screen.getByText('Total Items')).toBeInTheDocument()
+    // There are multiple "Total Items" (grocery lists and pantry), so use getAllByText
+    const totalItemsElements = screen.getAllByText('Total Items')
+    expect(totalItemsElements.length).toBeGreaterThan(0)
 
     // 1 completed item
     expect(screen.getByText('1')).toBeInTheDocument()

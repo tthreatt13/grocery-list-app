@@ -177,8 +177,22 @@ describe('GroceryListDetailPage - Quantity Display', () => {
       { timeout: 3000 }
     )
 
-    // Should display just the number
-    expect(screen.getByText('12')).toBeInTheDocument()
+    // Find the item by name first
+    const itemName = screen.getByText('Eggs')
+    expect(itemName).toBeInTheDocument()
+
+    // Find the parent container (the grocery list item card)
+    const itemCard = itemName.closest('div.flex.items-center.space-x-3')
+    expect(itemCard).toBeInTheDocument()
+
+    // Find the quantity within the item card - it's in a div with text-sm class
+    const quantityContainer = itemCard?.querySelector('div.text-sm')
+    expect(quantityContainer).toBeInTheDocument()
+
+    // The quantity "12" should be in the first span within the quantity container
+    const quantitySpan = quantityContainer?.querySelector('span')
+    expect(quantitySpan).toBeInTheDocument()
+    expect(quantitySpan).toHaveTextContent('12')
   })
 })
 

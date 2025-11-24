@@ -3,11 +3,16 @@ import MobileNav from '../MobileNav'
 import { usePathname } from 'next/navigation'
 
 // Mock next/navigation
+const mockUsePathname = jest.fn(() => '/')
 jest.mock('next/navigation', () => ({
-  usePathname: jest.fn(() => '/'),
+  usePathname: () => mockUsePathname(),
 }))
 
 describe('MobileNav', () => {
+  beforeEach(() => {
+    mockUsePathname.mockReturnValue('/')
+  })
+
   it('renders all navigation items', () => {
     render(<MobileNav />)
     expect(screen.getByText('Home')).toBeInTheDocument()
@@ -30,7 +35,7 @@ describe('MobileNav', () => {
   })
 
   it('highlights active navigation item', () => {
-    ;(usePathname as jest.Mock).mockReturnValue('/grocery-lists')
+    mockUsePathname.mockReturnValue('/grocery-lists')
 
     render(<MobileNav />)
     const listsLink = screen.getByText('Lists').closest('a')
@@ -44,7 +49,7 @@ describe('MobileNav', () => {
   })
 
   it('highlights Lists navigation when on a specific list detail page', () => {
-    ;(usePathname as jest.Mock).mockReturnValue('/grocery-lists/123')
+    mockUsePathname.mockReturnValue('/grocery-lists/123')
 
     render(<MobileNav />)
     const listsLink = screen.getByText('Lists').closest('a')
@@ -52,7 +57,7 @@ describe('MobileNav', () => {
   })
 
   it('highlights Lists navigation when on the lists page', () => {
-    ;(usePathname as jest.Mock).mockReturnValue('/grocery-lists')
+    mockUsePathname.mockReturnValue('/grocery-lists')
 
     render(<MobileNav />)
     const listsLink = screen.getByText('Lists').closest('a')
@@ -60,7 +65,7 @@ describe('MobileNav', () => {
   })
 
   it('highlights Pantry navigation when on pantry page', () => {
-    ;(usePathname as jest.Mock).mockReturnValue('/pantry')
+    mockUsePathname.mockReturnValue('/pantry')
 
     render(<MobileNav />)
     const pantryLink = screen.getByText('Pantry').closest('a')
@@ -68,7 +73,7 @@ describe('MobileNav', () => {
   })
 
   it('highlights Home navigation only when on exact home page', () => {
-    ;(usePathname as jest.Mock).mockReturnValue('/')
+    mockUsePathname.mockReturnValue('/')
 
     render(<MobileNav />)
     const homeLink = screen.getByText('Home').closest('a')
@@ -76,7 +81,7 @@ describe('MobileNav', () => {
   })
 
   it('does not highlight Home when on other pages', () => {
-    ;(usePathname as jest.Mock).mockReturnValue('/grocery-lists')
+    mockUsePathname.mockReturnValue('/grocery-lists')
 
     render(<MobileNav />)
     const homeLink = screen.getByText('Home').closest('a')

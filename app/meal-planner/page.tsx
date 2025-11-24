@@ -333,21 +333,26 @@ export default function MealPlannerPage() {
 
   // Handle meal delete
   const handleMealDelete = async (mealId: string) => {
-    if (!confirm('Are you sure you want to delete this meal?')) return
+    if (!confirm('Are you sure you want to delete this meal?')) {
+      return
+    }
 
     try {
-      setError(null)
       const token = await getToken()
       if (!token) {
-        setError('Authentication required')
-        return
+        throw new Error('Authentication required')
       }
 
       await deleteMealAPI(parseInt(mealId), token)
       setMeals(meals.filter((m) => m.id !== mealId))
+      // Close modal on successful delete if it's open
+      if (isAddModalOpen && editingMeal?.id === mealId) {
+        setIsAddModalOpen(false)
+        setEditingMeal(null)
+      }
     } catch (err) {
-      console.error('Error deleting meal:', err)
-      setError(err instanceof Error ? err.message : 'Failed to delete meal')
+      // Re-throw error so AddMealModal can catch and display it
+      throw err
     }
   }
 
@@ -414,6 +419,10 @@ export default function MealPlannerPage() {
       }
 
       // Use the backend API to generate grocery list from meals with meal type preservation
+      // Ensure currentWeekStart is valid before formatting
+      if (!currentWeekStart || isNaN(currentWeekStart.getTime())) {
+        throw new Error('Invalid week start date')
+      }
       const weekStartDate = formatDateForAPI(currentWeekStart)
       const result = await generateGroceryList(
         {
