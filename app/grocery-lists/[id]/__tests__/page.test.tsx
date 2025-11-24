@@ -71,13 +71,18 @@ describe('GroceryListDetailPage - Quantity Display', () => {
   })
 
   it('should display quantity correctly when quantity string contains number and unit', async () => {
-    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(mockListWithItems)
+    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(
+      mockListWithItems
+    )
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Check that the quantity is displayed correctly (not as "1 6 pcs")
     expect(screen.getByText('6 pcs')).toBeInTheDocument()
@@ -86,7 +91,9 @@ describe('GroceryListDetailPage - Quantity Display', () => {
   })
 
   it('should correctly parse and save quantity with unit when adding item', async () => {
-    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(mockListWithItems)
+    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(
+      mockListWithItems
+    )
     ;(groceryApi.addGroceryItem as jest.Mock).mockResolvedValue({
       id: 4,
       list_id: 1,
@@ -99,9 +106,12 @@ describe('GroceryListDetailPage - Quantity Display', () => {
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Open add item modal
     const addButton = screen.getByRole('button', { name: /add item/i })
@@ -112,8 +122,10 @@ describe('GroceryListDetailPage - Quantity Display', () => {
   })
 
   it('should correctly format quantity when adding item with numeric quantity and unit', async () => {
-    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(mockListWithItems)
-    
+    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(
+      mockListWithItems
+    )
+
     const mockNewItem = {
       id: 4,
       list_id: 1,
@@ -127,9 +139,12 @@ describe('GroceryListDetailPage - Quantity Display', () => {
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // When the add handler is called with quantity=3 and unit='lbs',
     // it should send quantity='3 lbs' to the API
@@ -155,9 +170,12 @@ describe('GroceryListDetailPage - Quantity Display', () => {
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Should display just the number
     expect(screen.getByText('12')).toBeInTheDocument()
@@ -245,21 +263,28 @@ describe('GroceryListDetailPage - Category Sorting', () => {
   }
 
   it('should display items sorted by category in grocery store order', async () => {
-    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(mockListWithMixedCategories)
+    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(
+      mockListWithMixedCategories
+    )
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Mixed Category List')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Mixed Category List')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Get all item names in the "To Buy" section (unchecked items)
     const toBuySection = screen.getByText('To Buy (5)').closest('div')
     expect(toBuySection).toBeInTheDocument()
 
     // Items should be sorted by category: Produce (Apples, Bananas), Dairy (Milk), Meat (Chicken), Bakery (Bread)
-    const itemElements = screen.getAllByText(/Apples|Bananas|Milk|Chicken Breast|Bread/)
-    
+    const itemElements = screen.getAllByText(
+      /Apples|Bananas|Milk|Chicken Breast|Bread/
+    )
+
     // Check that items appear in the correct category order
     expect(itemElements[0]).toHaveTextContent('Apples') // Produce comes first
     expect(itemElements[1]).toHaveTextContent('Bananas') // Produce (alphabetical within category)
@@ -269,13 +294,18 @@ describe('GroceryListDetailPage - Category Sorting', () => {
   })
 
   it('should display category group headers for each category', async () => {
-    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(mockListWithMixedCategories)
+    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(
+      mockListWithMixedCategories
+    )
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Mixed Category List')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Mixed Category List')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Should display category headers for each category that has items
     expect(screen.getByText('Produce')).toBeInTheDocument()
@@ -321,13 +351,18 @@ describe('GroceryListDetailPage - Category Sorting', () => {
       ],
     }
 
-    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(listWithSameCategoryItems)
+    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(
+      listWithSameCategoryItems
+    )
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Mixed Category List')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Mixed Category List')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Within Produce category, items should be alphabetical: Apples, Carrots, Zucchini
     const produceItems = screen.getAllByText(/Apples|Carrots|Zucchini/)
@@ -337,13 +372,18 @@ describe('GroceryListDetailPage - Category Sorting', () => {
   })
 
   it('should maintain category sorting for both checked and unchecked items', async () => {
-    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(mockListWithMixedCategories)
+    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(
+      mockListWithMixedCategories
+    )
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Mixed Category List')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Mixed Category List')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Check that both "To Buy" and "Completed" sections exist
     expect(screen.getByText('To Buy (5)')).toBeInTheDocument()
@@ -356,13 +396,18 @@ describe('GroceryListDetailPage - Category Sorting', () => {
   })
 
   it('should not display category filter component', async () => {
-    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(mockListWithMixedCategories)
+    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(
+      mockListWithMixedCategories
+    )
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Mixed Category List')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Mixed Category List')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Should not have the old category filter
     expect(screen.queryByText('Filter by Category')).not.toBeInTheDocument()
@@ -457,13 +502,18 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
   }
 
   it('should display sort method selector', async () => {
-    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(mockListWithMealTypes)
+    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(
+      mockListWithMealTypes
+    )
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Should display the sort method selector
     expect(screen.getByText('Sort by')).toBeInTheDocument()
@@ -471,48 +521,66 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
   })
 
   it('should switch to meal time sorting when selected', async () => {
-    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(mockListWithMealTypes)
+    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(
+      mockListWithMealTypes
+    )
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Change sort method to Meal Time
     const sortSelector = screen.getByRole('combobox', { name: /sort by/i })
     fireEvent.change(sortSelector, { target: { value: SortMethod.MEAL_TIME } })
 
     // Should display meal type group headers
-    await waitFor(() => {
-      expect(screen.getByText('Breakfast')).toBeInTheDocument()
-      expect(screen.getByText('Lunch')).toBeInTheDocument()
-      expect(screen.getByText('Dinner')).toBeInTheDocument()
-      expect(screen.getByText('Snack')).toBeInTheDocument()
-      expect(screen.getByText('No meal assignment')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Breakfast')).toBeInTheDocument()
+        expect(screen.getByText('Lunch')).toBeInTheDocument()
+        expect(screen.getByText('Dinner')).toBeInTheDocument()
+        expect(screen.getByText('Snack')).toBeInTheDocument()
+        expect(screen.getByText('No meal assignment')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
   })
 
   it('should display items in correct meal time order', async () => {
-    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(mockListWithMealTypes)
+    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(
+      mockListWithMealTypes
+    )
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Change to meal time sorting
     const sortSelector = screen.getByRole('combobox', { name: /sort by/i })
     fireEvent.change(sortSelector, { target: { value: SortMethod.MEAL_TIME } })
 
-    await waitFor(() => {
-      expect(screen.getByText('Breakfast')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Breakfast')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Get all meal type headers in order they appear
-    const mealHeaders = screen.getAllByText(/Breakfast|Lunch|Dinner|Snack|No meal assignment/)
-    
+    const mealHeaders = screen.getAllByText(
+      /Breakfast|Lunch|Dinner|Snack|No meal assignment/
+    )
+
     // Should be in order: Breakfast, Lunch, Dinner, Snack, No meal assignment
     expect(mealHeaders[0]).toHaveTextContent('Breakfast')
     expect(mealHeaders[1]).toHaveTextContent('Lunch')
@@ -522,21 +590,29 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
   })
 
   it('should sort items alphabetically within each meal type', async () => {
-    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(mockListWithMealTypes)
+    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(
+      mockListWithMealTypes
+    )
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Change to meal time sorting
     const sortSelector = screen.getByRole('combobox', { name: /sort by/i })
     fireEvent.change(sortSelector, { target: { value: SortMethod.MEAL_TIME } })
 
-    await waitFor(() => {
-      expect(screen.getByText('Breakfast')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Breakfast')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Within Breakfast category: Cereal should come before Eggs (alphabetical)
     const breakfastItems = screen.getAllByText(/Cereal|Eggs/)
@@ -545,26 +621,38 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
   })
 
   it('should switch to entry order sorting when selected', async () => {
-    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(mockListWithMealTypes)
+    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(
+      mockListWithMealTypes
+    )
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Change sort method to Entry Order
     const sortSelector = screen.getByRole('combobox', { name: /sort by/i })
-    fireEvent.change(sortSelector, { target: { value: SortMethod.ENTRY_ORDER } })
+    fireEvent.change(sortSelector, {
+      target: { value: SortMethod.ENTRY_ORDER },
+    })
 
     // Should not display group headers (no grouping in entry order)
-    await waitFor(() => {
-      expect(screen.queryByText('Breakfast')).not.toBeInTheDocument()
-      expect(screen.queryByText('Produce')).not.toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Breakfast')).not.toBeInTheDocument()
+        expect(screen.queryByText('Produce')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Items should be in chronological order (by created_at)
-    const allItems = screen.getAllByText(/Cereal|Sandwich Bread|Chicken|Chips|Milk|Eggs/)
+    const allItems = screen.getAllByText(
+      /Cereal|Sandwich Bread|Chicken|Chips|Milk|Eggs/
+    )
     expect(allItems[0]).toHaveTextContent('Cereal') // 10:00:00Z
     expect(allItems[1]).toHaveTextContent('Sandwich Bread') // 10:05:00Z
     expect(allItems[2]).toHaveTextContent('Chicken') // 10:10:00Z
@@ -574,13 +662,18 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
   })
 
   it('should display meal type badges on items', async () => {
-    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(mockListWithMealTypes)
+    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(
+      mockListWithMealTypes
+    )
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Should display meal type badges
     expect(screen.getAllByText('Breakfast')).toHaveLength(2) // 2 breakfast items
@@ -591,8 +684,10 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
   })
 
   it('should handle adding items with meal types', async () => {
-    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(mockListWithMealTypes)
-    
+    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(
+      mockListWithMealTypes
+    )
+
     const mockNewItem = {
       id: 7,
       list_id: 1,
@@ -607,17 +702,23 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Open add item modal
     const addButton = screen.getByRole('button', { name: /add item/i })
     fireEvent.click(addButton)
 
-    await waitFor(() => {
-      expect(screen.getByText('Add New Item')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Add New Item')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Should display meal type selector in the form
     expect(screen.getByText('Meal Type')).toBeInTheDocument()
@@ -625,7 +726,9 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
   })
 
   it('should handle editing items with meal types', async () => {
-    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(mockListWithMealTypes)
+    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(
+      mockListWithMealTypes
+    )
     ;(groceryApi.updateGroceryItem as jest.Mock).mockResolvedValue({
       ...mockListWithMealTypes.items[0],
       meal_type: 'Lunch', // Changed from Breakfast to Lunch
@@ -633,17 +736,23 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Click edit button on first item (Cereal)
     const editButtons = screen.getAllByLabelText('Edit item')
     fireEvent.click(editButtons[0])
 
-    await waitFor(() => {
-      expect(screen.getByText('Edit Item')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Edit Item')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Should display meal type selector with current value
     expect(screen.getByText('Meal Type')).toBeInTheDocument()
@@ -651,13 +760,18 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
   })
 
   it('should maintain sort method selection when switching between sort methods', async () => {
-    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(mockListWithMealTypes)
+    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(
+      mockListWithMealTypes
+    )
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Meal Planning List')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     const sortSelector = screen.getByRole('combobox', { name: /sort by/i })
 
@@ -669,7 +783,9 @@ describe('GroceryListDetailPage - Meal-Based Sorting', () => {
     expect(sortSelector).toHaveValue(SortMethod.MEAL_TIME)
 
     // Change to Entry Order
-    fireEvent.change(sortSelector, { target: { value: SortMethod.ENTRY_ORDER } })
+    fireEvent.change(sortSelector, {
+      target: { value: SortMethod.ENTRY_ORDER },
+    })
     expect(sortSelector).toHaveValue(SortMethod.ENTRY_ORDER)
 
     // Change back to Category
@@ -688,13 +804,18 @@ describe('GroceryListDetailPage - Layout and Button Order', () => {
   })
 
   it('should display header buttons in correct order: Share, Add Item, Sort', async () => {
-    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(mockListWithItems)
+    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(
+      mockListWithItems
+    )
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Get all buttons in the header area
     const shareButton = screen.getByRole('button', { name: /share list/i })
@@ -709,7 +830,7 @@ describe('GroceryListDetailPage - Layout and Button Order', () => {
     // Get their positions in the DOM to verify order
     const headerContainer = shareButton.closest('div')
     const buttons = headerContainer?.querySelectorAll('button, select')
-    
+
     if (buttons) {
       // Share button should be first
       expect(buttons[0]).toHaveTextContent('Share List')
@@ -722,13 +843,18 @@ describe('GroceryListDetailPage - Layout and Button Order', () => {
   })
 
   it('should display shopping progress card after header and before items list', async () => {
-    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(mockListWithItems)
+    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(
+      mockListWithItems
+    )
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Verify progress card exists
     const progressText = screen.getByText('Shopping Progress')
@@ -744,31 +870,42 @@ describe('GroceryListDetailPage - Layout and Button Order', () => {
   })
 
   it('should display items list after all other elements', async () => {
-    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(mockListWithItems)
+    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(
+      mockListWithItems
+    )
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Verify the complete layout order by checking elements exist in expected sections
-    
+
     // 1. Header with title
     expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-    
+
     // 2. Header buttons (Share, Add Item, Sort)
-    expect(screen.getByRole('button', { name: /share list/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /add item/i })).toBeInTheDocument()
-    expect(screen.getByRole('combobox', { name: /sort by/i })).toBeInTheDocument()
-    
+    expect(
+      screen.getByRole('button', { name: /share list/i })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /add item/i })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('combobox', { name: /sort by/i })
+    ).toBeInTheDocument()
+
     // 3. Shopping progress
     expect(screen.getByText('Shopping Progress')).toBeInTheDocument()
-    
+
     // 4. Items list sections
     expect(screen.getByText('To Buy (2)')).toBeInTheDocument()
     expect(screen.getByText('Completed (1)')).toBeInTheDocument()
-    
+
     // 5. Actual items
     expect(screen.getByText('Bananas')).toBeInTheDocument()
     expect(screen.getByText('Milk')).toBeInTheDocument()
@@ -776,7 +913,9 @@ describe('GroceryListDetailPage - Layout and Button Order', () => {
   })
 
   it('should maintain responsive layout on mobile', async () => {
-    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(mockListWithItems)
+    ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(
+      mockListWithItems
+    )
 
     // Mock mobile viewport
     Object.defineProperty(window, 'innerWidth', {
@@ -787,9 +926,12 @@ describe('GroceryListDetailPage - Layout and Button Order', () => {
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Verify buttons still exist and are accessible on mobile
     const shareButton = screen.getByRole('button', { name: /share list/i })
@@ -808,27 +950,37 @@ describe('GroceryListDetailPage - Layout and Button Order', () => {
   it('should handle empty list state with correct layout', async () => {
     const emptyList: groceryApi.GroceryListWithItems = {
       ...mockListWithItems,
-      items: []
+      items: [],
     }
     ;(groceryApi.getGroceryList as jest.Mock).mockResolvedValue(emptyList)
 
     render(<GroceryListDetailPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-    }, { timeout: 3000 })
+    await waitFor(
+      () => {
+        expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Header elements should still be present
-    expect(screen.getByRole('button', { name: /share list/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /add item/i })).toBeInTheDocument()
-    expect(screen.getByRole('combobox', { name: /sort by/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /share list/i })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /add item/i })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('combobox', { name: /sort by/i })
+    ).toBeInTheDocument()
 
     // Progress should show 0/0
     expect(screen.getByText('0 / 0 items')).toBeInTheDocument()
 
     // Empty state message should appear
     expect(screen.getByText('No items yet')).toBeInTheDocument()
-    expect(screen.getByText('Add items to your grocery list to get started')).toBeInTheDocument()
+    expect(
+      screen.getByText('Add items to your grocery list to get started')
+    ).toBeInTheDocument()
   })
 })
-

@@ -9,6 +9,7 @@ Replaced the browser alert dialog in the meal planner with a custom modal compon
 ### Test-Driven Development (TDD) Approach
 
 Following TDD principles:
+
 1. **Red Phase**: Created comprehensive test file first with all expected behaviors
 2. **Green Phase**: Implemented component to pass all tests
 3. **Refactor Phase**: Integrated into meal planner page
@@ -16,9 +17,11 @@ Following TDD principles:
 ### Files Created/Modified
 
 #### 1. Test File (TDD - Step 1)
+
 **`components/meal-planner/__tests__/GenerateGroceryListFromMealsModal.test.tsx`**
 
 Comprehensive test suite covering:
+
 - Modal rendering and visibility
 - Display of ingredients
 - Ingredient selection/deselection
@@ -31,18 +34,20 @@ Comprehensive test suite covering:
 - Empty states
 
 Test coverage includes:
+
 - 13 basic functionality tests
 - 10 tests for existing list integration
 - Edge cases and user interactions
 
 #### 2. Modal Component (TDD - Step 2)
+
 **`components/meal-planner/GenerateGroceryListFromMealsModal.tsx`**
 
 Features:
+
 - **Two Modes**:
   - Create new grocery list with custom name
   - Add to existing grocery list (with dropdown selection)
-  
 - **Ingredient Management**:
   - Display all ingredients from weekly meal plan
   - Select/deselect individual ingredients
@@ -64,17 +69,25 @@ Features:
     open: boolean
     onClose: () => void
     ingredients: string[]
-    onCreateList: (data: { listName: string; ingredients: string[] }) => void | Promise<void>
-    onAddToList?: (data: { listId: number; ingredients: string[] }) => void | Promise<void>
+    onCreateList: (data: {
+      listName: string
+      ingredients: string[]
+    }) => void | Promise<void>
+    onAddToList?: (data: {
+      listId: number
+      ingredients: string[]
+    }) => void | Promise<void>
     existingLists?: GroceryListResponse[]
     isCreating?: boolean
   }
   ```
 
 #### 3. Meal Planner Page Integration
+
 **`app/meal-planner/page.tsx`**
 
 Changes:
+
 - Imported new modal component
 - Imported grocery API functions
 - Added state management for:
@@ -85,6 +98,7 @@ Changes:
 - Added useEffect to fetch grocery lists when household changes
 
 - Replaced browser `alert()` with modal trigger:
+
   ```typescript
   // Before:
   const handleGenerateGroceryList = () => {
@@ -98,6 +112,7 @@ Changes:
   ```
 
 - Added helper function to extract ingredients:
+
   ```typescript
   const getCurrentWeekIngredients = () => {
     // Filters meals for current week
@@ -119,6 +134,7 @@ Changes:
 ## API Integration
 
 Uses existing grocery API functions from `lib/api/grocery.ts`:
+
 - `getGroceryLists()`: Fetch available lists
 - `createGroceryList()`: Create new list
 - `addGroceryItem()`: Add individual ingredient as item
@@ -158,6 +174,7 @@ While similar in structure, this modal differs from the Pantry version:
 ## Testing Strategy
 
 ### Unit Tests (Jest/React Testing Library)
+
 - Component rendering
 - User interactions
 - State management
@@ -165,12 +182,15 @@ While similar in structure, this modal differs from the Pantry version:
 - Edge cases
 
 ### Manual Testing (Browser)
+
 Prerequisites:
+
 1. Sign in to app
 2. Join/create household
 3. Add meals with ingredients to meal planner
 
 Test Cases:
+
 1. Click "Generate Grocery List" button
 2. Verify modal opens with ingredients
 3. Test create new list flow
@@ -183,6 +203,7 @@ Test Cases:
 ## Future Enhancements
 
 Potential improvements:
+
 1. Allow editing quantities before adding
 2. Categorize ingredients automatically
 3. Merge duplicate ingredients from multiple meals
@@ -201,6 +222,7 @@ Potential improvements:
 ## No Breaking Changes
 
 This implementation:
+
 - Adds new component without modifying existing ones
 - Only changes meal planner page
 - Maintains backward compatibility
@@ -216,4 +238,3 @@ This implementation:
 - Proper error handling
 - Loading states
 - Accessible (ARIA labels)
-

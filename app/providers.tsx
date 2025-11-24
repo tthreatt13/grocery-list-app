@@ -8,10 +8,5 @@ interface ProvidersProps {
 }
 
 export function Providers({ children }: ProvidersProps) {
-  return (
-    <ClerkProvider>
-      {children}
-    </ClerkProvider>
-  )
+  return <ClerkProvider>{children}</ClerkProvider>
 }
-

@@ -7,6 +7,7 @@ The Meal Type Tagging feature automatically assigns meal type tags (Breakfast, L
 ## Problem Statement
 
 Previously, when users generated grocery lists from their meal plans, all ingredients were added without any indication of which meal they came from. This made it difficult to:
+
 - Organize shopping by meal times
 - Understand the purpose of each ingredient
 - Sort grocery items by meal type
@@ -15,6 +16,7 @@ Previously, when users generated grocery lists from their meal plans, all ingred
 ## Solution
 
 When grocery lists are generated from meal plans, each ingredient now carries the meal type information from its source meal, enabling:
+
 - Visual meal type badges in the grocery list interface
 - Meal-based sorting capabilities
 - Better organization and meal planning workflow
@@ -25,6 +27,7 @@ When grocery lists are generated from meal plans, each ingredient now carries th
 ### Backend Changes
 
 #### 1. API Endpoint Enhancement
+
 **File**: `backend/routes/meals.py`
 
 The `generate_grocery_list` endpoint was modified to preserve meal type information:
@@ -57,12 +60,15 @@ for meal in meals:
 ```
 
 **Key Changes**:
+
 - Changed from batch processing all ingredients to processing per meal
 - Each `GroceryItem` now gets `meal_type` from its source meal
 - Maintains the association between ingredients and their meal context
 
 #### 2. Database Schema
+
 The feature leverages the existing database schema:
+
 - `grocery_items.meal_type` column (already existed)
 - `meals.meal_type` column (source of the data)
 - Proper indexing for efficient meal type queries
@@ -70,6 +76,7 @@ The feature leverages the existing database schema:
 ### Frontend Changes
 
 #### 1. Meal Planner Integration
+
 **File**: `app/meal-planner/page.tsx`
 
 Updated the meal planner to use the backend API instead of manual grocery list creation:
@@ -90,9 +97,11 @@ const result = await generateGroceryList({
 ```
 
 #### 2. Display Components
+
 **File**: `components/grocery/GroceryListItem.tsx`
 
 The grocery list item component already supported meal type display:
+
 - Colored badges for different meal types
 - Conditional rendering when meal type is present
 - Proper styling and accessibility
@@ -106,9 +115,11 @@ The grocery list item component already supported meal type display:
 ```
 
 #### 3. Data Transformation
+
 **File**: `lib/adapters/groceryAdapters.ts`
 
 The adapters properly handle meal type mapping:
+
 - Maps backend `meal_type` strings to frontend `MealType` enum
 - Handles case-insensitive mapping
 - Graceful handling of missing or invalid meal types
@@ -116,11 +127,13 @@ The adapters properly handle meal type mapping:
 ## Testing
 
 ### Backend Tests
+
 **File**: `backend/tests/routes/test_meals.py`
 
 Comprehensive test coverage includes:
 
 1. **Meal Type Preservation Test**
+
    ```python
    def test_generate_grocery_list_preserves_meal_types(self, ...):
        # Verifies that grocery items get correct meal types
@@ -129,6 +142,7 @@ Comprehensive test coverage includes:
    ```
 
 2. **Mixed Meal Types Test**
+
    ```python
    def test_generate_grocery_list_mixed_meal_types_same_ingredient(self, ...):
        # Tests same ingredient from different meals
@@ -143,9 +157,11 @@ Comprehensive test coverage includes:
    ```
 
 ### Frontend Tests
+
 **File**: `lib/adapters/__tests__/groceryAdapters.test.ts`
 
 Tests for data transformation:
+
 - Meal type mapping from API to frontend types
 - Case-insensitive handling
 - Missing meal type scenarios
@@ -154,15 +170,18 @@ Tests for data transformation:
 ## User Experience
 
 ### Visual Indicators
+
 Grocery items now display colored meal type badges:
+
 - 🟡 **Breakfast** - Yellow/orange for morning meals
-- 🔵 **Lunch** - Blue for midday meals  
+- 🔵 **Lunch** - Blue for midday meals
 - 🔴 **Dinner** - Red for evening meals
 - 🟢 **Snack** - Green for snacks
 
 ### Workflow Integration
+
 1. User plans meals for the week in the meal planner
-2. User clicks "Generate Grocery List" 
+2. User clicks "Generate Grocery List"
 3. System creates grocery list with meal type tags preserved
 4. User can see which ingredients are for which meals
 5. Future sorting and filtering by meal type is enabled
@@ -170,9 +189,11 @@ Grocery items now display colored meal type badges:
 ## API Reference
 
 ### Generate Grocery List from Meals
+
 **Endpoint**: `POST /api/meals/generate-grocery-list`
 
 **Request**:
+
 ```json
 {
   "week_start_date": "2024-01-01",
@@ -182,6 +203,7 @@ Grocery items now display colored meal type badges:
 ```
 
 **Response**:
+
 ```json
 {
   "grocery_list_id": 123,
@@ -190,19 +212,21 @@ Grocery items now display colored meal type badges:
 }
 ```
 
-**Behavior**: 
+**Behavior**:
+
 - Finds all meals for the specified week
 - Extracts ingredients from each meal
 - Creates grocery items with `meal_type` preserved from source meals
 
 ### Grocery Item Schema
+
 ```json
 {
   "id": 1,
   "name": "Eggs",
   "quantity": "12",
   "category": "dairy",
-  "meal_type": "breakfast",  // ✅ Now included
+  "meal_type": "breakfast", // ✅ Now included
   "notes": null,
   "checked": false
 }
@@ -211,11 +235,13 @@ Grocery items now display colored meal type badges:
 ## Migration Notes
 
 ### Existing Data
+
 - No migration required for existing grocery items
 - Existing items without meal types display normally
 - New items from meal planner will have meal types
 
 ### Backward Compatibility
+
 - All existing functionality remains unchanged
 - Meal type is optional and gracefully handled when missing
 - UI components conditionally show meal type badges
@@ -223,6 +249,7 @@ Grocery items now display colored meal type badges:
 ## Future Enhancements
 
 ### Potential Features
+
 1. **Meal Type Filtering**: Filter grocery lists by meal type
 2. **Meal Type Sorting**: Sort items by meal time order
 3. **Shopping Organization**: Group items by meal for efficient shopping
@@ -230,6 +257,7 @@ Grocery items now display colored meal type badges:
 5. **Smart Suggestions**: Suggest items based on meal type patterns
 
 ### Technical Considerations
+
 - Database indexes on `meal_type` column for efficient filtering
 - Frontend state management for meal type filters
 - Export/import functionality to preserve meal types
@@ -240,18 +268,22 @@ Grocery items now display colored meal type badges:
 ### Common Issues
 
 **Issue**: Grocery items missing meal types
+
 - **Cause**: Items added manually or from pantry won't have meal types
 - **Solution**: Only items from meal planner have meal types (by design)
 
 **Issue**: Incorrect meal type colors
+
 - **Cause**: CSS styling or badge variant mapping
 - **Solution**: Check `getMealBadgeVariant` function in `GroceryListItem.tsx`
 
 **Issue**: Backend API not preserving meal types
+
 - **Cause**: Using old manual creation instead of `generateGroceryList` API
 - **Solution**: Ensure frontend uses the correct API endpoint
 
 ### Debug Steps
+
 1. Check backend logs for meal type assignment
 2. Verify API response includes `meal_type` field
 3. Confirm frontend adapter mapping is working
@@ -260,16 +292,19 @@ Grocery items now display colored meal type badges:
 ## Performance Impact
 
 ### Backend
+
 - Minimal impact: Changed from batch to per-meal processing
 - Same number of database operations
 - Slightly more memory usage for meal type storage
 
-### Frontend  
+### Frontend
+
 - No performance impact on existing functionality
 - Meal type badges add minimal rendering overhead
 - Data transformation remains efficient
 
 ### Database
+
 - Existing `meal_type` column and index used
 - No additional queries required
 - Efficient meal type filtering when implemented

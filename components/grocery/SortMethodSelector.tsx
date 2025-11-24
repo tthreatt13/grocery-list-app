@@ -9,7 +9,11 @@ interface SortMethodSelectorProps {
   className?: string
 }
 
-export default function SortMethodSelector({ value, onChange, className }: SortMethodSelectorProps) {
+export default function SortMethodSelector({
+  value,
+  onChange,
+  className,
+}: SortMethodSelectorProps) {
   const sortMethodOptions = [
     { value: SortMethod.ENTRY_ORDER, label: SortMethod.ENTRY_ORDER },
     { value: SortMethod.CATEGORY, label: SortMethod.CATEGORY },

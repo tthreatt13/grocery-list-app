@@ -108,10 +108,7 @@ export async function updateMeal(
 /**
  * Delete a meal
  */
-export async function deleteMeal(
-  mealId: number,
-  token: string
-): Promise<void> {
+export async function deleteMeal(mealId: number, token: string): Promise<void> {
   return del<void>(`/api/meals/${mealId}`, token)
 }
 
@@ -149,4 +146,3 @@ export function getWeekStartDate(date: Date = new Date()): string {
 export function formatDateForAPI(date: Date): string {
   return date.toISOString().split('T')[0]
 }
-

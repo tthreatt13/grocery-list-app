@@ -9,7 +9,7 @@ const mockMeal: Meal = {
   date: new Date('2024-11-10'),
   createdBy: 'John',
   ingredients: ['eggs', 'butter', 'salt'],
-  notes: 'Quick breakfast'
+  notes: 'Quick breakfast',
 }
 
 const mockOnAdd = jest.fn()
@@ -119,7 +119,9 @@ describe('AddMealModal - Delete Functionality', () => {
       const deleteButton = screen.getByText('Delete')
       fireEvent.click(deleteButton)
 
-      expect(mockConfirm).toHaveBeenCalledWith('Are you sure you want to delete this meal?')
+      expect(mockConfirm).toHaveBeenCalledWith(
+        'Are you sure you want to delete this meal?'
+      )
       expect(mockOnDelete).not.toHaveBeenCalled()
     })
 
@@ -150,9 +152,11 @@ describe('AddMealModal - Delete Functionality', () => {
 
     it('shows loading state during deletion', async () => {
       mockConfirm.mockReturnValue(true)
-      
+
       // Mock a delayed delete operation
-      mockOnDelete.mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)))
+      mockOnDelete.mockImplementation(
+        () => new Promise((resolve) => setTimeout(resolve, 100))
+      )
 
       render(
         <AddMealModal
@@ -204,7 +208,7 @@ describe('AddMealModal - Delete Functionality', () => {
 
       // Should not close modal on error
       expect(mockOnClose).not.toHaveBeenCalled()
-      
+
       // Should re-enable buttons after error
       expect(screen.getByText('Delete')).not.toBeDisabled()
       expect(screen.getByText('Cancel')).not.toBeDisabled()
@@ -236,7 +240,9 @@ describe('AddMealModal - Delete Functionality', () => {
     })
 
     it('disables delete button during form submission', async () => {
-      mockOnAdd.mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)))
+      mockOnAdd.mockImplementation(
+        () => new Promise((resolve) => setTimeout(resolve, 100))
+      )
 
       render(
         <AddMealModal

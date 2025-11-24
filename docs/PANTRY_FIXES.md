@@ -5,18 +5,22 @@
 ### 1. ❌ **Changes Not Saving** (CRITICAL BUG)
 
 #### Problem
+
 When editing pantry items (changing quantity, removing expiration date), the changes were not being saved.
 
 #### Root Cause
+
 **Data Mapping Bug** - The quantity field was being incorrectly mapped in three places:
 
 1. **Create Item** (Line 109):
+
    ```typescript
    // WRONG - sends unit instead of quantity!
    quantity: newItem.unit || `${newItem.quantity}`
    ```
 
 2. **Update Item** (Line 165):
+
    ```typescript
    // WRONG - sends unit instead of quantity!
    quantity: updatedItem.unit || `${updatedItem.quantity}`
@@ -29,18 +33,21 @@ When editing pantry items (changing quantity, removing expiration date), the cha
    ```
 
 #### Solution
+
 The backend stores `quantity` as a **string** that includes both the number and unit (e.g., "5 pcs", "2 kg").
 
 **Fixed by:**
 
 1. **Proper Quantity String Construction**:
+
    ```typescript
-   quantity: updatedItem.unit 
-     ? `${updatedItem.quantity} ${updatedItem.unit}` 
+   quantity: updatedItem.unit
+     ? `${updatedItem.quantity} ${updatedItem.unit}`
      : `${updatedItem.quantity}`
    ```
 
 2. **Proper Quantity Parsing** with regex:
+
    ```typescript
    const parseQuantity = (quantityStr: string | undefined) => {
      if (!quantityStr) return { quantity: 0, unit: undefined }
@@ -48,7 +55,7 @@ The backend stores `quantity` as a **string** that includes both the number and 
      if (match) {
        return {
          quantity: parseFloat(match[1]),
-         unit: match[2] || undefined
+         unit: match[2] || undefined,
        }
      }
      return { quantity: parseFloat(quantityStr) || 0, unit: undefined }
@@ -63,26 +70,31 @@ The backend stores `quantity` as a **string** that includes both the number and 
 ### 2. ❌ **Badge Colors Not Matching**
 
 #### Problem
+
 The "Produce" and other category badges (pills) in the pantry had default gray color, while grocery lists had color-coded badges:
+
 - Produce = green
 - Dairy = blue
 - Meat = red
 - Bakery = yellow/orange
 
 #### Solution
+
 Added the `getBadgeVariant` function to `PantryItemCard.tsx` that matches the color scheme from `GroceryListItem.tsx`:
 
 ```typescript
-const getBadgeVariant = (category: string): 'default' | 'primary' | 'success' | 'warning' | 'danger' => {
+const getBadgeVariant = (
+  category: string
+): 'default' | 'primary' | 'success' | 'warning' | 'danger' => {
   switch (category) {
     case 'Produce':
-      return 'success'    // Green
+      return 'success' // Green
     case 'Dairy':
-      return 'primary'    // Blue
+      return 'primary' // Blue
     case 'Meat':
-      return 'danger'     // Red
+      return 'danger' // Red
     case 'Bakery':
-      return 'warning'    // Yellow/Orange
+      return 'warning' // Yellow/Orange
     case 'Grains':
       return 'warning'
     case 'Canned Goods':
@@ -94,12 +106,13 @@ const getBadgeVariant = (category: string): 'default' | 'primary' | 'success' | 
     case 'Beverages':
       return 'primary'
     default:
-      return 'default'    // Gray
+      return 'default' // Gray
   }
 }
 ```
 
 Now the badge uses the color variant:
+
 ```typescript
 <Badge variant={getBadgeVariant(item.category)} className="text-xs whitespace-nowrap">
   {item.category}
@@ -109,6 +122,7 @@ Now the badge uses the color variant:
 ## Testing Checklist
 
 ### ✅ Changes Should Now Save
+
 1. Open pantry page
 2. Click edit on any item
 3. Change the quantity (e.g., from 5 to 10)
@@ -117,20 +131,23 @@ Now the badge uses the color variant:
 6. **Expected**: Changes are saved and visible immediately
 
 ### ✅ Expiration Date Removal
+
 1. Edit an item with an expiration date
 2. Clear the expiration date field
 3. Save
 4. **Expected**: Expiration date is removed (API sends `null`)
 
 ### ✅ Quantity with Unit
+
 1. Edit an item
 2. Set quantity to "5" and unit to "pcs"
 3. Save
 4. **Expected**: Displays as "5 pcs" and both values are preserved
 
 ### ✅ Badge Colors
+
 1. View pantry items
-2. **Expected**: 
+2. **Expected**:
    - Produce items have green badges
    - Dairy items have blue badges
    - Meat items have red badges
@@ -151,20 +168,24 @@ Now the badge uses the color variant:
 ## Technical Details
 
 ### Backend API Contract
+
 - **Field**: `quantity: Optional[str]`
 - **Format**: "number unit" (e.g., "5 pcs", "2.5 kg", "10")
 - **Update**: Can send `null` to clear expiration_date
 
 ### Frontend Data Flow
+
 1. **User Input** → Separate fields (quantity: number, unit: string)
 2. **API Request** → Combined string (quantity: "5 pcs")
 3. **API Response** → Combined string (quantity: "5 pcs")
 4. **Frontend State** → Parsed back to separate (quantity: 5, unit: "pcs")
 
 ### Regex Pattern
+
 ```regex
 ^([\d.]+)\s*(.*)$
 ```
+
 - Captures: `(number)(optional whitespace)(optional unit)`
 - Examples:
   - "5 pcs" → quantity: 5, unit: "pcs"
@@ -176,13 +197,13 @@ Now the badge uses the color variant:
 ✅ No linter errors  
 ✅ TypeScript compilation passes  
 ✅ Data mapping is consistent across all operations  
-✅ Color scheme matches between pantry and grocery lists  
+✅ Color scheme matches between pantry and grocery lists
 
 ## Related Issues
 
 This fix resolves:
+
 - Modal input fields not saving changes
 - Expiration date removal not working
 - Quantity and unit data being lost
 - Badge colors not matching UI design
-

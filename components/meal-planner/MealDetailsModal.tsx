@@ -100,7 +100,10 @@ export default function MealDetailsModal({
             </h4>
             <ul className="space-y-1">
               {meal.ingredients.map((ingredient, index) => (
-                <li key={index} className="text-sm text-gray-600 flex items-center">
+                <li
+                  key={index}
+                  className="text-sm text-gray-600 flex items-center"
+                >
                   <svg
                     className="w-4 h-4 mr-2 text-green-500"
                     fill="none"
@@ -130,11 +133,7 @@ export default function MealDetailsModal({
 
         {/* Action Buttons */}
         <div className="flex space-x-3 pt-4">
-          <Button
-            variant="primary"
-            className="flex-1"
-            onClick={handleEdit}
-          >
+          <Button variant="primary" className="flex-1" onClick={handleEdit}>
             <svg
               className="w-4 h-4 mr-2"
               fill="none"
@@ -175,4 +174,3 @@ export default function MealDetailsModal({
     </Modal>
   )
 }
-

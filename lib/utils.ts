@@ -15,7 +15,7 @@ export function cn(...inputs: ClassValue[]) {
  */
 export function formatDate(date: Date | string, format?: string): string {
   const dateObj = typeof date === 'string' ? new Date(date) : date
-  
+
   if (format === 'EEEE, MMMM d') {
     // Full weekday name, full month name, day
     return new Intl.DateTimeFormat('en-US', {
@@ -24,7 +24,7 @@ export function formatDate(date: Date | string, format?: string): string {
       day: 'numeric',
     }).format(dateObj)
   }
-  
+
   if (format === 'EEE') {
     // Short weekday name (Mon, Tue, Wed)
     return new Intl.DateTimeFormat('en-US', {
@@ -39,7 +39,7 @@ export function formatDate(date: Date | string, format?: string): string {
       day: 'numeric',
     }).format(dateObj)
   }
-  
+
   // Default format
   return new Intl.DateTimeFormat('en-US', {
     month: 'short',
@@ -57,10 +57,13 @@ export function formatRelativeTime(date: Date | string): string {
   const diffInSeconds = Math.floor((now.getTime() - dateObj.getTime()) / 1000)
 
   if (diffInSeconds < 60) return 'just now'
-  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`
-  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`
-  if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`
-  
+  if (diffInSeconds < 3600)
+    return `${Math.floor(diffInSeconds / 60)} minutes ago`
+  if (diffInSeconds < 86400)
+    return `${Math.floor(diffInSeconds / 3600)} hours ago`
+  if (diffInSeconds < 604800)
+    return `${Math.floor(diffInSeconds / 86400)} days ago`
+
   return formatDate(dateObj)
 }
 
@@ -70,7 +73,9 @@ export function formatRelativeTime(date: Date | string): string {
 export function isWithinDays(date: Date | string, days: number): boolean {
   const dateObj = typeof date === 'string' ? new Date(date) : date
   const now = new Date()
-  const diffInDays = Math.floor((dateObj.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+  const diffInDays = Math.floor(
+    (dateObj.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+  )
   return diffInDays >= 0 && diffInDays <= days
 }
 
@@ -140,11 +145,11 @@ export function sortItemsByCategory(items: GroceryItem[]): GroceryItem[] {
     const categoryB = b.category || ItemCategory.OTHER
     const categoryOrderA = getCategoryOrder(categoryA)
     const categoryOrderB = getCategoryOrder(categoryB)
-    
+
     if (categoryOrderA !== categoryOrderB) {
       return categoryOrderA - categoryOrderB
     }
-    
+
     // If same category, sort alphabetically by name
     return a.name.localeCompare(b.name)
   })
@@ -161,11 +166,11 @@ export function sortPantryItemsByCategory(items: PantryItem[]): PantryItem[] {
     const categoryB = b.category || ItemCategory.OTHER
     const categoryOrderA = getCategoryOrder(categoryA)
     const categoryOrderB = getCategoryOrder(categoryB)
-    
+
     if (categoryOrderA !== categoryOrderB) {
       return categoryOrderA - categoryOrderB
     }
-    
+
     // If same category, sort alphabetically by name
     return a.name.localeCompare(b.name)
   })
@@ -200,11 +205,11 @@ export function sortItemsByMealTime(items: GroceryItem[]): GroceryItem[] {
     // First, sort by meal order
     const mealOrderA = getMealOrder(a.mealType)
     const mealOrderB = getMealOrder(b.mealType)
-    
+
     if (mealOrderA !== mealOrderB) {
       return mealOrderA - mealOrderB
     }
-    
+
     // If same meal type, sort alphabetically by name
     return a.name.localeCompare(b.name)
   })
@@ -219,4 +224,3 @@ export function sortItemsByEntryOrder(items: GroceryItem[]): GroceryItem[] {
     return a.addedAt.getTime() - b.addedAt.getTime()
   })
 }
-

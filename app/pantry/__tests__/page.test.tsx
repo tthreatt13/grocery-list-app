@@ -11,12 +11,16 @@ import { ItemCategory, SortMethod } from '@/lib/types'
 const mockGetToken = jest.fn().mockResolvedValue('mock-token')
 jest.mock('@clerk/nextjs', () => ({
   auth: () => ({ userId: 'user_test123' }),
-  currentUser: () => ({ id: 'user_test123', firstName: 'Test', lastName: 'Testuser' }),
+  currentUser: () => ({
+    id: 'user_test123',
+    firstName: 'Test',
+    lastName: 'Testuser',
+  }),
   ClerkProvider: ({ children }: { children: React.ReactNode }) => children,
   SignInButton: ({ children }: { children: React.ReactNode }) => children,
   SignUpButton: ({ children }: { children: React.ReactNode }) => children,
   UserButton: () => {
-    return React.createElement('div', { 'data-testid': 'user-button' }, 'TT');
+    return React.createElement('div', { 'data-testid': 'user-button' }, 'TT')
   },
   useAuth: () => ({
     getToken: mockGetToken,
@@ -24,14 +28,14 @@ jest.mock('@clerk/nextjs', () => ({
     isLoaded: true,
     isSignedIn: true,
   }),
-  useUser: () => ({ 
-    isSignedIn: true, 
-    user: { 
-      id: 'user_test123', 
-      firstName: 'Test', 
+  useUser: () => ({
+    isSignedIn: true,
+    user: {
+      id: 'user_test123',
+      firstName: 'Test',
       lastName: 'Testuser',
-      emailAddresses: [{ emailAddress: 'test@example.com' }]
-    }
+      emailAddresses: [{ emailAddress: 'test@example.com' }],
+    },
   }),
 }))
 
@@ -40,11 +44,22 @@ jest.mock('@/lib/api/pantry')
 jest.mock('@/lib/api/household')
 jest.mock('@/lib/api/grocery')
 
-const mockGetPantryItems = pantryApi.getPantryItems as jest.MockedFunction<typeof pantryApi.getPantryItems>
-const mockGetHouseholds = householdApi.getHouseholds as jest.MockedFunction<typeof householdApi.getHouseholds>
-const mockCreateGroceryList = groceryApi.createGroceryList as jest.MockedFunction<typeof groceryApi.createGroceryList>
-const mockAddGroceryItem = groceryApi.addGroceryItem as jest.MockedFunction<typeof groceryApi.addGroceryItem>
-const mockGetGroceryLists = groceryApi.getGroceryLists as jest.MockedFunction<typeof groceryApi.getGroceryLists>
+const mockGetPantryItems = pantryApi.getPantryItems as jest.MockedFunction<
+  typeof pantryApi.getPantryItems
+>
+const mockGetHouseholds = householdApi.getHouseholds as jest.MockedFunction<
+  typeof householdApi.getHouseholds
+>
+const mockCreateGroceryList =
+  groceryApi.createGroceryList as jest.MockedFunction<
+    typeof groceryApi.createGroceryList
+  >
+const mockAddGroceryItem = groceryApi.addGroceryItem as jest.MockedFunction<
+  typeof groceryApi.addGroceryItem
+>
+const mockGetGroceryLists = groceryApi.getGroceryLists as jest.MockedFunction<
+  typeof groceryApi.getGroceryLists
+>
 
 describe('PantryPage - Generate Grocery List', () => {
   const mockHouseholds = [
@@ -103,7 +118,9 @@ describe('PantryPage - Generate Grocery List', () => {
     render(<PantryPage />)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /generate grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /generate grocery list/i })
+      ).toBeInTheDocument()
     })
   })
 
@@ -124,10 +141,14 @@ describe('PantryPage - Generate Grocery List', () => {
     render(<PantryPage />)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /generate grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /generate grocery list/i })
+      ).toBeInTheDocument()
     })
 
-    const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+    const generateButton = screen.getByRole('button', {
+      name: /generate grocery list/i,
+    })
     fireEvent.click(generateButton)
 
     await waitFor(() => {
@@ -139,10 +160,14 @@ describe('PantryPage - Generate Grocery List', () => {
     render(<PantryPage />)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /generate grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /generate grocery list/i })
+      ).toBeInTheDocument()
     })
 
-    const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+    const generateButton = screen.getByRole('button', {
+      name: /generate grocery list/i,
+    })
     fireEvent.click(generateButton)
 
     await waitFor(() => {
@@ -181,19 +206,27 @@ describe('PantryPage - Generate Grocery List', () => {
     render(<PantryPage />)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /generate grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /generate grocery list/i })
+      ).toBeInTheDocument()
     })
 
     // Open modal
-    const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+    const generateButton = screen.getByRole('button', {
+      name: /generate grocery list/i,
+    })
     fireEvent.click(generateButton)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /create grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /create grocery list/i })
+      ).toBeInTheDocument()
     })
 
     // Create list
-    const createButton = screen.getByRole('button', { name: /create grocery list/i })
+    const createButton = screen.getByRole('button', {
+      name: /create grocery list/i,
+    })
     fireEvent.click(createButton)
 
     await waitFor(() => {
@@ -232,19 +265,27 @@ describe('PantryPage - Generate Grocery List', () => {
     render(<PantryPage />)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /generate grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /generate grocery list/i })
+      ).toBeInTheDocument()
     })
 
     // Open modal
-    const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+    const generateButton = screen.getByRole('button', {
+      name: /generate grocery list/i,
+    })
     fireEvent.click(generateButton)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /create grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /create grocery list/i })
+      ).toBeInTheDocument()
     })
 
     // Create list
-    const createButton = screen.getByRole('button', { name: /create grocery list/i })
+    const createButton = screen.getByRole('button', {
+      name: /create grocery list/i,
+    })
     fireEvent.click(createButton)
 
     await waitFor(() => {
@@ -279,23 +320,33 @@ describe('PantryPage - Generate Grocery List', () => {
     render(<PantryPage />)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /generate grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /generate grocery list/i })
+      ).toBeInTheDocument()
     })
 
     // Open modal
-    const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+    const generateButton = screen.getByRole('button', {
+      name: /generate grocery list/i,
+    })
     fireEvent.click(generateButton)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /create grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /create grocery list/i })
+      ).toBeInTheDocument()
     })
 
     // Create list
-    const createButton = screen.getByRole('button', { name: /create grocery list/i })
+    const createButton = screen.getByRole('button', {
+      name: /create grocery list/i,
+    })
     fireEvent.click(createButton)
 
     await waitFor(() => {
-      expect(screen.queryByRole('button', { name: /create grocery list/i })).not.toBeInTheDocument()
+      expect(
+        screen.queryByRole('button', { name: /create grocery list/i })
+      ).not.toBeInTheDocument()
     })
   })
 
@@ -305,19 +356,27 @@ describe('PantryPage - Generate Grocery List', () => {
     render(<PantryPage />)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /generate grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /generate grocery list/i })
+      ).toBeInTheDocument()
     })
 
     // Open modal
-    const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+    const generateButton = screen.getByRole('button', {
+      name: /generate grocery list/i,
+    })
     fireEvent.click(generateButton)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /create grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /create grocery list/i })
+      ).toBeInTheDocument()
     })
 
     // Try to create list
-    const createButton = screen.getByRole('button', { name: /create grocery list/i })
+    const createButton = screen.getByRole('button', {
+      name: /create grocery list/i,
+    })
     fireEvent.click(createButton)
 
     await waitFor(() => {
@@ -361,15 +420,19 @@ describe('PantryPage - Mobile Responsive Layout', () => {
     render(<PantryPage />)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /generate grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /generate grocery list/i })
+      ).toBeInTheDocument()
     })
 
     // Find the button container
-    const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+    const generateButton = screen.getByRole('button', {
+      name: /generate grocery list/i,
+    })
     const buttonContainer = generateButton.parentElement
 
     expect(buttonContainer).toBeInTheDocument()
-    
+
     // Check that the button container has responsive flex classes
     // On mobile (default), buttons should stack vertically (flex-col)
     // On larger screens (sm:), buttons can be side-by-side (sm:flex-row)
@@ -382,16 +445,20 @@ describe('PantryPage - Mobile Responsive Layout', () => {
     render(<PantryPage />)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /generate grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /generate grocery list/i })
+      ).toBeInTheDocument()
     })
 
-    const generateButton = screen.getByRole('button', { name: /generate grocery list/i })
+    const generateButton = screen.getByRole('button', {
+      name: /generate grocery list/i,
+    })
     const addButton = screen.getByRole('button', { name: /add to pantry/i })
 
     // Buttons should have w-full class on mobile and sm:w-auto on larger screens
     const generateClasses = generateButton.className
     const addClasses = addButton.className
-    
+
     expect(generateClasses).toMatch(/w-full/)
     expect(generateClasses).toMatch(/sm:w-auto/)
     expect(addClasses).toMatch(/w-full/)
@@ -402,13 +469,15 @@ describe('PantryPage - Mobile Responsive Layout', () => {
     const { container } = render(<PantryPage />)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /generate grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /generate grocery list/i })
+      ).toBeInTheDocument()
     })
 
     // Check that the main container doesn't have any classes that could cause overflow
     const mainContent = container.querySelector('.container')
     expect(mainContent).toBeInTheDocument()
-    
+
     // The container should have appropriate padding
     const classes = mainContent?.className || ''
     expect(classes).toMatch(/px-4/)
@@ -489,9 +558,11 @@ describe('PantryPage - Sort Functionality', () => {
     const sortSelect = screen.getByLabelText(/sort by/i) as HTMLSelectElement
     const options = Array.from(sortSelect.options)
 
-    expect(options.some(opt => opt.value === SortMethod.CATEGORY)).toBe(true)
-    expect(options.some(opt => opt.value === SortMethod.ENTRY_ORDER)).toBe(true)
-    expect(options.some(opt => opt.value === SortMethod.LOW_STOCK)).toBe(true)
+    expect(options.some((opt) => opt.value === SortMethod.CATEGORY)).toBe(true)
+    expect(options.some((opt) => opt.value === SortMethod.ENTRY_ORDER)).toBe(
+      true
+    )
+    expect(options.some((opt) => opt.value === SortMethod.LOW_STOCK)).toBe(true)
   })
 
   it('should sort items by low stock when Low Stock option is selected', async () => {
@@ -508,7 +579,7 @@ describe('PantryPage - Sort Functionality', () => {
       // Low stock items (Milk: 0.5 <= 1, Bread: 0 <= 1) should appear first
       // Rice (5 > 2) and Pasta (no threshold) should appear after
       expect(screen.getByText(/low stock items/i)).toBeInTheDocument()
-      
+
       // Check that low stock section shows the count
       const lowStockSection = screen.getByText(/low stock items/i)
       expect(lowStockSection).toHaveTextContent('2')
@@ -583,4 +654,3 @@ describe('PantryPage - Sort Functionality', () => {
     expect(screen.queryByText(/other items/i)).not.toBeInTheDocument()
   })
 })
-

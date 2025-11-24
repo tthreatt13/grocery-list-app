@@ -31,7 +31,12 @@ interface EditItemFormProps {
   isSubmitting?: boolean
 }
 
-export default function EditItemForm({ item, onSave, onCancel, isSubmitting }: EditItemFormProps) {
+export default function EditItemForm({
+  item,
+  onSave,
+  onCancel,
+  isSubmitting,
+}: EditItemFormProps) {
   const [name, setName] = useState(item.name)
   const [quantity, setQuantity] = useState(item.quantity.toString())
   const [unit, setUnit] = useState(item.unit || '')
@@ -51,7 +56,7 @@ export default function EditItemForm({ item, onSave, onCancel, isSubmitting }: E
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!name.trim()) return
 
     onSave(item.id, {
@@ -64,17 +69,17 @@ export default function EditItemForm({ item, onSave, onCancel, isSubmitting }: E
     })
   }
 
-  const categoryOptions = Object.values(ItemCategory).map(cat => ({
+  const categoryOptions = Object.values(ItemCategory).map((cat) => ({
     value: cat,
     label: cat,
   }))
 
   const mealTypeOptions = [
     { value: '', label: 'No meal assignment' },
-    ...Object.values(MealType).map(meal => ({
+    ...Object.values(MealType).map((meal) => ({
       value: meal,
       label: meal,
-    }))
+    })),
   ]
 
   return (
@@ -132,7 +137,12 @@ export default function EditItemForm({ item, onSave, onCancel, isSubmitting }: E
 
       <div className="flex space-x-3 justify-end pt-2">
         {onCancel && (
-          <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            disabled={isSubmitting}
+          >
             Cancel
           </Button>
         )}
@@ -143,4 +153,3 @@ export default function EditItemForm({ item, onSave, onCancel, isSubmitting }: E
     </form>
   )
 }
-

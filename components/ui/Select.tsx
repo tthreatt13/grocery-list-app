@@ -6,7 +6,8 @@ export interface SelectOption {
   label: string
 }
 
-export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
+export interface SelectProps
+  extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string
   options?: SelectOption[]
   error?: string
@@ -14,12 +15,25 @@ export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElemen
 }
 
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
-  ({ className, label, options, error, id, placeholder, children, value, ...props }, ref) => {
+  (
+    {
+      className,
+      label,
+      options,
+      error,
+      id,
+      placeholder,
+      children,
+      value,
+      ...props
+    },
+    ref
+  ) => {
     const selectId = id || `select-${Math.random().toString(36).substr(2, 9)}`
-    
+
     // If value is empty string, add an empty option to support it
     const needsEmptyOption = value === ''
-    
+
     return (
       <div className="w-full">
         {label && (
@@ -51,14 +65,14 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
               {placeholder}
             </option>
           )}
-          {needsEmptyOption && !placeholder && (
-            <option value="">--</option>
-          )}
-          {options && options.length > 0 ? options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          )) : children}
+          {needsEmptyOption && !placeholder && <option value="">--</option>}
+          {options && options.length > 0
+            ? options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))
+            : children}
         </select>
         {error && (
           <p id={`${selectId}-error`} className="mt-1 text-sm text-red-600">
@@ -71,4 +85,3 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
 )
 
 Select.displayName = 'Select'
-

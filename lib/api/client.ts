@@ -3,7 +3,9 @@
  * Handles authentication, request/response formatting, and error handling
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://grocery-list-app-production-3744.up.railway.app'
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  'https://grocery-list-app-production-3744.up.railway.app'
 
 export interface ApiError {
   message: string
@@ -38,7 +40,7 @@ async function apiFetch<T>(
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    ...(fetchOptions.headers as Record<string, string> || {}),
+    ...((fetchOptions.headers as Record<string, string>) || {}),
   }
 
   // Add authorization header if token is provided
@@ -200,4 +202,3 @@ export async function syncUser(data: {
 }): Promise<UserSyncResponse> {
   return post('/api/users/sync', data)
 }
-

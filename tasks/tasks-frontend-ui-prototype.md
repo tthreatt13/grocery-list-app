@@ -1,14 +1,17 @@
 # Task List: Front-End UI Prototype for Grocery App
 
 ## Feature Overview
+
 Build a working front-end UI prototype (React + Next.js) with mock data to visualize and test the user experience for busy parents. This prototype will include all core screens and interactions before backend integration.
 
 ## Target User
+
 Busy parents who need to efficiently plan weekly meals and manage grocery shopping for their family.
 
 ## Relevant Files
 
 ### Configuration & Setup
+
 - `package.json` - Project dependencies and scripts
 - `next.config.js` - Next.js configuration
 - `tailwind.config.js` - Tailwind CSS configuration
@@ -16,11 +19,13 @@ Busy parents who need to efficiently plan weekly meals and manage grocery shoppi
 - `.gitignore` - Git ignore file for node_modules, .next, etc.
 
 ### Layout & Core Structure
+
 - `app/layout.tsx` - Root layout component with navigation
 - `app/page.tsx` - Home/dashboard page
 - `app/globals.css` - Global styles and Tailwind imports
 
 ### Design System Components
+
 - `components/ui/Button.tsx` - Reusable button component
 - `components/ui/Input.tsx` - Input field component
 - `components/ui/Card.tsx` - Card container component
@@ -30,11 +35,13 @@ Busy parents who need to efficiently plan weekly meals and manage grocery shoppi
 - `components/ui/Select.tsx` - Dropdown select component
 
 ### Navigation Components
+
 - `components/layout/Navbar.tsx` - Top navigation bar
 - `components/layout/Sidebar.tsx` - Side navigation (optional for desktop)
 - `components/layout/MobileNav.tsx` - Mobile bottom navigation
 
 ### Grocery List Feature
+
 - `app/grocery-lists/page.tsx` - Grocery lists overview page
 - `app/grocery-lists/[id]/page.tsx` - Individual list detail page
 - `components/grocery/GroceryListCard.tsx` - List preview card
@@ -43,29 +50,34 @@ Busy parents who need to efficiently plan weekly meals and manage grocery shoppi
 - `components/grocery/CategoryFilter.tsx` - Filter by category
 
 ### Pantry Inventory Feature
+
 - `app/pantry/page.tsx` - Pantry inventory page
 - `components/pantry/PantryItemCard.tsx` - Individual pantry item card
 - `components/pantry/AddPantryItemForm.tsx` - Form to add pantry items
 - `components/pantry/PantryGrid.tsx` - Grid view of pantry items
 
 ### Meal Planner Feature
+
 - `app/meal-planner/page.tsx` - Weekly meal planner page
 - `components/meal-planner/WeeklyCalendar.tsx` - Calendar view component
 - `components/meal-planner/MealCard.tsx` - Individual meal card
 - `components/meal-planner/AddMealModal.tsx` - Modal to add meals
 
 ### Household/Family Management
+
 - `app/household/page.tsx` - Household management page
 - `components/household/MemberCard.tsx` - Family member card
 - `components/household/InviteMemberForm.tsx` - Form to invite members
 - `components/household/SharedListsView.tsx` - View of shared lists
 
 ### Mock Data & Utils
+
 - `lib/mockData.ts` - Mock data for all features
 - `lib/types.ts` - TypeScript type definitions
 - `lib/utils.ts` - Utility functions (classnames, formatters, etc.)
 
 ### Notes
+
 - We're using Next.js 14+ App Router (not Pages Router)
 - All components should be functional components using React hooks
 - Use Tailwind CSS for all styling (no CSS modules or styled-components)
@@ -77,6 +89,7 @@ Busy parents who need to efficiently plan weekly meals and manage grocery shoppi
 **IMPORTANT:** As you complete each task, you must check it off in this markdown file by changing `- [ ]` to `- [x]`. This helps track progress and ensures you don't skip any steps.
 
 Example:
+
 - `- [ ] 1.1 Read file` → `- [x] 1.1 Read file` (after completing)
 
 Update the file after completing each sub-task, not just after completing an entire parent task.
@@ -185,4 +198,3 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 8.11 Commit responsive design fixes with message "fix: improve responsive design for mobile and tablet"
   - [x] 8.12 Create a simple README.md with setup instructions and feature overview
   - [x] 8.13 Push feature branch to GitHub and create a pull request (or merge to main if working solo)
-

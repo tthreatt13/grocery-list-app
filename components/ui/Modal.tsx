@@ -66,7 +66,10 @@ export const Modal: React.FC<ModalProps> = ({
       >
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
           {title && (
-            <h2 id="modal-title" className="text-xl font-semibold text-gray-900">
+            <h2
+              id="modal-title"
+              className="text-xl font-semibold text-gray-900"
+            >
               {title}
             </h2>
           )}
@@ -97,4 +100,3 @@ export const Modal: React.FC<ModalProps> = ({
 }
 
 Modal.displayName = 'Modal'
-

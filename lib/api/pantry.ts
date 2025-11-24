@@ -51,12 +51,12 @@ export async function getPantryItems(
   const queryParams = new URLSearchParams()
   if (params?.category) queryParams.append('category', params.category)
   if (params?.search) queryParams.append('search', params.search)
-  
+
   const query = queryParams.toString()
-  const endpoint = query 
+  const endpoint = query
     ? `/api/pantry?household_id=${householdId}&${query}`
     : `/api/pantry?household_id=${householdId}`
-    
+
   return get<PantryItemResponse[]>(endpoint, token)
 }
 
@@ -127,4 +127,3 @@ export async function getLowStockItems(
     token
   )
 }
-

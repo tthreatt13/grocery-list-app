@@ -1,14 +1,16 @@
 import React from 'react'
 import { cn } from '@/lib/utils'
 
-export interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface CheckboxProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string
 }
 
 export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
   ({ className, label, id, ...props }, ref) => {
-    const checkboxId = id || `checkbox-${Math.random().toString(36).substr(2, 9)}`
-    
+    const checkboxId =
+      id || `checkbox-${Math.random().toString(36).substr(2, 9)}`
+
     return (
       <div className={cn('flex items-center', className)}>
         <input
@@ -37,4 +39,3 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
 )
 
 Checkbox.displayName = 'Checkbox'
-

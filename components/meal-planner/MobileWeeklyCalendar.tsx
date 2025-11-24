@@ -15,24 +15,26 @@ export interface MobileWeeklyCalendarRef {
   scrollToToday: () => void
 }
 
-const MobileWeeklyCalendar = forwardRef<MobileWeeklyCalendarRef, MobileWeeklyCalendarProps>(({
-  startDate,
-  meals,
-  onEmptySlotClick,
-  onMealClick,
-}, ref) => {
+const MobileWeeklyCalendar = forwardRef<
+  MobileWeeklyCalendarRef,
+  MobileWeeklyCalendarProps
+>(({ startDate, meals, onEmptySlotClick, onMealClick }, ref) => {
   const todayCardRef = useRef<HTMLDivElement>(null)
 
-  useImperativeHandle(ref, () => ({
-    scrollToToday: () => {
-      if (todayCardRef.current) {
-        todayCardRef.current.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
-        })
-      }
-    }
-  }), [])
+  useImperativeHandle(
+    ref,
+    () => ({
+      scrollToToday: () => {
+        if (todayCardRef.current) {
+          todayCardRef.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+          })
+        }
+      },
+    }),
+    []
+  )
   // Generate 7 days starting from startDate
   const weekDays = Array.from({ length: 7 }, (_, i) => {
     const date = new Date(startDate)
@@ -236,4 +238,3 @@ const MobileWeeklyCalendar = forwardRef<MobileWeeklyCalendarRef, MobileWeeklyCal
 MobileWeeklyCalendar.displayName = 'MobileWeeklyCalendar'
 
 export default MobileWeeklyCalendar
-

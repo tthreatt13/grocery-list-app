@@ -7,12 +7,15 @@ import { Modal } from '@/components/ui/Modal'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
 import GroceryListCard from '@/components/grocery/GroceryListCard'
-import { 
-  getGroceryListsWithItems, 
+import {
+  getGroceryListsWithItems,
   createGroceryList,
-  deleteGroceryList
+  deleteGroceryList,
 } from '@/lib/api/grocery'
-import { transformGroceryLists, transformGroceryList } from '@/lib/adapters/groceryAdapters'
+import {
+  transformGroceryLists,
+  transformGroceryList,
+} from '@/lib/adapters/groceryAdapters'
 import { GroceryList } from '@/lib/types'
 import { getHouseholds, HouseholdResponse } from '@/lib/api/household'
 
@@ -20,7 +23,9 @@ export default function GroceryListsPage() {
   const { getToken } = useAuth()
   const [lists, setLists] = useState<GroceryList[]>([])
   const [households, setHouseholds] = useState<HouseholdResponse[]>([])
-  const [selectedHouseholdId, setSelectedHouseholdId] = useState<number | null>(null)
+  const [selectedHouseholdId, setSelectedHouseholdId] = useState<number | null>(
+    null
+  )
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [newListName, setNewListName] = useState('')
   const [isLoading, setIsLoading] = useState(true)
@@ -45,7 +50,7 @@ export default function GroceryListsPage() {
         // Fetch households first
         const householdsData = await getHouseholds(token)
         setHouseholds(householdsData)
-        
+
         // Set default household if available
         if (householdsData.length > 0 && !selectedHouseholdId) {
           setSelectedHouseholdId(householdsData[0].id)
@@ -91,7 +96,7 @@ export default function GroceryListsPage() {
       // Add empty items array and transform to match GroceryList type
       const newListWithItems = {
         ...newList,
-        items: []
+        items: [],
       }
       const transformedNewList = transformGroceryList(newListWithItems)
 
@@ -107,7 +112,7 @@ export default function GroceryListsPage() {
   }
 
   const handleDeleteClick = (listId: string | number) => {
-    const list = lists.find(l => l.id === listId)
+    const list = lists.find((l) => l.id === listId)
     if (list) {
       setListToDelete(list)
       setIsDeleteModalOpen(true)
@@ -129,7 +134,7 @@ export default function GroceryListsPage() {
       await deleteGroceryList(Number(listToDelete.id), token)
 
       // Remove the deleted list from local state
-      setLists(lists.filter(list => list.id !== listToDelete.id))
+      setLists(lists.filter((list) => list.id !== listToDelete.id))
       setIsDeleteModalOpen(false)
       setListToDelete(null)
     } catch (err) {
@@ -163,10 +168,22 @@ export default function GroceryListsPage() {
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-            <svg className="w-12 h-12 text-red-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg
+              className="w-12 h-12 text-red-400 mx-auto mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
-            <h3 className="text-lg font-medium text-red-900 mb-2">Error Loading Data</h3>
+            <h3 className="text-lg font-medium text-red-900 mb-2">
+              Error Loading Data
+            </h3>
             <p className="text-red-700 mb-4">{error}</p>
             <Button onClick={() => window.location.reload()}>Try Again</Button>
           </div>
@@ -188,18 +205,30 @@ export default function GroceryListsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Grocery Lists</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+              Grocery Lists
+            </h1>
             <p className="text-sm sm:text-base text-gray-600">
               Manage your shopping lists and track items
             </p>
           </div>
-          <Button 
-            onClick={() => setIsModalOpen(true)} 
+          <Button
+            onClick={() => setIsModalOpen(true)}
             className="w-full sm:w-auto"
             disabled={households.length === 0}
           >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            <svg
+              className="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
             </svg>
             New List
           </Button>
@@ -208,28 +237,58 @@ export default function GroceryListsPage() {
         {/* No households message */}
         {households.length === 0 ? (
           <div className="text-center py-12">
-            <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            <svg
+              className="w-16 h-16 mx-auto text-gray-400 mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+              />
             </svg>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No Household Found</h3>
-            <p className="text-gray-600 mb-4">Create or join a household to start managing grocery lists</p>
-            <Button onClick={() => window.location.href = '/household'}>Go to Household</Button>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No Household Found
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Create or join a household to start managing grocery lists
+            </p>
+            <Button onClick={() => (window.location.href = '/household')}>
+              Go to Household
+            </Button>
           </div>
         ) : lists.length === 0 ? (
           <div className="text-center py-12">
-            <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            <svg
+              className="w-16 h-16 mx-auto text-gray-400 mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+              />
             </svg>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No lists yet</h3>
-            <p className="text-gray-600 mb-4">Create your first grocery list to get started</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No lists yet
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Create your first grocery list to get started
+            </p>
             <Button onClick={() => setIsModalOpen(true)}>Create List</Button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {lists.map((list) => (
-              <GroceryListCard 
-                key={list.id} 
-                list={list} 
+              <GroceryListCard
+                key={list.id}
+                list={list}
                 onDelete={handleDeleteClick}
               />
             ))}
@@ -252,7 +311,9 @@ export default function GroceryListsPage() {
               <Select
                 label="Household"
                 value={selectedHouseholdId?.toString() || ''}
-                onChange={(e) => setSelectedHouseholdId(parseInt(e.target.value))}
+                onChange={(e) =>
+                  setSelectedHouseholdId(parseInt(e.target.value))
+                }
               >
                 <option value="">Select a household</option>
                 {households.map((household) => (
@@ -285,9 +346,11 @@ export default function GroceryListsPage() {
               >
                 Cancel
               </Button>
-              <Button 
-                onClick={handleCreateList} 
-                disabled={!newListName.trim() || !selectedHouseholdId || isCreating}
+              <Button
+                onClick={handleCreateList}
+                disabled={
+                  !newListName.trim() || !selectedHouseholdId || isCreating
+                }
               >
                 {isCreating ? 'Creating...' : 'Create List'}
               </Button>
@@ -305,8 +368,9 @@ export default function GroceryListsPage() {
         >
           <div className="space-y-4">
             <p className="text-gray-600">
-              Are you sure you want to delete <strong>{listToDelete?.name}</strong>? 
-              This action cannot be undone and will permanently remove the list and all its items.
+              Are you sure you want to delete{' '}
+              <strong>{listToDelete?.name}</strong>? This action cannot be
+              undone and will permanently remove the list and all its items.
             </p>
             <div className="flex space-x-3 justify-end">
               <Button
@@ -316,7 +380,7 @@ export default function GroceryListsPage() {
               >
                 Cancel
               </Button>
-              <Button 
+              <Button
                 onClick={handleDeleteConfirm}
                 disabled={isDeleting}
                 className="bg-red-600 hover:bg-red-700 text-white"

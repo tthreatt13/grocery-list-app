@@ -30,12 +30,24 @@ jest.mock('@/lib/api/household')
 jest.mock('@/lib/api/grocery')
 jest.mock('@/lib/api/client')
 
-const mockGetWeeklyMeals = mealsApi.getWeeklyMeals as jest.MockedFunction<typeof mealsApi.getWeeklyMeals>
-const mockDeleteMeal = mealsApi.deleteMeal as jest.MockedFunction<typeof mealsApi.deleteMeal>
-const mockUpdateMeal = mealsApi.updateMeal as jest.MockedFunction<typeof mealsApi.updateMeal>
-const mockGetHouseholds = householdApi.getHouseholds as jest.MockedFunction<typeof householdApi.getHouseholds>
-const mockGetGroceryLists = groceryApi.getGroceryLists as jest.MockedFunction<typeof groceryApi.getGroceryLists>
-const mockSyncUser = clientApi.syncUser as jest.MockedFunction<typeof clientApi.syncUser>
+const mockGetWeeklyMeals = mealsApi.getWeeklyMeals as jest.MockedFunction<
+  typeof mealsApi.getWeeklyMeals
+>
+const mockDeleteMeal = mealsApi.deleteMeal as jest.MockedFunction<
+  typeof mealsApi.deleteMeal
+>
+const mockUpdateMeal = mealsApi.updateMeal as jest.MockedFunction<
+  typeof mealsApi.updateMeal
+>
+const mockGetHouseholds = householdApi.getHouseholds as jest.MockedFunction<
+  typeof householdApi.getHouseholds
+>
+const mockGetGroceryLists = groceryApi.getGroceryLists as jest.MockedFunction<
+  typeof groceryApi.getGroceryLists
+>
+const mockSyncUser = clientApi.syncUser as jest.MockedFunction<
+  typeof clientApi.syncUser
+>
 
 // Mock window.confirm
 const mockConfirm = jest.fn()
@@ -131,7 +143,7 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
 
       // MealDetailsModal should not exist in the DOM
       expect(screen.queryByText('Meal Details')).not.toBeInTheDocument()
-      
+
       // Click meal and verify no details modal appears
       const mealButton = screen.getByText('Scrambled Eggs').closest('button')
       fireEvent.click(mealButton!)
@@ -150,7 +162,7 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
       // Mock desktop view
       Object.defineProperty(window, 'matchMedia', {
         writable: true,
-        value: jest.fn().mockImplementation(query => ({
+        value: jest.fn().mockImplementation((query) => ({
           matches: query === '(min-width: 768px)', // Desktop
           media: query,
           onchange: null,
@@ -211,7 +223,9 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
       fireEvent.click(deleteButton)
 
       // Should show confirmation dialog
-      expect(mockConfirm).toHaveBeenCalledWith('Are you sure you want to delete this meal?')
+      expect(mockConfirm).toHaveBeenCalledWith(
+        'Are you sure you want to delete this meal?'
+      )
 
       // Should call delete API
       await waitFor(() => {
@@ -248,7 +262,9 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
       fireEvent.click(deleteButton)
 
       // Should show confirmation dialog
-      expect(mockConfirm).toHaveBeenCalledWith('Are you sure you want to delete this meal?')
+      expect(mockConfirm).toHaveBeenCalledWith(
+        'Are you sure you want to delete this meal?'
+      )
 
       // Should NOT call delete API
       expect(mockDeleteMeal).not.toHaveBeenCalled()
@@ -311,7 +327,9 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
 
       // Update meal name
       const nameInput = screen.getByDisplayValue('Scrambled Eggs')
-      fireEvent.change(nameInput, { target: { value: 'Updated Scrambled Eggs' } })
+      fireEvent.change(nameInput, {
+        target: { value: 'Updated Scrambled Eggs' },
+      })
 
       // Submit form
       const updateButton = screen.getByText('Update Meal')
@@ -337,5 +355,3 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
     })
   })
 })
-
-

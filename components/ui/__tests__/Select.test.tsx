@@ -30,12 +30,21 @@ describe('Select Component', () => {
   })
 
   it('displays error message when error prop is provided', () => {
-    render(<Select label="Test" id="test" options={options} error="Selection required" />)
+    render(
+      <Select
+        label="Test"
+        id="test"
+        options={options}
+        error="Selection required"
+      />
+    )
     expect(screen.getByText('Selection required')).toBeInTheDocument()
   })
 
   it('applies error styles when error prop is provided', () => {
-    render(<Select label="Test" id="test" options={options} error="Error message" />)
+    render(
+      <Select label="Test" id="test" options={options} error="Error message" />
+    )
     const select = screen.getByLabelText('Test')
     expect(select).toHaveAttribute('aria-invalid', 'true')
   })
@@ -43,11 +52,18 @@ describe('Select Component', () => {
   it('handles selection changes', async () => {
     const user = userEvent.setup()
     const handleChange = jest.fn()
-    render(<Select label="Category" id="category" options={options} onChange={handleChange} />)
-    
+    render(
+      <Select
+        label="Category"
+        id="category"
+        options={options}
+        onChange={handleChange}
+      />
+    )
+
     const select = screen.getByLabelText('Category')
     await user.selectOptions(select, 'option2')
-    
+
     expect(handleChange).toHaveBeenCalled()
   })
 
@@ -58,7 +74,14 @@ describe('Select Component', () => {
   })
 
   it('applies custom className', () => {
-    render(<Select label="Test" id="test" options={options} className="custom-class" />)
+    render(
+      <Select
+        label="Test"
+        id="test"
+        options={options}
+        className="custom-class"
+      />
+    )
     const select = screen.getByLabelText('Test')
     expect(select).toHaveClass('custom-class')
   })
@@ -76,34 +99,74 @@ describe('Select Component', () => {
   })
 
   it('renders placeholder option when provided', () => {
-    render(<Select label="Test" id="test" options={options} placeholder="Select an option" />)
+    render(
+      <Select
+        label="Test"
+        id="test"
+        options={options}
+        placeholder="Select an option"
+      />
+    )
     expect(screen.getByText('Select an option')).toBeInTheDocument()
   })
 
   it('placeholder option is disabled', () => {
-    render(<Select label="Test" id="test" options={options} placeholder="Select an option" />)
+    render(
+      <Select
+        label="Test"
+        id="test"
+        options={options}
+        placeholder="Select an option"
+      />
+    )
     const placeholderOption = screen.getByText('Select an option')
     expect(placeholderOption).toHaveAttribute('disabled')
   })
 
   it('handles value prop for controlled component', () => {
-    render(<Select label="Test" id="test" options={options} value="option2" onChange={() => {}} />)
+    render(
+      <Select
+        label="Test"
+        id="test"
+        options={options}
+        value="option2"
+        onChange={() => {}}
+      />
+    )
     const select = screen.getByLabelText('Test') as HTMLSelectElement
     expect(select.value).toBe('option2')
   })
 
   it('handles empty string value', () => {
-    render(<Select label="Test" id="test" options={options} value="" onChange={() => {}} />)
+    render(
+      <Select
+        label="Test"
+        id="test"
+        options={options}
+        value=""
+        onChange={() => {}}
+      />
+    )
     const select = screen.getByLabelText('Test') as HTMLSelectElement
     expect(select.value).toBe('')
   })
 
   it('links error message with aria-describedby', () => {
-    render(<Select label="Category" id="category" options={options} error="Invalid selection" />)
+    render(
+      <Select
+        label="Category"
+        id="category"
+        options={options}
+        error="Invalid selection"
+      />
+    )
     const select = screen.getByLabelText('Category')
     const errorId = select.getAttribute('aria-describedby')
     expect(errorId).toBeTruthy()
-    expect(screen.getByText('Invalid selection')).toHaveAttribute('id', errorId!)
+    expect(screen.getByText('Invalid selection')).toHaveAttribute(
+      'id',
+      errorId!
+    )
   })
 
   it('does not show error message when error prop is undefined', () => {
@@ -132,9 +195,11 @@ describe('Select Component', () => {
   })
 
   it('renders all options with correct values', () => {
-    const { container } = render(<Select label="Test" id="test" options={options} />)
+    const { container } = render(
+      <Select label="Test" id="test" options={options} />
+    )
     const optionElements = container.querySelectorAll('option:not([disabled])')
-    
+
     expect(optionElements).toHaveLength(3)
     expect(optionElements[0]).toHaveValue('option1')
     expect(optionElements[1]).toHaveValue('option2')
@@ -142,7 +207,15 @@ describe('Select Component', () => {
   })
 
   it('selects correct option based on value prop', () => {
-    render(<Select label="Test" id="test" options={options} value="option3" onChange={() => {}} />)
+    render(
+      <Select
+        label="Test"
+        id="test"
+        options={options}
+        value="option3"
+        onChange={() => {}}
+      />
+    )
     const select = screen.getByLabelText('Test') as HTMLSelectElement
     expect(select.selectedOptions[0]).toHaveValue('option3')
   })

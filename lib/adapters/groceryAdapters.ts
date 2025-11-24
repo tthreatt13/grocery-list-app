@@ -13,18 +13,18 @@ import { GroceryList, GroceryItem, ItemCategory, MealType } from '@/lib/types'
  */
 function mapCategory(category?: string): ItemCategory {
   if (!category) return ItemCategory.OTHER
-  
+
   const categoryMap: Record<string, ItemCategory> = {
-    'produce': ItemCategory.PRODUCE,
-    'dairy': ItemCategory.DAIRY,
-    'meat': ItemCategory.MEAT,
-    'bakery': ItemCategory.BAKERY,
-    'pantry': ItemCategory.PANTRY,
-    'frozen': ItemCategory.FROZEN,
-    'beverages': ItemCategory.BEVERAGES,
-    'snacks': ItemCategory.SNACKS,
+    produce: ItemCategory.PRODUCE,
+    dairy: ItemCategory.DAIRY,
+    meat: ItemCategory.MEAT,
+    bakery: ItemCategory.BAKERY,
+    pantry: ItemCategory.PANTRY,
+    frozen: ItemCategory.FROZEN,
+    beverages: ItemCategory.BEVERAGES,
+    snacks: ItemCategory.SNACKS,
   }
-  
+
   return categoryMap[category.toLowerCase()] || ItemCategory.OTHER
 }
 
@@ -33,14 +33,14 @@ function mapCategory(category?: string): ItemCategory {
  */
 function mapMealType(mealType?: string): MealType | undefined {
   if (!mealType) return undefined
-  
+
   const mealTypeMap: Record<string, MealType> = {
-    'breakfast': MealType.BREAKFAST,
-    'lunch': MealType.LUNCH,
-    'dinner': MealType.DINNER,
-    'snack': MealType.SNACK,
+    breakfast: MealType.BREAKFAST,
+    lunch: MealType.LUNCH,
+    dinner: MealType.DINNER,
+    snack: MealType.SNACK,
   }
-  
+
   return mealTypeMap[mealType.toLowerCase()]
 }
 
@@ -73,7 +73,7 @@ export function transformGroceryItem(apiItem: ApiGroceryItem): GroceryItem {
  */
 function extractUnit(quantity?: string): string | undefined {
   if (!quantity) return undefined
-  
+
   const match = quantity.match(/\d+\s*(.+)/)
   return match ? match[1].trim() : undefined
 }
@@ -81,11 +81,15 @@ function extractUnit(quantity?: string): string | undefined {
 /**
  * Transform API grocery list to frontend grocery list
  */
-export function transformGroceryList(apiList: ApiGroceryListWithItems): GroceryList {
+export function transformGroceryList(
+  apiList: ApiGroceryListWithItems
+): GroceryList {
   return {
     id: apiList.id.toString(),
     name: apiList.name,
-    items: Array.isArray(apiList.items) ? apiList.items.map(transformGroceryItem) : [],
+    items: Array.isArray(apiList.items)
+      ? apiList.items.map(transformGroceryItem)
+      : [],
     createdBy: apiList.created_by.toString(),
     createdAt: new Date(apiList.created_at),
     updatedAt: new Date(apiList.updated_at),
@@ -97,10 +101,11 @@ export function transformGroceryList(apiList: ApiGroceryListWithItems): GroceryL
 /**
  * Transform array of API grocery lists to frontend grocery lists
  */
-export function transformGroceryLists(apiLists: ApiGroceryListWithItems[]): GroceryList[] {
+export function transformGroceryLists(
+  apiLists: ApiGroceryListWithItems[]
+): GroceryList[] {
   if (!Array.isArray(apiLists)) {
     return []
   }
   return apiLists.map(transformGroceryList)
 }
-

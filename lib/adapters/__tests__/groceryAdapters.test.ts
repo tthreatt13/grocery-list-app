@@ -1,4 +1,8 @@
-import { transformGroceryItem, transformGroceryList, transformGroceryLists } from '../groceryAdapters'
+import {
+  transformGroceryItem,
+  transformGroceryList,
+  transformGroceryLists,
+} from '../groceryAdapters'
 import { GroceryItemResponse, GroceryListWithItems } from '@/lib/api/grocery'
 import { ItemCategory, MealType } from '@/lib/types'
 
@@ -169,7 +173,10 @@ describe('groceryAdapters', () => {
     })
 
     it('should handle null items', () => {
-      const listWithNullItems = { ...mockApiList, items: null as unknown as typeof mockApiList.items }
+      const listWithNullItems = {
+        ...mockApiList,
+        items: null as unknown as typeof mockApiList.items,
+      }
       const result = transformGroceryList(listWithNullItems)
 
       expect(result.items).toEqual([])
@@ -213,7 +220,9 @@ describe('groceryAdapters', () => {
     })
 
     it('should handle non-array input', () => {
-      const result = transformGroceryLists(null as unknown as GroceryListWithItems[])
+      const result = transformGroceryLists(
+        null as unknown as GroceryListWithItems[]
+      )
 
       expect(result).toEqual([])
     })

@@ -10,7 +10,7 @@ const mockMeals: Meal[] = [
     date: new Date('2024-11-10'),
     createdBy: 'John',
     ingredients: ['eggs', 'butter', 'salt'],
-    notes: 'Quick breakfast'
+    notes: 'Quick breakfast',
   },
   {
     id: 'm2',
@@ -19,7 +19,7 @@ const mockMeals: Meal[] = [
     date: new Date('2024-11-10'),
     createdBy: 'Jane',
     ingredients: ['pasta', 'tomato sauce'],
-    notes: 'Family dinner'
+    notes: 'Family dinner',
   },
 ]
 
@@ -41,7 +41,7 @@ describe('MobileWeeklyCalendar - Meal Delete Flow', () => {
         onMealClick={mockOnMealClick}
       />
     )
-    
+
     expect(screen.getByText('Scrambled Eggs')).toBeInTheDocument()
     expect(screen.getByText('Spaghetti')).toBeInTheDocument()
     expect(screen.getByText('Quick breakfast')).toBeInTheDocument()
@@ -57,10 +57,10 @@ describe('MobileWeeklyCalendar - Meal Delete Flow', () => {
         onMealClick={mockOnMealClick}
       />
     )
-    
+
     const mealButton = screen.getByText('Scrambled Eggs').closest('button')
     expect(mealButton).toBeInTheDocument()
-    
+
     fireEvent.click(mealButton!)
     expect(mockOnMealClick).toHaveBeenCalledWith(mockMeals[0])
   })
@@ -74,16 +74,16 @@ describe('MobileWeeklyCalendar - Meal Delete Flow', () => {
         onMealClick={mockOnMealClick}
       />
     )
-    
+
     const spaghettiButton = screen.getByText('Spaghetti').closest('button')
     fireEvent.click(spaghettiButton!)
-    
+
     expect(mockOnMealClick).toHaveBeenCalledWith(
       expect.objectContaining({
         id: 'm2',
         name: 'Spaghetti',
         mealType: MealType.DINNER,
-        notes: 'Family dinner'
+        notes: 'Family dinner',
       })
     )
   })
@@ -97,7 +97,7 @@ describe('MobileWeeklyCalendar - Meal Delete Flow', () => {
         onMealClick={mockOnMealClick}
       />
     )
-    
+
     expect(screen.getByText('3 ingredients')).toBeInTheDocument() // Scrambled Eggs
     expect(screen.getByText('2 ingredients')).toBeInTheDocument() // Spaghetti
   })
@@ -111,10 +111,10 @@ describe('MobileWeeklyCalendar - Meal Delete Flow', () => {
         onMealClick={mockOnMealClick}
       />
     )
-    
+
     const addButtons = screen.getAllByText(/add/i)
     expect(addButtons.length).toBeGreaterThan(0)
-    
+
     // Should have "Add breakfast", "Add lunch", "Add dinner" for each day
     expect(screen.getByText('Add breakfast')).toBeInTheDocument()
     expect(screen.getByText('Add lunch')).toBeInTheDocument()
@@ -130,10 +130,10 @@ describe('MobileWeeklyCalendar - Meal Delete Flow', () => {
         onMealClick={mockOnMealClick}
       />
     )
-    
+
     const addBreakfastButton = screen.getByText('Add breakfast')
     fireEvent.click(addBreakfastButton)
-    
+
     expect(mockOnEmptySlotClick).toHaveBeenCalledWith(
       expect.any(Date),
       MealType.BREAKFAST
@@ -150,7 +150,7 @@ describe('MobileWeeklyCalendar - Meal Delete Flow', () => {
         onMealClick={mockOnMealClick}
       />
     )
-    
+
     // Should show "Today" indicator
     expect(screen.getByText('Today')).toBeInTheDocument()
   })

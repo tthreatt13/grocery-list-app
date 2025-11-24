@@ -67,7 +67,13 @@ describe('GroceryListItem', () => {
   })
 
   it('renders delete button', () => {
-    render(<GroceryListItem item={mockItem} onToggle={mockOnToggle} onDelete={jest.fn()} />)
+    render(
+      <GroceryListItem
+        item={mockItem}
+        onToggle={mockOnToggle}
+        onDelete={jest.fn()}
+      />
+    )
     const deleteButton = screen.getByLabelText('Delete item')
     expect(deleteButton).toBeInTheDocument()
   })
@@ -80,14 +86,26 @@ describe('GroceryListItem', () => {
 
   // NEW TESTS FOR EDIT FUNCTIONALITY
   it('renders edit button', () => {
-    render(<GroceryListItem item={mockItem} onToggle={mockOnToggle} onEdit={jest.fn()} />)
+    render(
+      <GroceryListItem
+        item={mockItem}
+        onToggle={mockOnToggle}
+        onEdit={jest.fn()}
+      />
+    )
     const editButton = screen.getByLabelText('Edit item')
     expect(editButton).toBeInTheDocument()
   })
 
   it('calls onEdit when edit button is clicked', () => {
     const mockOnEdit = jest.fn()
-    render(<GroceryListItem item={mockItem} onToggle={mockOnToggle} onEdit={mockOnEdit} />)
+    render(
+      <GroceryListItem
+        item={mockItem}
+        onToggle={mockOnToggle}
+        onEdit={mockOnEdit}
+      />
+    )
     const editButton = screen.getByLabelText('Edit item')
     fireEvent.click(editButton)
     expect(mockOnEdit).toHaveBeenCalledWith('1')
@@ -95,7 +113,13 @@ describe('GroceryListItem', () => {
 
   it('calls onDelete when delete button is clicked', () => {
     const mockOnDelete = jest.fn()
-    render(<GroceryListItem item={mockItem} onToggle={mockOnToggle} onDelete={mockOnDelete} />)
+    render(
+      <GroceryListItem
+        item={mockItem}
+        onToggle={mockOnToggle}
+        onDelete={mockOnDelete}
+      />
+    )
     const deleteButton = screen.getByLabelText('Delete item')
     fireEvent.click(deleteButton)
     expect(mockOnDelete).toHaveBeenCalledWith('1')
@@ -124,14 +148,20 @@ describe('GroceryListItem', () => {
   })
 
   it('renders all meal type variants correctly', () => {
-    const mealTypes = [MealType.BREAKFAST, MealType.LUNCH, MealType.DINNER, MealType.SNACK]
-    
+    const mealTypes = [
+      MealType.BREAKFAST,
+      MealType.LUNCH,
+      MealType.DINNER,
+      MealType.SNACK,
+    ]
+
     mealTypes.forEach((mealType) => {
       const itemWithMealType = { ...mockItem, mealType }
-      const { unmount } = render(<GroceryListItem item={itemWithMealType} onToggle={mockOnToggle} />)
+      const { unmount } = render(
+        <GroceryListItem item={itemWithMealType} onToggle={mockOnToggle} />
+      )
       expect(screen.getByText(mealType)).toBeInTheDocument()
       unmount()
     })
   })
 })
-

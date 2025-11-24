@@ -10,7 +10,7 @@ export default function SignUpPage() {
             Create an account to start planning your meals
           </p>
         </div>
-        <SignUp 
+        <SignUp
           appearance={{
             elements: {
               rootBox: 'mx-auto',
@@ -24,4 +24,3 @@ export default function SignUpPage() {
     </div>
   )
 }
-

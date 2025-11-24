@@ -7,12 +7,24 @@ import { GroceryListResponse } from '@/lib/api/grocery'
 
 // Mock the Modal component
 jest.mock('@/components/ui/Modal', () => ({
-  Modal: ({ open, onClose, title, children }: { open: boolean; onClose: () => void; title: string; children: React.ReactNode }) => {
+  Modal: ({
+    open,
+    onClose,
+    title,
+    children,
+  }: {
+    open: boolean
+    onClose: () => void
+    title: string
+    children: React.ReactNode
+  }) => {
     if (!open) return null
     return (
       <div data-testid="modal">
         <div data-testid="modal-title">{title}</div>
-        <button onClick={onClose} data-testid="modal-close">Close</button>
+        <button onClick={onClose} data-testid="modal-close">
+          Close
+        </button>
         {children}
       </div>
     )
@@ -104,7 +116,9 @@ describe('GenerateGroceryListModal', () => {
     )
 
     expect(screen.getByTestId('modal')).toBeInTheDocument()
-    expect(screen.getByTestId('modal-title')).toHaveTextContent('Generate Grocery List')
+    expect(screen.getByTestId('modal-title')).toHaveTextContent(
+      'Generate Grocery List'
+    )
   })
 
   it('should display all low stock items', () => {
@@ -163,7 +177,7 @@ describe('GenerateGroceryListModal', () => {
     expect(checkboxes).toHaveLength(3)
 
     // All should be checked by default
-    checkboxes.forEach(checkbox => {
+    checkboxes.forEach((checkbox) => {
       expect(checkbox).toBeChecked()
     })
 
@@ -197,7 +211,9 @@ describe('GenerateGroceryListModal', () => {
       />
     )
 
-    const listNameInput = screen.getByLabelText(/list name/i) as HTMLInputElement
+    const listNameInput = screen.getByLabelText(
+      /list name/i
+    ) as HTMLInputElement
     fireEvent.change(listNameInput, { target: { value: 'My Custom List' } })
     expect(listNameInput.value).toBe('My Custom List')
   })
@@ -212,7 +228,9 @@ describe('GenerateGroceryListModal', () => {
       />
     )
 
-    const createButton = screen.getByRole('button', { name: /create grocery list/i })
+    const createButton = screen.getByRole('button', {
+      name: /create grocery list/i,
+    })
     fireEvent.click(createButton)
 
     await waitFor(() => {
@@ -237,7 +255,9 @@ describe('GenerateGroceryListModal', () => {
     const checkboxes = screen.getAllByRole('checkbox')
     fireEvent.click(checkboxes[1])
 
-    const createButton = screen.getByRole('button', { name: /create grocery list/i })
+    const createButton = screen.getByRole('button', {
+      name: /create grocery list/i,
+    })
     fireEvent.click(createButton)
 
     await waitFor(() => {
@@ -260,9 +280,11 @@ describe('GenerateGroceryListModal', () => {
 
     // Uncheck all items
     const checkboxes = screen.getAllByRole('checkbox')
-    checkboxes.forEach(checkbox => fireEvent.click(checkbox))
+    checkboxes.forEach((checkbox) => fireEvent.click(checkbox))
 
-    const createButton = screen.getByRole('button', { name: /create grocery list/i })
+    const createButton = screen.getByRole('button', {
+      name: /create grocery list/i,
+    })
     expect(createButton).toBeDisabled()
   })
 
@@ -276,10 +298,14 @@ describe('GenerateGroceryListModal', () => {
       />
     )
 
-    const listNameInput = screen.getByLabelText(/list name/i) as HTMLInputElement
+    const listNameInput = screen.getByLabelText(
+      /list name/i
+    ) as HTMLInputElement
     fireEvent.change(listNameInput, { target: { value: '' } })
 
-    const createButton = screen.getByRole('button', { name: /create grocery list/i })
+    const createButton = screen.getByRole('button', {
+      name: /create grocery list/i,
+    })
     expect(createButton).toBeDisabled()
   })
 
@@ -363,7 +389,9 @@ describe('GenerateGroceryListModal', () => {
         />
       )
 
-      const createNewRadio = screen.getByLabelText(/create new list/i) as HTMLInputElement
+      const createNewRadio = screen.getByLabelText(
+        /create new list/i
+      ) as HTMLInputElement
       expect(createNewRadio).toBeChecked()
     })
 
@@ -465,7 +493,9 @@ describe('GenerateGroceryListModal', () => {
       )
 
       // "Create new" is default, just click create
-      const createButton = screen.getByRole('button', { name: /create grocery list/i })
+      const createButton = screen.getByRole('button', {
+        name: /create grocery list/i,
+      })
       fireEvent.click(createButton)
 
       await waitFor(() => {
@@ -512,7 +542,9 @@ describe('GenerateGroceryListModal', () => {
 
       // Should only show create new option
       expect(screen.getByLabelText(/list name/i)).toBeInTheDocument()
-      expect(screen.queryByLabelText(/add to existing list/i)).not.toBeInTheDocument()
+      expect(
+        screen.queryByLabelText(/add to existing list/i)
+      ).not.toBeInTheDocument()
     })
 
     it('should change button text based on mode', () => {
@@ -528,14 +560,18 @@ describe('GenerateGroceryListModal', () => {
       )
 
       // Default is "Create Grocery List"
-      expect(screen.getByRole('button', { name: /create grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /create grocery list/i })
+      ).toBeInTheDocument()
 
       // Switch to add to existing
       const addToExistingRadio = screen.getByLabelText(/add to existing list/i)
       fireEvent.click(addToExistingRadio)
 
       // Should now be "Add to List"
-      expect(screen.getByRole('button', { name: /add to list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /add to list/i })
+      ).toBeInTheDocument()
     })
 
     it('should maintain item selections when switching between modes', () => {
@@ -568,4 +604,3 @@ describe('GenerateGroceryListModal', () => {
     })
   })
 })
-

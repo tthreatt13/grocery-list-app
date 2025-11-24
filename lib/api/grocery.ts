@@ -75,7 +75,10 @@ export async function getGroceryLists(
 export async function getGroceryListsWithItems(
   token: string
 ): Promise<GroceryListWithItems[]> {
-  return get<GroceryListWithItems[]>('/api/grocery-lists?include_items=true', token)
+  return get<GroceryListWithItems[]>(
+    '/api/grocery-lists?include_items=true',
+    token
+  )
 }
 
 /**
@@ -186,4 +189,3 @@ export async function toggleGroceryItemChecked(
 ): Promise<GroceryItemResponse> {
   return updateGroceryItem(listId, itemId, { checked }, token)
 }
-

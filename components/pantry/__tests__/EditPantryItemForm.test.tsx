@@ -31,7 +31,7 @@ describe('EditPantryItemForm', () => {
         onCancel={mockOnCancel}
       />
     )
-    
+
     expect(screen.getByLabelText(/item name/i)).toHaveValue('Test Item')
     expect(screen.getByLabelText(/quantity/i)).toHaveValue(5)
     expect(screen.getByLabelText(/unit/i)).toHaveValue('pcs')
@@ -47,8 +47,10 @@ describe('EditPantryItemForm', () => {
         onCancel={mockOnCancel}
       />
     )
-    
-    expect(screen.getByRole('button', { name: /save changes/i })).toBeInTheDocument()
+
+    expect(
+      screen.getByRole('button', { name: /save changes/i })
+    ).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /cancel/i })).toBeInTheDocument()
   })
 
@@ -61,9 +63,9 @@ describe('EditPantryItemForm', () => {
         onCancel={mockOnCancel}
       />
     )
-    
+
     await user.click(screen.getByRole('button', { name: /cancel/i }))
-    
+
     expect(mockOnCancel).toHaveBeenCalledTimes(1)
   })
 
@@ -76,12 +78,12 @@ describe('EditPantryItemForm', () => {
         onCancel={mockOnCancel}
       />
     )
-    
+
     const nameInput = screen.getByLabelText(/item name/i)
     await user.clear(nameInput)
-    
+
     await user.click(screen.getByRole('button', { name: /save changes/i }))
-    
+
     await waitFor(() => {
       expect(screen.getByText(/item name is required/i)).toBeInTheDocument()
     })
@@ -97,18 +99,23 @@ describe('EditPantryItemForm', () => {
         onCancel={mockOnCancel}
       />
     )
-    
+
     const quantityInput = screen.getByLabelText(/quantity/i) as HTMLInputElement
-    
+
     // Clear the input to make it empty, which should trigger validation
     await user.clear(quantityInput)
-    
+
     // Submit the form with empty quantity
     await user.click(screen.getByRole('button', { name: /save changes/i }))
-    
-    await waitFor(() => {
-      expect(screen.getByText(/quantity must be greater than 0/i)).toBeInTheDocument()
-    }, { timeout: 3000 })
+
+    await waitFor(
+      () => {
+        expect(
+          screen.getByText(/quantity must be greater than 0/i)
+        ).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
     expect(mockOnSubmit).not.toHaveBeenCalled()
   })
 
@@ -121,11 +128,11 @@ describe('EditPantryItemForm', () => {
         onCancel={mockOnCancel}
       />
     )
-    
+
     const nameInput = screen.getByLabelText(/item name/i)
     await user.clear(nameInput)
     await user.type(nameInput, 'Updated Item Name')
-    
+
     expect(nameInput).toHaveValue('Updated Item Name')
   })
 
@@ -138,11 +145,11 @@ describe('EditPantryItemForm', () => {
         onCancel={mockOnCancel}
       />
     )
-    
+
     const quantityInput = screen.getByLabelText(/quantity/i)
     await user.clear(quantityInput)
     await user.type(quantityInput, '10')
-    
+
     expect(quantityInput).toHaveValue(10)
   })
 
@@ -155,11 +162,11 @@ describe('EditPantryItemForm', () => {
         onCancel={mockOnCancel}
       />
     )
-    
+
     const unitInput = screen.getByLabelText(/unit/i)
     await user.clear(unitInput)
     await user.type(unitInput, 'kg')
-    
+
     expect(unitInput).toHaveValue('kg')
   })
 
@@ -172,10 +179,10 @@ describe('EditPantryItemForm', () => {
         onCancel={mockOnCancel}
       />
     )
-    
+
     const categorySelect = screen.getByLabelText(/category/i)
     await user.selectOptions(categorySelect, ItemCategory.DAIRY)
-    
+
     expect(categorySelect).toHaveValue(ItemCategory.DAIRY)
   })
 
@@ -188,17 +195,17 @@ describe('EditPantryItemForm', () => {
         onCancel={mockOnCancel}
       />
     )
-    
+
     const nameInput = screen.getByLabelText(/item name/i)
     await user.clear(nameInput)
     await user.type(nameInput, 'Updated Item')
-    
+
     const quantityInput = screen.getByLabelText(/quantity/i)
     await user.clear(quantityInput)
     await user.type(quantityInput, '10')
-    
+
     await user.click(screen.getByRole('button', { name: /save changes/i }))
-    
+
     await waitFor(() => {
       expect(mockOnSubmit).toHaveBeenCalledTimes(1)
       expect(mockOnSubmit).toHaveBeenCalledWith(
@@ -219,7 +226,7 @@ describe('EditPantryItemForm', () => {
         isSubmitting={true}
       />
     )
-    
+
     expect(screen.getByLabelText(/item name/i)).toBeDisabled()
     expect(screen.getByLabelText(/quantity/i)).toBeDisabled()
     expect(screen.getByLabelText(/unit/i)).toBeDisabled()
@@ -235,16 +242,16 @@ describe('EditPantryItemForm', () => {
         onCancel={mockOnCancel}
       />
     )
-    
+
     expect(screen.getByLabelText(/item name/i)).toHaveValue('Test Item')
-    
+
     const newItem: PantryItem = {
       ...mockItem,
       id: '2',
       name: 'Different Item',
       quantity: 10,
     }
-    
+
     rerender(
       <EditPantryItemForm
         item={newItem}
@@ -252,7 +259,7 @@ describe('EditPantryItemForm', () => {
         onCancel={mockOnCancel}
       />
     )
-    
+
     expect(screen.getByLabelText(/item name/i)).toHaveValue('Different Item')
     expect(screen.getByLabelText(/quantity/i)).toHaveValue(10)
   })
@@ -275,12 +282,12 @@ describe('EditPantryItemForm', () => {
         onCancel={mockOnCancel}
       />
     )
-    
+
     expect(screen.getByLabelText(/unit/i)).toHaveValue('')
     expect(screen.getByLabelText(/low stock threshold/i)).toHaveValue(null)
-    
+
     await user.click(screen.getByRole('button', { name: /save changes/i }))
-    
+
     await waitFor(() => {
       expect(mockOnSubmit).toHaveBeenCalled()
     })
@@ -295,13 +302,13 @@ describe('EditPantryItemForm', () => {
         onCancel={mockOnCancel}
       />
     )
-    
+
     const expirationInput = screen.getByLabelText(/expiration date/i)
     await user.clear(expirationInput)
     await user.type(expirationInput, '2026-01-15')
-    
+
     await user.click(screen.getByRole('button', { name: /save changes/i }))
-    
+
     await waitFor(() => {
       expect(mockOnSubmit).toHaveBeenCalledTimes(1)
       const submittedData = mockOnSubmit.mock.calls[0][0]
@@ -309,4 +316,3 @@ describe('EditPantryItemForm', () => {
     })
   })
 })
-

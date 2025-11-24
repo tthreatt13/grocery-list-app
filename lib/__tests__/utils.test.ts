@@ -1,4 +1,18 @@
-import { cn, formatDate, formatRelativeTime, isWithinDays, isPastDate, formatQuantity, generateId, sortItemsByCategory, sortPantryItemsByCategory, getCategoryOrder, sortItemsByMealTime, sortItemsByEntryOrder, getMealOrder } from '../utils'
+import {
+  cn,
+  formatDate,
+  formatRelativeTime,
+  isWithinDays,
+  isPastDate,
+  formatQuantity,
+  generateId,
+  sortItemsByCategory,
+  sortPantryItemsByCategory,
+  getCategoryOrder,
+  sortItemsByMealTime,
+  sortItemsByEntryOrder,
+  getMealOrder,
+} from '../utils'
 import { ItemCategory, MealType } from '../types'
 
 describe('utils', () => {
@@ -151,7 +165,7 @@ describe('utils', () => {
 
     it('sorts items by category order first', () => {
       const sorted = sortItemsByCategory(mockItems)
-      
+
       // Should be: Produce (Apples, Bananas), Dairy (Milk), Meat (Chicken), Bakery (Bread)
       expect(sorted[0].category).toBe(ItemCategory.PRODUCE)
       expect(sorted[1].category).toBe(ItemCategory.PRODUCE)
@@ -162,9 +176,11 @@ describe('utils', () => {
 
     it('sorts items alphabetically within each category', () => {
       const sorted = sortItemsByCategory(mockItems)
-      
+
       // Within Produce category: Apples should come before Bananas
-      const produceItems = sorted.filter(item => item.category === ItemCategory.PRODUCE)
+      const produceItems = sorted.filter(
+        (item) => item.category === ItemCategory.PRODUCE
+      )
       expect(produceItems[0].name).toBe('Apples')
       expect(produceItems[1].name).toBe('Bananas')
     })
@@ -195,7 +211,7 @@ describe('utils', () => {
       ]
 
       const sorted = sortItemsByCategory(itemsWithoutCategory)
-      
+
       // Produce should come first, undefined category should be treated as OTHER (last)
       expect(sorted[0].name).toBe('Apples')
       expect(sorted[1].name).toBe('Mystery Item')
@@ -222,7 +238,7 @@ describe('utils', () => {
       ]
 
       const sorted = sortItemsByCategory(duplicateItems)
-      
+
       // Should maintain original order for same name/category
       expect(sorted[0].id).toBe('1')
       expect(sorted[1].id).toBe('2')
@@ -279,7 +295,7 @@ describe('utils', () => {
 
     it('sorts pantry items by category order first', () => {
       const sorted = sortPantryItemsByCategory(mockPantryItems)
-      
+
       // Should be: Produce (Apples, Bananas), Dairy (Milk), Meat (Chicken), Bakery (Bread)
       expect(sorted[0].category).toBe(ItemCategory.PRODUCE)
       expect(sorted[1].category).toBe(ItemCategory.PRODUCE)
@@ -290,9 +306,11 @@ describe('utils', () => {
 
     it('sorts pantry items alphabetically within each category', () => {
       const sorted = sortPantryItemsByCategory(mockPantryItems)
-      
+
       // Within Produce category: Apples should come before Bananas
-      const produceItems = sorted.filter(item => item.category === ItemCategory.PRODUCE)
+      const produceItems = sorted.filter(
+        (item) => item.category === ItemCategory.PRODUCE
+      )
       expect(produceItems[0].name).toBe('Apples')
       expect(produceItems[1].name).toBe('Bananas')
     })
@@ -391,7 +409,7 @@ describe('utils', () => {
 
     it('sorts items by meal time order first', () => {
       const sorted = sortItemsByMealTime(mockMealItems)
-      
+
       // Should be: Breakfast items, Lunch items, Dinner items, Snack items, No meal items
       expect(sorted[0].mealType).toBe(MealType.BREAKFAST)
       expect(sorted[1].mealType).toBe(MealType.BREAKFAST)
@@ -403,9 +421,11 @@ describe('utils', () => {
 
     it('sorts items alphabetically within each meal type', () => {
       const sorted = sortItemsByMealTime(mockMealItems)
-      
+
       // Within Breakfast: Cereal should come before Eggs
-      const breakfastItems = sorted.filter(item => item.mealType === MealType.BREAKFAST)
+      const breakfastItems = sorted.filter(
+        (item) => item.mealType === MealType.BREAKFAST
+      )
       expect(breakfastItems[0].name).toBe('Cereal')
       expect(breakfastItems[1].name).toBe('Eggs')
     })
@@ -438,7 +458,7 @@ describe('utils', () => {
       ]
 
       const sorted = sortItemsByMealTime(itemsWithoutMealType)
-      
+
       // Breakfast should come first, undefined meal type should come last
       expect(sorted[0].name).toBe('Cereal')
       expect(sorted[1].name).toBe('Random Item')
@@ -467,7 +487,7 @@ describe('utils', () => {
       ]
 
       const sorted = sortItemsByMealTime(duplicateItems)
-      
+
       // Should maintain original order for same name/meal type
       expect(sorted[0].id).toBe('1')
       expect(sorted[1].id).toBe('2')
@@ -504,7 +524,7 @@ describe('utils', () => {
 
     it('sorts items by addedAt timestamp (earliest first)', () => {
       const sorted = sortItemsByEntryOrder(mockTimestampItems)
-      
+
       // Should be ordered by addedAt timestamp
       expect(sorted[0].name).toBe('First Item')
       expect(sorted[1].name).toBe('Second Item')
@@ -537,7 +557,7 @@ describe('utils', () => {
       ]
 
       const sorted = sortItemsByEntryOrder(sameTimestampItems)
-      
+
       // Should maintain original order for same timestamp
       expect(sorted[0].id).toBe('1')
       expect(sorted[1].id).toBe('2')
@@ -564,11 +584,10 @@ describe('utils', () => {
       ]
 
       const sorted = sortItemsByEntryOrder(preciseTimestampItems)
-      
+
       // Should sort by precise timestamp
       expect(sorted[0].name).toBe('Earlier Item')
       expect(sorted[1].name).toBe('Later Item')
     })
   })
 })
-

@@ -14,7 +14,7 @@ jest.mock('@/lib/api/grocery')
 
 describe('Dashboard Page', () => {
   const mockGetToken = jest.fn()
-  
+
   beforeEach(() => {
     jest.clearAllMocks()
     ;(useAuth as jest.Mock).mockReturnValue({
@@ -95,7 +95,9 @@ describe('Dashboard Page', () => {
       },
     ]
 
-    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(mockLists)
+    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+      mockLists
+    )
 
     render(<Home />)
 
@@ -141,7 +143,9 @@ describe('Dashboard Page', () => {
       },
     ]
 
-    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(mockLists)
+    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+      mockLists
+    )
 
     render(<Home />)
 
@@ -187,8 +191,9 @@ describe('Dashboard Page', () => {
     render(<Home />)
 
     await waitFor(() => {
-      expect(groceryApi.getGroceryListsWithItems).toHaveBeenCalledWith(mockToken)
+      expect(groceryApi.getGroceryListsWithItems).toHaveBeenCalledWith(
+        mockToken
+      )
     })
   })
 })
-

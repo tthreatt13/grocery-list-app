@@ -53,8 +53,8 @@ export default function Navbar() {
 
           {/* User Menu */}
           <div className="flex items-center">
-            {isLoaded && (
-              isSignedIn ? (
+            {isLoaded &&
+              (isSignedIn ? (
                 <UserButton afterSignOutUrl="/" />
               ) : (
                 <SignInButton mode="modal">
@@ -62,12 +62,10 @@ export default function Navbar() {
                     Sign In
                   </button>
                 </SignInButton>
-              )
-            )}
+              ))}
           </div>
         </div>
       </div>
     </nav>
   )
 }
-

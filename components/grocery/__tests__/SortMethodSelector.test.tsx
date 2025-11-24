@@ -38,10 +38,7 @@ describe('SortMethodSelector', () => {
 
   it('shows current value as selected', () => {
     render(
-      <SortMethodSelector
-        value={SortMethod.CATEGORY}
-        onChange={mockOnChange}
-      />
+      <SortMethodSelector value={SortMethod.CATEGORY} onChange={mockOnChange} />
     )
 
     const select = screen.getByRole('combobox') as HTMLSelectElement
@@ -75,14 +72,15 @@ describe('SortMethodSelector', () => {
   })
 
   it('handles all sort method values correctly', () => {
-    const sortMethods = [SortMethod.ENTRY_ORDER, SortMethod.CATEGORY, SortMethod.MEAL_TIME]
+    const sortMethods = [
+      SortMethod.ENTRY_ORDER,
+      SortMethod.CATEGORY,
+      SortMethod.MEAL_TIME,
+    ]
 
     sortMethods.forEach((sortMethod) => {
       const { unmount } = render(
-        <SortMethodSelector
-          value={sortMethod}
-          onChange={mockOnChange}
-        />
+        <SortMethodSelector value={sortMethod} onChange={mockOnChange} />
       )
 
       const select = screen.getByRole('combobox') as HTMLSelectElement

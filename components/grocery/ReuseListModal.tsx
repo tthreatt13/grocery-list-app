@@ -31,7 +31,10 @@ export default function ReuseListModal({
 
   // Filter out current list from available lists
   const previousLists = useMemo(
-    () => availableLists.filter(list => list.id.toString() !== currentListId.toString()),
+    () =>
+      availableLists.filter(
+        (list) => list.id.toString() !== currentListId.toString()
+      ),
     [availableLists, currentListId]
   )
 
@@ -43,11 +46,11 @@ export default function ReuseListModal({
       return
     }
 
-    const list = previousLists.find(l => l.id.toString() === selectedListId)
+    const list = previousLists.find((l) => l.id.toString() === selectedListId)
     if (list) {
       setSelectedList(list)
       // Pre-select all items
-      setSelectedItemIds(list.items.map(item => item.id))
+      setSelectedItemIds(list.items.map((item) => item.id))
     } else {
       setSelectedList(null)
       setSelectedItemIds([])
@@ -55,10 +58,10 @@ export default function ReuseListModal({
   }, [selectedListId, previousLists])
 
   const handleToggleItem = useCallback((itemId: string) => {
-    setSelectedItemIds(prev => {
+    setSelectedItemIds((prev) => {
       if (prev.includes(itemId)) {
         // Remove item from array
-        return prev.filter(id => id !== itemId)
+        return prev.filter((id) => id !== itemId)
       } else {
         // Add item to array
         return [...prev, itemId]
@@ -68,7 +71,7 @@ export default function ReuseListModal({
 
   const handleSelectAll = useCallback(() => {
     if (!selectedList) return
-    setSelectedItemIds(selectedList.items.map(item => item.id))
+    setSelectedItemIds(selectedList.items.map((item) => item.id))
   }, [selectedList])
 
   const handleDeselectAll = useCallback(() => {
@@ -84,7 +87,9 @@ export default function ReuseListModal({
       setIsAddingItems(true)
       setError(null)
 
-      const itemsToAdd = selectedList.items.filter(item => selectedItemIds.includes(item.id))
+      const itemsToAdd = selectedList.items.filter((item) =>
+        selectedItemIds.includes(item.id)
+      )
       await onAddItems(itemsToAdd)
 
       // Reset state and close modal on success
@@ -100,7 +105,9 @@ export default function ReuseListModal({
     }
   }
 
-  const getBadgeVariant = (category: string): 'default' | 'primary' | 'success' | 'warning' | 'danger' => {
+  const getBadgeVariant = (
+    category: string
+  ): 'default' | 'primary' | 'success' | 'warning' | 'danger' => {
     switch (category) {
       case 'Produce':
         return 'success'
@@ -115,7 +122,9 @@ export default function ReuseListModal({
     }
   }
 
-  const getMealBadgeVariant = (mealType?: MealType): 'default' | 'primary' | 'success' | 'warning' | 'danger' => {
+  const getMealBadgeVariant = (
+    mealType?: MealType
+  ): 'default' | 'primary' | 'success' | 'warning' | 'danger' => {
     switch (mealType) {
       case MealType.BREAKFAST:
         return 'warning'
@@ -130,7 +139,10 @@ export default function ReuseListModal({
     }
   }
 
-  const allSelected = selectedList && selectedList.items.length > 0 && selectedItemIds.length === selectedList.items.length
+  const allSelected =
+    selectedList &&
+    selectedList.items.length > 0 &&
+    selectedItemIds.length === selectedList.items.length
 
   return (
     <div className="space-y-4">
@@ -157,7 +169,9 @@ export default function ReuseListModal({
           ))}
         </Select>
         {previousLists.length === 0 && (
-          <p className="mt-2 text-sm text-gray-500">No previous lists available</p>
+          <p className="mt-2 text-sm text-gray-500">
+            No previous lists available
+          </p>
         )}
       </div>
 
@@ -208,7 +222,10 @@ export default function ReuseListModal({
                   onClick={(e) => {
                     // Only toggle if clicking on the row, not on checkbox or label
                     const target = e.target as HTMLElement
-                    if (target.tagName !== 'INPUT' && !target.closest('label')) {
+                    if (
+                      target.tagName !== 'INPUT' &&
+                      !target.closest('label')
+                    ) {
                       handleToggleItem(item.id)
                     }
                   }}
@@ -223,7 +240,7 @@ export default function ReuseListModal({
                       id={`reuse-item-${item.id}`}
                     />
                   </div>
-                  
+
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center space-x-2">
                       <label
@@ -243,7 +260,7 @@ export default function ReuseListModal({
                         )}
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center space-x-3 mt-1 text-sm text-gray-600">
                       <span>{formatQuantity(item.quantity, item.unit)}</span>
                       {item.notes && (
@@ -272,12 +289,18 @@ export default function ReuseListModal({
         </Button>
         <Button
           onClick={handleAddItems}
-          disabled={!selectedList || selectedItemIds.length === 0 || isAddingItems || isLoading}
+          disabled={
+            !selectedList ||
+            selectedItemIds.length === 0 ||
+            isAddingItems ||
+            isLoading
+          }
         >
-          {isAddingItems ? 'Adding Items...' : `Add Selected Items (${selectedItemIds.length})`}
+          {isAddingItems
+            ? 'Adding Items...'
+            : `Add Selected Items (${selectedItemIds.length})`}
         </Button>
       </div>
     </div>
   )
 }
-

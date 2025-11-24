@@ -9,7 +9,9 @@ interface MealCardProps {
 }
 
 export default function MealCard({ meal, onEdit, onDelete }: MealCardProps) {
-  const getMealTypeColor = (mealType: string): 'default' | 'primary' | 'success' | 'warning' | 'danger' => {
+  const getMealTypeColor = (
+    mealType: string
+  ): 'default' | 'primary' | 'success' | 'warning' | 'danger' => {
     switch (mealType) {
       case 'Breakfast':
         return 'warning'
@@ -66,7 +68,9 @@ export default function MealCard({ meal, onEdit, onDelete }: MealCardProps) {
         </div>
 
         {meal.notes && (
-          <p className="text-sm text-gray-600 mb-3 line-clamp-2">{meal.notes}</p>
+          <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+            {meal.notes}
+          </p>
         )}
 
         {ingredientCount > 0 && (
@@ -121,4 +125,3 @@ export default function MealCard({ meal, onEdit, onDelete }: MealCardProps) {
     </div>
   )
 }
-

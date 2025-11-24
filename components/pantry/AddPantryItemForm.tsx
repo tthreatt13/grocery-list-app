@@ -12,7 +12,11 @@ interface AddPantryItemFormProps {
   isSubmitting?: boolean
 }
 
-export default function AddPantryItemForm({ onSubmit, onCancel, isSubmitting }: AddPantryItemFormProps) {
+export default function AddPantryItemForm({
+  onSubmit,
+  onCancel,
+  isSubmitting,
+}: AddPantryItemFormProps) {
   const [name, setName] = useState('')
   const [quantity, setQuantity] = useState<string>('1')
   const [unit, setUnit] = useState('')
@@ -36,7 +40,8 @@ export default function AddPantryItemForm({ onSubmit, onCancel, isSubmitting }: 
     if (lowStockThreshold) {
       const threshold = parseFloat(lowStockThreshold)
       if (isNaN(threshold) || threshold < 0) {
-        newErrors.lowStockThreshold = 'Low stock threshold must be a positive number'
+        newErrors.lowStockThreshold =
+          'Low stock threshold must be a positive number'
       }
     }
 
@@ -52,7 +57,9 @@ export default function AddPantryItemForm({ onSubmit, onCancel, isSubmitting }: 
     }
 
     const quantityNum = parseFloat(quantity)
-    const thresholdNum = lowStockThreshold ? parseFloat(lowStockThreshold) : undefined
+    const thresholdNum = lowStockThreshold
+      ? parseFloat(lowStockThreshold)
+      : undefined
 
     const newItem: Omit<PantryItem, 'id' | 'addedAt' | 'updatedAt'> = {
       name: name.trim(),
@@ -60,11 +67,12 @@ export default function AddPantryItemForm({ onSubmit, onCancel, isSubmitting }: 
       unit: unit.trim() || undefined,
       category,
       expirationDate: expirationDate ? new Date(expirationDate) : undefined,
-      lowStockThreshold: thresholdNum && thresholdNum > 0 ? thresholdNum : undefined,
+      lowStockThreshold:
+        thresholdNum && thresholdNum > 0 ? thresholdNum : undefined,
     }
 
     onSubmit(newItem)
-    
+
     // Reset form
     setName('')
     setQuantity('1')
@@ -75,7 +83,7 @@ export default function AddPantryItemForm({ onSubmit, onCancel, isSubmitting }: 
     setErrors({})
   }
 
-  const categoryOptions = Object.values(ItemCategory).map(cat => ({
+  const categoryOptions = Object.values(ItemCategory).map((cat) => ({
     value: cat,
     label: cat,
   }))
@@ -159,14 +167,24 @@ export default function AddPantryItemForm({ onSubmit, onCancel, isSubmitting }: 
       </div>
 
       <div className="flex gap-3 pt-4">
-        <Button type="submit" variant="primary" className="flex-1" disabled={isSubmitting}>
+        <Button
+          type="submit"
+          variant="primary"
+          className="flex-1"
+          disabled={isSubmitting}
+        >
           {isSubmitting ? 'Adding...' : 'Add Item'}
         </Button>
-        <Button type="button" variant="outline" onClick={onCancel} className="flex-1" disabled={isSubmitting}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onCancel}
+          className="flex-1"
+          disabled={isSubmitting}
+        >
           Cancel
         </Button>
       </div>
     </form>
   )
 }
-

@@ -97,4 +97,3 @@ export enum SortMethod {
   MEAL_TIME = 'Meal Time',
   LOW_STOCK = 'Low Stock',
 }
-

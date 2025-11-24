@@ -37,7 +37,7 @@ const mockItems: PantryItem[] = [
 describe('PantryGrid', () => {
   it('renders all pantry items', () => {
     render(<PantryGrid items={mockItems} />)
-    
+
     expect(screen.getByText('Tomatoes')).toBeInTheDocument()
     expect(screen.getByText('Milk')).toBeInTheDocument()
     expect(screen.getByText('Rice')).toBeInTheDocument()
@@ -45,29 +45,28 @@ describe('PantryGrid', () => {
 
   it('renders empty state when no items provided', () => {
     render(<PantryGrid items={[]} />)
-    
+
     expect(screen.getByText(/no items in your pantry/i)).toBeInTheDocument()
   })
 
   it('displays items in a grid layout', () => {
     const { container } = render(<PantryGrid items={mockItems} />)
-    
+
     const grid = container.querySelector('.grid')
     expect(grid).toBeInTheDocument()
   })
 
   it('renders correct number of items', () => {
     render(<PantryGrid items={mockItems} />)
-    
+
     const items = screen.getAllByText(/pcs|gallons|lbs/i)
     expect(items.length).toBe(3)
   })
 
   it('applies responsive grid classes', () => {
     const { container } = render(<PantryGrid items={mockItems} />)
-    
+
     const grid = container.querySelector('.grid')
     expect(grid?.className).toMatch(/grid-cols/)
   })
 })
-

@@ -18,11 +18,11 @@ import {
   PantryItemResponse,
 } from '@/lib/api/pantry'
 import { getHouseholds, HouseholdResponse } from '@/lib/api/household'
-import { 
-  createGroceryList, 
-  addGroceryItem, 
-  getGroceryLists, 
-  GroceryListResponse 
+import {
+  createGroceryList,
+  addGroceryItem,
+  getGroceryLists,
+  GroceryListResponse,
 } from '@/lib/api/grocery'
 import { getCategoryOrder, sortPantryItemsByCategory } from '@/lib/utils'
 import PantryItemCard from '@/components/pantry/PantryItemCard'
@@ -32,7 +32,9 @@ export default function PantryPage() {
   const [items, setItems] = useState<PantryItem[]>([])
   const [households, setHouseholds] = useState<HouseholdResponse[]>([])
   const [groceryLists, setGroceryLists] = useState<GroceryListResponse[]>([])
-  const [selectedHouseholdId, setSelectedHouseholdId] = useState<number | null>(null)
+  const [selectedHouseholdId, setSelectedHouseholdId] = useState<number | null>(
+    null
+  )
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false)
@@ -63,11 +65,11 @@ export default function PantryPage() {
         // Fetch households first
         const householdsData = await getHouseholds(token)
         setHouseholds(householdsData)
-        
+
         // Fetch grocery lists
         const groceryListsData = await getGroceryLists(token)
         setGroceryLists(groceryListsData)
-        
+
         // Set default household if available
         if (householdsData.length > 0) {
           const defaultHousehold = selectedHouseholdId || householdsData[0].id
@@ -75,7 +77,7 @@ export default function PantryPage() {
 
           // Fetch pantry items for the household
           const pantryData = await getPantryItems(defaultHousehold, token)
-          
+
           // Parse quantity string back to number and unit
           const parseQuantity = (quantityStr: string | undefined) => {
             if (!quantityStr) return { quantity: 0, unit: undefined }
@@ -83,26 +85,30 @@ export default function PantryPage() {
             if (match) {
               return {
                 quantity: parseFloat(match[1]),
-                unit: match[2] || undefined
+                unit: match[2] || undefined,
               }
             }
             return { quantity: parseFloat(quantityStr) || 0, unit: undefined }
           }
-          
-          const mappedItems: PantryItem[] = pantryData.map((item: PantryItemResponse) => {
-            const parsed = parseQuantity(item.quantity)
-            return {
-              id: item.id.toString(),
-              name: item.name,
-              quantity: parsed.quantity,
-              unit: parsed.unit,
-              category: (item.category as ItemCategory) || ItemCategory.OTHER,
-              expirationDate: item.expiration_date ? new Date(item.expiration_date) : undefined,
-              lowStockThreshold: item.low_stock_threshold,
-              addedAt: new Date(item.created_at),
-              updatedAt: new Date(item.updated_at),
+
+          const mappedItems: PantryItem[] = pantryData.map(
+            (item: PantryItemResponse) => {
+              const parsed = parseQuantity(item.quantity)
+              return {
+                id: item.id.toString(),
+                name: item.name,
+                quantity: parsed.quantity,
+                unit: parsed.unit,
+                category: (item.category as ItemCategory) || ItemCategory.OTHER,
+                expirationDate: item.expiration_date
+                  ? new Date(item.expiration_date)
+                  : undefined,
+                lowStockThreshold: item.low_stock_threshold,
+                addedAt: new Date(item.created_at),
+                updatedAt: new Date(item.updated_at),
+              }
             }
-          })
+          )
           setItems(mappedItems)
         }
       } catch (err) {
@@ -118,8 +124,11 @@ export default function PantryPage() {
 
   // Filter items based on search and category
   const filteredItems = items.filter((item) => {
-    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter
+    const matchesSearch = item.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
+    const matchesCategory =
+      categoryFilter === 'all' || item.category === categoryFilter
     return matchesSearch && matchesCategory
   })
 
@@ -127,17 +136,26 @@ export default function PantryPage() {
   const sortedItems = (() => {
     switch (sortMethod) {
       case SortMethod.ENTRY_ORDER:
-        return [...filteredItems].sort((a, b) => new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime())
+        return [...filteredItems].sort(
+          (a, b) =>
+            new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime()
+        )
       case SortMethod.LOW_STOCK:
         // Separate items into low stock and not low stock
         const lowStockItems = filteredItems.filter(
-          (item) => item.lowStockThreshold !== undefined && item.quantity <= item.lowStockThreshold
+          (item) =>
+            item.lowStockThreshold !== undefined &&
+            item.quantity <= item.lowStockThreshold
         )
         const notLowStockItems = filteredItems.filter(
-          (item) => !item.lowStockThreshold || item.quantity > item.lowStockThreshold
+          (item) =>
+            !item.lowStockThreshold || item.quantity > item.lowStockThreshold
         )
         // Sort each group by category, then combine with low stock items first
-        return [...sortPantryItemsByCategory(lowStockItems), ...sortPantryItemsByCategory(notLowStockItems)]
+        return [
+          ...sortPantryItemsByCategory(lowStockItems),
+          ...sortPantryItemsByCategory(notLowStockItems),
+        ]
       case SortMethod.CATEGORY:
       default:
         return sortPantryItemsByCategory(filteredItems)
@@ -147,14 +165,17 @@ export default function PantryPage() {
   // Helper function to render items grouped by category
   const renderItemsByCategory = (items: PantryItem[]) => {
     // Group items by category
-    const itemsByCategory = items.reduce((acc, item) => {
-      const category = item.category
-      if (!acc[category]) {
-        acc[category] = []
-      }
-      acc[category].push(item)
-      return acc
-    }, {} as Record<ItemCategory, PantryItem[]>)
+    const itemsByCategory = items.reduce(
+      (acc, item) => {
+        const category = item.category
+        if (!acc[category]) {
+          acc[category] = []
+        }
+        acc[category].push(item)
+        return acc
+      },
+      {} as Record<ItemCategory, PantryItem[]>
+    )
 
     // Get categories in the correct order
     const categories = Object.keys(itemsByCategory) as ItemCategory[]
@@ -207,10 +228,13 @@ export default function PantryPage() {
   const renderItemsByLowStock = (items: PantryItem[]) => {
     // Separate items into low stock and not low stock
     const lowStockItems = items.filter(
-      (item) => item.lowStockThreshold !== undefined && item.quantity <= item.lowStockThreshold
+      (item) =>
+        item.lowStockThreshold !== undefined &&
+        item.quantity <= item.lowStockThreshold
     )
     const notLowStockItems = items.filter(
-      (item) => !item.lowStockThreshold || item.quantity > item.lowStockThreshold
+      (item) =>
+        !item.lowStockThreshold || item.quantity > item.lowStockThreshold
     )
 
     return (
@@ -251,7 +275,9 @@ export default function PantryPage() {
   }
 
   // Handle adding new item
-  const handleAddItem = async (newItem: Omit<PantryItem, 'id' | 'addedAt' | 'updatedAt'>) => {
+  const handleAddItem = async (
+    newItem: Omit<PantryItem, 'id' | 'addedAt' | 'updatedAt'>
+  ) => {
     if (!selectedHouseholdId) return
 
     try {
@@ -267,7 +293,9 @@ export default function PantryPage() {
         {
           household_id: selectedHouseholdId,
           name: newItem.name,
-          quantity: newItem.unit ? `${newItem.quantity} ${newItem.unit}` : `${newItem.quantity}`,
+          quantity: newItem.unit
+            ? `${newItem.quantity} ${newItem.unit}`
+            : `${newItem.quantity}`,
           category: newItem.category,
           expiration_date: newItem.expirationDate?.toISOString(),
           low_stock_threshold: newItem.lowStockThreshold,
@@ -282,7 +310,7 @@ export default function PantryPage() {
         if (match) {
           return {
             quantity: parseFloat(match[1]),
-            unit: match[2] || undefined
+            unit: match[2] || undefined,
           }
         }
         return { quantity: parseFloat(quantityStr) || 0, unit: undefined }
@@ -296,7 +324,9 @@ export default function PantryPage() {
         quantity: parsed.quantity,
         unit: parsed.unit,
         category: (createdItem.category as ItemCategory) || ItemCategory.OTHER,
-        expirationDate: createdItem.expiration_date ? new Date(createdItem.expiration_date) : undefined,
+        expirationDate: createdItem.expiration_date
+          ? new Date(createdItem.expiration_date)
+          : undefined,
         lowStockThreshold: createdItem.low_stock_threshold,
         addedAt: new Date(createdItem.created_at),
         updatedAt: new Date(createdItem.updated_at),
@@ -322,7 +352,9 @@ export default function PantryPage() {
   }
 
   // Handle updating an item
-  const handleUpdateItem = async (updatedItem: Omit<PantryItem, 'id' | 'addedAt' | 'updatedAt'>) => {
+  const handleUpdateItem = async (
+    updatedItem: Omit<PantryItem, 'id' | 'addedAt' | 'updatedAt'>
+  ) => {
     if (!editingItem) return
 
     try {
@@ -338,7 +370,9 @@ export default function PantryPage() {
         parseInt(editingItem.id),
         {
           name: updatedItem.name,
-          quantity: updatedItem.unit ? `${updatedItem.quantity} ${updatedItem.unit}` : `${updatedItem.quantity}`,
+          quantity: updatedItem.unit
+            ? `${updatedItem.quantity} ${updatedItem.unit}`
+            : `${updatedItem.quantity}`,
           category: updatedItem.category,
           expiration_date: updatedItem.expirationDate?.toISOString(),
           low_stock_threshold: updatedItem.lowStockThreshold,
@@ -353,7 +387,7 @@ export default function PantryPage() {
         if (match) {
           return {
             quantity: parseFloat(match[1]),
-            unit: match[2] || undefined
+            unit: match[2] || undefined,
           }
         }
         return { quantity: parseFloat(quantityStr) || 0, unit: undefined }
@@ -367,13 +401,17 @@ export default function PantryPage() {
         quantity: parsed.quantity,
         unit: parsed.unit,
         category: (updated.category as ItemCategory) || ItemCategory.OTHER,
-        expirationDate: updated.expiration_date ? new Date(updated.expiration_date) : undefined,
+        expirationDate: updated.expiration_date
+          ? new Date(updated.expiration_date)
+          : undefined,
         lowStockThreshold: updated.low_stock_threshold,
         addedAt: new Date(updated.created_at),
         updatedAt: new Date(updated.updated_at),
       }
 
-      setItems(items.map((item) => (item.id === editingItem.id ? mappedItem : item)))
+      setItems(
+        items.map((item) => (item.id === editingItem.id ? mappedItem : item))
+      )
       setIsEditModalOpen(false)
       setEditingItem(null)
     } catch (err) {
@@ -410,19 +448,25 @@ export default function PantryPage() {
   // Calculate statistics
   const totalItems = items.length
   const lowStockItemsList = items.filter(
-    (item) => item.lowStockThreshold !== undefined && item.quantity <= item.lowStockThreshold
+    (item) =>
+      item.lowStockThreshold !== undefined &&
+      item.quantity <= item.lowStockThreshold
   )
   const lowStockItems = lowStockItemsList.length
   const expiringSoonItems = items.filter((item) => {
     if (!item.expirationDate) return false
     const daysUntilExpiration = Math.ceil(
-      (new Date(item.expirationDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+      (new Date(item.expirationDate).getTime() - new Date().getTime()) /
+        (1000 * 60 * 60 * 24)
     )
     return daysUntilExpiration >= 0 && daysUntilExpiration <= 5
   }).length
 
   // Handle generating grocery list from low stock items
-  const handleGenerateGroceryList = async (data: { listName: string; items: PantryItem[] }) => {
+  const handleGenerateGroceryList = async (data: {
+    listName: string
+    items: PantryItem[]
+  }) => {
     if (!selectedHouseholdId) return
 
     try {
@@ -450,7 +494,9 @@ export default function PantryPage() {
           newList.id,
           {
             name: item.name,
-            quantity: item.unit ? `${item.quantity} ${item.unit}` : `${item.quantity}`,
+            quantity: item.unit
+              ? `${item.quantity} ${item.unit}`
+              : `${item.quantity}`,
             category: item.category,
             notes: item.lowStockThreshold
               ? `Restock - Low stock threshold: ${item.lowStockThreshold}`
@@ -461,25 +507,32 @@ export default function PantryPage() {
         )
       }
 
-      setSuccessMessage(`Grocery list "${data.listName}" created successfully with ${data.items.length} items!`)
+      setSuccessMessage(
+        `Grocery list "${data.listName}" created successfully with ${data.items.length} items!`
+      )
       setIsGenerateModalOpen(false)
-      
+
       // Refresh grocery lists
       const groceryListsData = await getGroceryLists(token)
       setGroceryLists(groceryListsData)
-      
+
       // Clear success message after 5 seconds
       setTimeout(() => setSuccessMessage(null), 5000)
     } catch (err) {
       console.error('Error creating grocery list:', err)
-      setError(err instanceof Error ? err.message : 'Failed to create grocery list')
+      setError(
+        err instanceof Error ? err.message : 'Failed to create grocery list'
+      )
     } finally {
       setIsCreatingList(false)
     }
   }
 
   // Handle adding items to existing grocery list
-  const handleAddToGroceryList = async (data: { listId: number; items: PantryItem[] }) => {
+  const handleAddToGroceryList = async (data: {
+    listId: number
+    items: PantryItem[]
+  }) => {
     try {
       setIsCreatingList(true)
       setError(null)
@@ -491,7 +544,8 @@ export default function PantryPage() {
       }
 
       // Find the list name for the success message
-      const listName = groceryLists.find(list => list.id === data.listId)?.name || 'list'
+      const listName =
+        groceryLists.find((list) => list.id === data.listId)?.name || 'list'
 
       // Add items to the existing list
       for (const item of data.items) {
@@ -499,7 +553,9 @@ export default function PantryPage() {
           data.listId,
           {
             name: item.name,
-            quantity: item.unit ? `${item.quantity} ${item.unit}` : `${item.quantity}`,
+            quantity: item.unit
+              ? `${item.quantity} ${item.unit}`
+              : `${item.quantity}`,
             category: item.category,
             notes: item.lowStockThreshold
               ? `Restock - Low stock threshold: ${item.lowStockThreshold}`
@@ -510,14 +566,20 @@ export default function PantryPage() {
         )
       }
 
-      setSuccessMessage(`Added ${data.items.length} items to "${listName}" successfully!`)
+      setSuccessMessage(
+        `Added ${data.items.length} items to "${listName}" successfully!`
+      )
       setIsGenerateModalOpen(false)
-      
+
       // Clear success message after 5 seconds
       setTimeout(() => setSuccessMessage(null), 5000)
     } catch (err) {
       console.error('Error adding items to grocery list:', err)
-      setError(err instanceof Error ? err.message : 'Failed to add items to grocery list')
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Failed to add items to grocery list'
+      )
     } finally {
       setIsCreatingList(false)
     }
@@ -550,12 +612,28 @@ export default function PantryPage() {
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-12">
-            <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            <svg
+              className="w-16 h-16 mx-auto text-gray-400 mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+              />
             </svg>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No Household Found</h3>
-            <p className="text-gray-600 mb-4">Create or join a household to start managing your pantry</p>
-            <Button onClick={() => window.location.href = '/household'}>Go to Household</Button>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No Household Found
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Create or join a household to start managing your pantry
+            </p>
+            <Button onClick={() => (window.location.href = '/household')}>
+              Go to Household
+            </Button>
           </div>
         </div>
       </div>
@@ -575,8 +653,16 @@ export default function PantryPage() {
       {successMessage && (
         <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-4">
           <div className="flex items-center">
-            <svg className="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            <svg
+              className="w-5 h-5 text-green-600 mr-3"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clipRule="evenodd"
+              />
             </svg>
             <p className="text-sm text-green-700">{successMessage}</p>
           </div>
@@ -585,9 +671,12 @@ export default function PantryPage() {
 
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Pantry Inventory</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+          Pantry Inventory
+        </h1>
         <p className="text-sm sm:text-base text-gray-600">
-          Keep track of your pantry items and get alerts for low stock and expiring items
+          Keep track of your pantry items and get alerts for low stock and
+          expiring items
         </p>
       </div>
 
@@ -596,11 +685,18 @@ export default function PantryPage() {
         <div className="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 mb-1">Total Items</p>
+              <p className="text-sm font-medium text-gray-600 mb-1">
+                Total Items
+              </p>
               <p className="text-3xl font-bold text-gray-900">{totalItems}</p>
             </div>
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="w-6 h-6 text-blue-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -615,11 +711,20 @@ export default function PantryPage() {
         <div className="bg-white rounded-lg shadow p-6 border-l-4 border-yellow-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 mb-1">Low Stock</p>
-              <p className="text-3xl font-bold text-gray-900">{lowStockItems}</p>
+              <p className="text-sm font-medium text-gray-600 mb-1">
+                Low Stock
+              </p>
+              <p className="text-3xl font-bold text-gray-900">
+                {lowStockItems}
+              </p>
             </div>
             <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="w-6 h-6 text-yellow-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -634,11 +739,20 @@ export default function PantryPage() {
         <div className="bg-white rounded-lg shadow p-6 border-l-4 border-orange-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 mb-1">Expiring Soon</p>
-              <p className="text-3xl font-bold text-gray-900">{expiringSoonItems}</p>
+              <p className="text-sm font-medium text-gray-600 mb-1">
+                Expiring Soon
+              </p>
+              <p className="text-3xl font-bold text-gray-900">
+                {expiringSoonItems}
+              </p>
             </div>
             <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="w-6 h-6 text-orange-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -685,12 +799,12 @@ export default function PantryPage() {
               </Select>
             </div>
           </div>
-          
+
           {/* Actions Row */}
           <div className="flex flex-col sm:flex-row gap-3">
-            <Button 
-              variant="secondary" 
-              onClick={() => setIsGenerateModalOpen(true)} 
+            <Button
+              variant="secondary"
+              onClick={() => setIsGenerateModalOpen(true)}
               className="w-full sm:w-auto"
               disabled={lowStockItems === 0}
             >
@@ -709,7 +823,11 @@ export default function PantryPage() {
               </svg>
               Generate Grocery List
             </Button>
-            <Button variant="primary" onClick={() => setIsModalOpen(true)} className="w-full sm:w-auto">
+            <Button
+              variant="primary"
+              onClick={() => setIsModalOpen(true)}
+              className="w-full sm:w-auto"
+            >
               <svg
                 className="w-5 h-5 mr-2"
                 fill="none"
@@ -747,13 +865,14 @@ export default function PantryPage() {
               />
             </svg>
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              {items.length === 0 ? "No items in your pantry" : "No matching items"}
+              {items.length === 0
+                ? 'No items in your pantry'
+                : 'No matching items'}
             </h3>
             <p className="text-gray-500">
-              {items.length === 0 
-                ? "Start adding items to keep track of your pantry inventory"
-                : "Try adjusting your search or filter criteria"
-              }
+              {items.length === 0
+                ? 'Start adding items to keep track of your pantry inventory'
+                : 'Try adjusting your search or filter criteria'}
             </p>
           </div>
         </div>

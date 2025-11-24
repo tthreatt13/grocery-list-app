@@ -91,17 +91,19 @@ describe('AddMealModal', () => {
         date={new Date('2024-11-10')}
       />
     )
-    
+
     const nameInput = screen.getByLabelText(/Meal Name/i)
     const ingredientsInput = screen.getByLabelText(/Ingredients/i)
     const notesInput = screen.getByLabelText(/Notes/i)
     const addButton = screen.getByRole('button', { name: /add meal/i })
-    
+
     fireEvent.change(nameInput, { target: { value: 'Spaghetti' } })
-    fireEvent.change(ingredientsInput, { target: { value: 'pasta, tomato sauce, ground beef' } })
+    fireEvent.change(ingredientsInput, {
+      target: { value: 'pasta, tomato sauce, ground beef' },
+    })
     fireEvent.change(notesInput, { target: { value: 'Kids favorite' } })
     fireEvent.click(addButton)
-    
+
     await waitFor(() => {
       expect(mockOnAdd).toHaveBeenCalledWith({
         name: 'Spaghetti',
@@ -121,10 +123,10 @@ describe('AddMealModal', () => {
         date={new Date('2024-11-10')}
       />
     )
-    
+
     const addButton = screen.getByRole('button', { name: /add meal/i })
     fireEvent.click(addButton)
-    
+
     expect(mockOnAdd).not.toHaveBeenCalled()
   })
 
@@ -138,13 +140,13 @@ describe('AddMealModal', () => {
         date={new Date('2024-11-10')}
       />
     )
-    
+
     const nameInput = screen.getByLabelText(/Meal Name/i) as HTMLInputElement
     const addButton = screen.getByRole('button', { name: /add meal/i })
-    
+
     fireEvent.change(nameInput, { target: { value: 'Spaghetti' } })
     fireEvent.click(addButton)
-    
+
     await waitFor(() => {
       expect(nameInput.value).toBe('')
     })
@@ -160,7 +162,7 @@ describe('AddMealModal', () => {
         date={new Date('2024-11-10')}
       />
     )
-    
+
     const backdrop = screen.getByRole('dialog').parentElement
     if (backdrop) {
       fireEvent.click(backdrop)
@@ -204,11 +206,13 @@ describe('AddMealModal', () => {
           meal={mockMeal}
         />
       )
-      
+
       const nameInput = screen.getByLabelText(/Meal Name/i) as HTMLInputElement
-      const ingredientsInput = screen.getByLabelText(/Ingredients/i) as HTMLTextAreaElement
+      const ingredientsInput = screen.getByLabelText(
+        /Ingredients/i
+      ) as HTMLTextAreaElement
       const notesInput = screen.getByLabelText(/Notes/i) as HTMLTextAreaElement
-      
+
       expect(nameInput.value).toBe('Existing Meal')
       expect(ingredientsInput.value).toBe('pasta, tomato sauce')
       expect(notesInput.value).toBe('Original notes')
@@ -225,8 +229,10 @@ describe('AddMealModal', () => {
           meal={mockMeal}
         />
       )
-      
-      expect(screen.getByRole('button', { name: /update meal/i })).toBeInTheDocument()
+
+      expect(
+        screen.getByRole('button', { name: /update meal/i })
+      ).toBeInTheDocument()
     })
 
     it('calls onAdd with updated data when update button is clicked', async () => {
@@ -240,14 +246,14 @@ describe('AddMealModal', () => {
           meal={mockMeal}
         />
       )
-      
+
       const nameInput = screen.getByLabelText(/Meal Name/i)
       const updateButton = screen.getByRole('button', { name: /update meal/i })
-      
+
       // Change the name
       fireEvent.change(nameInput, { target: { value: 'Updated Meal Name' } })
       fireEvent.click(updateButton)
-      
+
       await waitFor(() => {
         expect(mockOnAdd).toHaveBeenCalledWith({
           name: 'Updated Meal Name',
@@ -273,10 +279,11 @@ describe('AddMealModal', () => {
           meal={mealWithoutIngredients}
         />
       )
-      
-      const ingredientsInput = screen.getByLabelText(/Ingredients/i) as HTMLTextAreaElement
+
+      const ingredientsInput = screen.getByLabelText(
+        /Ingredients/i
+      ) as HTMLTextAreaElement
       expect(ingredientsInput.value).toBe('')
     })
   })
 })
-

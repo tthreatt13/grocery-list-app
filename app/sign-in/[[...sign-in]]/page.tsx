@@ -10,7 +10,7 @@ export default function SignInPage() {
             Sign in to manage your grocery lists
           </p>
         </div>
-        <SignIn 
+        <SignIn
           appearance={{
             elements: {
               rootBox: 'mx-auto',
@@ -24,4 +24,3 @@ export default function SignInPage() {
     </div>
   )
 }
-
