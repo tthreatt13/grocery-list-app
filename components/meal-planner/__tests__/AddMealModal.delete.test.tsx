@@ -45,7 +45,10 @@ describe('AddMealModal - Delete Functionality', () => {
       )
 
       expect(screen.queryByText('Delete')).not.toBeInTheDocument()
-      expect(screen.getByText('Add Meal')).toBeInTheDocument()
+      // There are multiple "Add Meal" elements (heading and button), check for heading
+      expect(
+        screen.getByRole('heading', { name: 'Add Meal' })
+      ).toBeInTheDocument()
     })
   })
 

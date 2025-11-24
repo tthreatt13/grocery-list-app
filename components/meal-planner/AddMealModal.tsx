@@ -95,12 +95,11 @@ export default function AddMealModal({
   const handleDelete = async () => {
     if (!meal || !onDelete) return
 
-    if (!confirm('Are you sure you want to delete this meal?')) return
-
     setIsDeleting(true)
     setError(null)
 
     try {
+      // Note: confirm dialog is handled in handleMealDelete (page component)
       await onDelete(meal.id)
       onClose()
     } catch (err) {

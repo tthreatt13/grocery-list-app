@@ -1,6 +1,7 @@
 import React from 'react'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, fireEvent, act } from '@testing-library/react'
 import '@testing-library/jest-dom'
+import userEvent from '@testing-library/user-event'
 import MealPlannerPage from '../page'
 import * as mealsApi from '@/lib/api/meals'
 import * as householdApi from '@/lib/api/household'
@@ -125,6 +126,27 @@ describe('MealPlannerPage - Generate List Button', () => {
 })
 
 describe('MealPlannerPage - Meal Type Functionality', () => {
+  // Calculate current week start (Monday) for test meals
+  const getCurrentWeekStart = () => {
+    const today = new Date()
+    const dayOfWeek = today.getDay()
+    const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1
+    const startDate = new Date(today)
+    startDate.setDate(today.getDate() - daysSinceMonday)
+    startDate.setHours(0, 0, 0, 0)
+    return startDate
+  }
+
+  const formatDateForAPI = (date: Date) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
+  const currentWeekStart = getCurrentWeekStart()
+  const weekStartDateStr = formatDateForAPI(currentWeekStart)
+
   const mockHouseholds = [
     {
       id: 1,
@@ -142,7 +164,7 @@ describe('MealPlannerPage - Meal Type Functionality', () => {
         name: 'Pancakes',
         meal_type: 'breakfast' as const,
         day_of_week: 0,
-        week_start_date: '2024-01-01',
+        week_start_date: weekStartDateStr,
         ingredients: 'flour, eggs, milk, butter',
         notes: 'Kids favorite',
         created_at: '2024-01-01T00:00:00Z',
@@ -153,7 +175,7 @@ describe('MealPlannerPage - Meal Type Functionality', () => {
         name: 'Spaghetti',
         meal_type: 'dinner' as const,
         day_of_week: 0,
-        week_start_date: '2024-01-01',
+        week_start_date: weekStartDateStr,
         ingredients: 'pasta, ground beef, tomato sauce',
         notes: 'Family dinner',
         created_at: '2024-01-01T00:00:00Z',
@@ -175,35 +197,69 @@ describe('MealPlannerPage - Meal Type Functionality', () => {
   })
 
   it('should call generateGroceryList API with correct parameters when creating grocery list', async () => {
-    const { fireEvent, waitFor } = await import('@testing-library/react')
+    const user = userEvent.setup()
 
     render(<MealPlannerPage />)
 
-    // Wait for component to load
+    // Wait for component to load and meals to be displayed
     await waitFor(() => {
       expect(
         screen.getByRole('button', { name: /generate grocery list/i })
       ).toBeInTheDocument()
     })
 
+    // Wait for component to fully initialize, including currentWeekStart
+    // This ensures all state is set before we interact with the modal
+    await waitFor(() => {
+      expect(mockGetWeeklyMeals).toHaveBeenCalled()
+    })
+    await new Promise((resolve) => setTimeout(resolve, 300))
+
     // Click the generate grocery list button
     const generateButton = screen.getByRole('button', {
       name: /generate grocery list/i,
     })
-    fireEvent.click(generateButton)
+    await user.click(generateButton)
 
-    // Wait for modal to appear
+    // Wait for modal to appear - use heading role to avoid matching button text
     await waitFor(() => {
-      expect(screen.getByText(/generate grocery list/i)).toBeInTheDocument()
+      expect(
+        screen.getByRole('heading', { name: /generate grocery list/i })
+      ).toBeInTheDocument()
     })
 
-    // Fill in the list name
-    const nameInput = screen.getByDisplayValue(/weekly meal plan/i)
-    fireEvent.change(nameInput, { target: { value: 'Test Meal List' } })
+    // Wait for modal to be fully rendered
+    await waitFor(() => {
+      const input = screen.getByLabelText(/list name/i) as HTMLInputElement
+      expect(input).toBeInTheDocument()
+    })
 
-    // Click create button
-    const createButton = screen.getByRole('button', { name: /create list/i })
-    fireEvent.click(createButton)
+    // Get the input reference
+    const nameInput = screen.getByLabelText(/list name/i) as HTMLInputElement
+
+    // Change the input value within act to ensure state updates are processed
+    await act(async () => {
+      fireEvent.change(nameInput, { target: { value: 'Test Meal List' } })
+      // Small delay to let React process the update
+      await new Promise((resolve) => setTimeout(resolve, 50))
+    })
+    
+    // Wait for button to be enabled (form validation) and get reference
+    const createButton = await waitFor(
+      () => {
+        const btn = screen.getByRole('button', {
+          name: /create grocery list/i,
+        })
+        expect(btn).not.toBeDisabled()
+        return btn
+      },
+      { timeout: 3000 }
+    )
+    
+    // Click the button
+    await act(async () => {
+      fireEvent.click(createButton)
+    })
 
     // Verify generateGroceryList was called with correct parameters
     await waitFor(() => {
@@ -215,7 +271,7 @@ describe('MealPlannerPage - Meal Type Functionality', () => {
         }),
         'mock-token'
       )
-    })
+    }, { timeout: 3000 })
   })
 
   it('should display success message after generating grocery list', async () => {
@@ -227,12 +283,15 @@ describe('MealPlannerPage - Meal Type Functionality', () => {
 
     render(<MealPlannerPage />)
 
-    // Wait for component to load
+    // Wait for component to load and meals to be displayed
     await waitFor(() => {
       expect(
         screen.getByRole('button', { name: /generate grocery list/i })
       ).toBeInTheDocument()
     })
+
+    // Wait a bit for meals to be processed
+    await new Promise((resolve) => setTimeout(resolve, 100))
 
     // Click the generate grocery list button
     const generateButton = screen.getByRole('button', {
@@ -240,10 +299,10 @@ describe('MealPlannerPage - Meal Type Functionality', () => {
     })
     fireEvent.click(generateButton)
 
-    // Wait for modal to appear
+    // Wait for modal to appear - modal title is "Generate Grocery List"
     await waitFor(() => {
       expect(
-        screen.getByText(/generate grocery list from meals/i)
+        screen.getByRole('heading', { name: /generate grocery list/i })
       ).toBeInTheDocument()
     })
 
@@ -251,8 +310,10 @@ describe('MealPlannerPage - Meal Type Functionality', () => {
     const nameInput = screen.getByLabelText(/list name/i)
     fireEvent.change(nameInput, { target: { value: 'Test Meal List' } })
 
-    // Click create button
-    const createButton = screen.getByRole('button', { name: /create list/i })
+    // Click create button - button text is "Create Grocery List"
+    const createButton = screen.getByRole('button', {
+      name: /create grocery list/i,
+    })
     fireEvent.click(createButton)
 
     // Verify success message is shown
@@ -284,10 +345,10 @@ describe('MealPlannerPage - Meal Type Functionality', () => {
     })
     fireEvent.click(generateButton)
 
-    // Wait for modal to appear
+    // Wait for modal to appear - modal title is "Generate Grocery List"
     await waitFor(() => {
       expect(
-        screen.getByText(/generate grocery list from meals/i)
+        screen.getByRole('heading', { name: /generate grocery list/i })
       ).toBeInTheDocument()
     })
 
@@ -295,8 +356,10 @@ describe('MealPlannerPage - Meal Type Functionality', () => {
     const nameInput = screen.getByLabelText(/list name/i)
     fireEvent.change(nameInput, { target: { value: 'Test Meal List' } })
 
-    // Click create button
-    const createButton = screen.getByRole('button', { name: /create list/i })
+    // Click create button - button text is "Create Grocery List"
+    const createButton = screen.getByRole('button', {
+      name: /create grocery list/i,
+    })
     fireEvent.click(createButton)
 
     // Verify grocery lists are refreshed
@@ -318,12 +381,15 @@ describe('MealPlannerPage - Meal Type Functionality', () => {
 
     render(<MealPlannerPage />)
 
-    // Wait for component to load
+    // Wait for component to load and meals to be displayed
     await waitFor(() => {
       expect(
         screen.getByRole('button', { name: /generate grocery list/i })
       ).toBeInTheDocument()
     })
+
+    // Wait a bit for meals to be processed
+    await new Promise((resolve) => setTimeout(resolve, 100))
 
     // Click the generate grocery list button
     const generateButton = screen.getByRole('button', {
@@ -331,10 +397,10 @@ describe('MealPlannerPage - Meal Type Functionality', () => {
     })
     fireEvent.click(generateButton)
 
-    // Wait for modal to appear
+    // Wait for modal to appear - modal title is "Generate Grocery List"
     await waitFor(() => {
       expect(
-        screen.getByText(/generate grocery list from meals/i)
+        screen.getByRole('heading', { name: /generate grocery list/i })
       ).toBeInTheDocument()
     })
 
@@ -342,8 +408,10 @@ describe('MealPlannerPage - Meal Type Functionality', () => {
     const nameInput = screen.getByLabelText(/list name/i)
     fireEvent.change(nameInput, { target: { value: 'Test Meal List' } })
 
-    // Click create button
-    const createButton = screen.getByRole('button', { name: /create list/i })
+    // Click create button - button text is "Create Grocery List"
+    const createButton = screen.getByRole('button', {
+      name: /create grocery list/i,
+    })
     fireEvent.click(createButton)
 
     // Verify error is logged

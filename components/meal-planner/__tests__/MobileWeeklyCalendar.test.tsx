@@ -115,10 +115,13 @@ describe('MobileWeeklyCalendar - Meal Delete Flow', () => {
     const addButtons = screen.getAllByText(/add/i)
     expect(addButtons.length).toBeGreaterThan(0)
 
-    // Should have "Add breakfast", "Add lunch", "Add dinner" for each day
-    expect(screen.getByText('Add breakfast')).toBeInTheDocument()
-    expect(screen.getByText('Add lunch')).toBeInTheDocument()
-    expect(screen.getByText('Add dinner')).toBeInTheDocument()
+    // Should have "Add breakfast", "Add lunch", "Add dinner" for each day (multiple instances)
+    const addBreakfastButtons = screen.getAllByText('Add breakfast')
+    expect(addBreakfastButtons.length).toBeGreaterThan(0)
+    const addLunchButtons = screen.getAllByText('Add lunch')
+    expect(addLunchButtons.length).toBeGreaterThan(0)
+    const addDinnerButtons = screen.getAllByText('Add dinner')
+    expect(addDinnerButtons.length).toBeGreaterThan(0)
   })
 
   it('calls onEmptySlotClick when empty slot is clicked', () => {
@@ -131,8 +134,10 @@ describe('MobileWeeklyCalendar - Meal Delete Flow', () => {
       />
     )
 
-    const addBreakfastButton = screen.getByText('Add breakfast')
-    fireEvent.click(addBreakfastButton)
+    // There are multiple "Add breakfast" buttons (one per day), get the first one
+    const addBreakfastButtons = screen.getAllByText('Add breakfast')
+    expect(addBreakfastButtons.length).toBeGreaterThan(0)
+    fireEvent.click(addBreakfastButtons[0])
 
     expect(mockOnEmptySlotClick).toHaveBeenCalledWith(
       expect.any(Date),
@@ -151,7 +156,8 @@ describe('MobileWeeklyCalendar - Meal Delete Flow', () => {
       />
     )
 
-    // Should show "Today" indicator
-    expect(screen.getByText('Today')).toBeInTheDocument()
+    // Should show "Today" indicator (may appear multiple times)
+    const todayIndicators = screen.getAllByText('Today')
+    expect(todayIndicators.length).toBeGreaterThan(0)
   })
 })

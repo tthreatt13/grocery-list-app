@@ -57,6 +57,29 @@ Object.defineProperty(window, 'confirm', {
 })
 
 describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
+  // Calculate current week start (Monday) for test meals - matching component logic
+  const getCurrentWeekStart = () => {
+    const today = new Date()
+    const dayOfWeek = today.getDay()
+    // Convert to Monday-based week (0=Monday, 6=Sunday)
+    const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1
+    const startDate = new Date(today)
+    startDate.setDate(today.getDate() - daysSinceMonday) // Start on Monday
+    // Normalize to start of day (midnight) to avoid time comparison issues
+    startDate.setHours(0, 0, 0, 0)
+    return startDate
+  }
+
+  const formatDateForAPI = (date: Date) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
+  const currentWeekStart = getCurrentWeekStart()
+  const weekStartDateStr = formatDateForAPI(currentWeekStart)
+
   const mockHouseholds = [
     {
       id: 1,
@@ -74,7 +97,7 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
         name: 'Scrambled Eggs',
         meal_type: 'breakfast' as const,
         day_of_week: 0,
-        week_start_date: '2024-11-10',
+        week_start_date: weekStartDateStr,
         ingredients: 'eggs, butter, salt',
         notes: 'Quick breakfast',
         created_at: '2024-01-01T00:00:00Z',
@@ -85,7 +108,7 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
         name: 'Spaghetti',
         meal_type: 'dinner' as const,
         day_of_week: 0,
-        week_start_date: '2024-11-10',
+        week_start_date: weekStartDateStr,
         ingredients: 'pasta, tomato sauce',
         notes: 'Family dinner',
         created_at: '2024-01-01T00:00:00Z',
@@ -108,13 +131,20 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
     it('should open edit modal directly when mobile meal is clicked', async () => {
       render(<MealPlannerPage />)
 
-      // Wait for component to load
+      // Wait for component to load - there are multiple "Scrambled Eggs" (desktop and mobile)
       await waitFor(() => {
-        expect(screen.getByText('Scrambled Eggs')).toBeInTheDocument()
+        const scrambledEggsElements = screen.getAllByText('Scrambled Eggs')
+        expect(scrambledEggsElements.length).toBeGreaterThan(0)
       })
 
-      // Click on the meal (should open edit modal directly, not details modal)
-      const mealButton = screen.getByText('Scrambled Eggs').closest('button')
+      // Click on the meal in mobile view (h4 element in mobile calendar)
+      // Mobile calendar uses h4, desktop uses h3
+      const mobileMeal = screen
+        .getAllByText('Scrambled Eggs')
+        .find((el) => el.tagName === 'H4')
+      expect(mobileMeal).toBeInTheDocument()
+      const mealButton = mobileMeal!.closest('button')
+      expect(mealButton).toBeInTheDocument()
       fireEvent.click(mealButton!)
 
       // Should open EditMealModal directly
@@ -136,16 +166,22 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
     it('should not render MealDetailsModal at all', async () => {
       render(<MealPlannerPage />)
 
-      // Wait for component to load
+      // Wait for component to load - there are multiple "Scrambled Eggs" (desktop and mobile)
       await waitFor(() => {
-        expect(screen.getByText('Scrambled Eggs')).toBeInTheDocument()
+        const scrambledEggsElements = screen.getAllByText('Scrambled Eggs')
+        expect(scrambledEggsElements.length).toBeGreaterThan(0)
       })
 
       // MealDetailsModal should not exist in the DOM
       expect(screen.queryByText('Meal Details')).not.toBeInTheDocument()
 
-      // Click meal and verify no details modal appears
-      const mealButton = screen.getByText('Scrambled Eggs').closest('button')
+      // Click meal in mobile view and verify no details modal appears
+      const mobileMeal = screen
+        .getAllByText('Scrambled Eggs')
+        .find((el) => el.tagName === 'H4')
+      expect(mobileMeal).toBeInTheDocument()
+      const mealButton = mobileMeal!.closest('button')
+      expect(mealButton).toBeInTheDocument()
       fireEvent.click(mealButton!)
 
       await waitFor(() => {
@@ -176,13 +212,19 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
 
       render(<MealPlannerPage />)
 
-      // Wait for component to load
+      // Wait for component to load - there are multiple "Scrambled Eggs" (desktop and mobile)
       await waitFor(() => {
-        expect(screen.getByText('Scrambled Eggs')).toBeInTheDocument()
+        const scrambledEggsElements = screen.getAllByText('Scrambled Eggs')
+        expect(scrambledEggsElements.length).toBeGreaterThan(0)
       })
 
-      // Click on the meal card (should open edit modal directly)
-      const mealCard = screen.getByText('Scrambled Eggs').closest('div')
+      // Click on the meal in desktop view (h3 element in desktop calendar)
+      const desktopMeal = screen
+        .getAllByText('Scrambled Eggs')
+        .find((el) => el.tagName === 'H3')
+      expect(desktopMeal).toBeInTheDocument()
+      const mealCard = desktopMeal!.closest('div')
+      expect(mealCard).toBeInTheDocument()
       fireEvent.click(mealCard!)
 
       // Should open EditMealModal directly
@@ -204,13 +246,19 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
 
       render(<MealPlannerPage />)
 
-      // Wait for component to load
+      // Wait for component to load - there are multiple "Scrambled Eggs" (desktop and mobile)
       await waitFor(() => {
-        expect(screen.getByText('Scrambled Eggs')).toBeInTheDocument()
+        const scrambledEggsElements = screen.getAllByText('Scrambled Eggs')
+        expect(scrambledEggsElements.length).toBeGreaterThan(0)
       })
 
-      // Click on the meal to open edit modal
-      const mealButton = screen.getByText('Scrambled Eggs').closest('button')
+      // Click on the meal in mobile view to open edit modal
+      const mobileMeal = screen
+        .getAllByText('Scrambled Eggs')
+        .find((el) => el.tagName === 'H4')
+      expect(mobileMeal).toBeInTheDocument()
+      const mealButton = mobileMeal!.closest('button')
+      expect(mealButton).toBeInTheDocument()
       fireEvent.click(mealButton!)
 
       // Wait for edit modal to open
@@ -243,13 +291,19 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
 
       render(<MealPlannerPage />)
 
-      // Wait for component to load
+      // Wait for component to load - there are multiple "Scrambled Eggs" (desktop and mobile)
       await waitFor(() => {
-        expect(screen.getByText('Scrambled Eggs')).toBeInTheDocument()
+        const scrambledEggsElements = screen.getAllByText('Scrambled Eggs')
+        expect(scrambledEggsElements.length).toBeGreaterThan(0)
       })
 
-      // Click on the meal to open edit modal
-      const mealButton = screen.getByText('Scrambled Eggs').closest('button')
+      // Click on the meal in mobile view to open edit modal
+      const mobileMeal = screen
+        .getAllByText('Scrambled Eggs')
+        .find((el) => el.tagName === 'H4')
+      expect(mobileMeal).toBeInTheDocument()
+      const mealButton = mobileMeal!.closest('button')
+      expect(mealButton).toBeInTheDocument()
       fireEvent.click(mealButton!)
 
       // Wait for edit modal to open
@@ -270,7 +324,9 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
       expect(mockDeleteMeal).not.toHaveBeenCalled()
 
       // Modal should remain open
-      expect(screen.getByText('Edit Meal')).toBeInTheDocument()
+      await waitFor(() => {
+        expect(screen.getByText('Edit Meal')).toBeInTheDocument()
+      })
     })
 
     it('should handle delete errors gracefully', async () => {
@@ -279,13 +335,19 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
 
       render(<MealPlannerPage />)
 
-      // Wait for component to load
+      // Wait for component to load - there are multiple "Scrambled Eggs" (desktop and mobile)
       await waitFor(() => {
-        expect(screen.getByText('Scrambled Eggs')).toBeInTheDocument()
+        const scrambledEggsElements = screen.getAllByText('Scrambled Eggs')
+        expect(scrambledEggsElements.length).toBeGreaterThan(0)
       })
 
-      // Click on the meal to open edit modal
-      const mealButton = screen.getByText('Scrambled Eggs').closest('button')
+      // Click on the meal in mobile view to open edit modal
+      const mobileMeal = screen
+        .getAllByText('Scrambled Eggs')
+        .find((el) => el.tagName === 'H4')
+      expect(mobileMeal).toBeInTheDocument()
+      const mealButton = mobileMeal!.closest('button')
+      expect(mealButton).toBeInTheDocument()
       fireEvent.click(mealButton!)
 
       // Wait for edit modal to open
@@ -311,13 +373,19 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
     it('should update meal when form is submitted', async () => {
       render(<MealPlannerPage />)
 
-      // Wait for component to load
+      // Wait for component to load - there are multiple "Scrambled Eggs" (desktop and mobile)
       await waitFor(() => {
-        expect(screen.getByText('Scrambled Eggs')).toBeInTheDocument()
+        const scrambledEggsElements = screen.getAllByText('Scrambled Eggs')
+        expect(scrambledEggsElements.length).toBeGreaterThan(0)
       })
 
-      // Click on the meal to open edit modal
-      const mealButton = screen.getByText('Scrambled Eggs').closest('button')
+      // Click on the meal in mobile view to open edit modal
+      const mobileMeal = screen
+        .getAllByText('Scrambled Eggs')
+        .find((el) => el.tagName === 'H4')
+      expect(mobileMeal).toBeInTheDocument()
+      const mealButton = mobileMeal!.closest('button')
+      expect(mealButton).toBeInTheDocument()
       fireEvent.click(mealButton!)
 
       // Wait for edit modal to open

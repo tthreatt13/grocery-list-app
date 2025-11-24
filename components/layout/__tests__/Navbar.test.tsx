@@ -3,21 +3,27 @@ import Navbar from '../Navbar'
 import { usePathname } from 'next/navigation'
 
 // Mock next/navigation
+const mockUsePathname = jest.fn(() => '/')
 jest.mock('next/navigation', () => ({
-  usePathname: jest.fn(() => '/'),
+  usePathname: () => mockUsePathname(),
 }))
 
-// Mock Clerk
-const mockUseAuth = jest.fn(() => ({ isSignedIn: false, isLoaded: true }))
+// Mock Clerk - use closure to allow modifying return value
+let mockUseAuthReturn = { isSignedIn: false, isLoaded: true }
 jest.mock('@clerk/nextjs', () => ({
   SignInButton: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="sign-in-button">{children}</div>
   ),
-  useAuth: mockUseAuth,
+  useAuth: () => mockUseAuthReturn,
   UserButton: () => <div data-testid="user-button">TT</div>,
 }))
 
 describe('Navbar', () => {
+  beforeEach(() => {
+    mockUseAuthReturn = { isSignedIn: false, isLoaded: true }
+    mockUsePathname.mockReturnValue('/')
+  })
+
   it('renders the logo', () => {
     render(<Navbar />)
     expect(screen.getByText('GroceryApp')).toBeInTheDocument()
@@ -33,19 +39,19 @@ describe('Navbar', () => {
   })
 
   it('renders user avatar with initials when signed in', () => {
-    mockUseAuth.mockReturnValue({ isSignedIn: true, isLoaded: true })
+    mockUseAuthReturn = { isSignedIn: true, isLoaded: true }
     render(<Navbar />)
     expect(screen.getByText('TT')).toBeInTheDocument()
   })
 
   it('renders sign in button when not signed in', () => {
-    mockUseAuth.mockReturnValue({ isSignedIn: false, isLoaded: true })
+    mockUseAuthReturn = { isSignedIn: false, isLoaded: true }
     render(<Navbar />)
     expect(screen.getByText('Sign In')).toBeInTheDocument()
   })
 
   it('highlights active link based on pathname', () => {
-    ;(usePathname as jest.Mock).mockReturnValue('/grocery-lists')
+    mockUsePathname.mockReturnValue('/grocery-lists')
 
     render(<Navbar />)
     const listsLink = screen.getByText('Lists').closest('a')
