@@ -95,7 +95,7 @@ export function transformGroceryList(
     createdAt: new Date(apiList.created_at),
     updatedAt: new Date(apiList.updated_at),
     sharedWith: [], // TODO: Get this from household members
-    isArchived: false, // TODO: Add archived field to API
+    isArchived: apiList.is_archived ?? false,
   }
 }
 

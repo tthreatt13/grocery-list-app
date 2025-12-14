@@ -676,4 +676,189 @@ class TestGetSharedLists:
         )
         
         assert response.status_code == 403
+    
+    def test_get_shared_lists_sorted_by_created_at_desc(
+        self, client, db_session, sample_user, sample_household_with_members, auth_headers
+    ):
+        """Test that shared lists are sorted by created_at descending (newest first)."""
+        from models.grocery_list import GroceryList
+        from datetime import datetime, timedelta
+        
+        # Create multiple lists with different creation times
+        list1 = GroceryList(
+            household_id=sample_household_with_members.id,
+            name="Oldest List",
+            created_by=sample_user.id,
+            created_at=datetime.utcnow() - timedelta(days=3),
+            updated_at=datetime.utcnow() - timedelta(days=3)
+        )
+        list2 = GroceryList(
+            household_id=sample_household_with_members.id,
+            name="Newest List",
+            created_by=sample_user.id,
+            created_at=datetime.utcnow(),
+            updated_at=datetime.utcnow()
+        )
+        list3 = GroceryList(
+            household_id=sample_household_with_members.id,
+            name="Middle List",
+            created_by=sample_user.id,
+            created_at=datetime.utcnow() - timedelta(days=1),
+            updated_at=datetime.utcnow() - timedelta(days=1)
+        )
+        
+        db_session.add_all([list1, list2, list3])
+        db_session.commit()
+        
+        response = client.get(
+            f"/api/households/{sample_household_with_members.id}/shared-lists",
+            headers=auth_headers
+        )
+        
+        assert response.status_code == 200
+        data = response.json()
+        lists = data["lists"]
+        
+        # Should be sorted newest first
+        assert len(lists) >= 3
+        assert lists[0]["name"] == "Newest List"
+        assert lists[1]["name"] == "Middle List"
+        assert lists[2]["name"] == "Oldest List"
+
+
+class TestHouseholdPreferences:
+    """Tests for household user preferences endpoints."""
+    
+    def test_get_preferences_not_found_returns_defaults(
+        self, client, sample_household_with_members, auth_headers
+    ):
+        """Test getting preferences when none exist returns default empty preferences."""
+        response = client.get(
+            f"/api/households/{sample_household_with_members.id}/preferences/me",
+            headers=auth_headers
+        )
+        
+        assert response.status_code == 200
+        data = response.json()
+        assert data["household_id"] == sample_household_with_members.id
+        assert data["diet_types"] is None
+        assert data["weekly_weather"] is None
+        assert data["cooking_apparatus"] is None
+        assert data["previous_meals"] is None
+    
+    def test_create_preferences(
+        self, client, db_session, sample_user, sample_household_with_members, auth_headers
+    ):
+        """Test creating new preferences."""
+        preferences_data = {
+            "diet_types": ["paleo", "mediterranean"],
+            "weekly_weather": "cold",
+            "cooking_apparatus": ["oven", "slow_cooker"],
+            "previous_meals": ["Chicken Stir Fry", "Pasta Carbonara"]
+        }
+        
+        response = client.put(
+            f"/api/households/{sample_household_with_members.id}/preferences/me",
+            json=preferences_data,
+            headers=auth_headers
+        )
+        
+        assert response.status_code == 200
+        data = response.json()
+        assert data["household_id"] == sample_household_with_members.id
+        assert data["user_id"] == sample_user.id
+        assert data["diet_types"] == ["paleo", "mediterranean"]
+        assert data["weekly_weather"] == "cold"
+        assert data["cooking_apparatus"] == ["oven", "slow_cooker"]
+        assert data["previous_meals"] == ["Chicken Stir Fry", "Pasta Carbonara"]
+    
+    def test_update_preferences(
+        self, client, db_session, sample_user, sample_household_with_members, auth_headers
+    ):
+        """Test updating existing preferences."""
+        from models.household_user_preferences import HouseholdUserPreferences
+        
+        # Create initial preferences
+        initial_prefs = HouseholdUserPreferences(
+            household_id=sample_household_with_members.id,
+            user_id=sample_user.id,
+            diet_types=["keto"],
+            weekly_weather="hot",
+            cooking_apparatus=["grill"],
+            previous_meals=["Grilled Chicken"]
+        )
+        db_session.add(initial_prefs)
+        db_session.commit()
+        
+        # Update preferences
+        update_data = {
+            "diet_types": ["vegetarian"],
+            "weekly_weather": "mixed",
+            "cooking_apparatus": ["oven", "instant_pot"],
+            "previous_meals": ["Vegetable Stir Fry", "Lentil Soup"]
+        }
+        
+        response = client.put(
+            f"/api/households/{sample_household_with_members.id}/preferences/me",
+            json=update_data,
+            headers=auth_headers
+        )
+        
+        assert response.status_code == 200
+        data = response.json()
+        assert data["diet_types"] == ["vegetarian"]
+        assert data["weekly_weather"] == "mixed"
+        assert data["cooking_apparatus"] == ["oven", "instant_pot"]
+        assert data["previous_meals"] == ["Vegetable Stir Fry", "Lentil Soup"]
+    
+    def test_get_preferences_after_creation(
+        self, client, db_session, sample_user, sample_household_with_members, auth_headers
+    ):
+        """Test getting preferences after they've been created."""
+        # Create preferences
+        create_data = {
+            "diet_types": ["vegan"],
+            "weekly_weather": "sunny",
+            "cooking_apparatus": ["air_fryer"],
+            "previous_meals": ["Tofu Scramble"]
+        }
+        
+        client.put(
+            f"/api/households/{sample_household_with_members.id}/preferences/me",
+            json=create_data,
+            headers=auth_headers
+        )
+        
+        # Get preferences
+        response = client.get(
+            f"/api/households/{sample_household_with_members.id}/preferences/me",
+            headers=auth_headers
+        )
+        
+        assert response.status_code == 200
+        data = response.json()
+        assert data["diet_types"] == ["vegan"]
+        assert data["weekly_weather"] == "sunny"
+        assert data["cooking_apparatus"] == ["air_fryer"]
+        assert data["previous_meals"] == ["Tofu Scramble"]
+    
+    def test_preferences_not_found(self, client, auth_headers):
+        """Test getting preferences for non-existent household."""
+        response = client.get(
+            "/api/households/99999/preferences/me",
+            headers=auth_headers
+        )
+        
+        assert response.status_code == 404
+    
+    def test_preferences_forbidden(
+        self, client, sample_household_2, auth_headers
+    ):
+        """Test getting preferences for household user is not member of."""
+        response = client.get(
+            f"/api/households/{sample_household_2.id}/preferences/me",
+            headers=auth_headers
+        )
+        
+        assert response.status_code == 403
 

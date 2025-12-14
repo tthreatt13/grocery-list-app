@@ -64,7 +64,8 @@ This feature provides an in-app modal for generating grocery lists from low-stoc
 - **Add Mode**: Adds items to the selected existing list
 - Adds selected items as grocery list items
 - Includes helpful notes (e.g., "Restock - Low stock threshold: 1")
-- Preserves quantity and category information
+- **Quantity normalization**: Each grocery list item starts with quantity = 1 (preserving the unit when present, e.g., "1 gallon", "1 loaf")
+- Preserves category information from pantry items
 - Auto-refreshes the list of available grocery lists after creation
 
 ### ✅ User Feedback
@@ -129,11 +130,11 @@ This feature provides an in-app modal for generating grocery lists from low-stoc
    - **Option A: Create New List**
      - Enter a custom list name (default: "Weekly Shopping List")
      - Click "Create Grocery List" button
-     - System creates a new grocery list with selected items
+     - System creates a new grocery list with selected items (each item starts with quantity = 1, preserving units)
    - **Option B: Add to Existing List**
      - Select a list from the dropdown
      - Click "Add to List" button
-     - System adds selected items to the chosen list
+     - System adds selected items to the chosen list (each item starts with quantity = 1, preserving units)
 6. Success message appears:
    - Create mode: "Grocery list [name] created successfully with X items!"
    - Add mode: "Added X items to [list name] successfully!"
@@ -178,7 +179,7 @@ for (const item of data.items) {
     newList.id,
     {
       name: item.name,
-      quantity: `${item.quantity} ${item.unit}`,
+      quantity: item.unit ? `1 ${item.unit}` : '1',
       category: item.category,
       notes: `Restock - Low stock threshold: ${item.lowStockThreshold}`,
       checked: false,
@@ -201,7 +202,7 @@ for (const item of data.items) {
     data.listId,
     {
       name: item.name,
-      quantity: `${item.quantity} ${item.unit}`,
+      quantity: item.unit ? `1 ${item.unit}` : '1',
       category: item.category,
       notes: `Restock - Low stock threshold: ${item.lowStockThreshold}`,
       checked: false,

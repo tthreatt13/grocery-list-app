@@ -44,6 +44,7 @@ class GroceryItemResponse(GroceryItemBase):
 class GroceryListBase(BaseModel):
     """Base schema for grocery list."""
     name: str = Field(..., min_length=1, max_length=200, description="List name")
+    is_archived: bool = Field(default=False, description="Whether the list is archived")
 
 
 class GroceryListCreate(GroceryListBase):
@@ -54,6 +55,7 @@ class GroceryListCreate(GroceryListBase):
 class GroceryListUpdate(BaseModel):
     """Schema for updating a grocery list."""
     name: Optional[str] = Field(None, min_length=1, max_length=200)
+    is_archived: Optional[bool] = Field(None, description="Whether to archive/unarchive the list")
 
 
 class GroceryListResponse(GroceryListBase):

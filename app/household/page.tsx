@@ -8,11 +8,15 @@ import MemberCard from '@/components/household/MemberCard'
 import InviteMemberForm from '@/components/household/InviteMemberForm'
 import EditMemberForm from '@/components/household/EditMemberForm'
 import SharedListsView from '@/components/household/SharedListsView'
+import PreferencesForm from '@/components/household/PreferencesForm'
+import PreferencesDisplay from '@/components/household/PreferencesDisplay'
 import { HouseholdMember, MemberRole } from '@/lib/types'
 import {
   getHouseholds,
   getHousehold,
   getSharedLists,
+  getHouseholdPreferences,
+  updateHouseholdPreferences,
   inviteMember,
   updateMemberRole,
   removeMember,
@@ -20,6 +24,8 @@ import {
   HouseholdResponse,
   MemberResponse,
   SharedListsResponse,
+  HouseholdPreferences,
+  HouseholdPreferencesUpdate,
 } from '@/lib/api/household'
 import { syncUser } from '@/lib/api/client'
 
@@ -62,6 +68,12 @@ export default function HouseholdPage() {
   const [userSynced, setUserSynced] = useState(false)
   const [currentUserMembership, setCurrentUserMembership] =
     useState<MemberResponse | null>(null)
+  const [preferences, setPreferences] = useState<HouseholdPreferences | null>(
+    null
+  )
+  const [isPreferencesLoading, setIsPreferencesLoading] = useState(false)
+  const [isSavingPreferences, setIsSavingPreferences] = useState(false)
+  const [isEditingPreferences, setIsEditingPreferences] = useState(false)
 
   // Sync user to backend on mount
   useEffect(() => {
@@ -159,6 +171,21 @@ export default function HouseholdPage() {
         // Fetch shared lists
         const sharedLists = await getSharedLists(selectedHouseholdId, token)
         setSharedListsData(sharedLists)
+
+        // Fetch user preferences for this household
+        try {
+          setIsPreferencesLoading(true)
+          const userPreferences = await getHouseholdPreferences(
+            selectedHouseholdId,
+            token
+          )
+          setPreferences(userPreferences)
+        } catch (err) {
+          console.error('Error fetching preferences:', err)
+          // Don't set error here, just log it - preferences are optional
+        } finally {
+          setIsPreferencesLoading(false)
+        }
       } catch (err) {
         console.error('Error fetching household details:', err)
         setError(
@@ -283,6 +310,44 @@ export default function HouseholdPage() {
         err instanceof Error ? err.message : 'Failed to update member role'
       )
     }
+  }
+
+  // Handle saving preferences
+  const handleSavePreferences = async (data: HouseholdPreferencesUpdate) => {
+    if (!selectedHouseholdId) return
+
+    try {
+      setIsSavingPreferences(true)
+      setError(null)
+      const token = await getToken()
+      if (!token) {
+        setError('Authentication required')
+        return
+      }
+
+      const updatedPreferences = await updateHouseholdPreferences(
+        selectedHouseholdId,
+        data,
+        token
+      )
+      setPreferences(updatedPreferences)
+      setIsEditingPreferences(false) // Return to read-only view after saving
+
+      // Show success message
+      alert('Preferences saved successfully!')
+    } catch (err) {
+      console.error('Error saving preferences:', err)
+      setError(
+        err instanceof Error ? err.message : 'Failed to save preferences'
+      )
+    } finally {
+      setIsSavingPreferences(false)
+    }
+  }
+
+  // Handle canceling edit mode
+  const handleCancelEditPreferences = () => {
+    setIsEditingPreferences(false)
   }
 
   // Handle removing a member
@@ -567,6 +632,42 @@ export default function HouseholdPage() {
                 onRemove={handleRemoveMember}
               />
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Preferences Section */}
+      {households.length > 0 && (
+        <div className="mb-8">
+          <div className="mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+              My Preferences
+            </h2>
+            <p className="text-gray-600 text-sm mt-1">
+              Set your personal preferences for this household (diet, weather,
+              cooking equipment, and meals made this week)
+            </p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            {isPreferencesLoading ? (
+              <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading preferences...</p>
+              </div>
+            ) : isEditingPreferences ? (
+              <PreferencesForm
+                preferences={preferences}
+                onSubmit={handleSavePreferences}
+                onCancel={handleCancelEditPreferences}
+                isLoading={isSavingPreferences}
+              />
+            ) : (
+              <PreferencesDisplay
+                preferences={preferences}
+                onEdit={() => setIsEditingPreferences(true)}
+              />
+            )}
           </div>
         </div>
       )}

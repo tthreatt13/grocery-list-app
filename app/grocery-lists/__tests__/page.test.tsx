@@ -39,6 +39,7 @@ const mockGroceryLists: groceryApi.GroceryListWithItems[] = [
     created_by: 1,
     created_at: '2024-11-10T10:00:00Z',
     updated_at: '2024-11-10T12:00:00Z',
+    is_archived: false,
     items: [
       {
         id: 1,
@@ -69,6 +70,7 @@ const mockGroceryLists: groceryApi.GroceryListWithItems[] = [
     created_by: 1,
     created_at: '2024-11-09T10:00:00Z',
     updated_at: '2024-11-09T15:00:00Z',
+    is_archived: false,
     items: [],
   },
 ]
@@ -579,6 +581,264 @@ describe('GroceryListsPage', () => {
       await waitFor(() => {
         expect(screen.queryByText('Deleting...')).not.toBeInTheDocument()
       })
+    })
+  })
+
+  describe('Tabs functionality', () => {
+    it('should render Current and Archived tabs with counts', async () => {
+      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
+        mockHouseholds
+      )
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+        mockGroceryLists
+      )
+
+      render(<GroceryListsPage />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Grocery Lists')).toBeInTheDocument()
+      })
+
+      expect(screen.getByText(/Current \(2\)/)).toBeInTheDocument()
+      expect(screen.getByText(/Archived \(0\)/)).toBeInTheDocument()
+    })
+
+    it('should show Current tab as active by default', async () => {
+      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
+        mockHouseholds
+      )
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+        mockGroceryLists
+      )
+
+      render(<GroceryListsPage />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Grocery Lists')).toBeInTheDocument()
+      })
+
+      const currentTab = screen.getByText(/Current \(2\)/)
+      expect(currentTab).toHaveClass('border-emerald-500', 'text-emerald-600')
+    })
+
+    it('should filter lists by archive status', async () => {
+      const listsWithArchived: groceryApi.GroceryListWithItems[] = [
+        ...mockGroceryLists,
+        {
+          id: 3,
+          household_id: 1,
+          name: 'Archived List',
+          created_by: 1,
+          created_at: '2024-11-08T10:00:00Z',
+          updated_at: '2024-11-08T10:00:00Z',
+          is_archived: true,
+          items: [],
+        },
+      ]
+
+      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
+        mockHouseholds
+      )
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+        listsWithArchived
+      )
+
+      render(<GroceryListsPage />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Grocery Lists')).toBeInTheDocument()
+      })
+
+      // Should show current lists by default
+      expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
+      expect(screen.getByText('Party Supplies')).toBeInTheDocument()
+      expect(screen.queryByText('Archived List')).not.toBeInTheDocument()
+
+      // Click Archived tab
+      const archivedTab = screen.getByText(/Archived \(1\)/)
+      fireEvent.click(archivedTab)
+
+      await waitFor(() => {
+        expect(screen.getByText('Archived List')).toBeInTheDocument()
+      })
+
+      // Current lists should not be visible
+      expect(screen.queryByText('Weekly Shopping')).not.toBeInTheDocument()
+      expect(screen.queryByText('Party Supplies')).not.toBeInTheDocument()
+    })
+
+    it('should show correct empty state for Current tab', async () => {
+      const archivedLists: groceryApi.GroceryListWithItems[] = [
+        {
+          id: 1,
+          household_id: 1,
+          name: 'Archived List',
+          created_by: 1,
+          created_at: '2024-11-10T10:00:00Z',
+          updated_at: '2024-11-10T12:00:00Z',
+          is_archived: true,
+          items: [],
+        },
+      ]
+
+      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
+        mockHouseholds
+      )
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+        archivedLists
+      )
+
+      render(<GroceryListsPage />)
+
+      await waitFor(() => {
+        expect(screen.getByText('No current lists yet')).toBeInTheDocument()
+      })
+
+      expect(
+        screen.getByText('Create your first grocery list to get started')
+      ).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /create list/i })
+      ).toBeInTheDocument()
+    })
+
+    it('should show correct empty state for Archived tab', async () => {
+      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
+        mockHouseholds
+      )
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+        mockGroceryLists
+      )
+
+      render(<GroceryListsPage />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Grocery Lists')).toBeInTheDocument()
+      })
+
+      // Click Archived tab
+      const archivedTab = screen.getByText(/Archived \(0\)/)
+      fireEvent.click(archivedTab)
+
+      await waitFor(() => {
+        expect(screen.getByText('No archived lists yet')).toBeInTheDocument()
+      })
+
+      expect(
+        screen.getByText(
+          /Archive lists from the Current tab to organize your completed shopping lists/
+        )
+      ).toBeInTheDocument()
+    })
+  })
+
+  describe('Archive/Unarchive functionality', () => {
+    it('should archive a list when archive button is clicked', async () => {
+      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
+        mockHouseholds
+      )
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+        mockGroceryLists
+      )
+      ;(groceryApi.archiveGroceryList as jest.Mock).mockResolvedValue({
+        ...mockGroceryLists[0],
+        is_archived: true,
+      })
+
+      render(<GroceryListsPage />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
+      })
+
+      // Find and click archive button
+      const archiveButtons = screen.getAllByLabelText(/archive list/i)
+      fireEvent.click(archiveButtons[0])
+
+      await waitFor(() => {
+        expect(groceryApi.archiveGroceryList).toHaveBeenCalledWith(
+          1,
+          'mock-token'
+        )
+      })
+
+      // List should move to archived tab
+      await waitFor(() => {
+        expect(screen.queryByText('Weekly Shopping')).not.toBeInTheDocument()
+      })
+    })
+
+    it('should unarchive a list when unarchive button is clicked', async () => {
+      const archivedList: groceryApi.GroceryListWithItems[] = [
+        {
+          ...mockGroceryLists[0],
+          is_archived: true,
+        },
+      ]
+
+      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
+        mockHouseholds
+      )
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+        archivedList
+      )
+      ;(groceryApi.unarchiveGroceryList as jest.Mock).mockResolvedValue({
+        ...mockGroceryLists[0],
+        is_archived: false,
+      })
+
+      render(<GroceryListsPage />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Grocery Lists')).toBeInTheDocument()
+      })
+
+      // Switch to Archived tab
+      const archivedTab = screen.getByText(/Archived \(1\)/)
+      fireEvent.click(archivedTab)
+
+      await waitFor(() => {
+        expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
+      })
+
+      // Find and click unarchive button
+      const unarchiveButtons = screen.getAllByLabelText(/unarchive list/i)
+      fireEvent.click(unarchiveButtons[0])
+
+      await waitFor(() => {
+        expect(groceryApi.unarchiveGroceryList).toHaveBeenCalledWith(
+          1,
+          'mock-token'
+        )
+      })
+    })
+
+    it('should handle archive error gracefully', async () => {
+      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
+        mockHouseholds
+      )
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+        mockGroceryLists
+      )
+      ;(groceryApi.archiveGroceryList as jest.Mock).mockRejectedValue(
+        new Error('Failed to archive list')
+      )
+
+      render(<GroceryListsPage />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
+      })
+
+      const archiveButtons = screen.getAllByLabelText(/archive list/i)
+      fireEvent.click(archiveButtons[0])
+
+      await waitFor(() => {
+        expect(screen.getByText('Failed to archive list')).toBeInTheDocument()
+      })
+
+      // List should still be visible (not archived)
+      expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
     })
   })
 })
