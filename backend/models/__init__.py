@@ -8,6 +8,7 @@ from models.grocery_list import GroceryList
 from models.grocery_item import GroceryItem
 from models.pantry_item import PantryItem
 from models.meal import Meal
+from models.household_user_preferences import HouseholdUserPreferences
 
 # Models will be imported here as they are created
 # This ensures they are registered with SQLAlchemy Base
@@ -20,6 +21,7 @@ __all__ = [
     "GroceryList",
     "GroceryItem",
     "PantryItem",
-    "Meal"
+    "Meal",
+    "HouseholdUserPreferences"
 ]
 

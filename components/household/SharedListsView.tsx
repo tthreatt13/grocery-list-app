@@ -34,9 +34,23 @@ export default function SharedListsView({ lists }: SharedListsViewProps) {
     )
   }
 
+  // Sort lists by created_at descending (newest first) as a safety net
+  // Backend should already sort, but this ensures correct order even if backend doesn't
+  const sortedLists = [...lists].sort((a, b) => {
+    const aCreatedAt = a.created_at || a.createdAt || ''
+    const bCreatedAt = b.created_at || b.createdAt || ''
+    // Compare as strings (ISO format) or fallback to updated_at
+    if (!aCreatedAt && !bCreatedAt) {
+      const aUpdatedAt = a.updated_at || a.updatedAt || ''
+      const bUpdatedAt = b.updated_at || b.updatedAt || ''
+      return bUpdatedAt.localeCompare(aUpdatedAt)
+    }
+    return bCreatedAt.localeCompare(aCreatedAt)
+  })
+
   return (
     <div className="space-y-4">
-      {lists.map((list) => {
+      {sortedLists.map((list) => {
         // Handle both API response format (item_count) and full GroceryList format (items array)
         const itemCount = list.item_count ?? list.items?.length ?? 0
 

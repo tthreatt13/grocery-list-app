@@ -325,6 +325,33 @@ describe('PantryPage - Generate Grocery List', () => {
         'mock-token'
       )
     })
+
+    // Verify that addGroceryItem was called with quantity = 1 for each item
+    await waitFor(() => {
+      expect(mockAddGroceryItem).toHaveBeenCalledTimes(2) // Milk and Bread are low stock
+
+      // Verify Milk (pantry quantity: 0.5 gallon) -> grocery quantity: 1 gallon
+      expect(mockAddGroceryItem).toHaveBeenCalledWith(
+        1,
+        expect.objectContaining({
+          name: 'Milk',
+          quantity: '1 gallon',
+          category: ItemCategory.DAIRY,
+        }),
+        'mock-token'
+      )
+
+      // Verify Bread (pantry quantity: 0 loaf) -> grocery quantity: 1 loaf
+      expect(mockAddGroceryItem).toHaveBeenCalledWith(
+        1,
+        expect.objectContaining({
+          name: 'Bread',
+          quantity: '1 loaf',
+          category: ItemCategory.BAKERY,
+        }),
+        'mock-token'
+      )
+    })
   })
 
   it('should show success message after creating grocery list', async () => {

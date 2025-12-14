@@ -12,6 +12,7 @@ import {
   sortItemsByMealTime,
   sortItemsByEntryOrder,
   getMealOrder,
+  normalizeIngredientsInput,
 } from '../utils'
 import { ItemCategory, MealType } from '../types'
 
@@ -588,6 +589,85 @@ describe('utils', () => {
       // Should sort by precise timestamp
       expect(sorted[0].name).toBe('Earlier Item')
       expect(sorted[1].name).toBe('Later Item')
+    })
+  })
+
+  describe('normalizeIngredientsInput', () => {
+    it('normalizes bulleted list with newlines', () => {
+      const input = '1. Eggs\n- Milk\n* Bread\n• Butter'
+      expect(normalizeIngredientsInput(input)).toBe('Eggs, Milk, Bread, Butter')
+    })
+
+    it('normalizes numbered list with newlines', () => {
+      const input = '1. Pasta\n2. Tomato sauce\n3) Ground beef'
+      expect(normalizeIngredientsInput(input)).toBe(
+        'Pasta, Tomato sauce, Ground beef'
+      )
+    })
+
+    it('handles comma-separated input without newlines', () => {
+      const input = 'pasta, tomato sauce, ground beef'
+      expect(normalizeIngredientsInput(input)).toBe(
+        'pasta, tomato sauce, ground beef'
+      )
+    })
+
+    it('handles newline-separated list without bullets', () => {
+      const input = 'Chicken\nCarrots\nOnions\nCelery'
+      expect(normalizeIngredientsInput(input)).toBe(
+        'Chicken, Carrots, Onions, Celery'
+      )
+    })
+
+    it('handles mixed commas and newlines', () => {
+      const input = 'Eggs,\nMilk'
+      expect(normalizeIngredientsInput(input)).toBe('Eggs, Milk')
+    })
+
+    it('handles empty string', () => {
+      expect(normalizeIngredientsInput('')).toBe('')
+    })
+
+    it('handles whitespace-only string', () => {
+      expect(normalizeIngredientsInput('   \n\n  ')).toBe('')
+    })
+
+    it('handles string with only bullets and numbers', () => {
+      expect(normalizeIngredientsInput('- \n* \n1. ')).toBe('')
+    })
+
+    it('trims whitespace from each ingredient', () => {
+      const input = '  Eggs  \n  Milk  \n  Bread  '
+      expect(normalizeIngredientsInput(input)).toBe('Eggs, Milk, Bread')
+    })
+
+    it('handles numbered list with different formats', () => {
+      const input = '1. First\n2) Second\n3 - Third'
+      expect(normalizeIngredientsInput(input)).toBe('First, Second, Third')
+    })
+
+    it('handles bullet characters', () => {
+      const input = '- Item 1\n* Item 2\n• Item 3'
+      expect(normalizeIngredientsInput(input)).toBe('Item 1, Item 2, Item 3')
+    })
+
+    it('handles single ingredient', () => {
+      expect(normalizeIngredientsInput('Eggs')).toBe('Eggs')
+    })
+
+    it('handles single ingredient with bullet', () => {
+      expect(normalizeIngredientsInput('- Eggs')).toBe('Eggs')
+    })
+
+    it('handles single ingredient with number', () => {
+      expect(normalizeIngredientsInput('1. Eggs')).toBe('Eggs')
+    })
+
+    it('preserves ingredient names with numbers in them', () => {
+      const input = '2 cups flour\n1/2 cup sugar'
+      expect(normalizeIngredientsInput(input)).toBe(
+        '2 cups flour, 1/2 cup sugar'
+      )
     })
   })
 })

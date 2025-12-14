@@ -140,7 +140,7 @@ export default function PantryPage() {
           (a, b) =>
             new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime()
         )
-      case SortMethod.LOW_STOCK:
+      case SortMethod.LOW_STOCK: {
         // Separate items into low stock and not low stock
         const lowStockItems = filteredItems.filter(
           (item) =>
@@ -156,6 +156,7 @@ export default function PantryPage() {
           ...sortPantryItemsByCategory(lowStockItems),
           ...sortPantryItemsByCategory(notLowStockItems),
         ]
+      }
       case SortMethod.CATEGORY:
       default:
         return sortPantryItemsByCategory(filteredItems)
@@ -494,9 +495,7 @@ export default function PantryPage() {
           newList.id,
           {
             name: item.name,
-            quantity: item.unit
-              ? `${item.quantity} ${item.unit}`
-              : `${item.quantity}`,
+            quantity: item.unit ? `1 ${item.unit}` : '1',
             category: item.category,
             notes: item.lowStockThreshold
               ? `Restock - Low stock threshold: ${item.lowStockThreshold}`
@@ -553,9 +552,7 @@ export default function PantryPage() {
           data.listId,
           {
             name: item.name,
-            quantity: item.unit
-              ? `${item.quantity} ${item.unit}`
-              : `${item.quantity}`,
+            quantity: item.unit ? `1 ${item.unit}` : '1',
             category: item.category,
             notes: item.lowStockThreshold
               ? `Restock - Low stock threshold: ${item.lowStockThreshold}`

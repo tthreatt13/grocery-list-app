@@ -44,6 +44,7 @@ class TestGroceryListModel:
         assert grocery_list.created_by == user.id
         assert isinstance(grocery_list.created_at, datetime)
         assert isinstance(grocery_list.updated_at, datetime)
+        assert grocery_list.is_archived is False
     
     def test_household_id_required(self, db_session):
         """Test that household_id is required."""
@@ -276,4 +277,73 @@ class TestGroceryListModel:
         repr_str = repr(grocery_list)
         assert "GroceryList" in repr_str
         assert "Shopping List" in repr_str
+    
+    def test_is_archived_defaults_to_false(self, db_session):
+        """Test that is_archived defaults to False."""
+        user = User(
+            clerk_user_id="user_123",
+            email="test@example.com",
+            name="Test User"
+        )
+        db_session.add(user)
+        db_session.commit()
+        
+        household = Household(
+            name="Test Household",
+            created_by=user.id
+        )
+        db_session.add(household)
+        db_session.commit()
+        
+        grocery_list = GroceryList(
+            household_id=household.id,
+            name="Test List",
+            created_by=user.id
+        )
+        db_session.add(grocery_list)
+        db_session.commit()
+        db_session.refresh(grocery_list)
+        
+        assert grocery_list.is_archived is False
+    
+    def test_is_archived_can_be_toggled(self, db_session):
+        """Test that is_archived can be set to True and back to False."""
+        user = User(
+            clerk_user_id="user_123",
+            email="test@example.com",
+            name="Test User"
+        )
+        db_session.add(user)
+        db_session.commit()
+        
+        household = Household(
+            name="Test Household",
+            created_by=user.id
+        )
+        db_session.add(household)
+        db_session.commit()
+        
+        grocery_list = GroceryList(
+            household_id=household.id,
+            name="Test List",
+            created_by=user.id
+        )
+        db_session.add(grocery_list)
+        db_session.commit()
+        db_session.refresh(grocery_list)
+        
+        # Initially False
+        assert grocery_list.is_archived is False
+        
+        # Set to True
+        grocery_list.is_archived = True
+        db_session.commit()
+        db_session.refresh(grocery_list)
+        assert grocery_list.is_archived is True
+        
+        # Set back to False
+        grocery_list.is_archived = False
+        db_session.commit()
+        db_session.refresh(grocery_list)
+        assert grocery_list.is_archived is False
 

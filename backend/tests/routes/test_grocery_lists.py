@@ -17,6 +17,8 @@ class TestGetGroceryLists:
         assert len(data) >= 1
         assert data[0]["name"] == "Weekly Groceries"
         assert data[0]["household_id"] == sample_grocery_list.household_id
+        assert "is_archived" in data[0]
+        assert data[0]["is_archived"] is False
 
     def test_get_empty_grocery_lists(self, client, db_session):
         """Test getting grocery lists when none exist."""
@@ -41,6 +43,8 @@ class TestGetGroceryListById:
         assert data["name"] == "Weekly Groceries"
         assert "items" in data
         assert len(data["items"]) == 3
+        assert "is_archived" in data
+        assert data["is_archived"] is False
         
         # Check first item details
         items = sorted(data["items"], key=lambda x: x["name"])
@@ -74,6 +78,7 @@ class TestCreateGroceryList:
         assert data["household_id"] == sample_household.id
         assert "id" in data
         assert "created_at" in data
+        assert data["is_archived"] is False
 
     def test_create_grocery_list_invalid_household(self, client):
         """Test creating a grocery list with non-existent household."""
@@ -124,6 +129,7 @@ class TestUpdateGroceryList:
         data = response.json()
         assert data["name"] == "Updated Weekly List"
         assert data["id"] == sample_grocery_list.id
+        assert "is_archived" in data
 
     def test_update_grocery_list_not_found(self, client):
         """Test updating a non-existent grocery list."""
@@ -144,6 +150,81 @@ class TestUpdateGroceryList:
         response = client.put(f"/api/grocery-lists/{sample_grocery_list.id}", json=payload)
         
         assert response.status_code == 422
+
+
+class TestArchiveGroceryList:
+    """Tests for archiving/unarchiving grocery lists via PUT endpoint."""
+
+    def test_archive_grocery_list_success(self, client, sample_grocery_list):
+        """Test archiving a grocery list."""
+        payload = {
+            "is_archived": True
+        }
+        
+        response = client.put(f"/api/grocery-lists/{sample_grocery_list.id}", json=payload)
+        
+        assert response.status_code == 200
+        data = response.json()
+        assert data["is_archived"] is True
+        assert data["id"] == sample_grocery_list.id
+        
+        # Verify it's archived in the database
+        get_response = client.get(f"/api/grocery-lists/{sample_grocery_list.id}")
+        assert get_response.status_code == 200
+        get_data = get_response.json()
+        assert get_data["is_archived"] is True
+
+    def test_unarchive_grocery_list_success(self, client, db_session, sample_user):
+        """Test unarchiving a grocery list."""
+        from models.household import Household
+        from models.grocery_list import GroceryList
+        
+        household = Household(
+            name="Test Household",
+            created_by=sample_user.id
+        )
+        db_session.add(household)
+        db_session.commit()
+        
+        grocery_list = GroceryList(
+            household_id=household.id,
+            name="Archived List",
+            created_by=sample_user.id,
+            is_archived=True
+        )
+        db_session.add(grocery_list)
+        db_session.commit()
+        
+        payload = {
+            "is_archived": False
+        }
+        
+        response = client.put(f"/api/grocery-lists/{grocery_list.id}", json=payload)
+        
+        assert response.status_code == 200
+        data = response.json()
+        assert data["is_archived"] is False
+        assert data["id"] == grocery_list.id
+        
+        # Verify it's unarchived in the database
+        get_response = client.get(f"/api/grocery-lists/{grocery_list.id}")
+        assert get_response.status_code == 200
+        get_data = get_response.json()
+        assert get_data["is_archived"] is False
+
+    def test_archive_and_update_name_together(self, client, sample_grocery_list):
+        """Test archiving a list and updating its name in the same request."""
+        payload = {
+            "name": "Updated Archived List",
+            "is_archived": True
+        }
+        
+        response = client.put(f"/api/grocery-lists/{sample_grocery_list.id}", json=payload)
+        
+        assert response.status_code == 200
+        data = response.json()
+        assert data["name"] == "Updated Archived List"
+        assert data["is_archived"] is True
 
 
 class TestDeleteGroceryList:

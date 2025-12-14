@@ -224,3 +224,64 @@ export function sortItemsByEntryOrder(items: GroceryItem[]): GroceryItem[] {
     return a.addedAt.getTime() - b.addedAt.getTime()
   })
 }
+
+/**
+ * Normalizes ingredient input from various formats (bullets, numbers, newlines, commas)
+ * into a consistent comma-separated string format.
+ *
+ * Handles:
+ * - Newline-separated lists (one ingredient per line)
+ * - Comma-separated lists
+ * - Bulleted lists (-, *, •)
+ * - Numbered lists (1., 2), etc.)
+ * - Mixed formats
+ *
+ * @param raw - Raw ingredient string from user input (may contain bullets, numbers, newlines, etc.)
+ * @returns Normalized comma-separated string (e.g., "Eggs, Milk, Bread") or empty string if no valid ingredients
+ */
+export function normalizeIngredientsInput(raw: string): string {
+  if (!raw || !raw.trim()) {
+    return ''
+  }
+
+  // Split by newlines first (for list format)
+  let items: string[]
+  if (raw.includes('\n')) {
+    items = raw.split('\n')
+  } else {
+    // Split by comma for comma-separated format
+    items = raw.split(',')
+  }
+
+  // Clean up items: remove empty strings, bullet points, numbers
+  const cleanedItems: string[] = []
+  for (let item of items) {
+    // Trim whitespace
+    item = item.trim()
+    if (!item) {
+      continue
+    }
+
+    // Remove trailing commas (from mixed comma+newline format)
+    item = item.replace(/,\s*$/, '')
+
+    // Remove common prefixes like "- ", "* ", "• ", etc.
+    item = item.replace(/^[-*•]\s*/, '')
+
+    // Remove leading numbers followed by punctuation (list markers like "1. ", "2) ", "3 - ")
+    // But preserve numbers that are part of ingredient names (e.g., "2 cups", "1/2 cup")
+    // Only match if number is followed by list punctuation (. or ) or space+dash
+    item = item.replace(/^\d+[.)]\s*/, '') // "1. " or "2) "
+    item = item.replace(/^\d+\s+-\s*/, '') // "3 - "
+
+    // Trim again after removing prefixes
+    item = item.trim()
+
+    if (item) {
+      cleanedItems.push(item)
+    }
+  }
+
+  // Join with comma and space
+  return cleanedItems.join(', ')
+}

@@ -89,4 +89,58 @@ describe('SharedListsView', () => {
     const lastEditedElements = screen.getAllByText(/Last edited:/)
     expect(lastEditedElements.length).toBeGreaterThan(0)
   })
+
+  it('sorts lists by created_at descending (newest first)', () => {
+    // Create lists with different created_at dates (unsorted order)
+    const unsortedLists = [
+      {
+        id: '3',
+        name: 'Oldest List',
+        created_at: '2024-11-01T00:00:00Z',
+        created_by: 1,
+        updated_at: '2024-11-01T00:00:00Z',
+        item_count: 0,
+      },
+      {
+        id: '1',
+        name: 'Newest List',
+        created_at: '2024-11-10T00:00:00Z',
+        created_by: 1,
+        updated_at: '2024-11-10T00:00:00Z',
+        item_count: 0,
+      },
+      {
+        id: '2',
+        name: 'Middle List',
+        created_at: '2024-11-05T00:00:00Z',
+        created_by: 1,
+        updated_at: '2024-11-05T00:00:00Z',
+        item_count: 0,
+      },
+    ]
+
+    render(<SharedListsView lists={unsortedLists} />)
+
+    // Get all list names in the order they appear
+    const listNames = screen
+      .getAllByText(
+        /Weekly Shopping|Party Supplies|Oldest List|Newest List|Middle List/
+      )
+      .map((el) => el.textContent)
+
+    // Find the positions of our test lists
+    const newestIndex = listNames.findIndex((name) =>
+      name?.includes('Newest List')
+    )
+    const middleIndex = listNames.findIndex((name) =>
+      name?.includes('Middle List')
+    )
+    const oldestIndex = listNames.findIndex((name) =>
+      name?.includes('Oldest List')
+    )
+
+    // Newest should come before middle, and middle before oldest
+    expect(newestIndex).toBeLessThan(middleIndex)
+    expect(middleIndex).toBeLessThan(oldestIndex)
+  })
 })

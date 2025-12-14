@@ -286,4 +286,198 @@ describe('AddMealModal', () => {
       expect(ingredientsInput.value).toBe('')
     })
   })
+
+  describe('Ingredient Normalization', () => {
+    beforeEach(() => {
+      mockOnAdd.mockResolvedValue(undefined)
+    })
+
+    it('normalizes bulleted list ingredients on submit', async () => {
+      render(
+        <AddMealModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onAdd={mockOnAdd}
+          mealType={MealType.DINNER}
+          date={new Date('2024-11-10')}
+        />
+      )
+
+      const nameInput = screen.getByLabelText(/Meal Name/i)
+      const ingredientsInput = screen.getByLabelText(/Ingredients/i)
+      const addButton = screen.getByRole('button', { name: /add meal/i })
+
+      fireEvent.change(nameInput, { target: { value: 'Pancakes' } })
+      fireEvent.change(ingredientsInput, {
+        target: {
+          value: '1. Eggs\n- Milk\n* Bread\n• Butter',
+        },
+      })
+      fireEvent.click(addButton)
+
+      await waitFor(() => {
+        expect(mockOnAdd).toHaveBeenCalledWith({
+          name: 'Pancakes',
+          ingredients: 'Eggs, Milk, Bread, Butter',
+          notes: undefined,
+        })
+      })
+    })
+
+    it('normalizes numbered list ingredients on submit', async () => {
+      render(
+        <AddMealModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onAdd={mockOnAdd}
+          mealType={MealType.DINNER}
+          date={new Date('2024-11-10')}
+        />
+      )
+
+      const nameInput = screen.getByLabelText(/Meal Name/i)
+      const ingredientsInput = screen.getByLabelText(/Ingredients/i)
+      const addButton = screen.getByRole('button', { name: /add meal/i })
+
+      fireEvent.change(nameInput, { target: { value: 'Pasta' } })
+      fireEvent.change(ingredientsInput, {
+        target: {
+          value: '1. Pasta\n2. Tomato sauce\n3) Ground beef',
+        },
+      })
+      fireEvent.click(addButton)
+
+      await waitFor(() => {
+        expect(mockOnAdd).toHaveBeenCalledWith({
+          name: 'Pasta',
+          ingredients: 'Pasta, Tomato sauce, Ground beef',
+          notes: undefined,
+        })
+      })
+    })
+
+    it('normalizes mixed commas and newlines', async () => {
+      render(
+        <AddMealModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onAdd={mockOnAdd}
+          mealType={MealType.DINNER}
+          date={new Date('2024-11-10')}
+        />
+      )
+
+      const nameInput = screen.getByLabelText(/Meal Name/i)
+      const ingredientsInput = screen.getByLabelText(/Ingredients/i)
+      const addButton = screen.getByRole('button', { name: /add meal/i })
+
+      fireEvent.change(nameInput, { target: { value: 'Salad' } })
+      fireEvent.change(ingredientsInput, {
+        target: {
+          value: 'Eggs,\nMilk',
+        },
+      })
+      fireEvent.click(addButton)
+
+      await waitFor(() => {
+        expect(mockOnAdd).toHaveBeenCalledWith({
+          name: 'Salad',
+          ingredients: 'Eggs, Milk',
+          notes: undefined,
+        })
+      })
+    })
+
+    it('handles empty or whitespace-only ingredients', async () => {
+      render(
+        <AddMealModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onAdd={mockOnAdd}
+          mealType={MealType.DINNER}
+          date={new Date('2024-11-10')}
+        />
+      )
+
+      const nameInput = screen.getByLabelText(/Meal Name/i)
+      const ingredientsInput = screen.getByLabelText(/Ingredients/i)
+      const addButton = screen.getByRole('button', { name: /add meal/i })
+
+      fireEvent.change(nameInput, { target: { value: 'Simple Meal' } })
+      fireEvent.change(ingredientsInput, {
+        target: { value: '   \n\n  ' },
+      })
+      fireEvent.click(addButton)
+
+      await waitFor(() => {
+        expect(mockOnAdd).toHaveBeenCalledWith({
+          name: 'Simple Meal',
+          ingredients: undefined,
+          notes: undefined,
+        })
+      })
+    })
+
+    it('preserves comma-separated format when no newlines present', async () => {
+      render(
+        <AddMealModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onAdd={mockOnAdd}
+          mealType={MealType.DINNER}
+          date={new Date('2024-11-10')}
+        />
+      )
+
+      const nameInput = screen.getByLabelText(/Meal Name/i)
+      const ingredientsInput = screen.getByLabelText(/Ingredients/i)
+      const addButton = screen.getByRole('button', { name: /add meal/i })
+
+      fireEvent.change(nameInput, { target: { value: 'Spaghetti' } })
+      fireEvent.change(ingredientsInput, {
+        target: { value: 'pasta, tomato sauce, ground beef' },
+      })
+      fireEvent.click(addButton)
+
+      await waitFor(() => {
+        expect(mockOnAdd).toHaveBeenCalledWith({
+          name: 'Spaghetti',
+          ingredients: 'pasta, tomato sauce, ground beef',
+          notes: undefined,
+        })
+      })
+    })
+
+    it('handles newline-separated list without bullets', async () => {
+      render(
+        <AddMealModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onAdd={mockOnAdd}
+          mealType={MealType.DINNER}
+          date={new Date('2024-11-10')}
+        />
+      )
+
+      const nameInput = screen.getByLabelText(/Meal Name/i)
+      const ingredientsInput = screen.getByLabelText(/Ingredients/i)
+      const addButton = screen.getByRole('button', { name: /add meal/i })
+
+      fireEvent.change(nameInput, { target: { value: 'Soup' } })
+      fireEvent.change(ingredientsInput, {
+        target: {
+          value: 'Chicken\nCarrots\nOnions\nCelery',
+        },
+      })
+      fireEvent.click(addButton)
+
+      await waitFor(() => {
+        expect(mockOnAdd).toHaveBeenCalledWith({
+          name: 'Soup',
+          ingredients: 'Chicken, Carrots, Onions, Celery',
+          notes: undefined,
+        })
+      })
+    })
+  })
 })

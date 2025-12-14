@@ -24,6 +24,7 @@ export interface GroceryListResponse {
   created_by: number
   created_at: string
   updated_at: string
+  is_archived: boolean
 }
 
 export interface GroceryListWithItems extends GroceryListResponse {
@@ -38,6 +39,7 @@ export interface CreateGroceryListRequest {
 
 export interface UpdateGroceryListRequest {
   name?: string
+  is_archived?: boolean
 }
 
 export interface CreateGroceryItemRequest {
@@ -188,4 +190,24 @@ export async function toggleGroceryItemChecked(
   token: string
 ): Promise<GroceryItemResponse> {
   return updateGroceryItem(listId, itemId, { checked }, token)
+}
+
+/**
+ * Archive a grocery list
+ */
+export async function archiveGroceryList(
+  listId: number,
+  token: string
+): Promise<GroceryListResponse> {
+  return updateGroceryList(listId, { is_archived: true }, token)
+}
+
+/**
+ * Unarchive a grocery list
+ */
+export async function unarchiveGroceryList(
+  listId: number,
+  token: string
+): Promise<GroceryListResponse> {
+  return updateGroceryList(listId, { is_archived: false }, token)
 }

@@ -21,15 +21,20 @@ import { GroceryListWithItems } from '@/lib/api/grocery'
 interface GroceryListCardProps {
   list: GroceryList | FlexibleGroceryList | GroceryListWithItems
   onDelete?: (listId: string | number) => void
+  onArchive?: (listId: string | number) => void
+  onUnarchive?: (listId: string | number) => void
 }
 
 export default function GroceryListCard({
   list,
   onDelete,
+  onArchive,
+  onUnarchive,
 }: GroceryListCardProps) {
   // Defensive checks for items and sharedWith arrays
   const items = list.items || []
   const sharedWith = (list as FlexibleGroceryList).sharedWith || []
+  const isArchived = (list as GroceryList).isArchived ?? false
 
   const totalItems = items.length
   const completedItems = items.filter((item) => item.checked).length
@@ -42,6 +47,18 @@ export default function GroceryListCard({
     onDelete?.(list.id)
   }
 
+  const handleArchiveClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    onArchive?.(list.id)
+  }
+
+  const handleUnarchiveClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    onUnarchive?.(list.id)
+  }
+
   return (
     <Link href={`/grocery-lists/${list.id}`}>
       <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
@@ -52,7 +69,52 @@ export default function GroceryListCard({
               {list.name}
             </h3>
             <div className="flex items-center space-x-2">
+              {isArchived && <Badge variant="default">Archived</Badge>}
               {sharedWith.length > 0 && <Badge variant="success">Shared</Badge>}
+              {!isArchived && onArchive && (
+                <button
+                  onClick={handleArchiveClick}
+                  className="p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-md hover:bg-gray-50"
+                  aria-label={`Archive list ${list.name}`}
+                  title="Archive list"
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+                    />
+                  </svg>
+                </button>
+              )}
+              {isArchived && onUnarchive && (
+                <button
+                  onClick={handleUnarchiveClick}
+                  className="p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-md hover:bg-gray-50"
+                  aria-label={`Unarchive list ${list.name}`}
+                  title="Unarchive list"
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                    />
+                  </svg>
+                </button>
+              )}
               {onDelete && (
                 <button
                   onClick={handleDeleteClick}

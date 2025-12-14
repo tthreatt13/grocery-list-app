@@ -1,7 +1,7 @@
 """GroceryList model for managing shopping lists."""
 
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -23,6 +23,7 @@ class GroceryList(Base):
         onupdate=datetime.utcnow,
         nullable=False
     )
+    is_archived = Column(Boolean, default=False, nullable=False)
     
     # Relationships
     household = relationship("Household", backref="grocery_lists")
