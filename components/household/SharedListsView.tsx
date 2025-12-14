@@ -14,6 +14,8 @@ interface ListItem {
   sharedWith?: string[]
   createdBy?: string
   created_by?: number
+  createdAt?: string | Date
+  created_at?: string
   updatedAt?: Date | string
   updated_at?: string
 }
@@ -37,12 +39,29 @@ export default function SharedListsView({ lists }: SharedListsViewProps) {
   // Sort lists by created_at descending (newest first) as a safety net
   // Backend should already sort, but this ensures correct order even if backend doesn't
   const sortedLists = [...lists].sort((a, b) => {
-    const aCreatedAt = a.created_at || a.createdAt || ''
-    const bCreatedAt = b.created_at || b.createdAt || ''
+    // Helper to convert Date or string to string for comparison
+    const toComparableString = (
+      value: string | Date | undefined
+    ): string => {
+      if (!value) return ''
+      if (value instanceof Date) return value.toISOString()
+      return String(value)
+    }
+
+    const aCreatedAt = toComparableString(
+      a.created_at || a.createdAt
+    )
+    const bCreatedAt = toComparableString(
+      b.created_at || b.createdAt
+    )
     // Compare as strings (ISO format) or fallback to updated_at
     if (!aCreatedAt && !bCreatedAt) {
-      const aUpdatedAt = a.updated_at || a.updatedAt || ''
-      const bUpdatedAt = b.updated_at || b.updatedAt || ''
+      const aUpdatedAt = toComparableString(
+        a.updated_at || a.updatedAt
+      )
+      const bUpdatedAt = toComparableString(
+        b.updated_at || b.updatedAt
+      )
       return bUpdatedAt.localeCompare(aUpdatedAt)
     }
     return bCreatedAt.localeCompare(aCreatedAt)
