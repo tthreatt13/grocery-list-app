@@ -55,7 +55,8 @@ def get_grocery_lists(
                 name=lst.name,
                 created_by=lst.created_by,
                 created_at=lst.created_at,
-                updated_at=lst.updated_at
+                updated_at=lst.updated_at,
+                is_archived=lst.is_archived
             )
             for lst in lists
         ]
@@ -121,7 +122,8 @@ def create_grocery_list(
     grocery_list = GroceryList(
         name=list_data.name,
         household_id=list_data.household_id,
-        created_by=created_by
+        created_by=created_by,
+        is_archived=False
     )
     
     db.add(grocery_list)
@@ -161,6 +163,8 @@ def update_grocery_list(
     # Update fields
     if list_data.name is not None:
         grocery_list.name = list_data.name
+    if list_data.is_archived is not None:
+        grocery_list.is_archived = list_data.is_archived
     
     db.commit()
     db.refresh(grocery_list)
