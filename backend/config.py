@@ -22,12 +22,12 @@ class Settings(BaseSettings):
     
     # API Configuration
     api_prefix: str = "/api"
+    # Default CORS origins (safe, explicit list).
+    # Can be overridden via ALLOWED_ORIGINS env var (comma-separated).
     allowed_origins: list[str] = [
         "http://localhost:3000",
         "http://localhost:3001",
-        "https://grocery-list-app-seven.vercel.app",  # Production frontend
-        "https://grocery-list-app-seven.vercel.app/",  # With trailing slash
-        "*",  # Temporary: allow all origins for debugging
+        "https://grocery-list-app-seven.vercel.app",
     ]
     
     # Server Configuration (for Railway deployment)
@@ -38,6 +38,24 @@ class Settings(BaseSettings):
     def is_production(self) -> bool:
         """Check if running in production environment."""
         return self.environment.lower() == "production"
+
+    def get_allowed_origins(self) -> list[str]:
+        """
+        Return the list of allowed CORS origins.
+
+        If an ALLOWED_ORIGINS env var is set, it should be a comma-separated
+        list of origins. Empty strings are filtered out. Otherwise the default
+        allowed_origins list is used.
+        """
+        import os
+
+        raw = os.getenv("ALLOWED_ORIGINS")
+        if not raw:
+            return self.allowed_origins
+
+        # Split on commas, strip whitespace, and drop empty entries
+        parsed = [origin.strip() for origin in raw.split(",")]
+        return [origin for origin in parsed if origin]
     
     model_config = SettingsConfigDict(
         env_file=".env",
