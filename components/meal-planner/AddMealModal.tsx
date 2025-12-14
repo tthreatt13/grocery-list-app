@@ -5,7 +5,7 @@ import { MealType, Meal } from '@/lib/types'
 import { Modal } from '@/components/ui/Modal'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
-import { formatDate } from '@/lib/utils'
+import { formatDate, normalizeIngredientsInput } from '@/lib/utils'
 
 interface AddMealModalProps {
   isOpen: boolean
@@ -70,10 +70,13 @@ export default function AddMealModal({
     setError(null)
 
     try {
+      // Normalize ingredients input (handles bullets, numbers, newlines, etc.)
+      const normalizedIngredients = normalizeIngredientsInput(ingredients)
+
       await onAdd({
         name: name.trim(),
         notes: notes.trim() || undefined,
-        ingredients: ingredients.trim() || undefined,
+        ingredients: normalizedIngredients || undefined,
       })
 
       // Clear form and close modal only on success
