@@ -29,8 +29,12 @@ read
 echo "Step 6: Deploy the application"
 railway up
 
-echo "Step 7: Run database migrations"
-railway run alembic upgrade head
+echo "Step 7: Verify database migrations"
+echo "Migrations run automatically on deployment via start.sh"
+echo "To verify manually, run: railway run alembic current"
+echo "To check migration status: railway run alembic history"
+echo "Press Enter when done..."
+read
 
 echo "Step 8: Test deployment"
 echo "Your Railway URL will be shown in the dashboard"

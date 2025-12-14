@@ -207,6 +207,10 @@ const API_BASE_URL =
 
 ### Migration Process
 
+**Automatic Migrations**: Migrations run automatically on every deployment via `backend/start.sh`, which executes `alembic upgrade head` before starting the FastAPI server. No manual migration steps are required.
+
+**Manual Migration (if needed)**: If you need to manually run migrations or verify migration status:
+
 ```bash
 # Install Railway CLI
 npm install -g @railway/cli
@@ -217,17 +221,27 @@ railway login
 # Link to project
 railway link [project-id]
 
-# Run migrations
+# Check current migration version
+railway run alembic current
+
+# Run migrations manually (usually not needed)
 railway run alembic upgrade head
+
+# View migration history
+railway run alembic history
 ```
+
+**Verification**: See [PRODUCTION_DATABASE_VERIFICATION.md](./PRODUCTION_DATABASE_VERIFICATION.md) for detailed instructions on verifying that all required tables and columns exist in production.
 
 ### Database Schema
 
 All existing Alembic migrations are included:
 
 - `90f091a98d1c_initial_schema.py` - Initial database schema
-- `b1f2c3d4e5f6_add_meal_type_to_grocery_items.py` - Meal type tagging
-- `4801cb88f9d6_fix_meal_type_capitalization.py` - Meal type fixes
+- `b1f2c3d4e5f6_add_meal_type_to_grocery_items.py` - Adds meal_type column to grocery_items
+- `4801cb88f9d6_fix_meal_type_capitalization.py` - Fixes meal type capitalization
+- `c7d8e9f0a1b2_change_low_stock_threshold_to_float.py` - Changes low_stock_threshold to float
+- `d1e2f3a4b5c6_add_household_user_preferences.py` - Creates household_user_preferences table
 
 ## Monitoring and Observability
 
@@ -351,7 +365,7 @@ railway shell
 ### Immediate Actions Required
 
 1. **Update Clerk Secret Key**: Replace placeholder with actual key
-2. **Run Database Migrations**: Execute Alembic migrations on production
+2. **Verify Database Migrations**: Migrations run automatically, but verify they completed successfully (see [PRODUCTION_DATABASE_VERIFICATION.md](./PRODUCTION_DATABASE_VERIFICATION.md))
 3. **Deploy Frontend**: Deploy to Vercel with Railway backend URL
 4. **End-to-End Testing**: Test all application features
 
