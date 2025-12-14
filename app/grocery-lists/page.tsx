@@ -11,6 +11,8 @@ import {
   getGroceryListsWithItems,
   createGroceryList,
   deleteGroceryList,
+  archiveGroceryList,
+  unarchiveGroceryList,
 } from '@/lib/api/grocery'
 import {
   transformGroceryLists,
@@ -34,6 +36,7 @@ export default function GroceryListsPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [listToDelete, setListToDelete] = useState<GroceryList | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [activeTab, setActiveTab] = useState<'current' | 'archived'>('current')
 
   // Fetch households and lists on mount
   useEffect(() => {
@@ -150,6 +153,57 @@ export default function GroceryListsPage() {
     setListToDelete(null)
   }
 
+  const handleArchive = async (listId: string | number) => {
+    try {
+      setError(null)
+      const token = await getToken()
+      if (!token) {
+        setError('Authentication required')
+        return
+      }
+
+      await archiveGroceryList(Number(listId), token)
+
+      // Optimistically update local state
+      setLists(
+        lists.map((list) =>
+          list.id === listId ? { ...list, isArchived: true } : list
+        )
+      )
+    } catch (err) {
+      console.error('Error archiving list:', err)
+      setError(err instanceof Error ? err.message : 'Failed to archive list')
+    }
+  }
+
+  const handleUnarchive = async (listId: string | number) => {
+    try {
+      setError(null)
+      const token = await getToken()
+      if (!token) {
+        setError('Authentication required')
+        return
+      }
+
+      await unarchiveGroceryList(Number(listId), token)
+
+      // Optimistically update local state
+      setLists(
+        lists.map((list) =>
+          list.id === listId ? { ...list, isArchived: false } : list
+        )
+      )
+    } catch (err) {
+      console.error('Error unarchiving list:', err)
+      setError(err instanceof Error ? err.message : 'Failed to unarchive list')
+    }
+  }
+
+  // Filter lists based on archive status
+  const currentLists = lists.filter((list) => !list.isArchived)
+  const archivedLists = lists.filter((list) => list.isArchived)
+  const displayedLists = activeTab === 'current' ? currentLists : archivedLists
+
   // Show loading state
   if (isLoading) {
     return (
@@ -234,6 +288,34 @@ export default function GroceryListsPage() {
           </Button>
         </div>
 
+        {/* Tabs */}
+        {households.length > 0 && lists.length > 0 && (
+          <div className="mb-6 border-b border-gray-200">
+            <nav className="flex space-x-8" aria-label="Tabs">
+              <button
+                onClick={() => setActiveTab('current')}
+                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === 'current'
+                    ? 'border-emerald-500 text-emerald-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                Current ({currentLists.length})
+              </button>
+              <button
+                onClick={() => setActiveTab('archived')}
+                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === 'archived'
+                    ? 'border-emerald-500 text-emerald-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                Archived ({archivedLists.length})
+              </button>
+            </nav>
+          </div>
+        )}
+
         {/* No households message */}
         {households.length === 0 ? (
           <div className="text-center py-12">
@@ -260,7 +342,7 @@ export default function GroceryListsPage() {
               Go to Household
             </Button>
           </div>
-        ) : lists.length === 0 ? (
+        ) : displayedLists.length === 0 ? (
           <div className="text-center py-12">
             <svg
               className="w-16 h-16 mx-auto text-gray-400 mb-4"
@@ -276,20 +358,28 @@ export default function GroceryListsPage() {
               />
             </svg>
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No lists yet
+              {activeTab === 'current'
+                ? 'No current lists yet'
+                : 'No archived lists yet'}
             </h3>
             <p className="text-gray-600 mb-4">
-              Create your first grocery list to get started
+              {activeTab === 'current'
+                ? 'Create your first grocery list to get started'
+                : 'Archive lists from the Current tab to organize your completed shopping lists'}
             </p>
-            <Button onClick={() => setIsModalOpen(true)}>Create List</Button>
+            {activeTab === 'current' && (
+              <Button onClick={() => setIsModalOpen(true)}>Create List</Button>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {lists.map((list) => (
+            {displayedLists.map((list) => (
               <GroceryListCard
                 key={list.id}
                 list={list}
                 onDelete={handleDeleteClick}
+                onArchive={handleArchive}
+                onUnarchive={handleUnarchive}
               />
             ))}
           </div>

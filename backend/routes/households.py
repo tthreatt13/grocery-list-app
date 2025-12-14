@@ -1,5 +1,6 @@
 """Household management routes."""
 
+from datetime import datetime
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -18,6 +19,7 @@ from models.household import Household
 from models.household_member import HouseholdMember
 from models.grocery_list import GroceryList
 from models.grocery_item import GroceryItem
+from models.household_user_preferences import HouseholdUserPreferences
 from schemas.household import (
     HouseholdCreate,
     HouseholdUpdate,
@@ -28,6 +30,8 @@ from schemas.household import (
     MemberRoleUpdate,
     SharedListsResponse,
     SharedListItem,
+    HouseholdPreferencesUpdate,
+    HouseholdPreferencesResponse,
 )
 
 router = APIRouter(prefix="/households", tags=["households"])
@@ -443,10 +447,10 @@ def get_shared_lists(
     # Check user is a member
     require_household_member(db, household_id, current_user)
     
-    # Get all grocery lists for this household
+    # Get all grocery lists for this household, sorted by created_at descending (newest first)
     grocery_lists = db.query(GroceryList).filter(
         GroceryList.household_id == household_id
-    ).all()
+    ).order_by(GroceryList.created_at.desc()).all()
     
     # Build list items with item counts
     list_items = []
@@ -474,4 +478,114 @@ def get_shared_lists(
     )
     
     return response
+
+
+@router.get("/{household_id}/preferences/me", response_model=HouseholdPreferencesResponse)
+def get_my_preferences(
+    household_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+) -> HouseholdPreferencesResponse:
+    """
+    Get current user's preferences for a household.
+    
+    Args:
+        household_id: Household ID
+        current_user: Current authenticated user
+        db: Database session
+    
+    Returns:
+        User's preferences for the household, or default empty preferences if not found
+    
+    Raises:
+        HTTPException: If household not found or user not a member
+    """
+    # Validate household exists
+    household = validate_household_exists(db, household_id)
+    
+    # Check user is a member
+    require_household_member(db, household_id, current_user)
+    
+    # Get or create preferences
+    preferences = db.query(HouseholdUserPreferences).filter(
+        HouseholdUserPreferences.household_id == household_id,
+        HouseholdUserPreferences.user_id == current_user.id
+    ).first()
+    
+    if not preferences:
+        # Return default empty preferences
+        return HouseholdPreferencesResponse(
+            household_id=household_id,
+            user_id=current_user.id,
+            diet_types=None,
+            weekly_weather=None,
+            cooking_apparatus=None,
+            previous_meals=None,
+            created_at=datetime.utcnow(),
+            updated_at=datetime.utcnow()
+        )
+    
+    return preferences
+
+
+@router.put("/{household_id}/preferences/me", response_model=HouseholdPreferencesResponse)
+def update_my_preferences(
+    household_id: int,
+    preferences_data: HouseholdPreferencesUpdate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+) -> HouseholdPreferencesResponse:
+    """
+    Create or update current user's preferences for a household.
+    
+    Args:
+        household_id: Household ID
+        preferences_data: Preferences data to update
+        current_user: Current authenticated user
+        db: Database session
+    
+    Returns:
+        Updated preferences
+    
+    Raises:
+        HTTPException: If household not found or user not a member
+    """
+    # Validate household exists
+    household = validate_household_exists(db, household_id)
+    
+    # Check user is a member
+    require_household_member(db, household_id, current_user)
+    
+    # Get existing preferences or create new
+    preferences = db.query(HouseholdUserPreferences).filter(
+        HouseholdUserPreferences.household_id == household_id,
+        HouseholdUserPreferences.user_id == current_user.id
+    ).first()
+    
+    if not preferences:
+        # Create new preferences
+        preferences = HouseholdUserPreferences(
+            household_id=household_id,
+            user_id=current_user.id,
+            diet_types=preferences_data.diet_types,
+            weekly_weather=preferences_data.weekly_weather,
+            cooking_apparatus=preferences_data.cooking_apparatus,
+            previous_meals=preferences_data.previous_meals
+        )
+        db.add(preferences)
+    else:
+        # Update existing preferences
+        if preferences_data.diet_types is not None:
+            preferences.diet_types = preferences_data.diet_types
+        if preferences_data.weekly_weather is not None:
+            preferences.weekly_weather = preferences_data.weekly_weather
+        if preferences_data.cooking_apparatus is not None:
+            preferences.cooking_apparatus = preferences_data.cooking_apparatus
+        if preferences_data.previous_meals is not None:
+            preferences.previous_meals = preferences_data.previous_meals
+    
+    db.commit()
+    db.refresh(preferences)
+    
+    return preferences
 

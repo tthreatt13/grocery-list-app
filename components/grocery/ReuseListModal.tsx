@@ -165,6 +165,7 @@ export default function ReuseListModal({
           {previousLists.map((list) => (
             <option key={list.id} value={list.id}>
               {list.name} ({list.items.length} items)
+              {list.isArchived ? ' [Archived]' : ''}
             </option>
           ))}
         </Select>

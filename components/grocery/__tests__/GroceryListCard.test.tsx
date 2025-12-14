@@ -133,4 +133,115 @@ describe('GroceryListCard', () => {
       expect(trashIcon).toBeInTheDocument()
     })
   })
+
+  describe('Archive/Unarchive functionality', () => {
+    it('renders archive button when list is not archived and onArchive is provided', () => {
+      const mockOnArchive = jest.fn()
+      render(<GroceryListCard list={mockList} onArchive={mockOnArchive} />)
+
+      const archiveButton = screen.getByRole('button', {
+        name: /archive list/i,
+      })
+      expect(archiveButton).toBeInTheDocument()
+    })
+
+    it('does not render archive button when list is archived', () => {
+      const archivedList = { ...mockList, isArchived: true }
+      const mockOnArchive = jest.fn()
+      render(<GroceryListCard list={archivedList} onArchive={mockOnArchive} />)
+
+      const archiveButton = screen.queryByRole('button', {
+        name: /archive list/i,
+      })
+      expect(archiveButton).not.toBeInTheDocument()
+    })
+
+    it('renders unarchive button when list is archived and onUnarchive is provided', () => {
+      const archivedList = { ...mockList, isArchived: true }
+      const mockOnUnarchive = jest.fn()
+      render(
+        <GroceryListCard list={archivedList} onUnarchive={mockOnUnarchive} />
+      )
+
+      const unarchiveButton = screen.getByRole('button', {
+        name: /unarchive list/i,
+      })
+      expect(unarchiveButton).toBeInTheDocument()
+    })
+
+    it('shows Archived badge when list is archived', () => {
+      const archivedList = { ...mockList, isArchived: true }
+      render(<GroceryListCard list={archivedList} />)
+
+      expect(screen.getByText('Archived')).toBeInTheDocument()
+    })
+
+    it('calls onArchive with list id when archive button is clicked', () => {
+      const mockOnArchive = jest.fn()
+      render(<GroceryListCard list={mockList} onArchive={mockOnArchive} />)
+
+      const archiveButton = screen.getByRole('button', {
+        name: /archive list/i,
+      })
+      fireEvent.click(archiveButton)
+
+      expect(mockOnArchive).toHaveBeenCalledWith('1')
+    })
+
+    it('calls onUnarchive with list id when unarchive button is clicked', () => {
+      const archivedList = { ...mockList, isArchived: true }
+      const mockOnUnarchive = jest.fn()
+      render(
+        <GroceryListCard list={archivedList} onUnarchive={mockOnUnarchive} />
+      )
+
+      const unarchiveButton = screen.getByRole('button', {
+        name: /unarchive list/i,
+      })
+      fireEvent.click(unarchiveButton)
+
+      expect(mockOnUnarchive).toHaveBeenCalledWith('1')
+    })
+
+    it('prevents navigation when archive button is clicked', () => {
+      const mockOnArchive = jest.fn()
+      render(<GroceryListCard list={mockList} onArchive={mockOnArchive} />)
+
+      const archiveButton = screen.getByRole('button', {
+        name: /archive list/i,
+      })
+      fireEvent.click(archiveButton)
+
+      expect(mockOnArchive).toHaveBeenCalled()
+    })
+
+    it('has proper accessibility attributes for archive button', () => {
+      const mockOnArchive = jest.fn()
+      render(<GroceryListCard list={mockList} onArchive={mockOnArchive} />)
+
+      const archiveButton = screen.getByRole('button', {
+        name: /archive list/i,
+      })
+      expect(archiveButton).toHaveAttribute(
+        'aria-label',
+        'Archive list Weekly Shopping'
+      )
+    })
+
+    it('has proper accessibility attributes for unarchive button', () => {
+      const archivedList = { ...mockList, isArchived: true }
+      const mockOnUnarchive = jest.fn()
+      render(
+        <GroceryListCard list={archivedList} onUnarchive={mockOnUnarchive} />
+      )
+
+      const unarchiveButton = screen.getByRole('button', {
+        name: /unarchive list/i,
+      })
+      expect(unarchiveButton).toHaveAttribute(
+        'aria-label',
+        'Unarchive list Weekly Shopping'
+      )
+    })
+  })
 })

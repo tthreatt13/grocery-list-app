@@ -34,6 +34,9 @@ jest.mock('@/lib/api/client')
 const mockGetWeeklyMeals = mealsApi.getWeeklyMeals as jest.MockedFunction<
   typeof mealsApi.getWeeklyMeals
 >
+const mockCreateMeal = mealsApi.createMeal as jest.MockedFunction<
+  typeof mealsApi.createMeal
+>
 const mockGenerateGroceryList =
   mealsApi.generateGroceryList as jest.MockedFunction<
     typeof mealsApi.generateGroceryList
@@ -467,5 +470,194 @@ describe('MealPlannerPage - Meal Type Functionality', () => {
 
     // Cleanup
     mockConsoleError.mockRestore()
+  })
+})
+
+describe('MealPlannerPage - Ingredient Normalization', () => {
+  // Calculate current week start (Monday) for test meals
+  const getCurrentWeekStart = () => {
+    const today = new Date()
+    const dayOfWeek = today.getDay()
+    const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1
+    const startDate = new Date(today)
+    startDate.setDate(today.getDate() - daysSinceMonday)
+    startDate.setHours(0, 0, 0, 0)
+    return startDate
+  }
+
+  const formatDateForAPI = (date: Date) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
+  const currentWeekStart = getCurrentWeekStart()
+  const weekStartDateStr = formatDateForAPI(currentWeekStart)
+
+  const mockHouseholds = [
+    {
+      id: 1,
+      name: 'Test Household',
+      created_by: 1,
+      created_at: '2024-01-01T00:00:00Z',
+    },
+  ]
+
+  const mockMealsResponse = {
+    week_start_date: weekStartDateStr,
+    household_id: 1,
+    meals: [],
+  }
+
+  const mockUserSyncResponse = {
+    id: 1,
+    clerk_user_id: 'user_test123',
+    email: 'test@example.com',
+    name: 'Test User',
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-01T00:00:00Z',
+  }
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+    mockGetHouseholds.mockResolvedValue(mockHouseholds)
+    mockGetWeeklyMeals.mockResolvedValue(mockMealsResponse)
+    mockGetGroceryLists.mockResolvedValue([])
+    mockSyncUser.mockResolvedValue(mockUserSyncResponse)
+    mockCreateMeal.mockResolvedValue({
+      id: 1,
+      household_id: 1,
+      name: 'Test Meal',
+      meal_type: 'dinner',
+      day_of_week: 0,
+      week_start_date: weekStartDateStr,
+      ingredients: 'Eggs, Milk, Bread, Butter',
+      notes: '',
+      created_at: '2024-01-01T00:00:00Z',
+    })
+  })
+
+  it('should normalize pasted bulleted ingredients when creating meal', async () => {
+    render(<MealPlannerPage />)
+
+    // Wait for component to load
+    await waitFor(() => {
+      expect(mockGetHouseholds).toHaveBeenCalled()
+    })
+
+    // Wait for household to be selected and calendar to render
+    await waitFor(() => {
+      expect(mockGetWeeklyMeals).toHaveBeenCalled()
+    })
+
+    // Wait for calendar to be visible (empty slot buttons should be present)
+    await waitFor(() => {
+      const emptySlotButtons = screen.getAllByLabelText(/add meal/i)
+      expect(emptySlotButtons.length).toBeGreaterThan(0)
+    })
+
+    // Find an empty slot button to add a meal
+    const emptySlotButtons = screen.getAllByLabelText(/add meal/i)
+    fireEvent.click(emptySlotButtons[0])
+
+    // Wait for modal to open - look for the heading (h2 element)
+    await waitFor(
+      () => {
+        const headings = screen.getAllByText('Add Meal')
+        const heading = headings.find((el) => el.tagName === 'H2')
+        expect(heading).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
+    // Fill in meal name
+    const nameInput = screen.getByLabelText(/meal name/i)
+    fireEvent.change(nameInput, { target: { value: 'Pancakes' } })
+
+    // Paste bulleted ingredients into ingredients textarea
+    const ingredientsInput = screen.getByLabelText(/ingredients/i)
+    const pastedIngredients = '1. Eggs\n- Milk\n* Bread\n• Butter'
+    fireEvent.change(ingredientsInput, { target: { value: pastedIngredients } })
+
+    // Submit the form - there may be multiple "Add Meal" buttons, get the one in the modal
+    const addButtons = screen.getAllByRole('button', { name: /add meal/i })
+    // The last one should be the submit button in the modal
+    const addButton = addButtons[addButtons.length - 1]
+    fireEvent.click(addButton)
+
+    // Wait for createMeal to be called
+    await waitFor(() => {
+      expect(mockCreateMeal).toHaveBeenCalled()
+    })
+
+    // Verify that createMeal was called with normalized ingredients
+    expect(mockCreateMeal).toHaveBeenCalledWith(
+      expect.objectContaining({
+        ingredients: 'Eggs, Milk, Bread, Butter',
+      }),
+      'mock-token'
+    )
+  })
+
+  it('should normalize newline-separated ingredients when creating meal', async () => {
+    render(<MealPlannerPage />)
+
+    // Wait for component to load
+    await waitFor(() => {
+      expect(mockGetHouseholds).toHaveBeenCalled()
+    })
+
+    await waitFor(() => {
+      expect(mockGetWeeklyMeals).toHaveBeenCalled()
+    })
+
+    // Wait for calendar to be visible (empty slot buttons should be present)
+    await waitFor(() => {
+      const emptySlotButtons = screen.getAllByLabelText(/add meal/i)
+      expect(emptySlotButtons.length).toBeGreaterThan(0)
+    })
+
+    // Find an empty slot button to add a meal
+    const emptySlotButtons = screen.getAllByLabelText(/add meal/i)
+    fireEvent.click(emptySlotButtons[0])
+
+    // Wait for modal to open - look for the heading (h2 element)
+    await waitFor(
+      () => {
+        const headings = screen.getAllByText('Add Meal')
+        const heading = headings.find((el) => el.tagName === 'H2')
+        expect(heading).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
+    // Fill in meal name
+    const nameInput = screen.getByLabelText(/meal name/i)
+    fireEvent.change(nameInput, { target: { value: 'Soup' } })
+
+    // Paste newline-separated ingredients
+    const ingredientsInput = screen.getByLabelText(/ingredients/i)
+    const pastedIngredients = 'Chicken\nCarrots\nOnions\nCelery'
+    fireEvent.change(ingredientsInput, { target: { value: pastedIngredients } })
+
+    // Submit the form - there may be multiple "Add Meal" buttons, get the one in the modal
+    const addButtons = screen.getAllByRole('button', { name: /add meal/i })
+    // The last one should be the submit button in the modal
+    const addButton = addButtons[addButtons.length - 1]
+    fireEvent.click(addButton)
+
+    // Wait for createMeal to be called
+    await waitFor(() => {
+      expect(mockCreateMeal).toHaveBeenCalled()
+    })
+
+    // Verify that createMeal was called with normalized ingredients
+    expect(mockCreateMeal).toHaveBeenCalledWith(
+      expect.objectContaining({
+        ingredients: 'Chicken, Carrots, Onions, Celery',
+      }),
+      'mock-token'
+    )
   })
 })

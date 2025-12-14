@@ -89,3 +89,26 @@ class SharedListsResponse(BaseModel):
     household_name: str
     lists: List[SharedListItem] = []
 
+
+class HouseholdPreferencesBase(BaseModel):
+    """Base schema for household user preferences."""
+    diet_types: Optional[List[str]] = None
+    weekly_weather: Optional[str] = None
+    cooking_apparatus: Optional[List[str]] = None
+    previous_meals: Optional[List[str]] = None
+
+
+class HouseholdPreferencesUpdate(HouseholdPreferencesBase):
+    """Schema for updating household user preferences."""
+    pass
+
+
+class HouseholdPreferencesResponse(HouseholdPreferencesBase):
+    """Schema for household user preferences response."""
+    household_id: int
+    user_id: int
+    created_at: datetime
+    updated_at: datetime
+    
+    model_config = ConfigDict(from_attributes=True)
+

@@ -41,6 +41,24 @@ export interface SharedListsResponse {
   lists: SharedListItem[]
 }
 
+export interface HouseholdPreferences {
+  household_id: number
+  user_id: number
+  diet_types?: string[] | null
+  weekly_weather?: string | null
+  cooking_apparatus?: string[] | null
+  previous_meals?: string[] | null
+  created_at: string
+  updated_at: string
+}
+
+export interface HouseholdPreferencesUpdate {
+  diet_types?: string[] | null
+  weekly_weather?: string | null
+  cooking_apparatus?: string[] | null
+  previous_meals?: string[] | null
+}
+
 // Request Types
 export interface CreateHouseholdRequest {
   name: string
@@ -165,6 +183,34 @@ export async function getSharedLists(
 ): Promise<SharedListsResponse> {
   return get<SharedListsResponse>(
     `/api/households/${householdId}/shared-lists`,
+    token
+  )
+}
+
+/**
+ * Get current user's preferences for a household
+ */
+export async function getHouseholdPreferences(
+  householdId: number,
+  token: string
+): Promise<HouseholdPreferences> {
+  return get<HouseholdPreferences>(
+    `/api/households/${householdId}/preferences/me`,
+    token
+  )
+}
+
+/**
+ * Create or update current user's preferences for a household
+ */
+export async function updateHouseholdPreferences(
+  householdId: number,
+  data: HouseholdPreferencesUpdate,
+  token: string
+): Promise<HouseholdPreferences> {
+  return put<HouseholdPreferences>(
+    `/api/households/${householdId}/preferences/me`,
+    data,
     token
   )
 }
