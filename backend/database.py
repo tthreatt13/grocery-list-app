@@ -12,7 +12,9 @@ if settings.database_url.startswith("sqlite"):
     engine = create_engine(
         settings.database_url,
         echo=settings.debug,  # Log SQL queries in debug mode
-        connect_args={"check_same_thread": False}  # Allow SQLite to be used with FastAPI
+        connect_args={
+            "check_same_thread": False
+        },  # Allow SQLite to be used with FastAPI
     )
 else:
     # PostgreSQL configuration
@@ -25,11 +27,7 @@ else:
     )
 
 # Create SessionLocal class
-SessionLocal = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=engine
-)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Create Base class for models
 Base = declarative_base()
@@ -38,10 +36,10 @@ Base = declarative_base()
 def get_db() -> Generator[Session, None, None]:
     """
     Dependency function to get database session.
-    
+
     Yields:
         Session: SQLAlchemy database session
-        
+
     Usage:
         @app.get("/items")
         def read_items(db: Session = Depends(get_db)):
@@ -60,4 +58,3 @@ def init_db():
     This should be called after all models are imported.
     """
     Base.metadata.create_all(bind=engine)
-

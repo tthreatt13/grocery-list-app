@@ -7,6 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 class PantryItemBase(BaseModel):
     """Base schema for pantry item with common fields."""
+
     name: str = Field(..., min_length=1, max_length=255)
     quantity: Optional[str] = None
     category: Optional[str] = None
@@ -16,11 +17,13 @@ class PantryItemBase(BaseModel):
 
 class PantryItemCreate(PantryItemBase):
     """Schema for creating a new pantry item."""
+
     household_id: int = Field(..., gt=0)
 
 
 class PantryItemUpdate(BaseModel):
     """Schema for updating a pantry item (all fields optional)."""
+
     name: Optional[str] = Field(None, min_length=1, max_length=255)
     quantity: Optional[str] = None
     category: Optional[str] = None
@@ -30,10 +33,10 @@ class PantryItemUpdate(BaseModel):
 
 class PantryItemResponse(PantryItemBase):
     """Schema for pantry item response."""
+
     id: int
     household_id: int
     created_at: datetime
     updated_at: datetime
-    
-    model_config = ConfigDict(from_attributes=True)
 
+    model_config = ConfigDict(from_attributes=True)

@@ -58,11 +58,11 @@ export default function GenerateGroceryListFromMealsModal({
       setSelectedIngredients(
         new Set(ingredients.map((item) => item.ingredient))
       )
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setListName('Weekly Meal Plan')
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setMode('create')
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setSelectedListId(null)
     }
     prevOpenRef.current = open

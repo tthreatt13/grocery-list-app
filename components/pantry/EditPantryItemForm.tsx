@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
@@ -36,6 +36,29 @@ export default function EditPantryItemForm({
     item.lowStockThreshold ? item.lowStockThreshold.toString() : ''
   )
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
+
+  // Sync form state when item prop changes
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setName(item.name)
+     
+    setQuantity(item.quantity.toString())
+     
+    setUnit(item.unit || '')
+     
+    setCategory(item.category)
+     
+    setExpirationDate(
+      item.expirationDate
+        ? new Date(item.expirationDate).toISOString().split('T')[0]
+        : ''
+    )
+     
+    setLowStockThreshold(
+      item.lowStockThreshold ? item.lowStockThreshold.toString() : ''
+    )
+    setErrors({})
+  }, [item.id, item.name, item.quantity, item.unit, item.category, item.expirationDate, item.lowStockThreshold])
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {}

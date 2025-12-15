@@ -36,28 +36,28 @@ def parse_ingredients(ingredients_str: str) -> List[str]:
     """Parse ingredients string into list of individual ingredients."""
     if not ingredients_str:
         return []
-    
+
     # Try splitting by newlines first (for list format)
-    if '\n' in ingredients_str:
-        items = [item.strip() for item in ingredients_str.split('\n')]
+    if "\n" in ingredients_str:
+        items = [item.strip() for item in ingredients_str.split("\n")]
     else:
         # Split by comma for comma-separated format
-        items = [item.strip() for item in ingredients_str.split(',')]
-    
+        items = [item.strip() for item in ingredients_str.split(",")]
+
     # Clean up items: remove empty strings, bullet points, numbers
     cleaned_items = []
     for item in items:
         if not item:
             continue
         # Remove common prefixes like "- ", "* ", "1. ", etc.
-        item = item.lstrip('- *•')
+        item = item.lstrip("- *•")
         item = item.strip()
         # Remove leading numbers and dots
         while item and item[0].isdigit():
-            item = item[1:].lstrip('. ')
+            item = item[1:].lstrip(". ")
         if item:
             cleaned_items.append(item)
-    
+
     return cleaned_items
 
 
@@ -70,25 +70,25 @@ async def get_weekly_meals(
 ):
     """
     Get all meals for a specific week.
-    
+
     The week is calculated as Monday through Sunday based on the provided date.
     """
     # Check permission: user must be a household member
     require_household_member(db, household_id, current_user)
-    
+
     # Calculate the Monday of the week
     week_start = get_week_start_monday(date)
-    
+
     # Query meals for this week and household
-    meals = db.query(Meal).filter(
-        Meal.household_id == household_id,
-        Meal.week_start_date == week_start
-    ).order_by(Meal.day_of_week, Meal.meal_type).all()
-    
+    meals = (
+        db.query(Meal)
+        .filter(Meal.household_id == household_id, Meal.week_start_date == week_start)
+        .order_by(Meal.day_of_week, Meal.meal_type)
+        .all()
+    )
+
     return WeeklyPlanResponse(
-        week_start_date=week_start,
-        household_id=household_id,
-        meals=meals
+        week_start_date=week_start, household_id=household_id, meals=meals
     )
 
 
@@ -100,16 +100,15 @@ async def get_meal(
 ):
     """Get a specific meal by ID."""
     meal = db.query(Meal).filter(Meal.id == meal_id).first()
-    
+
     if not meal:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Meal not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Meal not found"
         )
-    
+
     # Check permission: user must be a household member
     require_household_member(db, meal.household_id, current_user)
-    
+
     return meal
 
 
@@ -122,10 +121,10 @@ async def create_meal(
     """Create a new meal in the meal planner."""
     # Check permission: user must be a household member
     require_household_member(db, meal_data.household_id, current_user)
-    
+
     # Ensure week_start_date is a Monday
     week_start = get_week_start_monday(meal_data.week_start_date)
-    
+
     meal = Meal(
         household_id=meal_data.household_id,
         meal_type=meal_data.meal_type,
@@ -135,11 +134,11 @@ async def create_meal(
         ingredients=meal_data.ingredients,
         notes=meal_data.notes,
     )
-    
+
     db.add(meal)
     db.commit()
     db.refresh(meal)
-    
+
     return meal
 
 
@@ -152,29 +151,30 @@ async def update_meal(
 ):
     """Update an existing meal."""
     meal = db.query(Meal).filter(Meal.id == meal_id).first()
-    
+
     if not meal:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Meal not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Meal not found"
         )
-    
+
     # Check permission: user must be a household member
     require_household_member(db, meal.household_id, current_user)
-    
+
     # Update only provided fields
     update_data = meal_data.model_dump(exclude_unset=True)
-    
+
     # If week_start_date is being updated, ensure it's a Monday
     if "week_start_date" in update_data and update_data["week_start_date"]:
-        update_data["week_start_date"] = get_week_start_monday(update_data["week_start_date"])
-    
+        update_data["week_start_date"] = get_week_start_monday(
+            update_data["week_start_date"]
+        )
+
     for field, value in update_data.items():
         setattr(meal, field, value)
-    
+
     db.commit()
     db.refresh(meal)
-    
+
     return meal
 
 
@@ -186,23 +186,26 @@ async def delete_meal(
 ):
     """Delete a meal from the meal planner."""
     meal = db.query(Meal).filter(Meal.id == meal_id).first()
-    
+
     if not meal:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Meal not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Meal not found"
         )
-    
+
     # Check permission: user must be a household member
     require_household_member(db, meal.household_id, current_user)
-    
+
     db.delete(meal)
     db.commit()
-    
+
     return {"message": "Meal deleted successfully"}
 
 
-@router.post("/meals/generate-grocery-list", response_model=GenerateGroceryListResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/meals/generate-grocery-list",
+    response_model=GenerateGroceryListResponse,
+    status_code=status.HTTP_201_CREATED,
+)
 async def generate_grocery_list(
     request: GenerateGroceryListRequest,
     db: Session = Depends(get_db),
@@ -210,7 +213,7 @@ async def generate_grocery_list(
 ):
     """
     Generate a grocery list from meals in a specific week.
-    
+
     This endpoint:
     1. Finds all meals for the specified week
     2. Extracts ingredients from each meal
@@ -218,16 +221,20 @@ async def generate_grocery_list(
     """
     # Check permission: user must be a household member
     require_household_member(db, request.household_id, current_user)
-    
+
     # Calculate the Monday of the week
     week_start = get_week_start_monday(request.week_start_date)
-    
+
     # Get all meals for this week
-    meals = db.query(Meal).filter(
-        Meal.household_id == request.household_id,
-        Meal.week_start_date == week_start
-    ).all()
-    
+    meals = (
+        db.query(Meal)
+        .filter(
+            Meal.household_id == request.household_id,
+            Meal.week_start_date == week_start,
+        )
+        .all()
+    )
+
     # Create the grocery list
     grocery_list = GroceryList(
         household_id=request.household_id,
@@ -237,7 +244,7 @@ async def generate_grocery_list(
     db.add(grocery_list)
     db.commit()
     db.refresh(grocery_list)
-    
+
     # Parse ingredients from all meals and create grocery items with meal type
     items_count = 0
     for meal in meals:
@@ -255,12 +262,11 @@ async def generate_grocery_list(
                     )
                     db.add(grocery_item)
                     items_count += 1
-    
+
     db.commit()
-    
+
     return GenerateGroceryListResponse(
         grocery_list_id=grocery_list.id,
         items_count=items_count,
-        message=f"Successfully generated grocery list with {items_count} items from {len(meals)} meals"
+        message=f"Successfully generated grocery list with {items_count} items from {len(meals)} meals",
     )
-

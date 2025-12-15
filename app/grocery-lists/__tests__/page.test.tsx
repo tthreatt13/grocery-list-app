@@ -78,6 +78,9 @@ const mockGroceryLists: groceryApi.GroceryListWithItems[] = [
 describe('GroceryListsPage', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    // Reset mock implementations to ensure they don't leak from previous tests
+    ;(householdApi.getHouseholds as jest.Mock).mockReset()
+    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockReset()
     ;(useAuth as jest.Mock).mockReturnValue({ getToken: mockGetToken })
     mockGetToken.mockResolvedValue('mock-token')
   })
@@ -105,6 +108,14 @@ describe('GroceryListsPage', () => {
     )
 
     render(<GroceryListsPage />)
+
+    // Wait for loading to complete
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Loading your grocery lists...')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     await waitFor(() => {
       expect(screen.getByText('Grocery Lists')).toBeInTheDocument()
@@ -137,7 +148,7 @@ describe('GroceryListsPage', () => {
     render(<GroceryListsPage />)
 
     await waitFor(() => {
-      expect(screen.getByText('No lists yet')).toBeInTheDocument()
+      expect(screen.getByText('No current lists yet')).toBeInTheDocument()
     })
 
     expect(

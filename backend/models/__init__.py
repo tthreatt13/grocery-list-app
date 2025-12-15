@@ -22,6 +22,5 @@ __all__ = [
     "GroceryItem",
     "PantryItem",
     "Meal",
-    "HouseholdUserPreferences"
+    "HouseholdUserPreferences",
 ]
-

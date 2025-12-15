@@ -831,6 +831,14 @@ describe('PantryPage - Sort Functionality', () => {
   it('should display "Other Items" section when Low Stock sort is selected and there are non-low-stock items', async () => {
     render(<PantryPage />)
 
+    // Wait for loading to complete
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Loading pantry...')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
     // Wait for households to load
     await waitFor(
       () => {
