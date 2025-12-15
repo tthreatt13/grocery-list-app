@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Checkbox } from '@/components/ui/Checkbox'
 import { Select } from '@/components/ui/Select'
@@ -12,7 +12,7 @@ import {
 
 interface PreferencesFormProps {
   preferences: HouseholdPreferences | null
-  onSubmit: (data: HouseholdPreferencesUpdate) => Promise<void>
+  onSubmit: (_data: HouseholdPreferencesUpdate) => Promise<void>
   onCancel?: () => void
   isLoading?: boolean
 }
@@ -56,20 +56,52 @@ export default function PreferencesForm({
   onCancel,
   isLoading = false,
 }: PreferencesFormProps) {
-  const [dietTypes, setDietTypes] = useState<string[]>([])
-  const [weeklyWeather, setWeeklyWeather] = useState<string>('')
-  const [cookingApparatus, setCookingApparatus] = useState<string[]>([])
-  const [previousMeals, setPreviousMeals] = useState<string>('')
+  const prevPreferencesIdRef = useRef<number | null>(
+    preferences?.household_id || null
+  )
 
-  // Initialize form with preferences when they load
+  // Initialize state from props
+  const [dietTypes, setDietTypes] = useState<string[]>(
+    () => preferences?.diet_types || []
+  )
+  const [weeklyWeather, setWeeklyWeather] = useState<string>(
+    () => preferences?.weekly_weather || ''
+  )
+  const [cookingApparatus, setCookingApparatus] = useState<string[]>(
+    () => preferences?.cooking_apparatus || []
+  )
+  const [previousMeals, setPreviousMeals] = useState<string>(() =>
+    preferences?.previous_meals ? preferences.previous_meals.join(', ') : ''
+  )
+
+  // Update form state when preferences change (different household or preferences updated)
+  // Using ref to track previous household_id avoids setState-in-effect for same preferences
+  // Note: This effect is necessary to sync props to form state when preferences load/change
   useEffect(() => {
-    if (preferences) {
+    const currentId = preferences?.household_id || null
+    if (preferences && prevPreferencesIdRef.current !== currentId) {
+      prevPreferencesIdRef.current = currentId
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDietTypes(preferences.diet_types || [])
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setWeeklyWeather(preferences.weekly_weather || '')
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCookingApparatus(preferences.cooking_apparatus || [])
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPreviousMeals(
         preferences.previous_meals ? preferences.previous_meals.join(', ') : ''
       )
+    } else if (!preferences && prevPreferencesIdRef.current !== null) {
+      // Preferences cleared - reset form
+      prevPreferencesIdRef.current = null
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setDietTypes([])
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setWeeklyWeather('')
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setCookingApparatus([])
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setPreviousMeals('')
     }
   }, [preferences])
 
@@ -135,8 +167,8 @@ export default function PreferencesForm({
           ))}
         </div>
         <p className="mt-2 text-xs text-gray-500">
-          Select all that apply. Select "None" if you don't follow any specific
-          diet.
+          Select all that apply. Select &quot;None&quot; if you don&apos;t
+          follow any specific diet.
         </p>
       </div>
 
@@ -181,7 +213,7 @@ export default function PreferencesForm({
           placeholder="e.g., Chicken Stir Fry, Pasta Carbonara, Grilled Salmon"
         />
         <p className="mt-1 text-xs text-gray-500">
-          Enter meals you've already made this week, separated by commas.
+          Enter meals you&apos;ve already made this week, separated by commas.
         </p>
       </div>
 

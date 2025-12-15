@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react'
 import Navbar from '../Navbar'
-import { usePathname } from 'next/navigation'
 
 // Mock next/navigation
 const mockUsePathname = jest.fn(() => '/')

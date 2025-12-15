@@ -5,7 +5,7 @@ import { SortMethod } from '@/lib/types'
 
 interface SortMethodSelectorProps {
   value: SortMethod
-  onChange: (sortMethod: SortMethod) => void
+  onChange: (_sortMethod: SortMethod) => void
   className?: string
 }
 

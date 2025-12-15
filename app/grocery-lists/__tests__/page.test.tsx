@@ -534,8 +534,8 @@ describe('GroceryListsPage', () => {
     })
 
     it('should show loading state during deletion', async () => {
-      let resolveDelete: (value?: unknown) => void
-      const deletePromise = new Promise((resolve) => {
+      let resolveDelete: () => void
+      const deletePromise = new Promise<void>((resolve) => {
         resolveDelete = resolve
       })
 

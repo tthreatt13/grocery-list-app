@@ -23,7 +23,8 @@ describe('utils', () => {
     })
 
     it('handles conditional classes', () => {
-      expect(cn('px-2', false && 'py-1')).toBe('px-2')
+      const condition = false
+      expect(cn('px-2', condition && 'py-1')).toBe('px-2')
     })
 
     it('merges Tailwind classes without conflicts', () => {

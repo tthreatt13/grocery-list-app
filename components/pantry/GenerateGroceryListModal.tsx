@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -14,11 +14,11 @@ interface GenerateGroceryListModalProps {
   open: boolean
   onClose: () => void
   lowStockItems: PantryItem[]
-  onCreateList: (data: {
+  onCreateList: (_data: {
     listName: string
     items: PantryItem[]
   }) => void | Promise<void>
-  onAddToList?: (data: {
+  onAddToList?: (_data: {
     listId: number
     items: PantryItem[]
   }) => void | Promise<void>
@@ -35,21 +35,32 @@ export default function GenerateGroceryListModal({
   existingLists = [],
   isCreating = false,
 }: GenerateGroceryListModalProps) {
+  const prevOpenRef = useRef(open)
   const [mode, setMode] = useState<'create' | 'add'>('create')
   const [listName, setListName] = useState('Weekly Shopping List')
   const [selectedListId, setSelectedListId] = useState<number | null>(null)
-  const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set())
+  const [selectedItems, setSelectedItems] = useState<Set<string>>(
+    () => new Set(lowStockItems.map((item) => item.id))
+  )
 
   const hasExistingLists = existingLists.length > 0
 
-  // Initialize all items as selected when modal opens
+  // Reset form state when modal opens (transition from closed to open)
+  // Using ref to track previous open state avoids setState-in-effect for same state
+  // Note: This effect is necessary to reset modal form state when it opens
   useEffect(() => {
-    if (open) {
+    if (open && !prevOpenRef.current) {
+      // Modal just opened - reset form state
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedItems(new Set(lowStockItems.map((item) => item.id)))
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setListName('Weekly Shopping List')
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setMode('create')
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedListId(null)
     }
+    prevOpenRef.current = open
   }, [open, lowStockItems])
 
   const handleToggleItem = (itemId: string) => {

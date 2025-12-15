@@ -141,6 +141,24 @@ Expected tables:
 
 #### Verify Key Columns Exist
 
+**grocery_lists table:**
+
+```sql
+SELECT column_name, data_type, is_nullable
+FROM information_schema.columns
+WHERE table_name = 'grocery_lists'
+ORDER BY ordinal_position;
+```
+
+Expected columns:
+
+- `id` (integer)
+- `household_id` (integer)
+- `name` (character varying)
+- `created_at` (timestamp without time zone)
+- `updated_at` (timestamp without time zone)
+- `is_archived` (boolean) ⚠️ **Important: Added in migration e6680da276e3**
+
 **grocery_items table:**
 
 ```sql
@@ -210,7 +228,7 @@ Expected columns:
 SELECT version_num FROM alembic_version;
 ```
 
-Expected: `d1e2f3a4b5c6` (the latest migration revision ID)
+Expected: `e6680da276e3` (the latest migration revision ID)
 
 ### Method 4: Test Application Endpoints
 
@@ -247,6 +265,9 @@ All migrations that should be applied in production:
 
 5. **d1e2f3a4b5c6** - `add_household_user_preferences.py`
    - Creates `household_user_preferences` table with JSON columns
+
+6. **e6680da276e3** - `add_is_archived_to_grocery_lists.py`
+   - Adds `is_archived` column to `grocery_lists` table
 
 ## Troubleshooting
 
@@ -367,7 +388,7 @@ Before considering production database ready:
 - [ ] `DATABASE_URL` environment variable is set in Railway
 - [ ] PostgreSQL service is running in Railway dashboard
 - [ ] Railway deployment logs show migrations running successfully
-- [ ] Migration version matches latest revision (`d1e2f3a4b5c6`)
+- [ ] Migration version matches latest revision (`e6680da276e3`)
 - [ ] All expected tables exist (9 tables including `alembic_version`)
 - [ ] `grocery_items` table has `meal_type` column
 - [ ] `pantry_items` table has `low_stock_threshold` as float/double precision

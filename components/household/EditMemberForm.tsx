@@ -8,7 +8,7 @@ import { MemberRole } from '@/lib/types'
 interface EditMemberFormProps {
   memberName: string
   currentRole: MemberRole
-  onSubmit: (role: MemberRole) => void
+  onSubmit: (_role: MemberRole) => void
   onCancel: () => void
 }
 

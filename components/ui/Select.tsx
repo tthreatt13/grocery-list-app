@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useId } from 'react'
 import { cn } from '@/lib/utils'
 
 export interface SelectOption {
@@ -29,7 +29,8 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
     },
     ref
   ) => {
-    const selectId = id || `select-${Math.random().toString(36).substr(2, 9)}`
+    const generatedId = useId()
+    const selectId = id || generatedId
 
     // If value is empty string, add an empty option to support it
     const needsEmptyOption = value === ''

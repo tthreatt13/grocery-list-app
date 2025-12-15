@@ -16,6 +16,8 @@ export default [
       'coverage/**',
       '*.config.js',
       '*.config.mjs',
+      'backend/venv/**',
+      'backend/**/*.py',
     ],
   },
   {
@@ -42,6 +44,12 @@ export default [
         HTMLInputElement: 'readonly',
         HTMLElement: 'readonly',
         Element: 'readonly',
+        HTMLDivElement: 'readonly',
+        HTMLSpanElement: 'readonly',
+        HTMLButtonElement: 'readonly',
+        HTMLTableCellElement: 'readonly',
+        HTMLTextAreaElement: 'readonly',
+        RequestInit: 'readonly',
         React: 'readonly',
         TextEncoder: 'readonly',
         TextDecoder: 'readonly',
@@ -87,6 +95,7 @@ export default [
       ...nextPlugin.configs.recommended.rules,
       ...nextPlugin.configs['core-web-vitals'].rules,
       'react/react-in-jsx-scope': 'off',
+      'no-unused-vars': 'off', // Disable base rule in favor of TypeScript version
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
@@ -112,7 +121,7 @@ export default [
     },
   },
   {
-    files: ['**/__tests__/**', '**/*.test.{js,jsx,ts,tsx}', '**/*.spec.{js,jsx,ts,tsx}'],
+    files: ['**/__tests__/**', '**/*.test.{js,jsx,ts,tsx}', '**/*.spec.{js,jsx,ts,tsx}', 'jest.setup.js'],
     languageOptions: {
       globals: {
         jest: 'readonly',
@@ -123,6 +132,7 @@ export default [
         afterEach: 'readonly',
         beforeAll: 'readonly',
         afterAll: 'readonly',
+        require: 'readonly',
       },
     },
   },

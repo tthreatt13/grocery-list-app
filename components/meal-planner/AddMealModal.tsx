@@ -10,12 +10,12 @@ import { formatDate, normalizeIngredientsInput } from '@/lib/utils'
 interface AddMealModalProps {
   isOpen: boolean
   onClose: () => void
-  onAdd: (mealData: {
+  onAdd: (_mealData: {
     name: string
     notes?: string
     ingredients?: string
   }) => Promise<void>
-  onDelete?: (mealId: string) => Promise<void> // Optional delete handler for edit mode
+  onDelete?: (_mealId: string) => Promise<void> // Optional delete handler for edit mode
   mealType: MealType
   date: Date
   meal?: Meal | null // Optional meal for editing

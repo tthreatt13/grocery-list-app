@@ -89,10 +89,6 @@ export default function MealPlannerPage() {
   )
   const [editingMeal, setEditingMeal] = useState<Meal | null>(null)
 
-  // State for meal details modal
-  const [isMealDetailsOpen, setIsMealDetailsOpen] = useState(false)
-  const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null)
-
   // State for generate grocery list modal
   const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false)
   const [groceryLists, setGroceryLists] = useState<GroceryListResponse[]>([])
@@ -337,22 +333,17 @@ export default function MealPlannerPage() {
       return
     }
 
-    try {
-      const token = await getToken()
-      if (!token) {
-        throw new Error('Authentication required')
-      }
+    const token = await getToken()
+    if (!token) {
+      throw new Error('Authentication required')
+    }
 
-      await deleteMealAPI(parseInt(mealId), token)
-      setMeals(meals.filter((m) => m.id !== mealId))
-      // Close modal on successful delete if it's open
-      if (isAddModalOpen && editingMeal?.id === mealId) {
-        setIsAddModalOpen(false)
-        setEditingMeal(null)
-      }
-    } catch (err) {
-      // Re-throw error so AddMealModal can catch and display it
-      throw err
+    await deleteMealAPI(parseInt(mealId), token)
+    setMeals(meals.filter((m) => m.id !== mealId))
+    // Close modal on successful delete if it's open
+    if (isAddModalOpen && editingMeal?.id === mealId) {
+      setIsAddModalOpen(false)
+      setEditingMeal(null)
     }
   }
 

@@ -3,15 +3,15 @@
 import { Meal, MealType } from '@/lib/types'
 import MealCard from './MealCard'
 import { formatDate, cn } from '@/lib/utils'
-import { useEffect, useRef, forwardRef, useImperativeHandle } from 'react'
+import { useRef, forwardRef, useImperativeHandle } from 'react'
 
 interface WeeklyCalendarProps {
   startDate: Date
   meals: Meal[]
-  onMealClick: (meal: Meal) => void
-  onEmptySlotClick: (date: Date, mealType: MealType) => void
-  onMealEdit: (meal: Meal) => void
-  onMealDelete: (mealId: string) => void
+  onMealClick: (_meal: Meal) => void
+  onEmptySlotClick: (_date: Date, _mealType: MealType) => void
+  onMealEdit: (_meal: Meal) => void
+  onMealDelete: (_mealId: string) => void
 }
 
 export interface WeeklyCalendarRef {
@@ -176,24 +176,6 @@ const WeeklyCalendar = forwardRef<WeeklyCalendarRef, WeeklyCalendarProps>(
             ))}
           </tbody>
         </table>
-
-        {/* Drag and drop placeholder indicator */}
-        <div className="mt-4 p-3 bg-gray-50 border border-dashed border-gray-300 rounded-lg text-center text-sm text-gray-500">
-          <svg
-            className="w-5 h-5 inline mr-2 text-gray-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
-            />
-          </svg>
-          Drag &amp; drop functionality coming soon!
-        </div>
       </div>
     )
   }

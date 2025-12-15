@@ -7,8 +7,8 @@ import { useRef, forwardRef, useImperativeHandle } from 'react'
 interface MobileWeeklyCalendarProps {
   startDate: Date
   meals: Meal[]
-  onEmptySlotClick: (date: Date, mealType: MealType) => void
-  onMealClick: (meal: Meal) => void
+  onEmptySlotClick: (_date: Date, _mealType: MealType) => void
+  onMealClick: (_meal: Meal) => void
 }
 
 export interface MobileWeeklyCalendarRef {

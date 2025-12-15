@@ -58,7 +58,7 @@ A modern, full-stack grocery list and meal planning application built for busy p
 
 **Backend:**
 
-- Python 3.9 or higher
+- Python 3.11 or higher
 - PostgreSQL 15+ (or SQLite for development)
 - Virtual environment (venv or conda)
 
@@ -79,11 +79,17 @@ python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
+# Set up environment variables
+# Copy railway-env-template.txt and create .env file with your settings
+# For local development, DATABASE_URL can use SQLite: sqlite:///./grocery_app.db
+
 # Set up the database
 alembic upgrade head
 
 # Start the backend server
 uvicorn main:app --reload
+# Or use the start script (runs migrations automatically):
+./start.sh
 ```
 
 3. **Set up the frontend:**
@@ -92,8 +98,11 @@ uvicorn main:app --reload
 # In a new terminal, from the project root
 npm install
 
-# Set up environment variables (copy and modify as needed)
-cp .env.example .env.local
+# Set up environment variables
+# Create .env.local with:
+# NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_key
+# CLERK_SECRET_KEY=your_secret
+# NEXT_PUBLIC_API_URL=http://localhost:8000
 
 # Start the frontend development server
 npm run dev
@@ -105,40 +114,133 @@ npm run dev
 - Backend API: [http://localhost:8000](http://localhost:8000)
 - API Documentation: [http://localhost:8000/docs](http://localhost:8000/docs)
 
+### Environment Variables
+
+**Backend (.env):**
+
+- `DATABASE_URL` - Database connection string (PostgreSQL or SQLite)
+- `CLERK_SECRET_KEY` - Clerk authentication secret key
+- `ENVIRONMENT` - Environment name (development/production)
+- `ALLOWED_ORIGINS` - Comma-separated list of allowed CORS origins (optional)
+
+**Frontend (.env.local):**
+
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` - Clerk publishable key
+- `CLERK_SECRET_KEY` - Clerk secret key (for server-side)
+- `NEXT_PUBLIC_API_URL` - Backend API URL (defaults to Railway production URL)
+
 ## 🏗️ Project Structure
 
 ```
 grocery-list-app/
 ├── app/                          # Next.js App Router pages
 │   ├── page.tsx                 # Home/Dashboard (✅ Backend integrated)
+│   ├── layout.tsx               # Root layout with providers
+│   ├── providers.tsx            # React context providers
+│   ├── globals.css              # Global styles
 │   ├── grocery-lists/           # Grocery lists pages
+│   │   ├── page.tsx            # Lists overview page
+│   │   └── [id]/               # Individual list detail pages
 │   ├── pantry/                  # Pantry inventory page
+│   │   └── page.tsx
 │   ├── meal-planner/            # Weekly meal planner page
+│   │   └── page.tsx
 │   ├── household/               # Household management page
-│   └── sign-in/[[...sign-in]]/  # Clerk authentication
+│   │   └── page.tsx
+│   ├── sign-in/                 # Clerk authentication
+│   └── sign-up/                 # Clerk registration
 ├── backend/                      # FastAPI backend
 │   ├── main.py                  # FastAPI application entry point
+│   ├── config.py                # Configuration and settings
+│   ├── database.py              # Database connection setup
+│   ├── start.sh                 # Startup script (runs migrations)
+│   ├── pre_deploy_check.sh      # Pre-deployment verification
+│   ├── verify_schema.py         # Database schema verification
+│   ├── Dockerfile               # Docker configuration for Railway
 │   ├── models/                  # SQLAlchemy database models
+│   │   ├── user.py
+│   │   ├── household.py
+│   │   ├── grocery_list.py
+│   │   ├── grocery_item.py
+│   │   ├── pantry_item.py
+│   │   ├── meal.py
+│   │   └── household_member.py
 │   ├── routes/                  # API route handlers
+│   │   ├── auth.py
+│   │   ├── users.py
+│   │   ├── households.py
+│   │   ├── grocery_lists.py
+│   │   ├── pantry.py
+│   │   └── meals.py
 │   ├── schemas/                 # Pydantic request/response schemas
 │   ├── middleware/              # Authentication & permissions
+│   │   ├── auth.py
+│   │   └── permissions.py
 │   ├── alembic/                 # Database migrations
+│   │   ├── env.py
+│   │   └── versions/            # Migration files
 │   └── tests/                   # Backend test suite
 ├── components/                   # React components
 │   ├── ui/                      # Reusable UI components
+│   │   ├── Button.tsx
+│   │   ├── Input.tsx
+│   │   ├── Card.tsx
+│   │   ├── Modal.tsx
+│   │   ├── Badge.tsx
+│   │   ├── Checkbox.tsx
+│   │   └── Select.tsx
 │   ├── grocery/                 # Grocery list components
+│   │   ├── GroceryListCard.tsx
+│   │   ├── GroceryListItem.tsx
+│   │   ├── AddItemForm.tsx
+│   │   ├── EditItemForm.tsx
+│   │   ├── SortMethodSelector.tsx
+│   │   └── ReuseListModal.tsx
 │   ├── pantry/                  # Pantry components
-│   ├── meal-planner/           # Meal planner components
-│   ├── household/              # Household components
-│   └── layout/                 # Layout components (Nav, etc.)
-├── lib/                        # Frontend utilities and helpers
-│   ├── api/                    # API client functions
-│   ├── adapters/               # Data transformation layer
-│   ├── types.ts               # TypeScript type definitions
-│   ├── utils.ts               # Utility functions
-│   └── mockData.ts            # Mock data for development
-├── docs/                       # Project documentation
-└── tests/                      # Frontend test suites
+│   │   ├── PantryGrid.tsx
+│   │   ├── PantryItemCard.tsx
+│   │   ├── AddPantryItemForm.tsx
+│   │   ├── EditPantryItemForm.tsx
+│   │   └── GenerateGroceryListModal.tsx
+│   ├── meal-planner/            # Meal planner components
+│   │   ├── WeeklyCalendar.tsx
+│   │   ├── MobileWeeklyCalendar.tsx
+│   │   ├── MealCard.tsx
+│   │   ├── AddMealModal.tsx
+│   │   ├── MealDetailsModal.tsx
+│   │   └── GenerateGroceryListFromMealsModal.tsx
+│   ├── household/               # Household components
+│   │   ├── MemberCard.tsx
+│   │   ├── InviteMemberForm.tsx
+│   │   ├── EditMemberForm.tsx
+│   │   ├── PreferencesForm.tsx
+│   │   └── SharedListsView.tsx
+│   └── layout/                  # Layout components
+│       ├── Navbar.tsx
+│       └── MobileNav.tsx
+├── lib/                         # Frontend utilities and helpers
+│   ├── api/                     # API client functions
+│   │   ├── client.ts           # Base API client
+│   │   ├── grocery.ts          # Grocery API calls
+│   │   ├── pantry.ts           # Pantry API calls
+│   │   ├── meals.ts            # Meals API calls
+│   │   └── household.ts        # Household API calls
+│   ├── adapters/                # Data transformation layer
+│   │   └── groceryAdapters.ts
+│   ├── types.ts                 # TypeScript type definitions
+│   ├── utils.ts                 # Utility functions
+│   └── mockData.ts              # Mock data for development
+├── docs/                        # Project documentation
+│   ├── DEPLOYMENT_CHECKLIST.md  # Deployment guide
+│   ├── RAILWAY_BACKEND_DEPLOYMENT.md
+│   ├── PRODUCTION_DATABASE_VERIFICATION.md
+│   ├── INTEGRATION_STATUS.md
+│   └── ...                      # Additional documentation
+├── tasks/                       # Task documentation
+├── railway.json                 # Railway deployment configuration
+├── railway-setup-commands.sh    # Railway setup helper
+├── middleware.ts                # Next.js middleware (Clerk)
+└── package.json                 # Frontend dependencies
 ```
 
 ## 🎨 Design System
@@ -213,6 +315,22 @@ pytest
 pytest --cov=. --cov-report=html
 ```
 
+### Code Quality
+
+```bash
+# Run ESLint
+npm run lint
+
+# Fix ESLint issues
+npm run lint -- --fix
+
+# Format code with Prettier
+npm run format
+
+# Check formatting
+npm run format:check
+```
+
 ## 🛠️ Built With
 
 ### Frontend
@@ -243,6 +361,7 @@ pytest --cov=. --cov-report=html
 - **Adapter Pattern** for data transformation between API and UI layers
 - **Authentication** via Clerk with JWT token validation
 - **Database** migrations with Alembic for schema evolution
+- **Automatic Migrations**: Database migrations run automatically on deployment
 
 ### Data Flow
 
@@ -251,42 +370,72 @@ Frontend (Next.js) → API Client → Backend (FastAPI) → Database (PostgreSQL
                   ↖ Adapters ↗
 ```
 
+### Deployment Architecture
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   Frontend      │    │   Railway         │    │   PostgreSQL    │
+│   (Next.js)      │◄──►│   Backend API     │◄──►│   Database      │
+│   (Vercel)       │    │   FastAPI         │    │   (Managed)     │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+```
+
 ### Key Design Patterns
 
 - **Repository Pattern**: Clean data access layer
 - **Adapter Pattern**: Transform API responses to frontend types
 - **Middleware Pattern**: Authentication and permission handling
 - **Test-Driven Development**: Write tests first, implement second
+- **Migration-First**: Database schema changes via Alembic migrations
+
+### Database Migrations
+
+Migrations run automatically on every deployment:
+
+1. **Pre-deployment**: Run `backend/pre_deploy_check.sh` to verify migrations
+2. **Deployment**: `start.sh` automatically runs `alembic upgrade head`
+3. **Verification**: Check Railway logs and run `railway run alembic current`
+
+See [DEPLOYMENT_CHECKLIST.md](docs/DEPLOYMENT_CHECKLIST.md) for detailed procedures.
 
 ## 📋 Current Status
 
-This is a **full-stack application** with backend integration in progress. Current implementation status:
+This is a **production-ready full-stack application** with complete backend integration. Current implementation status:
 
 ### ✅ Completed Features
 
 - **Backend API**: Complete FastAPI backend with PostgreSQL database
 - **Authentication**: Clerk integration for user management
-- **Dashboard**: Fully integrated with backend API (✅ All tests passing)
-- **Database Models**: Complete schema for all entities
+- **Dashboard**: Fully integrated with backend API
+- **Grocery Lists**: Complete backend integration with sorting, filtering, and archiving
+- **Meal Planner**: Full backend integration with meal-to-grocery-list generation
+- **Pantry Inventory**: Complete backend integration with low-stock alerts
+- **Household Management**: Full backend integration with member roles and preferences
+- **Database Models**: Complete schema for all entities with migrations
 - **API Client**: Type-safe frontend API layer with error handling
 - **Testing**: Comprehensive test suites for both frontend and backend
+- **Deployment**: Railway backend deployment with automatic migrations
+- **Database Migrations**: Automatic migration system with pre-deployment checks
 
-### 🚧 In Progress
+### 🚀 Deployment
 
-- **Grocery Lists**: Partial backend integration
-- **Meal Planner**: Partial backend integration
-- **Household Management**: Partial backend integration
-- **Pantry**: Using mock data, backend ready
+- **Frontend**: Deployed on Vercel
+- **Backend**: Deployed on Railway with PostgreSQL
+- **Database Migrations**: Run automatically on every deployment via `start.sh`
+- **Health Monitoring**: Health check endpoints and logging
 
-### 🎯 Next Steps
+See [DEPLOYMENT_CHECKLIST.md](docs/DEPLOYMENT_CHECKLIST.md) for deployment procedures.
 
-- [ ] Complete integration for remaining pages
+### 🎯 Future Enhancements
+
 - [ ] Real-time collaboration with WebSockets
 - [ ] Push notifications for expiring items
 - [ ] Recipe database integration
 - [ ] Barcode scanning for pantry items
 - [ ] Shopping list sharing via QR codes
 - [ ] Mobile app (React Native)
+- [ ] Export/import functionality
+- [ ] Meal plan templates
 
 ## 🎯 Target Users
 
@@ -314,10 +463,22 @@ Contributions are welcome! This is an active full-stack project with both fronte
 
 ### Code Quality Standards
 
-- **Frontend**: TypeScript, ESLint, Jest tests required
-- **Backend**: Python type hints, Black formatting, Pytest tests required
+- **Frontend**: TypeScript, ESLint, Prettier, Jest tests required
+- **Backend**: Python type hints, Pytest tests required
 - **TDD Approach**: Write tests first, then implement features
 - **API Integration**: Use the adapter pattern for data transformation
+- **Migrations**: Always create Alembic migrations for schema changes
+- **Pre-commit**: Run `pre_deploy_check.sh` before deploying database changes
+
+### Development Workflow
+
+1. **Write tests first** (TDD approach)
+2. **Implement feature**
+3. **Run tests**: `npm test` (frontend) and `pytest` (backend)
+4. **Check linting**: `npm run lint`
+5. **Format code**: `npm run format`
+6. **For database changes**: Create migration, test locally, run pre-deploy check
+7. **Commit and push**: Migrations run automatically on Railway deployment
 
 ## 📄 License
 
@@ -336,4 +497,21 @@ For questions or feedback, please open an issue on GitHub.
 
 ---
 
-**Note**: This is a full-stack application with backend integration. The dashboard is fully integrated with the backend API, and other pages are in various stages of integration. See the [Integration Status](docs/INTEGRATION_STATUS.md) for detailed progress.
+## 📚 Additional Documentation
+
+- [Deployment Checklist](docs/DEPLOYMENT_CHECKLIST.md) - Guide for deploying database updates
+- [Railway Backend Deployment](docs/RAILWAY_BACKEND_DEPLOYMENT.md) - Backend deployment guide
+- [Production Database Verification](docs/PRODUCTION_DATABASE_VERIFICATION.md) - Database schema verification
+- [Integration Status](docs/INTEGRATION_STATUS.md) - Current integration status
+- [CORS Configuration](docs/CORS_CONFIGURATION.md) - CORS troubleshooting guide
+
+## 🔧 Development Tools
+
+- **Pre-deployment Check**: `cd backend && ./pre_deploy_check.sh`
+- **Schema Verification**: `railway run python backend/verify_schema.py`
+- **Migration Status**: `railway run alembic current`
+- **View Logs**: `railway logs`
+
+---
+
+**Note**: This is a production-ready full-stack application with complete backend integration. All features are fully integrated with the backend API. See the [Integration Status](docs/INTEGRATION_STATUS.md) for detailed progress.
