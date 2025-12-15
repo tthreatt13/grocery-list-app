@@ -5,21 +5,21 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
-    
+
     # Application
     app_name: str = "Grocery App API"
     app_version: str = "1.0.0"
     environment: str = "development"
     debug: bool = True
-    
+
     # Database
     database_url: str = "sqlite:///./grocery_app.db"
-    
+
     # Clerk Authentication
     clerk_secret_key: str = ""
     clerk_publishable_key: str = ""
     clerk_api_url: str = "https://api.clerk.com/v1"
-    
+
     # API Configuration
     api_prefix: str = "/api"
     # Default CORS origins (safe, explicit list).
@@ -31,11 +31,11 @@ class Settings(BaseSettings):
         "https://grocery-list-app-seven.vercel.app",
         "https://grocery-list-app.vercel.app",  # Production Vercel domain
     ]
-    
+
     # Server Configuration (for Railway deployment)
     host: str = "0.0.0.0"
     port: int = 8000
-    
+
     @property
     def is_production(self) -> bool:
         """Check if running in production environment."""
@@ -58,41 +58,37 @@ class Settings(BaseSettings):
         # Split on commas, strip whitespace, and drop empty entries
         parsed = [origin.strip() for origin in raw.split(",")]
         return [origin for origin in parsed if origin]
-    
+
     def is_origin_allowed(self, origin: str) -> bool:
         """
         Check if an origin is allowed for CORS requests.
-        
+
         Supports:
         - Exact matches from allowed_origins or ALLOWED_ORIGINS env var
         - Vercel preview URLs (*.vercel.app pattern)
-        
+
         Args:
             origin: The origin header value from the request
-            
+
         Returns:
             True if the origin is allowed, False otherwise
         """
         origins = self.get_allowed_origins()
-        
+
         # Check exact matches first
         if origin in origins:
             return True
-        
+
         # Check Vercel preview URL pattern (*.vercel.app)
         if origin.endswith(".vercel.app"):
             return True
-        
+
         return False
-    
+
     model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
-        case_sensitive=False,
-        extra="ignore"
+        env_file=".env", env_file_encoding="utf-8", case_sensitive=False, extra="ignore"
     )
 
 
 # Create global settings instance
 settings = Settings()
-

@@ -9,9 +9,9 @@ from database import Base
 
 class GroceryItem(Base):
     """GroceryItem model representing an individual item in a grocery list."""
-    
+
     __tablename__ = "grocery_items"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     list_id = Column(Integer, ForeignKey("grocery_lists.id"), nullable=False)
     name = Column(String, nullable=False)
@@ -21,11 +21,12 @@ class GroceryItem(Base):
     notes = Column(String, nullable=True)
     checked = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    
+
     # Relationships
     grocery_list = relationship("GroceryList", backref="items")
-    
+
     def __repr__(self):
         """String representation of GroceryItem."""
-        return f"<GroceryItem(id={self.id}, name='{self.name}', checked={self.checked})>"
-
+        return (
+            f"<GroceryItem(id={self.id}, name='{self.name}', checked={self.checked})>"
+        )

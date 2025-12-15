@@ -83,24 +83,24 @@ export default function PreferencesForm({
       prevPreferencesIdRef.current = currentId
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setDietTypes(preferences.diet_types || [])
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setWeeklyWeather(preferences.weekly_weather || '')
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setCookingApparatus(preferences.cooking_apparatus || [])
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setPreviousMeals(
         preferences.previous_meals ? preferences.previous_meals.join(', ') : ''
       )
     } else if (!preferences && prevPreferencesIdRef.current !== null) {
       // Preferences cleared - reset form
       prevPreferencesIdRef.current = null
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setDietTypes([])
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setWeeklyWeather('')
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setCookingApparatus([])
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setPreviousMeals('')
     }
   }, [preferences])

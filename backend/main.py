@@ -10,8 +10,7 @@ from routes import auth, users, grocery_lists, pantry, households, meals
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -38,23 +37,27 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Request logging middleware
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
     """Log all HTTP requests with method, path, and timing."""
     start_time = time.time()
-    
+
     # Log request
     logger.info(f"→ {request.method} {request.url.path}")
-    
+
     # Process request
     response = await call_next(request)
-    
+
     # Log response
     process_time = (time.time() - start_time) * 1000
-    logger.info(f"← {request.method} {request.url.path} - Status: {response.status_code} - Time: {process_time:.2f}ms")
-    
+    logger.info(
+        f"← {request.method} {request.url.path} - Status: {response.status_code} - Time: {process_time:.2f}ms"
+    )
+
     return response
+
 
 # Register routers
 app.include_router(auth.router, prefix="/api")
@@ -71,15 +74,11 @@ async def root():
     return {
         "message": "Welcome to Grocery App API",
         "version": "1.0.0",
-        "docs": "/docs"
+        "docs": "/docs",
     }
 
 
 @app.get("/health")
 async def health_check():
     """Health check endpoint for monitoring."""
-    return {
-        "status": "healthy",
-        "service": "grocery-app-api"
-    }
-
+    return {"status": "healthy", "service": "grocery-app-api"}
