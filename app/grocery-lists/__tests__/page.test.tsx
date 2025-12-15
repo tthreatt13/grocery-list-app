@@ -839,11 +839,22 @@ describe('GroceryListsPage', () => {
 
       render(<GroceryListsPage />)
 
+      // Wait for loading to complete
+      await waitFor(
+        () => {
+          expect(
+            screen.queryByText('Loading your grocery lists...')
+          ).not.toBeInTheDocument()
+        },
+        { timeout: 3000 }
+      )
+
       await waitFor(() => {
         expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
       })
 
-      const archiveButtons = screen.getAllByLabelText(/archive list/i)
+      // Wait for archive buttons to be available
+      const archiveButtons = await screen.findAllByLabelText(/archive list/i)
       fireEvent.click(archiveButtons[0])
 
       await waitFor(() => {
