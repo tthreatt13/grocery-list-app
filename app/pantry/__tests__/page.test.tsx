@@ -380,6 +380,14 @@ describe('PantryPage - Generate Grocery List', () => {
 
     render(<PantryPage />)
 
+    // Wait for loading to complete
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Loading pantry...')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
     // Wait for households to load
     await waitFor(
       () => {
