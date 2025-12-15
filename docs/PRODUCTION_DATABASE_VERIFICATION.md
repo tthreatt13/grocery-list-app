@@ -15,6 +15,7 @@ This guide helps ensure that the Railway production database has all required ta
 ### Verification That Migrations Are Running
 
 Check Railway deployment logs for these messages:
+
 ```
 Starting application...
 Running database migrations...
@@ -53,6 +54,7 @@ railway run python backend/verify_schema.py
 ```
 
 This script will:
+
 - Check that all required tables exist
 - Verify critical columns are present (including recently added ones)
 - Check that column types are correct
@@ -60,6 +62,7 @@ This script will:
 - Provide a summary of any issues found
 
 **Expected Output (Success):**
+
 ```
 ======================================================================
 Database Schema Verification
@@ -98,6 +101,7 @@ railway run alembic history
 ```
 
 Expected output should show all migrations applied:
+
 ```
 90f091a98d1c -> b1f2c3d4e5f6 (head), add meal_type to grocery_items
 4801cb88f9d6 -> c7d8e9f0a1b2, change low_stock_threshold to float
@@ -117,13 +121,14 @@ railway connect postgres
 
 ```sql
 -- List all tables
-SELECT table_name 
-FROM information_schema.tables 
-WHERE table_schema = 'public' 
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'public'
 ORDER BY table_name;
 ```
 
 Expected tables:
+
 - `alembic_version` (tracks migration version)
 - `grocery_items`
 - `grocery_lists`
@@ -137,6 +142,7 @@ Expected tables:
 #### Verify Key Columns Exist
 
 **grocery_items table:**
+
 ```sql
 SELECT column_name, data_type, is_nullable
 FROM information_schema.columns
@@ -145,6 +151,7 @@ ORDER BY ordinal_position;
 ```
 
 Expected columns:
+
 - `id` (integer)
 - `list_id` (integer)
 - `name` (character varying)
@@ -156,6 +163,7 @@ Expected columns:
 - `created_at` (timestamp without time zone)
 
 **pantry_items table:**
+
 ```sql
 SELECT column_name, data_type, is_nullable
 FROM information_schema.columns
@@ -164,6 +172,7 @@ ORDER BY ordinal_position;
 ```
 
 Expected columns:
+
 - `id` (integer)
 - `household_id` (integer)
 - `name` (character varying)
@@ -175,6 +184,7 @@ Expected columns:
 - `updated_at` (timestamp without time zone)
 
 **household_user_preferences table:**
+
 ```sql
 SELECT column_name, data_type, is_nullable
 FROM information_schema.columns
@@ -183,6 +193,7 @@ ORDER BY ordinal_position;
 ```
 
 Expected columns:
+
 - `id` (integer)
 - `household_id` (integer)
 - `user_id` (integer)
@@ -242,6 +253,7 @@ All migrations that should be applied in production:
 ### Migrations Not Running
 
 **Symptoms:**
+
 - Application starts but database errors occur
 - Missing columns or tables in production
 - Migration version not updated
@@ -249,9 +261,11 @@ All migrations that should be applied in production:
 **Solutions:**
 
 1. **Check Railway Logs**
+
    ```bash
    railway logs
    ```
+
    Look for migration-related errors or messages
 
 2. **Verify DATABASE_URL is Set**
@@ -259,6 +273,7 @@ All migrations that should be applied in production:
    - Ensure `DATABASE_URL` is present and points to PostgreSQL
 
 3. **Manually Run Migrations**
+
    ```bash
    railway run alembic upgrade head
    ```
@@ -272,28 +287,32 @@ All migrations that should be applied in production:
 If specific columns are missing:
 
 1. **Check Migration History**
+
    ```bash
    railway run alembic history
    ```
 
 2. **Verify Current Version**
+
    ```bash
    railway run alembic current
    ```
 
 3. **Force Migration Run**
+
    ```bash
    railway run alembic upgrade head
    ```
 
 4. **If Migrations Are Stuck**
+
    ```bash
    # Check what migrations are pending
    railway run alembic heads
-   
+
    # Check current version
    railway run alembic current
-   
+
    # Run upgrade
    railway run alembic upgrade head
    ```
@@ -301,6 +320,7 @@ If specific columns are missing:
 ### Database Connection Issues
 
 **Symptoms:**
+
 - Migrations fail with connection errors
 - Application can't connect to database
 
