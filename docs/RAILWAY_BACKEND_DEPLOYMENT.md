@@ -266,14 +266,23 @@ All existing Alembic migrations are included:
 
 ### CORS Policy
 
+The backend supports CORS via FastAPI's CORSMiddleware:
+
+- **Exact matches**: Domains listed in `backend/config.py` or `ALLOWED_ORIGINS` env var
+- **Vercel preview URLs**: Automatically allowed via regex pattern (`*.vercel.app`)
+
+Default origins in code:
+
 ```python
 allowed_origins = [
     "http://localhost:3000",      # Local development
     "http://localhost:3001",      # Alternative local port
-    "https://grocery-list-app.vercel.app",  # Production frontend
-    "https://*.vercel.app",       # Vercel preview deployments
+    "https://grocery-list-app-seven.vercel.app",  # Production frontend
+    "https://grocery-list-app.vercel.app",  # Alternative production domain
 ]
 ```
+
+**Important**: If `ALLOWED_ORIGINS` environment variable is set in Railway, it overrides the code defaults. See [CORS_CONFIGURATION.md](./CORS_CONFIGURATION.md) for troubleshooting CORS issues.
 
 ### Authentication
 

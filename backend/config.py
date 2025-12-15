@@ -24,10 +24,12 @@ class Settings(BaseSettings):
     api_prefix: str = "/api"
     # Default CORS origins (safe, explicit list).
     # Can be overridden via ALLOWED_ORIGINS env var (comma-separated).
+    # Note: Vercel preview URLs are automatically allowed via pattern matching.
     allowed_origins: list[str] = [
         "http://localhost:3000",
         "http://localhost:3001",
         "https://grocery-list-app-seven.vercel.app",
+        "https://grocery-list-app.vercel.app",  # Production Vercel domain
     ]
     
     # Server Configuration (for Railway deployment)
@@ -56,6 +58,32 @@ class Settings(BaseSettings):
         # Split on commas, strip whitespace, and drop empty entries
         parsed = [origin.strip() for origin in raw.split(",")]
         return [origin for origin in parsed if origin]
+    
+    def is_origin_allowed(self, origin: str) -> bool:
+        """
+        Check if an origin is allowed for CORS requests.
+        
+        Supports:
+        - Exact matches from allowed_origins or ALLOWED_ORIGINS env var
+        - Vercel preview URLs (*.vercel.app pattern)
+        
+        Args:
+            origin: The origin header value from the request
+            
+        Returns:
+            True if the origin is allowed, False otherwise
+        """
+        origins = self.get_allowed_origins()
+        
+        # Check exact matches first
+        if origin in origins:
+            return True
+        
+        # Check Vercel preview URL pattern (*.vercel.app)
+        if origin.endswith(".vercel.app"):
+            return True
+        
+        return False
     
     model_config = SettingsConfigDict(
         env_file=".env",

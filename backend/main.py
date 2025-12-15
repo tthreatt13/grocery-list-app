@@ -22,11 +22,17 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Configure CORS
+# Log configured CORS origins at startup
+configured_origins = settings.get_allowed_origins()
+logger.info(f"CORS configured origins: {configured_origins}")
+logger.info("CORS also allows any *.vercel.app preview URLs via regex pattern")
+
 app.add_middleware(
     CORSMiddleware,
-    # Use origins from config (optionally overridden via ALLOWED_ORIGINS env var)
-    allow_origins=settings.get_allowed_origins(),
+    # Exact matches from config (including production Vercel domains)
+    allow_origins=configured_origins,
+    # Pattern match for Vercel preview URLs (e.g., grocery-list-app-git-*.vercel.app)
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

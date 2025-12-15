@@ -40,28 +40,18 @@ export default function SharedListsView({ lists }: SharedListsViewProps) {
   // Backend should already sort, but this ensures correct order even if backend doesn't
   const sortedLists = [...lists].sort((a, b) => {
     // Helper to convert Date or string to string for comparison
-    const toComparableString = (
-      value: string | Date | undefined
-    ): string => {
+    const toComparableString = (value: string | Date | undefined): string => {
       if (!value) return ''
       if (value instanceof Date) return value.toISOString()
       return String(value)
     }
 
-    const aCreatedAt = toComparableString(
-      a.created_at || a.createdAt
-    )
-    const bCreatedAt = toComparableString(
-      b.created_at || b.createdAt
-    )
+    const aCreatedAt = toComparableString(a.created_at || a.createdAt)
+    const bCreatedAt = toComparableString(b.created_at || b.createdAt)
     // Compare as strings (ISO format) or fallback to updated_at
     if (!aCreatedAt && !bCreatedAt) {
-      const aUpdatedAt = toComparableString(
-        a.updated_at || a.updatedAt
-      )
-      const bUpdatedAt = toComparableString(
-        b.updated_at || b.updatedAt
-      )
+      const aUpdatedAt = toComparableString(a.updated_at || a.updatedAt)
+      const bUpdatedAt = toComparableString(b.updated_at || b.updatedAt)
       return bUpdatedAt.localeCompare(aUpdatedAt)
     }
     return bCreatedAt.localeCompare(aCreatedAt)
