@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session, joinedload
 
 from database import get_db
-from middleware.auth import get_current_user
+from middleware.auth import get_current_user, get_current_user_optional
 from middleware.permissions import require_household_member
 from models.grocery_list import GroceryList
 from models.grocery_item import GroceryItem
@@ -209,7 +209,7 @@ def create_grocery_item(
     list_id: int,
     item_data: GroceryItemCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: Optional[User] = Depends(get_current_user_optional),
 ):
     """
     Add an item to a grocery list.
@@ -232,8 +232,9 @@ def create_grocery_item(
             detail=f"Grocery list with id {list_id} not found",
         )
 
-    # Check permission: user must be a household member
-    require_household_member(db, grocery_list.household_id, current_user)
+    # Check permission: user must be a household member (if authenticated)
+    if current_user is not None:
+        require_household_member(db, grocery_list.household_id, current_user)
 
     grocery_item = GroceryItem(
         list_id=list_id,
