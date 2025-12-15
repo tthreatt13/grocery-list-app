@@ -33,7 +33,7 @@ jobs:
         run: npm run format:check
 
       - name: Run tests
-        run: npm test
+        run: npm run test:ci
 
   backend-checks:
     name: Backend Checks

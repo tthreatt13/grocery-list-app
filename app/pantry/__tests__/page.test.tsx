@@ -777,11 +777,16 @@ describe('PantryPage - Sort Functionality', () => {
       { timeout: 3000 }
     )
 
+    // Wait for the sort dropdown to appear and be ready
+    const sortSelect = (await screen.findByLabelText(
+      /sort by/i
+    )) as HTMLSelectElement
+
+    // Ensure the select has options loaded
     await waitFor(() => {
-      expect(screen.getByLabelText(/sort by/i)).toBeInTheDocument()
+      expect(sortSelect.options.length).toBeGreaterThan(0)
     })
 
-    const sortSelect = screen.getByLabelText(/sort by/i) as HTMLSelectElement
     const options = Array.from(sortSelect.options)
 
     expect(options.some((opt) => opt.value === SortMethod.CATEGORY)).toBe(true)
@@ -810,11 +815,16 @@ describe('PantryPage - Sort Functionality', () => {
       { timeout: 3000 }
     )
 
+    // Wait for the sort dropdown to appear and be ready
+    const sortSelect = (await screen.findByLabelText(
+      /sort by/i
+    )) as HTMLSelectElement
+
+    // Wait for items to be rendered before interacting with sort
     await waitFor(() => {
-      expect(screen.getByLabelText(/sort by/i)).toBeInTheDocument()
+      expect(screen.getByText('Milk')).toBeInTheDocument()
     })
 
-    const sortSelect = screen.getByLabelText(/sort by/i) as HTMLSelectElement
     fireEvent.change(sortSelect, { target: { value: SortMethod.LOW_STOCK } })
 
     await waitFor(() => {
@@ -853,11 +863,16 @@ describe('PantryPage - Sort Functionality', () => {
       { timeout: 3000 }
     )
 
+    // Wait for the sort dropdown to appear and be ready
+    const sortSelect = (await screen.findByLabelText(
+      /sort by/i
+    )) as HTMLSelectElement
+
+    // Wait for items to be rendered before interacting with sort
     await waitFor(() => {
-      expect(screen.getByLabelText(/sort by/i)).toBeInTheDocument()
+      expect(screen.getByText('Milk')).toBeInTheDocument()
     })
 
-    const sortSelect = screen.getByLabelText(/sort by/i) as HTMLSelectElement
     fireEvent.change(sortSelect, { target: { value: SortMethod.LOW_STOCK } })
 
     await waitFor(() => {
@@ -916,11 +931,16 @@ describe('PantryPage - Sort Functionality', () => {
       { timeout: 3000 }
     )
 
+    // Wait for the sort dropdown to appear and be ready
+    const sortSelect = (await screen.findByLabelText(
+      /sort by/i
+    )) as HTMLSelectElement
+
+    // Wait for items to be rendered before interacting with sort
     await waitFor(() => {
-      expect(screen.getByLabelText(/sort by/i)).toBeInTheDocument()
+      expect(screen.getByText('Milk')).toBeInTheDocument()
     })
 
-    const sortSelect = screen.getByLabelText(/sort by/i) as HTMLSelectElement
     fireEvent.change(sortSelect, { target: { value: SortMethod.LOW_STOCK } })
 
     await waitFor(() => {
