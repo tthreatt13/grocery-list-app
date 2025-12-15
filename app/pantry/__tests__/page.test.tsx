@@ -110,8 +110,10 @@ describe('PantryPage - Generate Grocery List', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     mockGetToken.mockResolvedValue('mock-token')
-    mockGetHouseholds.mockResolvedValue(mockHouseholds)
-    mockGetPantryItems.mockResolvedValue(mockPantryItems)
+    mockGetHouseholds.mockResolvedValue(mockHouseholds.map((h) => ({ ...h })))
+    mockGetPantryItems.mockResolvedValue(
+      mockPantryItems.map((item) => ({ ...item }))
+    )
     mockGetGroceryLists.mockResolvedValue([])
   })
 
@@ -566,8 +568,10 @@ describe('PantryPage - Mobile Responsive Layout', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     mockGetToken.mockResolvedValue('mock-token')
-    mockGetHouseholds.mockResolvedValue(mockHouseholds)
-    mockGetPantryItems.mockResolvedValue(mockPantryItems)
+    mockGetHouseholds.mockResolvedValue(mockHouseholds.map((h) => ({ ...h })))
+    mockGetPantryItems.mockResolvedValue(
+      mockPantryItems.map((item) => ({ ...item }))
+    )
     mockGetGroceryLists.mockResolvedValue([])
   })
 
@@ -747,8 +751,10 @@ describe('PantryPage - Sort Functionality', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     mockGetToken.mockResolvedValue('mock-token')
-    mockGetHouseholds.mockResolvedValue(mockHouseholds)
-    mockGetPantryItems.mockResolvedValue(mockPantryItems)
+    mockGetHouseholds.mockResolvedValue(mockHouseholds.map((h) => ({ ...h })))
+    mockGetPantryItems.mockResolvedValue(
+      mockPantryItems.map((item) => ({ ...item }))
+    )
     mockGetGroceryLists.mockResolvedValue([])
   })
 
@@ -887,9 +893,20 @@ describe('PantryPage - Sort Functionality', () => {
       },
     ]
 
-    mockGetPantryItems.mockResolvedValue(allLowStockItems)
+    // Create a fresh copy to prevent mutations from affecting other tests
+    mockGetPantryItems.mockResolvedValue(
+      allLowStockItems.map((item) => ({ ...item }))
+    )
 
     render(<PantryPage />)
+
+    // Wait for loading to complete
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Loading pantry...')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     // Wait for households to load
     await waitFor(

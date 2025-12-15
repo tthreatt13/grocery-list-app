@@ -136,6 +136,16 @@ describe('GroceryListsPage', () => {
 
     render(<GroceryListsPage />)
 
+    // Wait for loading to complete
+    await waitFor(
+      () => {
+        expect(
+          screen.queryByText('Loading your grocery lists...')
+        ).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
     await waitFor(() => {
       expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
     })
@@ -192,6 +202,16 @@ describe('GroceryListsPage', () => {
     )
 
     render(<GroceryListsPage />)
+
+    // Wait for loading to complete
+    await waitFor(
+      () => {
+        expect(
+          screen.queryByText('Loading your grocery lists...')
+        ).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     await waitFor(() => {
       expect(screen.getByText('Grocery Lists')).toBeInTheDocument()
@@ -267,6 +287,16 @@ describe('GroceryListsPage', () => {
     ;(groceryApi.createGroceryList as jest.Mock).mockResolvedValue(newList)
 
     render(<GroceryListsPage />)
+
+    // Wait for loading to complete
+    await waitFor(
+      () => {
+        expect(
+          screen.queryByText('Loading your grocery lists...')
+        ).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
 
     await waitFor(() => {
       expect(screen.getByText('Grocery Lists')).toBeInTheDocument()
@@ -371,6 +401,16 @@ describe('GroceryListsPage', () => {
 
       render(<GroceryListsPage />)
 
+      // Wait for loading to complete
+      await waitFor(
+        () => {
+          expect(
+            screen.queryByText('Loading your grocery lists...')
+          ).not.toBeInTheDocument()
+        },
+        { timeout: 3000 }
+      )
+
       await waitFor(() => {
         expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
       })
@@ -391,6 +431,16 @@ describe('GroceryListsPage', () => {
       )
 
       render(<GroceryListsPage />)
+
+      // Wait for loading to complete
+      await waitFor(
+        () => {
+          expect(
+            screen.queryByText('Loading your grocery lists...')
+          ).not.toBeInTheDocument()
+        },
+        { timeout: 3000 }
+      )
 
       await waitFor(() => {
         expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
@@ -433,6 +483,16 @@ describe('GroceryListsPage', () => {
 
       render(<GroceryListsPage />)
 
+      // Wait for loading to complete
+      await waitFor(
+        () => {
+          expect(
+            screen.queryByText('Loading your grocery lists...')
+          ).not.toBeInTheDocument()
+        },
+        { timeout: 3000 }
+      )
+
       await waitFor(() => {
         expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
       })
@@ -469,6 +529,16 @@ describe('GroceryListsPage', () => {
       ;(groceryApi.deleteGroceryList as jest.Mock).mockResolvedValue(undefined)
 
       render(<GroceryListsPage />)
+
+      // Wait for loading to complete
+      await waitFor(
+        () => {
+          expect(
+            screen.queryByText('Loading your grocery lists...')
+          ).not.toBeInTheDocument()
+        },
+        { timeout: 3000 }
+      )
 
       await waitFor(() => {
         expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
@@ -517,6 +587,16 @@ describe('GroceryListsPage', () => {
       )
 
       render(<GroceryListsPage />)
+
+      // Wait for loading to complete
+      await waitFor(
+        () => {
+          expect(
+            screen.queryByText('Loading your grocery lists...')
+          ).not.toBeInTheDocument()
+        },
+        { timeout: 3000 }
+      )
 
       await waitFor(() => {
         expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
