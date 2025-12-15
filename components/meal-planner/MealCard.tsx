@@ -4,8 +4,8 @@ import Image from 'next/image'
 
 interface MealCardProps {
   meal: Meal
-  onEdit: (meal: Meal) => void
-  onDelete: (id: string) => void
+  onEdit: (_meal: Meal) => void
+  onDelete: (_id: string) => void
 }
 
 export default function MealCard({ meal, onEdit, onDelete }: MealCardProps) {

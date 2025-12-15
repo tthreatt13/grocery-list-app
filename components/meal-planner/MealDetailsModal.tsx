@@ -9,8 +9,8 @@ interface MealDetailsModalProps {
   isOpen: boolean
   onClose: () => void
   meal: Meal | null
-  onEdit: (meal: Meal) => void
-  onDelete: (mealId: string) => void
+  onEdit: (_meal: Meal) => void
+  onDelete: (_mealId: string) => void
 }
 
 export default function MealDetailsModal({

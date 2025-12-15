@@ -11,8 +11,8 @@ interface MemberCardProps {
   member: HouseholdMember
   isCurrentUserAdmin?: boolean
   isCurrentUser?: boolean
-  onEdit?: (member: HouseholdMember) => void
-  onRemove?: (member: HouseholdMember) => void
+  onEdit?: (_member: HouseholdMember) => void
+  onRemove?: (_member: HouseholdMember) => void
 }
 
 const getRoleBadgeClass = (role: MemberRole): string => {

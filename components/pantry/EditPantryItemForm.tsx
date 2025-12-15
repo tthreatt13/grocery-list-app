@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
@@ -19,34 +19,23 @@ export default function EditPantryItemForm({
   onCancel,
   isSubmitting,
 }: EditPantryItemFormProps) {
-  const [name, setName] = useState(item.name)
-  const [quantity, setQuantity] = useState<string>(item.quantity.toString())
-  const [unit, setUnit] = useState(item.unit || '')
-  const [category, setCategory] = useState<ItemCategory>(item.category)
-  const [expirationDate, setExpirationDate] = useState(
+  // Initialize state from props - component remounts when item.id changes (via key prop)
+  // This avoids setState in useEffect which can cause cascading renders
+  const [name, setName] = useState(() => item.name)
+  const [quantity, setQuantity] = useState<string>(() =>
+    item.quantity.toString()
+  )
+  const [unit, setUnit] = useState(() => item.unit || '')
+  const [category, setCategory] = useState<ItemCategory>(() => item.category)
+  const [expirationDate, setExpirationDate] = useState(() =>
     item.expirationDate
       ? new Date(item.expirationDate).toISOString().split('T')[0]
       : ''
   )
-  const [lowStockThreshold, setLowStockThreshold] = useState<string>(
+  const [lowStockThreshold, setLowStockThreshold] = useState<string>(() =>
     item.lowStockThreshold ? item.lowStockThreshold.toString() : ''
   )
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
-
-  useEffect(() => {
-    setName(item.name)
-    setQuantity(item.quantity.toString())
-    setUnit(item.unit || '')
-    setCategory(item.category)
-    setExpirationDate(
-      item.expirationDate
-        ? new Date(item.expirationDate).toISOString().split('T')[0]
-        : ''
-    )
-    setLowStockThreshold(
-      item.lowStockThreshold ? item.lowStockThreshold.toString() : ''
-    )
-  }, [item])
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {}

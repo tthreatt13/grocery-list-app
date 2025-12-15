@@ -902,6 +902,7 @@ export default function PantryPage() {
       >
         {editingItem && (
           <EditPantryItemForm
+            key={editingItem.id}
             item={editingItem}
             onSubmit={handleUpdateItem}
             onCancel={() => {

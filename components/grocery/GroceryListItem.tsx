@@ -6,9 +6,9 @@ import { cn } from '@/lib/utils'
 
 interface GroceryListItemProps {
   item: GroceryItem
-  onToggle: (id: string) => void
-  onEdit?: (id: string) => void
-  onDelete?: (id: string) => void
+  onToggle: (_id: string) => void
+  onEdit?: (_id: string) => void
+  onDelete?: (_id: string) => void
 }
 
 export default function GroceryListItem({

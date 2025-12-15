@@ -7,7 +7,7 @@ import { Select } from '@/components/ui/Select'
 import { Button } from '@/components/ui/Button'
 
 interface InviteMemberFormProps {
-  onSubmit: (data: { email: string; role: MemberRole }) => void
+  onSubmit: (_data: { email: string; role: MemberRole }) => void
   onCancel: () => void
 }
 

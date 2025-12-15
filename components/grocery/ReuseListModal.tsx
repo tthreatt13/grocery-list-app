@@ -11,7 +11,7 @@ import { formatQuantity } from '@/lib/utils'
 interface ReuseListModalProps {
   currentListId: string | number
   availableLists: GroceryList[]
-  onAddItems: (items: GroceryItem[]) => Promise<void>
+  onAddItems: (_items: GroceryItem[]) => Promise<void>
   onClose: () => void
   isLoading?: boolean
 }

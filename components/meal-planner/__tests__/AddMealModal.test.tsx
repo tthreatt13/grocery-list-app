@@ -210,8 +210,10 @@ describe('AddMealModal', () => {
       const nameInput = screen.getByLabelText(/Meal Name/i) as HTMLInputElement
       const ingredientsInput = screen.getByLabelText(
         /Ingredients/i
-      ) as HTMLTextAreaElement
-      const notesInput = screen.getByLabelText(/Notes/i) as HTMLTextAreaElement
+      ) as HTMLTextAreaElement & { value: string } & { value: string }
+      const notesInput = screen.getByLabelText(
+        /Notes/i
+      ) as HTMLTextAreaElement & { value: string }
 
       expect(nameInput.value).toBe('Existing Meal')
       expect(ingredientsInput.value).toBe('pasta, tomato sauce')
@@ -282,7 +284,7 @@ describe('AddMealModal', () => {
 
       const ingredientsInput = screen.getByLabelText(
         /Ingredients/i
-      ) as HTMLTextAreaElement
+      ) as HTMLTextAreaElement & { value: string }
       expect(ingredientsInput.value).toBe('')
     })
   })

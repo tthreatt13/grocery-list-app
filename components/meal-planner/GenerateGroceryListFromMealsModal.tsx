@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -17,11 +17,11 @@ interface GenerateGroceryListFromMealsModalProps {
   open: boolean
   onClose: () => void
   ingredients: IngredientWithMealType[]
-  onCreateList: (data: {
+  onCreateList: (_data: {
     listName: string
     ingredients: IngredientWithMealType[]
   }) => void | Promise<void>
-  onAddToList?: (data: {
+  onAddToList?: (_data: {
     listId: number
     ingredients: IngredientWithMealType[]
   }) => void | Promise<void>
@@ -38,25 +38,34 @@ export default function GenerateGroceryListFromMealsModal({
   existingLists = [],
   isCreating = false,
 }: GenerateGroceryListFromMealsModalProps) {
+  const prevOpenRef = useRef(open)
   const [mode, setMode] = useState<'create' | 'add'>('create')
   const [listName, setListName] = useState('Weekly Meal Plan')
   const [selectedListId, setSelectedListId] = useState<number | null>(null)
   const [selectedIngredients, setSelectedIngredients] = useState<Set<string>>(
-    new Set()
+    () => new Set(ingredients.map((item) => item.ingredient))
   )
 
   const hasExistingLists = existingLists.length > 0
 
-  // Initialize all ingredients as selected when modal opens
+  // Reset form state when modal opens (transition from closed to open)
+  // Using ref to track previous open state avoids setState-in-effect for same state
+  // Note: This effect is necessary to reset modal form state when it opens
   useEffect(() => {
-    if (open) {
+    if (open && !prevOpenRef.current) {
+      // Modal just opened - reset form state
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedIngredients(
         new Set(ingredients.map((item) => item.ingredient))
       )
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setListName('Weekly Meal Plan')
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setMode('create')
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedListId(null)
     }
+    prevOpenRef.current = open
   }, [open, ingredients])
 
   const handleToggleIngredient = (ingredient: string) => {

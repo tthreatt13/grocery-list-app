@@ -4,8 +4,8 @@ import { PantryItem } from '@/lib/types'
 
 interface PantryItemCardProps {
   item: PantryItem
-  onEdit?: (id: string) => void
-  onDelete?: (id: string) => void
+  onEdit?: (_id: string) => void
+  onDelete?: (_id: string) => void
 }
 
 export default function PantryItemCard({

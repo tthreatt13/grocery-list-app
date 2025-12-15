@@ -7,7 +7,7 @@ import { Select } from '@/components/ui/Select'
 import { ItemCategory, PantryItem } from '@/lib/types'
 
 interface AddPantryItemFormProps {
-  onSubmit: (item: Omit<PantryItem, 'id' | 'addedAt' | 'updatedAt'>) => void
+  onSubmit: (_item: Omit<PantryItem, 'id' | 'addedAt' | 'updatedAt'>) => void
   onCancel: () => void
   isSubmitting?: boolean
 }

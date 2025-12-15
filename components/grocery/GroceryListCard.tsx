@@ -20,9 +20,9 @@ import { GroceryListWithItems } from '@/lib/api/grocery'
 
 interface GroceryListCardProps {
   list: GroceryList | FlexibleGroceryList | GroceryListWithItems
-  onDelete?: (listId: string | number) => void
-  onArchive?: (listId: string | number) => void
-  onUnarchive?: (listId: string | number) => void
+  onDelete?: (_listId: string | number) => void
+  onArchive?: (_listId: string | number) => void
+  onUnarchive?: (_listId: string | number) => void
 }
 
 export default function GroceryListCard({

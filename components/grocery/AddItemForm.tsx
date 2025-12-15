@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button'
 import { ItemCategory, MealType } from '@/lib/types'
 
 interface AddItemFormProps {
-  onAdd: (item: {
+  onAdd: (_item: {
     name: string
     quantity: number
     unit: string

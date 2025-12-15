@@ -3,8 +3,8 @@ import PantryItemCard from './PantryItemCard'
 
 interface PantryGridProps {
   items: PantryItem[]
-  onEdit?: (id: string) => void
-  onDelete?: (id: string) => void
+  onEdit?: (_id: string) => void
+  onDelete?: (_id: string) => void
 }
 
 export default function PantryGrid({

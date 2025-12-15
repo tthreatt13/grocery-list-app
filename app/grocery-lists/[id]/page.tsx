@@ -857,6 +857,7 @@ export default function GroceryListDetailPage() {
             closeOnEscape={false}
           >
             <EditItemForm
+              key={editingItem?.id}
               item={editingItem}
               onSave={handleSaveItem}
               onCancel={() => {

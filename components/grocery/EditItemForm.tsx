@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
 import { Button } from '@/components/ui/Button'
@@ -17,7 +17,7 @@ interface EditItemFormProps {
     notes?: string
   }
   onSave: (
-    itemId: string,
+    _itemId: string,
     item: {
       name: string
       quantity: number
@@ -37,22 +37,16 @@ export default function EditItemForm({
   onCancel,
   isSubmitting,
 }: EditItemFormProps) {
-  const [name, setName] = useState(item.name)
-  const [quantity, setQuantity] = useState(item.quantity.toString())
-  const [unit, setUnit] = useState(item.unit || '')
-  const [category, setCategory] = useState(item.category)
-  const [mealType, setMealType] = useState<MealType | ''>(item.mealType || '')
-  const [notes, setNotes] = useState(item.notes || '')
-
-  // Update form when item prop changes
-  useEffect(() => {
-    setName(item.name)
-    setQuantity(item.quantity.toString())
-    setUnit(item.unit || '')
-    setCategory(item.category)
-    setMealType(item.mealType || '')
-    setNotes(item.notes || '')
-  }, [item])
+  // Initialize state from props - component remounts when item.id changes (via key prop)
+  // This avoids setState in useEffect which can cause cascading renders
+  const [name, setName] = useState(() => item.name)
+  const [quantity, setQuantity] = useState(() => item.quantity.toString())
+  const [unit, setUnit] = useState(() => item.unit || '')
+  const [category, setCategory] = useState(() => item.category)
+  const [mealType, setMealType] = useState<MealType | ''>(
+    () => item.mealType || ''
+  )
+  const [notes, setNotes] = useState(() => item.notes || '')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
