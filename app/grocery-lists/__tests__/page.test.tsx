@@ -250,6 +250,9 @@ describe('GroceryListsPage', () => {
   })
 
   it('should handle error state', async () => {
+    // Suppress console.error for this test since we're testing error states
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+
     ;(householdApi.getHouseholds as jest.Mock).mockRejectedValue(
       new Error('Failed to fetch households')
     )
@@ -267,6 +270,8 @@ describe('GroceryListsPage', () => {
     expect(
       screen.getByRole('button', { name: /try again/i })
     ).toBeInTheDocument()
+
+    consoleSpy.mockRestore()
   })
 
   it('should create new list when form is submitted', async () => {
@@ -576,6 +581,9 @@ describe('GroceryListsPage', () => {
     })
 
     it('should handle delete error', async () => {
+      // Suppress console.error for this test since we're testing error states
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+
       ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
         mockHouseholds
       )
@@ -624,6 +632,8 @@ describe('GroceryListsPage', () => {
       // List should still be in UI (check by heading in card)
       const listCards = screen.getAllByText('Weekly Shopping')
       expect(listCards.length).toBeGreaterThan(0)
+
+      consoleSpy.mockRestore()
     })
 
     it('should show loading state during deletion', async () => {
