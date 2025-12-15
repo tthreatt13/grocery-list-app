@@ -112,7 +112,9 @@ describe('GroceryListsPage', () => {
     // Wait for loading to complete
     await waitFor(
       () => {
-        expect(screen.queryByText('Loading your grocery lists...')).not.toBeInTheDocument()
+        expect(
+          screen.queryByText('Loading your grocery lists...')
+        ).not.toBeInTheDocument()
       },
       { timeout: 3000 }
     )

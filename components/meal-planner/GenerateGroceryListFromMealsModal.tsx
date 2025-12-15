@@ -58,11 +58,11 @@ export default function GenerateGroceryListFromMealsModal({
       setSelectedIngredients(
         new Set(ingredients.map((item) => item.ingredient))
       )
-       
+
       setListName('Weekly Meal Plan')
-       
+
       setMode('create')
-       
+
       setSelectedListId(null)
     }
     prevOpenRef.current = open

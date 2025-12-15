@@ -53,11 +53,11 @@ export default function GenerateGroceryListModal({
       // Modal just opened - reset form state
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedItems(new Set(lowStockItems.map((item) => item.id)))
-       
+
       setListName('Weekly Shopping List')
-       
+
       setMode('create')
-       
+
       setSelectedListId(null)
     }
     prevOpenRef.current = open
