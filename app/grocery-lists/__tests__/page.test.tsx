@@ -75,6 +75,38 @@ const mockGroceryLists: groceryApi.GroceryListWithItems[] = [
   },
 ]
 
+/**
+ * Helper function to render GroceryListsPage with mocks and wait for loading to complete
+ * This ensures consistent loading synchronization across all tests
+ */
+async function renderGroceryListsPage(
+  households: householdApi.HouseholdResponse[] = mockHouseholds,
+  groceryLists: groceryApi.GroceryListWithItems[] = mockGroceryLists
+) {
+  ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(households)
+  ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
+    groceryLists
+  )
+
+  render(<GroceryListsPage />)
+
+  // Wait for loading to complete by checking that loading text is gone
+  // and the main content is visible
+  await waitFor(
+    () => {
+      expect(
+        screen.queryByText('Loading your grocery lists...')
+      ).not.toBeInTheDocument()
+    },
+    { timeout: 3000 }
+  )
+
+  // Wait for the page title to appear, confirming the component has fully loaded
+  await screen.findByText('Grocery Lists')
+
+  return { screen }
+}
+
 describe('GroceryListsPage', () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -86,82 +118,35 @@ describe('GroceryListsPage', () => {
   })
 
   it('should render page title and description', async () => {
-    ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(mockHouseholds)
-    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
-      mockGroceryLists
-    )
+    await renderGroceryListsPage()
 
-    render(<GroceryListsPage />)
-
-    await waitFor(() => {
-      expect(screen.getByText('Grocery Lists')).toBeInTheDocument()
-      expect(
-        screen.getByText('Manage your shopping lists and track items')
-      ).toBeInTheDocument()
-    })
+    expect(screen.getByText('Grocery Lists')).toBeInTheDocument()
+    expect(
+      screen.getByText('Manage your shopping lists and track items')
+    ).toBeInTheDocument()
   })
 
   it('should display New List button in header', async () => {
-    ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(mockHouseholds)
-    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
-      mockGroceryLists
-    )
+    await renderGroceryListsPage()
 
-    render(<GroceryListsPage />)
-
-    // Wait for loading to complete
-    await waitFor(
-      () => {
-        expect(
-          screen.queryByText('Loading your grocery lists...')
-        ).not.toBeInTheDocument()
-      },
-      { timeout: 3000 }
-    )
-
-    await waitFor(() => {
-      expect(screen.getByText('Grocery Lists')).toBeInTheDocument()
+    const newListButton = await screen.findByRole('button', {
+      name: /new list/i,
     })
-
-    const newListButton = screen.getByRole('button', { name: /new list/i })
     expect(newListButton).toBeInTheDocument()
     expect(newListButton).not.toBeDisabled()
   })
 
   it('should display grocery list cards when lists exist', async () => {
-    ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(mockHouseholds)
-    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
-      mockGroceryLists
-    )
+    await renderGroceryListsPage()
 
-    render(<GroceryListsPage />)
-
-    // Wait for loading to complete
-    await waitFor(
-      () => {
-        expect(
-          screen.queryByText('Loading your grocery lists...')
-        ).not.toBeInTheDocument()
-      },
-      { timeout: 3000 }
-    )
-
-    await waitFor(() => {
-      expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-    })
-
+    expect(await screen.findByText('Weekly Shopping')).toBeInTheDocument()
     expect(screen.getByText('Party Supplies')).toBeInTheDocument()
   })
 
   it('should show empty state when no lists exist', async () => {
-    ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(mockHouseholds)
-    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue([])
+    await renderGroceryListsPage(mockHouseholds, [])
 
-    render(<GroceryListsPage />)
-
-    await waitFor(() => {
-      expect(screen.getByText('No current lists yet')).toBeInTheDocument()
-    })
+    expect(await screen.findByText('No current lists yet')).toBeInTheDocument()
 
     expect(
       screen.getByText('Create your first grocery list to get started')
@@ -172,14 +157,9 @@ describe('GroceryListsPage', () => {
   })
 
   it('should show no household message when no households exist', async () => {
-    ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue([])
-    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue([])
+    await renderGroceryListsPage([], [])
 
-    render(<GroceryListsPage />)
-
-    await waitFor(() => {
-      expect(screen.getByText('No Household Found')).toBeInTheDocument()
-    })
+    expect(await screen.findByText('No Household Found')).toBeInTheDocument()
 
     expect(
       screen.getByText(
@@ -196,28 +176,11 @@ describe('GroceryListsPage', () => {
   })
 
   it('should open create list modal when New List button is clicked', async () => {
-    ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(mockHouseholds)
-    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
-      mockGroceryLists
-    )
+    await renderGroceryListsPage()
 
-    render(<GroceryListsPage />)
-
-    // Wait for loading to complete
-    await waitFor(
-      () => {
-        expect(
-          screen.queryByText('Loading your grocery lists...')
-        ).not.toBeInTheDocument()
-      },
-      { timeout: 3000 }
-    )
-
-    await waitFor(() => {
-      expect(screen.getByText('Grocery Lists')).toBeInTheDocument()
+    const newListButton = await screen.findByRole('button', {
+      name: /new list/i,
     })
-
-    const newListButton = screen.getByRole('button', { name: /new list/i })
     fireEvent.click(newListButton)
 
     await waitFor(() => {
@@ -285,30 +248,14 @@ describe('GroceryListsPage', () => {
       items: [],
     }
 
-    ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(mockHouseholds)
-    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
-      mockGroceryLists
-    )
     ;(groceryApi.createGroceryList as jest.Mock).mockResolvedValue(newList)
 
-    render(<GroceryListsPage />)
-
-    // Wait for loading to complete
-    await waitFor(
-      () => {
-        expect(
-          screen.queryByText('Loading your grocery lists...')
-        ).not.toBeInTheDocument()
-      },
-      { timeout: 3000 }
-    )
-
-    await waitFor(() => {
-      expect(screen.getByText('Grocery Lists')).toBeInTheDocument()
-    })
+    await renderGroceryListsPage()
 
     // Open modal
-    const newListButton = screen.getByRole('button', { name: /new list/i })
+    const newListButton = await screen.findByRole('button', {
+      name: /new list/i,
+    })
     fireEvent.click(newListButton)
 
     await waitFor(() => {
@@ -335,16 +282,9 @@ describe('GroceryListsPage', () => {
   })
 
   it('should display lists in grid layout', async () => {
-    ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(mockHouseholds)
-    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
-      mockGroceryLists
-    )
+    await renderGroceryListsPage()
 
-    render(<GroceryListsPage />)
-
-    await waitFor(() => {
-      expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-    })
+    expect(await screen.findByText('Weekly Shopping')).toBeInTheDocument()
 
     // Check that lists are displayed in a grid
     const gridContainer = screen.getByText('Weekly Shopping').closest('.grid')
@@ -368,21 +308,12 @@ describe('GroceryListsPage', () => {
       },
     ]
 
-    ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
-      multipleHouseholds
-    )
-    ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
-      mockGroceryLists
-    )
+    await renderGroceryListsPage(multipleHouseholds, mockGroceryLists)
 
-    render(<GroceryListsPage />)
-
-    await waitFor(() => {
-      expect(screen.getByText('Grocery Lists')).toBeInTheDocument()
+    // Open modal - wait for button to be available after loading
+    const newListButton = await screen.findByRole('button', {
+      name: /new list/i,
     })
-
-    // Open modal
-    const newListButton = screen.getByRole('button', { name: /new list/i })
     fireEvent.click(newListButton)
 
     await waitFor(() => {
@@ -397,28 +328,9 @@ describe('GroceryListsPage', () => {
 
   describe('Delete functionality', () => {
     it('should show delete buttons on grocery list cards', async () => {
-      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
-        mockHouseholds
-      )
-      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
-        mockGroceryLists
-      )
+      await renderGroceryListsPage()
 
-      render(<GroceryListsPage />)
-
-      // Wait for loading to complete
-      await waitFor(
-        () => {
-          expect(
-            screen.queryByText('Loading your grocery lists...')
-          ).not.toBeInTheDocument()
-        },
-        { timeout: 3000 }
-      )
-
-      await waitFor(() => {
-        expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-      })
+      expect(await screen.findByText('Weekly Shopping')).toBeInTheDocument()
 
       // Should show delete buttons for each list
       const deleteButtons = screen.getAllByRole('button', {
@@ -428,28 +340,9 @@ describe('GroceryListsPage', () => {
     })
 
     it('should open confirmation modal when delete button is clicked', async () => {
-      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
-        mockHouseholds
-      )
-      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
-        mockGroceryLists
-      )
+      await renderGroceryListsPage()
 
-      render(<GroceryListsPage />)
-
-      // Wait for loading to complete
-      await waitFor(
-        () => {
-          expect(
-            screen.queryByText('Loading your grocery lists...')
-          ).not.toBeInTheDocument()
-        },
-        { timeout: 3000 }
-      )
-
-      await waitFor(() => {
-        expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-      })
+      expect(await screen.findByText('Weekly Shopping')).toBeInTheDocument()
 
       // Click delete button for first list
       const deleteButtons = screen.getAllByRole('button', {
@@ -479,28 +372,9 @@ describe('GroceryListsPage', () => {
     })
 
     it('should close confirmation modal when cancel is clicked', async () => {
-      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
-        mockHouseholds
-      )
-      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
-        mockGroceryLists
-      )
+      await renderGroceryListsPage()
 
-      render(<GroceryListsPage />)
-
-      // Wait for loading to complete
-      await waitFor(
-        () => {
-          expect(
-            screen.queryByText('Loading your grocery lists...')
-          ).not.toBeInTheDocument()
-        },
-        { timeout: 3000 }
-      )
-
-      await waitFor(() => {
-        expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-      })
+      expect(await screen.findByText('Weekly Shopping')).toBeInTheDocument()
 
       // Open confirmation modal
       const deleteButtons = screen.getAllByRole('button', {
@@ -525,29 +399,11 @@ describe('GroceryListsPage', () => {
     })
 
     it('should delete list when confirmed', async () => {
-      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
-        mockHouseholds
-      )
-      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
-        mockGroceryLists
-      )
       ;(groceryApi.deleteGroceryList as jest.Mock).mockResolvedValue(undefined)
 
-      render(<GroceryListsPage />)
+      await renderGroceryListsPage()
 
-      // Wait for loading to complete
-      await waitFor(
-        () => {
-          expect(
-            screen.queryByText('Loading your grocery lists...')
-          ).not.toBeInTheDocument()
-        },
-        { timeout: 3000 }
-      )
-
-      await waitFor(() => {
-        expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-      })
+      expect(await screen.findByText('Weekly Shopping')).toBeInTheDocument()
 
       // Open confirmation modal
       const deleteButtons = screen.getAllByRole('button', {
@@ -586,31 +442,13 @@ describe('GroceryListsPage', () => {
         .spyOn(console, 'error')
         .mockImplementation(() => {})
 
-      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
-        mockHouseholds
-      )
-      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
-        mockGroceryLists
-      )
       ;(groceryApi.deleteGroceryList as jest.Mock).mockRejectedValue(
         new Error('Failed to delete list')
       )
 
-      render(<GroceryListsPage />)
+      await renderGroceryListsPage()
 
-      // Wait for loading to complete
-      await waitFor(
-        () => {
-          expect(
-            screen.queryByText('Loading your grocery lists...')
-          ).not.toBeInTheDocument()
-        },
-        { timeout: 3000 }
-      )
-
-      await waitFor(() => {
-        expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-      })
+      expect(await screen.findByText('Weekly Shopping')).toBeInTheDocument()
 
       // Open confirmation modal
       const deleteButtons = screen.getAllByRole('button', {
@@ -644,21 +482,13 @@ describe('GroceryListsPage', () => {
         resolveDelete = resolve
       })
 
-      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
-        mockHouseholds
-      )
-      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
-        mockGroceryLists
-      )
       ;(groceryApi.deleteGroceryList as jest.Mock).mockReturnValue(
         deletePromise
       )
 
-      render(<GroceryListsPage />)
+      await renderGroceryListsPage()
 
-      await waitFor(() => {
-        expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-      })
+      expect(await screen.findByText('Weekly Shopping')).toBeInTheDocument()
 
       // Open confirmation modal
       const deleteButtons = screen.getAllByRole('button', {
@@ -691,36 +521,14 @@ describe('GroceryListsPage', () => {
 
   describe('Tabs functionality', () => {
     it('should render Current and Archived tabs with counts', async () => {
-      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
-        mockHouseholds
-      )
-      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
-        mockGroceryLists
-      )
-
-      render(<GroceryListsPage />)
-
-      await waitFor(() => {
-        expect(screen.getByText('Grocery Lists')).toBeInTheDocument()
-      })
+      await renderGroceryListsPage()
 
       expect(screen.getByText(/Current \(2\)/)).toBeInTheDocument()
       expect(screen.getByText(/Archived \(0\)/)).toBeInTheDocument()
     })
 
     it('should show Current tab as active by default', async () => {
-      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
-        mockHouseholds
-      )
-      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
-        mockGroceryLists
-      )
-
-      render(<GroceryListsPage />)
-
-      await waitFor(() => {
-        expect(screen.getByText('Grocery Lists')).toBeInTheDocument()
-      })
+      await renderGroceryListsPage()
 
       const currentTab = screen.getByText(/Current \(2\)/)
       expect(currentTab).toHaveClass('border-emerald-500', 'text-emerald-600')
@@ -741,21 +549,10 @@ describe('GroceryListsPage', () => {
         },
       ]
 
-      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
-        mockHouseholds
-      )
-      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
-        listsWithArchived
-      )
-
-      render(<GroceryListsPage />)
-
-      await waitFor(() => {
-        expect(screen.getByText('Grocery Lists')).toBeInTheDocument()
-      })
+      await renderGroceryListsPage(mockHouseholds, listsWithArchived)
 
       // Should show current lists by default
-      expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
+      expect(await screen.findByText('Weekly Shopping')).toBeInTheDocument()
       expect(screen.getByText('Party Supplies')).toBeInTheDocument()
       expect(screen.queryByText('Archived List')).not.toBeInTheDocument()
 
@@ -786,18 +583,11 @@ describe('GroceryListsPage', () => {
         },
       ]
 
-      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
-        mockHouseholds
-      )
-      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
-        archivedLists
-      )
+      await renderGroceryListsPage(mockHouseholds, archivedLists)
 
-      render(<GroceryListsPage />)
-
-      await waitFor(() => {
-        expect(screen.getByText('No current lists yet')).toBeInTheDocument()
-      })
+      expect(
+        await screen.findByText('No current lists yet')
+      ).toBeInTheDocument()
 
       expect(
         screen.getByText('Create your first grocery list to get started')
@@ -808,18 +598,7 @@ describe('GroceryListsPage', () => {
     })
 
     it('should show correct empty state for Archived tab', async () => {
-      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
-        mockHouseholds
-      )
-      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
-        mockGroceryLists
-      )
-
-      render(<GroceryListsPage />)
-
-      await waitFor(() => {
-        expect(screen.getByText('Grocery Lists')).toBeInTheDocument()
-      })
+      await renderGroceryListsPage()
 
       // Click Archived tab
       const archivedTab = screen.getByText(/Archived \(0\)/)
@@ -839,22 +618,14 @@ describe('GroceryListsPage', () => {
 
   describe('Archive/Unarchive functionality', () => {
     it('should archive a list when archive button is clicked', async () => {
-      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
-        mockHouseholds
-      )
-      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
-        mockGroceryLists
-      )
       ;(groceryApi.archiveGroceryList as jest.Mock).mockResolvedValue({
         ...mockGroceryLists[0],
         is_archived: true,
       })
 
-      render(<GroceryListsPage />)
+      await renderGroceryListsPage()
 
-      await waitFor(() => {
-        expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-      })
+      expect(await screen.findByText('Weekly Shopping')).toBeInTheDocument()
 
       // Find and click archive button
       const archiveButtons = screen.getAllByLabelText(/archive list/i)
@@ -881,22 +652,12 @@ describe('GroceryListsPage', () => {
         },
       ]
 
-      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
-        mockHouseholds
-      )
-      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
-        archivedList
-      )
       ;(groceryApi.unarchiveGroceryList as jest.Mock).mockResolvedValue({
         ...mockGroceryLists[0],
         is_archived: false,
       })
 
-      render(<GroceryListsPage />)
-
-      await waitFor(() => {
-        expect(screen.getByText('Grocery Lists')).toBeInTheDocument()
-      })
+      await renderGroceryListsPage(mockHouseholds, archivedList)
 
       // Switch to Archived tab
       const archivedTab = screen.getByText(/Archived \(1\)/)
@@ -919,31 +680,18 @@ describe('GroceryListsPage', () => {
     })
 
     it('should handle archive error gracefully', async () => {
-      ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
-        mockHouseholds
-      )
-      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
-        mockGroceryLists
-      )
+      // Suppress console.error for this test since we're testing error states
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
+
       ;(groceryApi.archiveGroceryList as jest.Mock).mockRejectedValue(
         new Error('Failed to archive list')
       )
 
-      render(<GroceryListsPage />)
+      await renderGroceryListsPage()
 
-      // Wait for loading to complete
-      await waitFor(
-        () => {
-          expect(
-            screen.queryByText('Loading your grocery lists...')
-          ).not.toBeInTheDocument()
-        },
-        { timeout: 3000 }
-      )
-
-      await waitFor(() => {
-        expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
-      })
+      expect(await screen.findByText('Weekly Shopping')).toBeInTheDocument()
 
       // Wait for archive buttons to be available
       const archiveButtons = await screen.findAllByLabelText(/archive list/i)
@@ -955,6 +703,8 @@ describe('GroceryListsPage', () => {
 
       // List should still be visible (not archived)
       expect(screen.getByText('Weekly Shopping')).toBeInTheDocument()
+
+      consoleSpy.mockRestore()
     })
   })
 })
