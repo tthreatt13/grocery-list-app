@@ -582,7 +582,9 @@ describe('GroceryListsPage', () => {
 
     it('should handle delete error', async () => {
       // Suppress console.error for this test since we're testing error states
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
 
       ;(householdApi.getHouseholds as jest.Mock).mockResolvedValue(
         mockHouseholds
