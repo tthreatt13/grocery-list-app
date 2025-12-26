@@ -147,7 +147,10 @@ export default function PreferencesForm({
         // Extract meal names from response
         const mealNames = response.meals
           .map((meal) => meal.name)
-          .filter((name) => name && name.trim().length > 0)
+          .filter(
+            (name): name is string =>
+              name !== null && name !== undefined && name.trim().length > 0
+          )
 
         // Deduplicate meal names (preserve original capitalization)
         const uniqueMealNames = Array.from(

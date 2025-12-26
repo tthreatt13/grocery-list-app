@@ -160,11 +160,15 @@ def main():
         if check_column_exists(inspector, "household_user_preferences", "zip_code"):
             print("✓ Column 'household_user_preferences.zip_code' exists")
         else:
-            errors.append("✗ Column 'household_user_preferences.zip_code' is missing (added in migration e4a05e381069)")
+            errors.append(
+                "✗ Column 'household_user_preferences.zip_code' is missing "
+                "(added in migration e4a05e381069)"
+            )
             print("✗ Column 'household_user_preferences.zip_code' is missing")
     else:
         errors.append(
-            "✗ Table 'household_user_preferences' is missing (added in migration d1e2f3a4b5c6)"
+            "✗ Table 'household_user_preferences' is missing "
+            "(added in migration d1e2f3a4b5c6)"
         )
         print("✗ Table 'household_user_preferences' is missing")
 
@@ -176,13 +180,20 @@ def main():
         if check_column_exists(inspector, "meals", "meal_category"):
             print("✓ Column 'meals.meal_category' exists")
         else:
-            errors.append("✗ Column 'meals.meal_category' is missing (added in migration 626841e03296)")
+            errors.append(
+                "✗ Column 'meals.meal_category' is missing "
+                "(added in migration 626841e03296)"
+            )
             print("✗ Column 'meals.meal_category' is missing")
-        
+
         # Check that name column is nullable (changed in migration 1406e9442b77)
         if check_column_exists(inspector, "meals", "name"):
-            # Note: We can't easily check nullability in a cross-database way, but we can verify the column exists
-            print("✓ Column 'meals.name' exists (should be nullable per migration 1406e9442b77)")
+            # Note: We can't easily check nullability in a cross-database way,
+            # but we can verify the column exists
+            print(
+                "✓ Column 'meals.name' exists "
+                "(should be nullable per migration 1406e9442b77)"
+            )
         else:
             errors.append("✗ Column 'meals.name' is missing")
             print("✗ Column 'meals.name' is missing")
@@ -194,7 +205,10 @@ def main():
     if check_column_exists(inspector, "grocery_lists", "is_archived"):
         print("✓ Column 'grocery_lists.is_archived' exists")
     else:
-        errors.append("✗ Column 'grocery_lists.is_archived' is missing (added in migration e6680da276e3)")
+        errors.append(
+            "✗ Column 'grocery_lists.is_archived' is missing "
+            "(added in migration e6680da276e3)"
+        )
         print("✗ Column 'grocery_lists.is_archived' is missing")
 
     print()
