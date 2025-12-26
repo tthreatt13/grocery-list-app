@@ -46,7 +46,9 @@ def check_migration_version() -> Tuple[bool, str]:
         with engine.connect() as conn:
             result = conn.execute(text("SELECT version_num FROM alembic_version"))
             version = result.scalar()
-            expected_version = "1406e9442b77"  # Latest migration: make_meal_name_nullable
+            expected_version = (
+                "1406e9442b77"  # Latest migration: make_meal_name_nullable
+            )
             return version == expected_version, version or "None"
     except Exception as e:
         return False, f"Error: {str(e)}"
@@ -155,7 +157,7 @@ def main():
             else:
                 errors.append(f"✗ Column 'household_user_preferences.{col}' is missing")
                 print(f"✗ Column 'household_user_preferences.{col}' is missing")
-        
+
         # Check zip_code column (added in migration e4a05e381069)
         if check_column_exists(inspector, "household_user_preferences", "zip_code"):
             print("✓ Column 'household_user_preferences.zip_code' exists")
@@ -175,7 +177,7 @@ def main():
     # meals table columns (check for latest migrations)
     if check_table_exists(inspector, "meals"):
         print("✓ Table 'meals' exists")
-        
+
         # Check meal_category column (added in migration 626841e03296)
         if check_column_exists(inspector, "meals", "meal_category"):
             print("✓ Column 'meals.meal_category' exists")
@@ -200,7 +202,7 @@ def main():
     else:
         errors.append("✗ Table 'meals' is missing")
         print("✗ Table 'meals' is missing")
-    
+
     # grocery_lists.is_archived (added in migration e6680da276e3)
     if check_column_exists(inspector, "grocery_lists", "is_archived"):
         print("✓ Column 'grocery_lists.is_archived' exists")
