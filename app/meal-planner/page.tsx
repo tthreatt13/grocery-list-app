@@ -12,6 +12,7 @@ import MobileWeeklyCalendar, {
 import AddMealModal from '@/components/meal-planner/AddMealModal'
 import GenerateGroceryListFromMealsModal from '@/components/meal-planner/GenerateGroceryListFromMealsModal'
 import { Button } from '@/components/ui/Button'
+import { ConfirmDeleteModal } from '@/components/ui/ConfirmDeleteModal'
 import { formatDate } from '@/lib/utils'
 import {
   getWeeklyMeals,
@@ -42,7 +43,7 @@ function convertMealResponse(meal: MealResponse): Meal {
 
   return {
     id: meal.id.toString(),
-    name: meal.name,
+    name: meal.name || undefined,
     mealType: (meal.meal_type.charAt(0).toUpperCase() +
       meal.meal_type.slice(1)) as MealType,
     date: mealDate,
@@ -64,27 +65,18 @@ export default function MealPlannerPage() {
   )
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [userSynced, setUserSynced] = useState(false)
 
-  // State for the current week's start date
-  const [currentWeekStart, setCurrentWeekStart] = useState(() => {
-    const today = new Date()
-    const dayOfWeek = today.getDay()
-    // Convert to Monday-based week (0=Monday, 6=Sunday)
-    const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1
-    const startDate = new Date(today)
-    startDate.setDate(today.getDate() - daysSinceMonday) // Start on Monday
-    // Normalize to start of day (midnight) to avoid time comparison issues
-    startDate.setHours(0, 0, 0, 0)
-    return startDate
-  })
+  // State for the current week's start date (initialized client-side only to avoid hydration mismatch)
+  const [currentWeekStart, setCurrentWeekStart] = useState<Date | null>(null)
 
   // State for meals
   const [meals, setMeals] = useState<Meal[]>([])
 
   // State for add/edit meal modal
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [selectedMealType, setSelectedMealType] = useState<MealType>(
     MealType.DINNER
   )
@@ -94,6 +86,11 @@ export default function MealPlannerPage() {
   const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false)
   const [groceryLists, setGroceryLists] = useState<GroceryListResponse[]>([])
   const [isCreatingList, setIsCreatingList] = useState(false)
+
+  // State for delete confirmation modal
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [mealToDelete, setMealToDelete] = useState<string | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   // Refs for calendar components to trigger scroll
   const desktopCalendarRef = useRef<WeeklyCalendarRef>(null)
@@ -131,6 +128,20 @@ export default function MealPlannerPage() {
     syncUserToBackend()
   }, [user])
 
+  // Initialize dates client-side only to avoid hydration mismatch
+  useEffect(() => {
+    const today = new Date()
+    const dayOfWeek = today.getDay()
+    // Convert to Monday-based week (0=Monday, 6=Sunday)
+    const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1
+    const startDate = new Date(today)
+    startDate.setDate(today.getDate() - daysSinceMonday) // Start on Monday
+    // Normalize to start of day (midnight) to avoid time comparison issues
+    startDate.setHours(0, 0, 0, 0)
+    setCurrentWeekStart(startDate)
+    setSelectedDate(new Date())
+  }, [])
+
   // Fetch households after user is synced
   useEffect(() => {
     async function fetchHouseholds() {
@@ -166,7 +177,7 @@ export default function MealPlannerPage() {
   // Fetch meals when household or week changes
   useEffect(() => {
     async function fetchMeals() {
-      if (!selectedHouseholdId) return
+      if (!selectedHouseholdId || !currentWeekStart) return
 
       try {
         setError(null)
@@ -214,8 +225,21 @@ export default function MealPlannerPage() {
     fetchGroceryLists()
   }, [selectedHouseholdId, getToken])
 
+  // Show loading state while dates are being initialized
+  if (!currentWeekStart || !selectedDate) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading meal planner...</p>
+        </div>
+      </div>
+    )
+  }
+
   // Navigate to previous week
   const handlePreviousWeek = () => {
+    if (!currentWeekStart) return
     const newStart = new Date(currentWeekStart)
     newStart.setDate(newStart.getDate() - 7)
     setCurrentWeekStart(newStart)
@@ -223,6 +247,7 @@ export default function MealPlannerPage() {
 
   // Navigate to next week
   const handleNextWeek = () => {
+    if (!currentWeekStart) return
     const newStart = new Date(currentWeekStart)
     newStart.setDate(newStart.getDate() + 7)
     setCurrentWeekStart(newStart)
@@ -255,7 +280,7 @@ export default function MealPlannerPage() {
 
   // Handle adding or updating a meal
   const handleAddMeal = async (mealData: {
-    name: string
+    name?: string
     notes?: string
     ingredients?: string
     mealCategory?: 'normal' | 'quick_meal' | 'eat_out'
@@ -274,7 +299,7 @@ export default function MealPlannerPage() {
       const updatedMealResponse = await updateMeal(
         parseInt(editingMeal.id),
         {
-          name: mealData.name,
+          name: mealData.name || undefined,
           notes: mealData.notes || '',
           ingredients: mealData.ingredients || '',
           meal_category: mealData.mealCategory || 'normal',
@@ -295,7 +320,7 @@ export default function MealPlannerPage() {
       const newMealResponse = await createMeal(
         {
           household_id: selectedHouseholdId,
-          name: mealData.name,
+          name: mealData.name || undefined,
           meal_type: selectedMealType.toLowerCase() as
             | 'breakfast'
             | 'lunch'
@@ -331,24 +356,64 @@ export default function MealPlannerPage() {
     setIsAddModalOpen(true)
   }
 
-  // Handle meal delete
-  const handleMealDelete = async (mealId: string) => {
-    if (!confirm('Are you sure you want to delete this meal?')) {
-      return
-    }
+  // Handle meal delete - show confirmation modal
+  const handleMealDelete = async (mealId: string): Promise<void> => {
+    setMealToDelete(mealId)
+    setIsDeleteModalOpen(true)
+    // Return resolved promise to satisfy AddMealModal's interface
+    return Promise.resolve()
+  }
 
-    const token = await getToken()
-    if (!token) {
-      throw new Error('Authentication required')
-    }
+  // Handle meal delete directly - show confirmation modal (for calendar view)
+  const handleMealDeleteDirect = (mealId: string) => {
+    setMealToDelete(mealId)
+    setIsDeleteModalOpen(true)
+  }
 
-    await deleteMealAPI(parseInt(mealId), token)
-    setMeals(meals.filter((m) => m.id !== mealId))
-    // Close modal on successful delete if it's open
-    if (isAddModalOpen && editingMeal?.id === mealId) {
-      setIsAddModalOpen(false)
-      setEditingMeal(null)
+  // Handle confirmed delete - performs actual deletion
+  const handleConfirmDelete = async () => {
+    if (!mealToDelete) return
+
+    try {
+      setIsDeleting(true)
+      const token = await getToken()
+      if (!token) {
+        throw new Error('Authentication required')
+      }
+
+      await deleteMealAPI(parseInt(mealToDelete), token)
+      setMeals(meals.filter((m) => m.id !== mealToDelete))
+
+      // Clear editing state and close modals if this meal was being edited
+      if (editingMeal?.id === mealToDelete) {
+        setEditingMeal(null)
+        setIsAddModalOpen(false)
+      }
+
+      // Close delete confirmation modal
+      setIsDeleteModalOpen(false)
+      setMealToDelete(null)
+
+      // Show success message
+      setSuccessMessage('Meal deleted successfully')
+      setError(null)
+
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 3000)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to delete meal')
+      setSuccessMessage(null)
+    } finally {
+      setIsDeleting(false)
     }
+  }
+
+  // Handle cancel delete - close modal without deleting
+  const handleCancelDelete = () => {
+    setIsDeleteModalOpen(false)
+    setMealToDelete(null)
   }
 
   // Generate grocery list from week's meals
@@ -542,6 +607,13 @@ export default function MealPlannerPage() {
         {error && (
           <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-4">
             <p className="text-sm text-red-700">{error}</p>
+          </div>
+        )}
+
+        {/* Success message banner */}
+        {successMessage && (
+          <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-4">
+            <p className="text-sm text-green-700">{successMessage}</p>
           </div>
         )}
 
@@ -766,7 +838,7 @@ export default function MealPlannerPage() {
               onMealClick={handleMealClick}
               onEmptySlotClick={handleEmptySlotClick}
               onMealEdit={handleMealEdit}
-              onMealDelete={handleMealDelete}
+              onMealDelete={handleMealDeleteDirect}
             />
           </div>
         )}
@@ -917,6 +989,18 @@ export default function MealPlannerPage() {
         onAddToList={handleAddToGroceryList}
         existingLists={groceryLists}
         isCreating={isCreatingList}
+      />
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmDeleteModal
+        open={isDeleteModalOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        title="Delete Meal?"
+        message="Are you sure you want to delete this meal? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        isLoading={isDeleting}
       />
     </div>
   )
