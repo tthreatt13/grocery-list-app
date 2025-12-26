@@ -3,10 +3,11 @@
 import logging
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPBearer
 import time
 
 from config import settings
-from routes import auth, users, grocery_lists, pantry, households, meals
+from routes import auth, users, grocery_lists, pantry, households, meals, weather
 
 # Configure logging
 logging.basicConfig(
@@ -14,12 +15,60 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Create security scheme for Swagger UI
+security = HTTPBearer()
+
 # Create FastAPI app instance
 app = FastAPI(
     title="Grocery App API",
     description="Backend API for busy parents to manage grocery lists, pantry inventory, and meal planning",
     version="1.0.0",
 )
+
+# Add security scheme to OpenAPI schema for Swagger UI
+app.openapi_schema = None  # Clear cache to regenerate
+
+
+def custom_openapi():
+    """Custom OpenAPI schema with security definitions."""
+    if app.openapi_schema:
+        return app.openapi_schema
+    
+    from fastapi.openapi.utils import get_openapi
+    
+    openapi_schema = get_openapi(
+        title=app.title,
+        version=app.version,
+        description=app.description,
+        routes=app.routes,
+    )
+    
+    # Add security scheme
+    openapi_schema["components"]["securitySchemes"] = {
+        "Bearer": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT",
+            "description": "Enter your JWT token. You can get a test token by running: python scripts/generate_test_token.py",
+        }
+    }
+    
+    # Add security to all endpoints that require authentication
+    # This makes the Authorize button appear in Swagger UI
+    for path, path_item in openapi_schema.get("paths", {}).items():
+        for method, operation in path_item.items():
+            if method in ["get", "post", "put", "delete", "patch"]:
+                # Check if endpoint has dependencies that include get_current_user
+                # For now, we'll add security to all endpoints
+                # In production, you might want to be more selective
+                if "security" not in operation:
+                    operation["security"] = [{"Bearer": []}]
+    
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+
+app.openapi = custom_openapi
 
 # Log configured CORS origins at startup
 configured_origins = settings.get_allowed_origins()
@@ -66,6 +115,7 @@ app.include_router(grocery_lists.router)
 app.include_router(pantry.router)
 app.include_router(households.router, prefix="/api")
 app.include_router(meals.router, prefix="/api")
+app.include_router(weather.router, prefix="/api")
 
 
 @app.get("/")
