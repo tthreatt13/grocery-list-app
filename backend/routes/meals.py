@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from typing import List
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 
 from database import get_db
 from middleware.auth import get_current_user
@@ -268,5 +268,8 @@ async def generate_grocery_list(
     return GenerateGroceryListResponse(
         grocery_list_id=grocery_list.id,
         items_count=items_count,
-        message=f"Successfully generated grocery list with {items_count} items from {len(meals)} meals",
+        message=(
+            f"Successfully generated grocery list with {items_count} items "
+            f"from {len(meals)} meals"
+        ),
     )

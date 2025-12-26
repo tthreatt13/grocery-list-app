@@ -21,7 +21,10 @@ security = HTTPBearer()
 # Create FastAPI app instance
 app = FastAPI(
     title="Grocery App API",
-    description="Backend API for busy parents to manage grocery lists, pantry inventory, and meal planning",
+    description=(
+        "Backend API for busy parents to manage grocery lists, "
+        "pantry inventory, and meal planning"
+    ),
     version="1.0.0",
 )
 
@@ -49,7 +52,10 @@ def custom_openapi():
             "type": "http",
             "scheme": "bearer",
             "bearerFormat": "JWT",
-            "description": "Enter your JWT token. You can get a test token by running: python scripts/generate_test_token.py",
+            "description": (
+                "Enter your JWT token. You can get a test token by running: "
+                "python scripts/generate_test_token.py"
+            ),
         }
     }
 
@@ -102,7 +108,8 @@ async def log_requests(request: Request, call_next):
     # Log response
     process_time = (time.time() - start_time) * 1000
     logger.info(
-        f"← {request.method} {request.url.path} - Status: {response.status_code} - Time: {process_time:.2f}ms"
+        f"← {request.method} {request.url.path} - Status: {response.status_code} "
+        f"- Time: {process_time:.2f}ms"
     )
 
     return response

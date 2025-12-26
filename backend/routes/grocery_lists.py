@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session, joinedload
 
 from database import get_db
-from middleware.auth import get_current_user, get_current_user_optional
+from middleware.auth import get_current_user_optional
 from middleware.permissions import require_household_member
 from models.grocery_list import GroceryList
 from models.grocery_item import GroceryItem

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { useAuth } from '@clerk/nextjs'
 import { Button } from '@/components/ui/Button'
 import { Checkbox } from '@/components/ui/Checkbox'
 import { Input } from '@/components/ui/Input'
@@ -8,6 +9,7 @@ import {
   HouseholdPreferences,
   HouseholdPreferencesUpdate,
 } from '@/lib/api/household'
+import { getWeeklyMeals, getWeekStartDate } from '@/lib/api/meals'
 
 interface PreferencesFormProps {
   preferences: HouseholdPreferences | null
@@ -65,6 +67,169 @@ export default function PreferencesForm({
   )
   const [zipCodeError, setZipCodeError] = useState<string>('')
 
+  // Meal fetching state
+  const [isLoadingMeals, setIsLoadingMeals] = useState<boolean>(false)
+  const [_mealsError, setMealsError] = useState<string | null>(null)
+  const [fetchedMeals, setFetchedMeals] = useState<string[] | null>(null)
+  const hasFetchedMealsRef = useRef<boolean>(false)
+  const mealPlannerDataAppliedRef = useRef<boolean>(false)
+  const [isMounted, setIsMounted] = useState<boolean>(false)
+  // Store initial preferences value to avoid hydration issues
+  const initialPreviousMealsRef = useRef<string>(
+    preferences?.previous_meals ? preferences.previous_meals.join(', ') : ''
+  )
+
+  const { getToken } = useAuth()
+
+  // Track mount state to prevent hydration issues
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  // Fetch meals from previous week when form loads in edit mode
+  useEffect(() => {
+    // Only fetch after component has mounted to avoid hydration issues
+    if (!isMounted) {
+      return
+    }
+
+    const fetchPreviousWeekMeals = async () => {
+      // Check if we should fetch meals
+      if (!preferences?.household_id || hasFetchedMealsRef.current) {
+        return
+      }
+
+      // Determine if form is in edit mode (preferences exist)
+      const isEditMode = !!preferences
+
+      if (!isEditMode) {
+        return
+      }
+
+      try {
+        setIsLoadingMeals(true)
+        setMealsError(null)
+
+        const token = await getToken()
+        if (!token) {
+          setMealsError('No authentication token available')
+          setIsLoadingMeals(false)
+          return
+        }
+
+        // Calculate previous week's Monday (inside useEffect to avoid hydration issues)
+        const getPreviousWeekMonday = (): string => {
+          const currentWeekMonday = getWeekStartDate()
+          const currentWeekMondayDate = new Date(currentWeekMonday)
+          const previousWeekMondayDate = new Date(currentWeekMondayDate)
+          previousWeekMondayDate.setDate(currentWeekMondayDate.getDate() - 7)
+          return previousWeekMondayDate.toISOString().split('T')[0]
+        }
+
+        const previousWeekMonday = getPreviousWeekMonday()
+        console.log(
+          '[PreferencesForm] Fetching meals for previous week Monday:',
+          previousWeekMonday
+        )
+
+        // Fetch meals from previous week
+        const response = await getWeeklyMeals(
+          previousWeekMonday,
+          preferences.household_id,
+          token
+        )
+        console.log(
+          '[PreferencesForm] Received meals response:',
+          response.meals.length,
+          'meals'
+        )
+
+        // Extract meal names from response
+        const mealNames = response.meals
+          .map((meal) => meal.name)
+          .filter((name) => name && name.trim().length > 0)
+
+        // Deduplicate meal names (preserve original capitalization)
+        const uniqueMealNames = Array.from(
+          new Set(mealNames.map((name) => name.trim()))
+        ).sort()
+
+        setFetchedMeals(uniqueMealNames)
+        hasFetchedMealsRef.current = true
+
+        console.log(
+          '[PreferencesForm] Extracted meal names:',
+          uniqueMealNames,
+          'Existing previous_meals:',
+          preferences.previous_meals
+        )
+
+        // Merge fetched meals with existing meals (append, don't override)
+        // Read from ref to avoid hydration issues - ref stores initial value from props
+        // This ensures consistent behavior between server and client
+        const existingMealsString = initialPreviousMealsRef.current
+        const existingMeals = existingMealsString
+          .split(',')
+          .map((meal) => meal.trim())
+          .filter((meal) => meal.length > 0)
+
+        // Create a Set of lowercase meal names for case-insensitive deduplication
+        const existingMealsLowercase = new Set(
+          existingMeals.map((meal) => meal.toLowerCase())
+        )
+
+        // Filter out duplicates from fetched meals (case-insensitive)
+        const newUniqueMeals = uniqueMealNames.filter(
+          (meal) => !existingMealsLowercase.has(meal.toLowerCase())
+        )
+
+        // Combine: existing meals first, then new unique meals
+        const mergedMeals = [...existingMeals, ...newUniqueMeals]
+
+        if (newUniqueMeals.length > 0) {
+          console.log(
+            '[PreferencesForm] Merging meal planner data with existing meals. Added:',
+            newUniqueMeals.join(', '),
+            'Total meals:',
+            mergedMeals.length
+          )
+          setPreviousMeals(mergedMeals.join(', '))
+          mealPlannerDataAppliedRef.current = true
+        } else if (uniqueMealNames.length > 0) {
+          console.log(
+            '[PreferencesForm] All fetched meals already exist in previous_meals (case-insensitive match)'
+          )
+          mealPlannerDataAppliedRef.current = true
+        } else {
+          console.log(
+            '[PreferencesForm] No meals found in meal planner for previous week'
+          )
+        }
+      } catch (error) {
+        // Silent failure - log for debugging but don't show to user
+        const errorMessage =
+          error instanceof Error ? error.message : 'Failed to fetch meals'
+        setMealsError(errorMessage)
+        console.error('Failed to fetch previous week meals:', error)
+      } finally {
+        setIsLoadingMeals(false)
+      }
+    }
+
+    fetchPreviousWeekMeals()
+  }, [preferences?.household_id, getToken, isMounted])
+
+  // Reset meal fetching flag when preferences change (different household)
+  useEffect(() => {
+    const currentId = preferences?.household_id || null
+    if (prevPreferencesIdRef.current !== currentId) {
+      hasFetchedMealsRef.current = false
+      mealPlannerDataAppliedRef.current = false
+      setFetchedMeals(null)
+      setMealsError(null)
+    }
+  }, [preferences?.household_id])
+
   // Update form state when preferences change (different household or preferences updated)
   // Using ref to track previous household_id avoids setState-in-effect for same preferences
   // Note: This effect is necessary to sync props to form state when preferences load/change
@@ -72,14 +237,19 @@ export default function PreferencesForm({
     const currentId = preferences?.household_id || null
     if (preferences && prevPreferencesIdRef.current !== currentId) {
       prevPreferencesIdRef.current = currentId
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDietTypes(preferences.diet_types || [])
 
       setCookingApparatus(preferences.cooking_apparatus || [])
 
-      setPreviousMeals(
-        preferences.previous_meals ? preferences.previous_meals.join(', ') : ''
-      )
+      // Only sync previousMeals from preferences if meal planner data hasn't been applied yet
+      // Meal planner is the source of truth and should take precedence
+      const previousMealsString = preferences.previous_meals
+        ? preferences.previous_meals.join(', ')
+        : ''
+      initialPreviousMealsRef.current = previousMealsString
+      if (!mealPlannerDataAppliedRef.current) {
+        setPreviousMeals(previousMealsString)
+      }
 
       setZipCode(preferences.zip_code || '')
 
@@ -226,16 +396,58 @@ export default function PreferencesForm({
 
       {/* Previous Meals */}
       <div>
-        <Input
-          label="Previous Meals Made This Week"
-          type="text"
-          value={previousMeals}
-          onChange={(e) => setPreviousMeals(e.target.value)}
-          placeholder="e.g., Chicken Stir Fry, Pasta Carbonara, Grilled Salmon"
-        />
-        <p className="mt-1 text-xs text-gray-500">
-          Enter meals you&apos;ve already made this week, separated by commas.
-        </p>
+        <div className="flex items-start gap-2">
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <Input
+                label="Previous Meals Made This Week"
+                type="text"
+                value={previousMeals}
+                onChange={(e) => setPreviousMeals(e.target.value)}
+                placeholder="e.g., Chicken Stir Fry, Pasta Carbonara, Grilled Salmon"
+                disabled={isLoadingMeals}
+              />
+              {isLoadingMeals && (
+                <div className="mt-6" role="status" aria-label="Loading meals">
+                  <svg
+                    className="animate-spin h-5 w-5 text-gray-400"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="flex items-start gap-2 mt-1">
+          <p className="text-xs text-gray-500">
+            Meals from last week&apos;s meal planner will be auto-populated.
+            Enter meals you&apos;ve already made this week, separated by commas.
+          </p>
+          {fetchedMeals && fetchedMeals.length > 0 && (
+            <span
+              className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 whitespace-nowrap"
+              title="Auto-populated from meal planner"
+            >
+              Auto-populated
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Zip Code */}

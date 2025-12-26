@@ -56,8 +56,8 @@ class TestHouseholdModel:
     def test_created_by_references_user(self, db_session):
         """Test that created_by must reference an existing user."""
         household = Household(
-            name="Test Household", created_by=99999  # Non-existent user
-        )
+            name="Test Household", created_by=99999
+        )  # Non-existent user
         db_session.add(household)
 
         with pytest.raises(IntegrityError):
