@@ -14,6 +14,7 @@ export interface MealResponse {
   week_start_date: string // ISO date string
   ingredients?: string
   notes?: string
+  meal_category?: 'normal' | 'quick_meal' | 'eat_out'
   created_at: string
 }
 
@@ -38,6 +39,7 @@ export interface CreateMealRequest {
   week_start_date: string // ISO date string (YYYY-MM-DD)
   ingredients?: string
   notes?: string
+  meal_category?: 'normal' | 'quick_meal' | 'eat_out'
 }
 
 export interface UpdateMealRequest {
@@ -47,6 +49,7 @@ export interface UpdateMealRequest {
   week_start_date?: string
   ingredients?: string
   notes?: string
+  meal_category?: 'normal' | 'quick_meal' | 'eat_out'
 }
 
 export interface GenerateGroceryListRequest {

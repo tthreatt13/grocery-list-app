@@ -46,6 +46,7 @@ export interface Meal {
   ingredients?: string[]
   imageUrl?: string
   createdBy: string
+  mealCategory?: 'normal' | 'quick_meal' | 'eat_out'
 }
 
 export interface HouseholdMember {
