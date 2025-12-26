@@ -12,7 +12,7 @@ interface AddMealModalProps {
   isOpen: boolean
   onClose: () => void
   onAdd: (_mealData: {
-    name: string
+    name?: string
     notes?: string
     ingredients?: string
     mealCategory?: 'normal' | 'quick_meal' | 'eat_out'
@@ -47,7 +47,7 @@ export default function AddMealModal({
   // Pre-populate form when meal is provided (edit mode)
   useEffect(() => {
     if (isOpen && meal) {
-      setName(meal.name)
+      setName(meal.name || '')
       setNotes(meal.notes || '')
       setIngredients(meal.ingredients?.join(', ') || '')
       setMealCategory(meal.mealCategory || 'normal')
@@ -69,7 +69,11 @@ export default function AddMealModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!name.trim()) {
+    // Validation: either name or category must be provided
+    // Category is always selected (defaults to 'normal'), so this is always valid
+    // But we check that at least one meaningful value exists
+    if (!name.trim() && !mealCategory) {
+      setError('Please provide either a meal name or select a category')
       return
     }
 
@@ -81,7 +85,7 @@ export default function AddMealModal({
       const normalizedIngredients = normalizeIngredientsInput(ingredients)
 
       await onAdd({
-        name: name.trim(),
+        name: name.trim() || undefined,
         notes: notes.trim() || undefined,
         ingredients: normalizedIngredients || undefined,
         mealCategory: mealCategory,
@@ -112,8 +116,9 @@ export default function AddMealModal({
 
     try {
       // Note: confirm dialog is handled in handleMealDelete (page component)
+      // The edit modal will be closed by the page component after successful deletion
       await onDelete(meal.id)
-      onClose()
+      // Don't close the modal here - let the page component handle it after confirmation
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to delete meal')
     } finally {
@@ -147,13 +152,12 @@ export default function AddMealModal({
         <form onSubmit={handleSubmit}>
           <div className="space-y-4">
             <Input
-              label="Meal Name"
+              label="Meal Name (Optional)"
               id="meal-name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g., Spaghetti Bolognese"
-              required
+              placeholder="e.g., Spaghetti Bolognese (optional)"
               disabled={isSubmitting}
             />
 
@@ -254,7 +258,7 @@ export default function AddMealModal({
               <Button
                 type="submit"
                 variant="primary"
-                disabled={!name.trim() || isSubmitting || isDeleting}
+                disabled={isSubmitting || isDeleting}
               >
                 {isSubmitting
                   ? isEditMode

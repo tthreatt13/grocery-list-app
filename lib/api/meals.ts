@@ -8,7 +8,7 @@ import { get, post, put, del } from './client'
 export interface MealResponse {
   id: number
   household_id: number
-  name: string
+  name?: string
   meal_type: 'breakfast' | 'lunch' | 'dinner' | 'snack'
   day_of_week: number // 0=Monday, 6=Sunday
   week_start_date: string // ISO date string
@@ -33,7 +33,7 @@ export interface GenerateGroceryListResponse {
 // Request Types
 export interface CreateMealRequest {
   household_id: number
-  name: string
+  name?: string
   meal_type: 'breakfast' | 'lunch' | 'dinner' | 'snack'
   day_of_week: number // 0=Monday, 6=Sunday
   week_start_date: string // ISO date string (YYYY-MM-DD)

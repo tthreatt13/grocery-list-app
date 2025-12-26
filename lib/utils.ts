@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { ItemCategory, GroceryItem, PantryItem, MealType } from './types'
+import { ItemCategory, GroceryItem, PantryItem, MealType, Meal } from './types'
 
 /**
  * Merges Tailwind CSS classes with clsx and tailwind-merge
@@ -284,4 +284,22 @@ export function normalizeIngredientsInput(raw: string): string {
 
   // Join with comma and space
   return cleanedItems.join(', ')
+}
+
+/**
+ * Formats meal display name. If meal has no name, returns category with "TBD" placeholder.
+ * @param meal - Meal object (may have optional name)
+ * @returns Display name for the meal
+ */
+export function getMealDisplayName(meal: Meal): string {
+  if (meal.name && meal.name.trim()) {
+    return meal.name
+  }
+  const categoryLabels = {
+    normal: 'Normal',
+    quick_meal: 'Quick Meal',
+    eat_out: 'Eat Out',
+  }
+  const categoryLabel = categoryLabels[meal.mealCategory || 'normal']
+  return `${categoryLabel} - TBD`
 }

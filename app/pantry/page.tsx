@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useAuth } from '@clerk/nextjs'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -454,14 +454,18 @@ export default function PantryPage() {
       item.quantity <= item.lowStockThreshold
   )
   const lowStockItems = lowStockItemsList.length
-  const expiringSoonItems = items.filter((item) => {
-    if (!item.expirationDate) return false
-    const daysUntilExpiration = Math.ceil(
-      (new Date(item.expirationDate).getTime() - new Date().getTime()) /
-        (1000 * 60 * 60 * 24)
-    )
-    return daysUntilExpiration >= 0 && daysUntilExpiration <= 5
-  }).length
+  // Calculate expiring soon items client-side only to avoid hydration mismatch
+  const expiringSoonItems = useMemo(() => {
+    if (typeof window === 'undefined') return 0
+    return items.filter((item) => {
+      if (!item.expirationDate) return false
+      const daysUntilExpiration = Math.ceil(
+        (new Date(item.expirationDate).getTime() - new Date().getTime()) /
+          (1000 * 60 * 60 * 24)
+      )
+      return daysUntilExpiration >= 0 && daysUntilExpiration <= 5
+    }).length
+  }, [items])
 
   // Handle generating grocery list from low stock items
   const handleGenerateGroceryList = async (data: {

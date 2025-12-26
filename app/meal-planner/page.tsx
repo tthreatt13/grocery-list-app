@@ -405,6 +405,9 @@ export default function MealPlannerPage() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to delete meal')
       setSuccessMessage(null)
+      // Close delete confirmation modal on error so user can see the error message
+      setIsDeleteModalOpen(false)
+      setMealToDelete(null)
     } finally {
       setIsDeleting(false)
     }
