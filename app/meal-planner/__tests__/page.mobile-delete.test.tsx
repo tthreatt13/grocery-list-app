@@ -185,10 +185,14 @@ describe('MealPlannerPage - Mobile Delete Flow', () => {
     })
 
     // Click confirm button in confirmation modal (find it within the confirmation modal context)
-    const confirmationModal = screen.getByText('Delete Meal?').closest('[role="dialog"]')
+    const confirmationModal = screen
+      .getByText('Delete Meal?')
+      .closest('[role="dialog"]')
     expect(confirmationModal).toBeInTheDocument()
-    const allDeleteButtons = screen.getAllByRole('button', { name: /^Delete$/i })
-    const confirmButton = allDeleteButtons.find(btn => 
+    const allDeleteButtons = screen.getAllByRole('button', {
+      name: /^Delete$/i,
+    })
+    const confirmButton = allDeleteButtons.find((btn) =>
       confirmationModal!.contains(btn)
     )
     expect(confirmButton).toBeInTheDocument()
@@ -204,7 +208,6 @@ describe('MealPlannerPage - Mobile Delete Flow', () => {
       expect(screen.queryByText('Edit Meal')).not.toBeInTheDocument()
     })
   })
-
 
   it('should handle delete errors gracefully', async () => {
     mockDeleteMeal.mockRejectedValue(new Error('Network error'))
@@ -241,10 +244,14 @@ describe('MealPlannerPage - Mobile Delete Flow', () => {
     })
 
     // Click confirm button in confirmation modal (find it within the confirmation modal context)
-    const confirmationModal = screen.getByText('Delete Meal?').closest('[role="dialog"]')
+    const confirmationModal = screen
+      .getByText('Delete Meal?')
+      .closest('[role="dialog"]')
     expect(confirmationModal).toBeInTheDocument()
-    const allDeleteButtons = screen.getAllByRole('button', { name: /^Delete$/i })
-    const confirmButton = allDeleteButtons.find(btn => 
+    const allDeleteButtons = screen.getAllByRole('button', {
+      name: /^Delete$/i,
+    })
+    const confirmButton = allDeleteButtons.find((btn) =>
       confirmationModal!.contains(btn)
     )
     expect(confirmButton).toBeInTheDocument()
@@ -298,10 +305,14 @@ describe('MealPlannerPage - Mobile Delete Flow', () => {
     })
 
     // Click cancel button in confirmation modal (find it within the confirmation modal context)
-    const confirmationModal = screen.getByText('Delete Meal?').closest('[role="dialog"]')
+    const confirmationModal = screen
+      .getByText('Delete Meal?')
+      .closest('[role="dialog"]')
     expect(confirmationModal).toBeInTheDocument()
-    const allCancelButtons = screen.getAllByRole('button', { name: /^Cancel$/i })
-    const cancelButton = allCancelButtons.find(btn => 
+    const allCancelButtons = screen.getAllByRole('button', {
+      name: /^Cancel$/i,
+    })
+    const cancelButton = allCancelButtons.find((btn) =>
       confirmationModal!.contains(btn)
     )
     expect(cancelButton).toBeInTheDocument()
