@@ -62,7 +62,7 @@ jobs:
 
       - name: Run Black format check
         working-directory: ./backend
-        run: black --check .
+        run: black --check --exclude="/(alembic/versions|venv)/" .
 
       - name: Run pytest
         working-directory: ./backend

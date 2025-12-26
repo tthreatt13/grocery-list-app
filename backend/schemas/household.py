@@ -105,9 +105,9 @@ class HouseholdPreferencesBase(BaseModel):
     """Base schema for household user preferences."""
 
     diet_types: Optional[List[str]] = None
-    weekly_weather: Optional[str] = None
     cooking_apparatus: Optional[List[str]] = None
     previous_meals: Optional[List[str]] = None
+    zip_code: Optional[str] = None
 
 
 class HouseholdPreferencesUpdate(HouseholdPreferencesBase):
