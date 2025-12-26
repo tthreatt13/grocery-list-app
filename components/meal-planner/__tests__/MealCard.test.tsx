@@ -98,4 +98,87 @@ describe('MealCard', () => {
     )
     expect(screen.queryByText(/ingredients/)).not.toBeInTheDocument()
   })
+
+  describe('Meal Category Indicators', () => {
+    it('displays quick meal indicator (⚡) for quick_meal category', () => {
+      const quickMeal = { ...mockMeal, mealCategory: 'quick_meal' as const }
+      render(
+        <MealCard
+          meal={quickMeal}
+          onEdit={mockOnEdit}
+          onDelete={mockOnDelete}
+        />
+      )
+      const quickMealIndicator = screen.getByLabelText('Quick Meal')
+      expect(quickMealIndicator).toBeInTheDocument()
+      expect(quickMealIndicator).toHaveTextContent('⚡')
+    })
+
+    it('displays eat out indicator (🍴) for eat_out category', () => {
+      const eatOutMeal = { ...mockMeal, mealCategory: 'eat_out' as const }
+      render(
+        <MealCard
+          meal={eatOutMeal}
+          onEdit={mockOnEdit}
+          onDelete={mockOnDelete}
+        />
+      )
+      const eatOutIndicator = screen.getByLabelText('Eat Out')
+      expect(eatOutIndicator).toBeInTheDocument()
+      expect(eatOutIndicator).toHaveTextContent('🍴')
+    })
+
+    it('does not display indicator for normal category', () => {
+      const normalMeal = { ...mockMeal, mealCategory: 'normal' as const }
+      render(
+        <MealCard
+          meal={normalMeal}
+          onEdit={mockOnEdit}
+          onDelete={mockOnDelete}
+        />
+      )
+      expect(screen.queryByLabelText('Quick Meal')).not.toBeInTheDocument()
+      expect(screen.queryByLabelText('Eat Out')).not.toBeInTheDocument()
+    })
+
+    it('does not display indicator when mealCategory is undefined', () => {
+      const mealWithoutCategory = { ...mockMeal, mealCategory: undefined }
+      render(
+        <MealCard
+          meal={mealWithoutCategory}
+          onEdit={mockOnEdit}
+          onDelete={mockOnDelete}
+        />
+      )
+      expect(screen.queryByLabelText('Quick Meal')).not.toBeInTheDocument()
+      expect(screen.queryByLabelText('Eat Out')).not.toBeInTheDocument()
+    })
+
+    it('displays correct indicator when switching categories', () => {
+      const quickMeal = { ...mockMeal, mealCategory: 'quick_meal' as const }
+      const { rerender } = render(
+        <MealCard
+          meal={quickMeal}
+          onEdit={mockOnEdit}
+          onDelete={mockOnDelete}
+        />
+      )
+
+      expect(screen.getByLabelText('Quick Meal')).toBeInTheDocument()
+      expect(screen.queryByLabelText('Eat Out')).not.toBeInTheDocument()
+
+      // Change to eat_out
+      const eatOutMeal = { ...mockMeal, mealCategory: 'eat_out' as const }
+      rerender(
+        <MealCard
+          meal={eatOutMeal}
+          onEdit={mockOnEdit}
+          onDelete={mockOnDelete}
+        />
+      )
+
+      expect(screen.queryByLabelText('Quick Meal')).not.toBeInTheDocument()
+      expect(screen.getByLabelText('Eat Out')).toBeInTheDocument()
+    })
+  })
 })

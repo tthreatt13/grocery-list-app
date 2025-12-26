@@ -13,22 +13,14 @@ const mockMeal: Meal = {
 }
 
 const mockOnEdit = jest.fn()
-const mockOnDelete = jest.fn()
+const mockOnDelete = jest.fn().mockResolvedValue(undefined)
 const mockOnClose = jest.fn()
-
-// Mock window.confirm
-const mockConfirm = jest.fn()
-Object.defineProperty(window, 'confirm', {
-  writable: true,
-  value: mockConfirm,
-})
 
 describe('MealDetailsModal - Delete Functionality', () => {
   beforeEach(() => {
     mockOnEdit.mockClear()
-    mockOnDelete.mockClear()
+    mockOnDelete.mockClear().mockResolvedValue(undefined)
     mockOnClose.mockClear()
-    mockConfirm.mockClear()
   })
 
   it('renders meal details correctly', () => {
@@ -85,9 +77,7 @@ describe('MealDetailsModal - Delete Functionality', () => {
     expect(mockOnClose).toHaveBeenCalled()
   })
 
-  it('shows confirmation dialog when delete is clicked', () => {
-    mockConfirm.mockReturnValue(false) // User cancels
-
+  it('calls onDelete and closes modal when delete button is clicked', async () => {
     render(
       <MealDetailsModal
         isOpen={true}
@@ -101,30 +91,36 @@ describe('MealDetailsModal - Delete Functionality', () => {
     const deleteButton = screen.getByText('Delete')
     fireEvent.click(deleteButton)
 
-    expect(mockConfirm).toHaveBeenCalledWith(
-      'Are you sure you want to delete this meal?'
-    )
-    expect(mockOnDelete).not.toHaveBeenCalled()
-    expect(mockOnClose).not.toHaveBeenCalled()
-  })
-
-  it('calls onDelete and closes modal when user confirms deletion', () => {
-    mockConfirm.mockReturnValue(true) // User confirms
-
-    render(
-      <MealDetailsModal
-        isOpen={true}
-        onClose={mockOnClose}
-        meal={mockMeal}
-        onEdit={mockOnEdit}
-        onDelete={mockOnDelete}
-      />
-    )
-
-    const deleteButton = screen.getByText('Delete')
-    fireEvent.click(deleteButton)
+    // Wait for async onDelete to complete
+    await expect(mockOnDelete).resolves
 
     expect(mockOnDelete).toHaveBeenCalledWith('m1')
+    expect(mockOnClose).toHaveBeenCalled()
+  })
+
+  it('closes modal even if onDelete throws an error', async () => {
+    const mockOnDeleteWithError = jest
+      .fn()
+      .mockRejectedValue(new Error('Delete failed'))
+
+    render(
+      <MealDetailsModal
+        isOpen={true}
+        onClose={mockOnClose}
+        meal={mockMeal}
+        onEdit={mockOnEdit}
+        onDelete={mockOnDeleteWithError}
+      />
+    )
+
+    const deleteButton = screen.getByText('Delete')
+    fireEvent.click(deleteButton)
+
+    // Wait for async operation
+    await new Promise((resolve) => setTimeout(resolve, 0))
+
+    expect(mockOnDeleteWithError).toHaveBeenCalledWith('m1')
+    // Modal should still close even on error (error handling is in parent)
     expect(mockOnClose).toHaveBeenCalled()
   })
 

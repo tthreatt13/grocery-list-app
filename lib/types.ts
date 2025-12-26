@@ -39,13 +39,14 @@ export interface PantryItem {
 
 export interface Meal {
   id: string
-  name: string
+  name?: string
   mealType: MealType
   date: Date
   notes?: string
   ingredients?: string[]
   imageUrl?: string
   createdBy: string
+  mealCategory?: 'normal' | 'quick_meal' | 'eat_out'
 }
 
 export interface HouseholdMember {

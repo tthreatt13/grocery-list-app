@@ -8,12 +8,13 @@ import { get, post, put, del } from './client'
 export interface MealResponse {
   id: number
   household_id: number
-  name: string
+  name?: string
   meal_type: 'breakfast' | 'lunch' | 'dinner' | 'snack'
   day_of_week: number // 0=Monday, 6=Sunday
   week_start_date: string // ISO date string
   ingredients?: string
   notes?: string
+  meal_category?: 'normal' | 'quick_meal' | 'eat_out'
   created_at: string
 }
 
@@ -32,12 +33,13 @@ export interface GenerateGroceryListResponse {
 // Request Types
 export interface CreateMealRequest {
   household_id: number
-  name: string
+  name?: string
   meal_type: 'breakfast' | 'lunch' | 'dinner' | 'snack'
   day_of_week: number // 0=Monday, 6=Sunday
   week_start_date: string // ISO date string (YYYY-MM-DD)
   ingredients?: string
   notes?: string
+  meal_category?: 'normal' | 'quick_meal' | 'eat_out'
 }
 
 export interface UpdateMealRequest {
@@ -47,6 +49,7 @@ export interface UpdateMealRequest {
   week_start_date?: string
   ingredients?: string
   notes?: string
+  meal_category?: 'normal' | 'quick_meal' | 'eat_out'
 }
 
 export interface GenerateGroceryListRequest {

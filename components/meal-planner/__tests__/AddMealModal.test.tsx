@@ -109,11 +109,13 @@ describe('AddMealModal', () => {
         name: 'Spaghetti',
         ingredients: 'pasta, tomato sauce, ground beef',
         notes: 'Kids favorite',
+        mealCategory: 'normal',
       })
     })
   })
 
-  it('does not call onAdd if meal name is empty', () => {
+  it('calls onAdd even if meal name is empty (category is always selected)', async () => {
+    mockOnAdd.mockResolvedValue(undefined)
     render(
       <AddMealModal
         isOpen={true}
@@ -127,7 +129,14 @@ describe('AddMealModal', () => {
     const addButton = screen.getByRole('button', { name: /add meal/i })
     fireEvent.click(addButton)
 
-    expect(mockOnAdd).not.toHaveBeenCalled()
+    await waitFor(() => {
+      expect(mockOnAdd).toHaveBeenCalledWith({
+        name: undefined,
+        ingredients: undefined,
+        notes: undefined,
+        mealCategory: 'normal',
+      })
+    })
   })
 
   it('clears form after successful submission', async () => {
@@ -261,6 +270,7 @@ describe('AddMealModal', () => {
           name: 'Updated Meal Name',
           ingredients: 'pasta, tomato sauce',
           notes: 'Original notes',
+          mealCategory: 'normal',
         })
       })
     })
@@ -322,6 +332,7 @@ describe('AddMealModal', () => {
           name: 'Pancakes',
           ingredients: 'Eggs, Milk, Bread, Butter',
           notes: undefined,
+          mealCategory: 'normal',
         })
       })
     })
@@ -354,6 +365,7 @@ describe('AddMealModal', () => {
           name: 'Pasta',
           ingredients: 'Pasta, Tomato sauce, Ground beef',
           notes: undefined,
+          mealCategory: 'normal',
         })
       })
     })
@@ -386,6 +398,7 @@ describe('AddMealModal', () => {
           name: 'Salad',
           ingredients: 'Eggs, Milk',
           notes: undefined,
+          mealCategory: 'normal',
         })
       })
     })
@@ -416,6 +429,7 @@ describe('AddMealModal', () => {
           name: 'Simple Meal',
           ingredients: undefined,
           notes: undefined,
+          mealCategory: 'normal',
         })
       })
     })
@@ -446,6 +460,7 @@ describe('AddMealModal', () => {
           name: 'Spaghetti',
           ingredients: 'pasta, tomato sauce, ground beef',
           notes: undefined,
+          mealCategory: 'normal',
         })
       })
     })
@@ -478,8 +493,222 @@ describe('AddMealModal', () => {
           name: 'Soup',
           ingredients: 'Chicken, Carrots, Onions, Celery',
           notes: undefined,
+          mealCategory: 'normal',
         })
       })
+    })
+  })
+
+  describe('Meal Category Selection', () => {
+    const mockMeal = {
+      id: '1',
+      name: 'Existing Meal',
+      mealType: MealType.DINNER,
+      date: new Date('2024-11-10'),
+      ingredients: ['pasta', 'tomato sauce'],
+      notes: 'Original notes',
+      createdBy: 'User',
+    }
+
+    it('renders meal category dropdown', () => {
+      render(
+        <AddMealModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onAdd={mockOnAdd}
+          mealType={MealType.DINNER}
+          date={new Date('2024-11-10')}
+        />
+      )
+      expect(screen.getByLabelText(/Meal Category/i)).toBeInTheDocument()
+    })
+
+    it('defaults to "Normal" category when creating new meal', () => {
+      render(
+        <AddMealModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onAdd={mockOnAdd}
+          mealType={MealType.DINNER}
+          date={new Date('2024-11-10')}
+        />
+      )
+      const categorySelect = screen.getByLabelText(
+        /Meal Category/i
+      ) as HTMLSelectElement
+      expect(categorySelect.value).toBe('normal')
+    })
+
+    it('has all three category options', () => {
+      render(
+        <AddMealModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onAdd={mockOnAdd}
+          mealType={MealType.DINNER}
+          date={new Date('2024-11-10')}
+        />
+      )
+      const categorySelect = screen.getByLabelText(/Meal Category/i)
+      expect(
+        categorySelect.querySelector('option[value="normal"]')
+      ).toBeInTheDocument()
+      expect(
+        categorySelect.querySelector('option[value="quick_meal"]')
+      ).toBeInTheDocument()
+      expect(
+        categorySelect.querySelector('option[value="eat_out"]')
+      ).toBeInTheDocument()
+    })
+
+    it('calls onAdd with selected meal category', async () => {
+      render(
+        <AddMealModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onAdd={mockOnAdd}
+          mealType={MealType.DINNER}
+          date={new Date('2024-11-10')}
+        />
+      )
+
+      const nameInput = screen.getByLabelText(/Meal Name/i)
+      const categorySelect = screen.getByLabelText(/Meal Category/i)
+      const addButton = screen.getByRole('button', { name: /add meal/i })
+
+      fireEvent.change(nameInput, { target: { value: 'Pizza' } })
+      fireEvent.change(categorySelect, { target: { value: 'eat_out' } })
+      fireEvent.click(addButton)
+
+      await waitFor(() => {
+        expect(mockOnAdd).toHaveBeenCalledWith({
+          name: 'Pizza',
+          mealCategory: 'eat_out',
+          ingredients: undefined,
+          notes: undefined,
+        })
+      })
+    })
+
+    it('pre-populates meal category in edit mode', () => {
+      const mealWithCategory = {
+        ...mockMeal,
+        mealCategory: 'quick_meal' as const,
+      }
+
+      render(
+        <AddMealModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onAdd={mockOnAdd}
+          mealType={MealType.DINNER}
+          date={new Date('2024-11-10')}
+          meal={mealWithCategory}
+        />
+      )
+
+      const categorySelect = screen.getByLabelText(
+        /Meal Category/i
+      ) as HTMLSelectElement
+      expect(categorySelect.value).toBe('quick_meal')
+    })
+
+    it('defaults to "normal" when editing meal without category', () => {
+      const mealWithoutCategory = {
+        ...mockMeal,
+        mealCategory: undefined,
+      }
+
+      render(
+        <AddMealModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onAdd={mockOnAdd}
+          mealType={MealType.DINNER}
+          date={new Date('2024-11-10')}
+          meal={mealWithoutCategory}
+        />
+      )
+
+      const categorySelect = screen.getByLabelText(
+        /Meal Category/i
+      ) as HTMLSelectElement
+      expect(categorySelect.value).toBe('normal')
+    })
+
+    it('calls onAdd with updated meal category when editing', async () => {
+      const mealWithCategory = {
+        ...mockMeal,
+        mealCategory: 'normal' as const,
+      }
+
+      render(
+        <AddMealModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onAdd={mockOnAdd}
+          mealType={MealType.DINNER}
+          date={new Date('2024-11-10')}
+          meal={mealWithCategory}
+        />
+      )
+
+      const categorySelect = screen.getByLabelText(/Meal Category/i)
+      const updateButton = screen.getByRole('button', { name: /update meal/i })
+
+      fireEvent.change(categorySelect, { target: { value: 'quick_meal' } })
+      fireEvent.click(updateButton)
+
+      await waitFor(() => {
+        expect(mockOnAdd).toHaveBeenCalledWith({
+          name: 'Existing Meal',
+          ingredients: 'pasta, tomato sauce',
+          notes: 'Original notes',
+          mealCategory: 'quick_meal',
+        })
+      })
+    })
+
+    it('resets meal category to "normal" when modal closes', async () => {
+      const { rerender } = render(
+        <AddMealModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onAdd={mockOnAdd}
+          mealType={MealType.DINNER}
+          date={new Date('2024-11-10')}
+        />
+      )
+
+      const categorySelect = screen.getByLabelText(/Meal Category/i)
+      fireEvent.change(categorySelect, { target: { value: 'eat_out' } })
+
+      // Close modal
+      rerender(
+        <AddMealModal
+          isOpen={false}
+          onClose={mockOnClose}
+          onAdd={mockOnAdd}
+          mealType={MealType.DINNER}
+          date={new Date('2024-11-10')}
+        />
+      )
+
+      // Reopen modal
+      rerender(
+        <AddMealModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onAdd={mockOnAdd}
+          mealType={MealType.DINNER}
+          date={new Date('2024-11-10')}
+        />
+      )
+
+      const newCategorySelect = screen.getByLabelText(
+        /Meal Category/i
+      ) as HTMLSelectElement
+      expect(newCategorySelect.value).toBe('normal')
     })
   })
 })

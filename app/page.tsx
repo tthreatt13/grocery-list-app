@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@clerk/nextjs'
 import { Card } from '@/components/ui/Card'
@@ -117,14 +117,18 @@ export default function Home() {
       item.low_stock_threshold &&
       parseInt(item.quantity || '0') <= item.low_stock_threshold
   ).length
-  const expiringSoonItems = pantryItems.filter((item) => {
-    if (!item.expiration_date) return false
-    const daysUntilExpiration = Math.ceil(
-      (new Date(item.expiration_date).getTime() - new Date().getTime()) /
-        (1000 * 60 * 60 * 24)
-    )
-    return daysUntilExpiration >= 0 && daysUntilExpiration <= 5
-  }).length
+  // Calculate expiring soon items client-side only to avoid hydration mismatch
+  const expiringSoonItems = useMemo(() => {
+    if (typeof window === 'undefined') return 0
+    return pantryItems.filter((item) => {
+      if (!item.expiration_date) return false
+      const daysUntilExpiration = Math.ceil(
+        (new Date(item.expiration_date).getTime() - new Date().getTime()) /
+          (1000 * 60 * 60 * 24)
+      )
+      return daysUntilExpiration >= 0 && daysUntilExpiration <= 5
+    }).length
+  }, [pantryItems])
 
   // Calculate meal planner stats
   const mealsThisWeek = weeklyMeals.length
