@@ -179,7 +179,7 @@ railway run alembic downgrade <revision_id>
 
 ## Current Migration List
 
-All migrations that should be applied in production:
+All migrations that should be applied in production (in order):
 
 1. **90f091a98d1c** - `initial_schema.py`
    - Creates initial database schema
@@ -198,6 +198,18 @@ All migrations that should be applied in production:
 
 6. **e6680da276e3** - `add_is_archived_to_grocery_lists.py`
    - Adds `is_archived` column to `grocery_lists` table
+
+7. **e4a05e381069** - `add_zip_code_to_household_user_preferences.py`
+   - Adds `zip_code` column to `household_user_preferences` table
+
+8. **f7a8b9c0d1e2** - `remove_weekly_weather_from_preferences.py`
+   - Removes `weekly_weather` column from `household_user_preferences` table
+
+9. **626841e03296** - `add_meal_category_to_meals.py`
+   - Adds `meal_category` column to `meals` table
+
+10. **1406e9442b77** - `make_meal_name_nullable.py` (CURRENT HEAD)
+    - Makes `meals.name` column nullable
 
 ## Best Practices
 
