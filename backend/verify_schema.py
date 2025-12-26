@@ -72,7 +72,9 @@ def main():
     if migration_ok:
         print(f"✓ Migration version: {version} (expected: d1e2f3a4b5c6)")
     else:
-        errors.append(f"✗ Migration version mismatch: {version} (expected: d1e2f3a4b5c6)")
+        errors.append(
+            f"✗ Migration version mismatch: {version} (expected: d1e2f3a4b5c6)"
+        )
         print(f"✗ Migration version: {version} (expected: d1e2f3a4b5c6)")
     print()
 
@@ -123,7 +125,9 @@ def main():
             warnings.append(
                 f"⚠ Column 'pantry_items.low_stock_threshold' is {col_type}, expected float (changed in migration c7d8e9f0a1b2)"
             )
-            print(f"⚠ Column 'pantry_items.low_stock_threshold' is {col_type}, expected float")
+            print(
+                f"⚠ Column 'pantry_items.low_stock_threshold' is {col_type}, expected float"
+            )
     else:
         errors.append("✗ Column 'pantry_items.low_stock_threshold' is missing")
         print("✗ Column 'pantry_items.low_stock_threshold' is missing")
@@ -138,7 +142,9 @@ def main():
             if check_column_exists(inspector, "household_user_preferences", col):
                 col_type = get_column_type(inspector, "household_user_preferences", col)
                 if "json" in col_type.lower() or "text" in col_type.lower():
-                    print(f"✓ Column 'household_user_preferences.{col}' exists as {col_type}")
+                    print(
+                        f"✓ Column 'household_user_preferences.{col}' exists as {col_type}"
+                    )
                 else:
                     warnings.append(
                         f"⚠ Column 'household_user_preferences.{col}' is {col_type}, expected JSON"

@@ -75,7 +75,9 @@ def sample_user(db_session):
     """Create a sample user for testing."""
     from models.user import User
 
-    user = User(clerk_user_id="test_clerk_user_123", email="test@example.com", name="Test User")
+    user = User(
+        clerk_user_id="test_clerk_user_123", email="test@example.com", name="Test User"
+    )
     db_session.add(user)
     db_session.commit()
     db_session.refresh(user)
@@ -94,7 +96,9 @@ def sample_household(db_session, sample_user):
     db_session.refresh(household)
 
     # Add user as household member (admin role)
-    member = HouseholdMember(household_id=household.id, user_id=sample_user.id, role="admin")
+    member = HouseholdMember(
+        household_id=household.id, user_id=sample_user.id, role="admin"
+    )
     db_session.add(member)
     db_session.commit()
 

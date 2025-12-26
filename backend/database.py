@@ -12,7 +12,9 @@ if settings.database_url.startswith("sqlite"):
     engine = create_engine(
         settings.database_url,
         echo=settings.debug,  # Log SQL queries in debug mode
-        connect_args={"check_same_thread": False},  # Allow SQLite to be used with FastAPI
+        connect_args={
+            "check_same_thread": False
+        },  # Allow SQLite to be used with FastAPI
     )
 else:
     # PostgreSQL configuration

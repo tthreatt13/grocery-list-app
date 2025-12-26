@@ -37,7 +37,9 @@ def sample_user_2(db_session):
 
 
 @pytest.fixture
-def sample_household_with_members(db_session, sample_user, sample_user_2, sample_household):
+def sample_household_with_members(
+    db_session, sample_user, sample_user_2, sample_household
+):
     """Create a household with multiple members for testing."""
     # Check if members already exist before adding
     existing_member1 = (
@@ -84,7 +86,9 @@ def sample_household_2(db_session, sample_user_2):
     db_session.refresh(household)
 
     # Add creator as admin
-    member = HouseholdMember(household_id=household.id, user_id=sample_user_2.id, role="admin")
+    member = HouseholdMember(
+        household_id=household.id, user_id=sample_user_2.id, role="admin"
+    )
     db_session.add(member)
     db_session.commit()
 
@@ -130,7 +134,9 @@ class TestGetHouseholds:
         db_session.commit()
         db_session.refresh(household2)
 
-        member = HouseholdMember(household_id=household2.id, user_id=sample_user.id, role="member")
+        member = HouseholdMember(
+            household_id=household2.id, user_id=sample_user.id, role="member"
+        )
         db_session.add(member)
         db_session.commit()
 
@@ -198,7 +204,9 @@ class TestGetHouseholdById:
         self, client, db_session, sample_user_2, sample_household_2, auth_headers
     ):
         """Test retrieving a household user is not a member of."""
-        response = client.get(f"/api/households/{sample_household_2.id}", headers=auth_headers)
+        response = client.get(
+            f"/api/households/{sample_household_2.id}", headers=auth_headers
+        )
 
         assert response.status_code == 403
 
@@ -216,7 +224,9 @@ class TestCreateHousehold:
         """Test creating a new household."""
         household_data = {"name": "My New Household"}
 
-        response = client.post("/api/households", json=household_data, headers=auth_headers)
+        response = client.post(
+            "/api/households", json=household_data, headers=auth_headers
+        )
 
         assert response.status_code == 201
         data = response.json()
@@ -225,11 +235,15 @@ class TestCreateHousehold:
         assert "id" in data
         assert "created_at" in data
 
-    def test_create_household_with_member(self, client, db_session, sample_user, auth_headers):
+    def test_create_household_with_member(
+        self, client, db_session, sample_user, auth_headers
+    ):
         """Test that creator is automatically added as admin member."""
         household_data = {"name": "Auto-Member Household"}
 
-        response = client.post("/api/households", json=household_data, headers=auth_headers)
+        response = client.post(
+            "/api/households", json=household_data, headers=auth_headers
+        )
 
         assert response.status_code == 201
         data = response.json()
@@ -252,7 +266,9 @@ class TestCreateHousehold:
         """Test creating household with invalid data."""
         household_data = {}  # Missing required 'name' field
 
-        response = client.post("/api/households", json=household_data, headers=auth_headers)
+        response = client.post(
+            "/api/households", json=household_data, headers=auth_headers
+        )
 
         assert response.status_code == 422
 
@@ -294,7 +310,9 @@ class TestUpdateHousehold:
         """Test updating a non-existent household."""
         update_data = {"name": "New Name"}
 
-        response = client.put("/api/households/99999", json=update_data, headers=auth_headers)
+        response = client.put(
+            "/api/households/99999", json=update_data, headers=auth_headers
+        )
 
         assert response.status_code == 404
 
@@ -334,7 +352,9 @@ class TestUpdateHousehold:
         """Test updating household without authentication."""
         update_data = {"name": "New Name"}
 
-        response = client.put(f"/api/households/{sample_household.id}", json=update_data)
+        response = client.put(
+            f"/api/households/{sample_household.id}", json=update_data
+        )
 
         assert response.status_code == 401
 
@@ -353,12 +373,16 @@ class TestDeleteHousehold:
         """Test deleting household as admin."""
         household_id = sample_household_with_members.id
 
-        response = client.delete(f"/api/households/{household_id}", headers=auth_headers)
+        response = client.delete(
+            f"/api/households/{household_id}", headers=auth_headers
+        )
 
         assert response.status_code == 204
 
         # Verify household is deleted
-        household = db_session.query(Household).filter(Household.id == household_id).first()
+        household = (
+            db_session.query(Household).filter(Household.id == household_id).first()
+        )
         assert household is None
 
     def test_delete_household_not_found(self, client, auth_headers):
@@ -602,7 +626,9 @@ class TestRemoveMember:
         )
         assert member is None
 
-    def test_remove_member_not_found(self, client, sample_household_with_members, auth_headers):
+    def test_remove_member_not_found(
+        self, client, sample_household_with_members, auth_headers
+    ):
         """Test removing non-existent member."""
         response = client.delete(
             f"/api/households/{sample_household_with_members.id}/members/99999",
@@ -695,7 +721,9 @@ class TestGetSharedLists:
         assert len(data["lists"]) == 1
         assert data["lists"][0]["name"] == "Weekly Groceries"
 
-    def test_get_shared_lists_empty(self, client, sample_household_with_members, auth_headers):
+    def test_get_shared_lists_empty(
+        self, client, sample_household_with_members, auth_headers
+    ):
         """Test retrieving shared lists when household has no lists."""
         response = client.get(
             f"/api/households/{sample_household_with_members.id}/shared-lists",
@@ -709,7 +737,9 @@ class TestGetSharedLists:
 
     def test_get_shared_lists_not_found(self, client, auth_headers):
         """Test retrieving shared lists for non-existent household."""
-        response = client.get("/api/households/99999/shared-lists", headers=auth_headers)
+        response = client.get(
+            "/api/households/99999/shared-lists", headers=auth_headers
+        )
 
         assert response.status_code == 404
 
@@ -902,7 +932,9 @@ class TestHouseholdPreferences:
 
     def test_preferences_not_found(self, client, auth_headers):
         """Test getting preferences for non-existent household."""
-        response = client.get("/api/households/99999/preferences/me", headers=auth_headers)
+        response = client.get(
+            "/api/households/99999/preferences/me", headers=auth_headers
+        )
 
         assert response.status_code == 404
 

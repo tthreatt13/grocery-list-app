@@ -10,7 +10,9 @@ from config import settings
 from routes import auth, users, grocery_lists, pantry, households, meals, weather
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 # Create security scheme for Swagger UI

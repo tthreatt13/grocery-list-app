@@ -14,7 +14,9 @@ class TestMealModel:
 
     def test_create_meal_full(self, db_session):
         """Test creating a meal with all fields."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -49,7 +51,9 @@ class TestMealModel:
 
     def test_create_meal_minimal(self, db_session):
         """Test creating a meal with only required fields."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -92,7 +96,9 @@ class TestMealModel:
 
     def test_meal_type_required(self, db_session):
         """Test that meal_type is required."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -115,7 +121,9 @@ class TestMealModel:
 
     def test_day_of_week_required(self, db_session):
         """Test that day_of_week is required."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -138,7 +146,9 @@ class TestMealModel:
 
     def test_week_start_date_required(self, db_session):
         """Test that week_start_date is required."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -159,7 +169,9 @@ class TestMealModel:
 
     def test_name_required(self, db_session):
         """Test that name is required."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -182,7 +194,9 @@ class TestMealModel:
 
     def test_household_relationship(self, db_session):
         """Test the relationship to household."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -208,7 +222,9 @@ class TestMealModel:
 
     def test_multiple_meals_per_week(self, db_session):
         """Test creating multiple meals for a week."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -246,7 +262,9 @@ class TestMealModel:
 
         monday_meals = (
             db_session.query(Meal)
-            .filter_by(household_id=household.id, week_start_date=week_start, day_of_week=1)
+            .filter_by(
+                household_id=household.id, week_start_date=week_start, day_of_week=1
+            )
             .all()
         )
 
@@ -255,7 +273,9 @@ class TestMealModel:
 
     def test_query_meals_by_week(self, db_session):
         """Test querying meals for a specific week."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -290,7 +310,9 @@ class TestMealModel:
         db_session.commit()
 
         week1_results = (
-            db_session.query(Meal).filter_by(household_id=household.id, week_start_date=week1).all()
+            db_session.query(Meal)
+            .filter_by(household_id=household.id, week_start_date=week1)
+            .all()
         )
 
         assert len(week1_results) == 7
@@ -298,7 +320,9 @@ class TestMealModel:
 
     def test_meal_types(self, db_session):
         """Test different meal types."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -328,7 +352,9 @@ class TestMealModel:
 
     def test_meal_repr(self, db_session):
         """Test meal string representation."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 

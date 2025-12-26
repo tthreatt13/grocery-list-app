@@ -24,7 +24,9 @@ class TestPantryRoutes:
     def test_list_pantry_items_success(self, db_session):
         """Test GET /api/pantry returns all pantry items for user's household."""
         # Create test user and household
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -33,7 +35,9 @@ class TestPantryRoutes:
         db_session.commit()
 
         # Add user to household
-        member = HouseholdMember(household_id=household.id, user_id=user.id, role="admin")
+        member = HouseholdMember(
+            household_id=household.id, user_id=user.id, role="admin"
+        )
         db_session.add(member)
         db_session.commit()
 
@@ -82,7 +86,9 @@ class TestPantryRoutes:
 
     def test_list_pantry_items_filter_by_category(self, db_session):
         """Test GET /api/pantry with category filter."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -90,7 +96,9 @@ class TestPantryRoutes:
         db_session.add(household)
         db_session.commit()
 
-        member = HouseholdMember(household_id=household.id, user_id=user.id, role="admin")
+        member = HouseholdMember(
+            household_id=household.id, user_id=user.id, role="admin"
+        )
         db_session.add(member)
         db_session.commit()
 
@@ -132,7 +140,9 @@ class TestPantryRoutes:
 
     def test_list_pantry_items_search_by_name(self, db_session):
         """Test GET /api/pantry with name search."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -140,7 +150,9 @@ class TestPantryRoutes:
         db_session.add(household)
         db_session.commit()
 
-        member = HouseholdMember(household_id=household.id, user_id=user.id, role="admin")
+        member = HouseholdMember(
+            household_id=household.id, user_id=user.id, role="admin"
+        )
         db_session.add(member)
         db_session.commit()
 
@@ -182,8 +194,12 @@ class TestPantryRoutes:
 
     def test_list_pantry_items_unauthorized(self, db_session):
         """Test GET /api/pantry for non-member returns 403."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
-        other_user = User(clerk_user_id="user_456", email="other@example.com", name="Other User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
+        other_user = User(
+            clerk_user_id="user_456", email="other@example.com", name="Other User"
+        )
         db_session.add_all([user, other_user])
         db_session.commit()
 
@@ -192,7 +208,9 @@ class TestPantryRoutes:
         db_session.commit()
 
         # Only add first user as member
-        member = HouseholdMember(household_id=household.id, user_id=user.id, role="admin")
+        member = HouseholdMember(
+            household_id=household.id, user_id=user.id, role="admin"
+        )
         db_session.add(member)
         db_session.commit()
 
@@ -224,7 +242,9 @@ class TestPantryRoutes:
 
     def test_get_pantry_item_success(self, db_session):
         """Test GET /api/pantry/{item_id} returns specific item."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -232,7 +252,9 @@ class TestPantryRoutes:
         db_session.add(household)
         db_session.commit()
 
-        member = HouseholdMember(household_id=household.id, user_id=user.id, role="admin")
+        member = HouseholdMember(
+            household_id=household.id, user_id=user.id, role="admin"
+        )
         db_session.add(member)
         db_session.commit()
 
@@ -279,7 +301,9 @@ class TestPantryRoutes:
 
     def test_get_pantry_item_not_found(self, db_session):
         """Test GET /api/pantry/{item_id} with invalid ID returns 404."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -299,7 +323,9 @@ class TestPantryRoutes:
         app.dependency_overrides[get_current_user] = override_get_current_user
 
         client = TestClient(app)
-        response = client.get("/api/pantry/99999", headers={"Authorization": "Bearer valid_token"})
+        response = client.get(
+            "/api/pantry/99999", headers={"Authorization": "Bearer valid_token"}
+        )
 
         # Cleanup
         app.dependency_overrides.clear()
@@ -308,7 +334,9 @@ class TestPantryRoutes:
 
     def test_create_pantry_item_success(self, db_session):
         """Test POST /api/pantry creates new item."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -316,7 +344,9 @@ class TestPantryRoutes:
         db_session.add(household)
         db_session.commit()
 
-        member = HouseholdMember(household_id=household.id, user_id=user.id, role="admin")
+        member = HouseholdMember(
+            household_id=household.id, user_id=user.id, role="admin"
+        )
         db_session.add(member)
         db_session.commit()
 
@@ -361,7 +391,9 @@ class TestPantryRoutes:
 
     def test_create_pantry_item_with_expiration(self, db_session):
         """Test POST /api/pantry with expiration date."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -369,7 +401,9 @@ class TestPantryRoutes:
         db_session.add(household)
         db_session.commit()
 
-        member = HouseholdMember(household_id=household.id, user_id=user.id, role="admin")
+        member = HouseholdMember(
+            household_id=household.id, user_id=user.id, role="admin"
+        )
         db_session.add(member)
         db_session.commit()
 
@@ -411,8 +445,12 @@ class TestPantryRoutes:
 
     def test_create_pantry_item_unauthorized(self, db_session):
         """Test POST /api/pantry for non-member returns 403."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
-        other_user = User(clerk_user_id="user_456", email="other@example.com", name="Other User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
+        other_user = User(
+            clerk_user_id="user_456", email="other@example.com", name="Other User"
+        )
         db_session.add_all([user, other_user])
         db_session.commit()
 
@@ -420,7 +458,9 @@ class TestPantryRoutes:
         db_session.add(household)
         db_session.commit()
 
-        member = HouseholdMember(household_id=household.id, user_id=user.id, role="admin")
+        member = HouseholdMember(
+            household_id=household.id, user_id=user.id, role="admin"
+        )
         db_session.add(member)
         db_session.commit()
 
@@ -453,7 +493,9 @@ class TestPantryRoutes:
 
     def test_update_pantry_item_success(self, db_session):
         """Test PUT /api/pantry/{item_id} updates item."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -461,7 +503,9 @@ class TestPantryRoutes:
         db_session.add(household)
         db_session.commit()
 
-        member = HouseholdMember(household_id=household.id, user_id=user.id, role="admin")
+        member = HouseholdMember(
+            household_id=household.id, user_id=user.id, role="admin"
+        )
         db_session.add(member)
         db_session.commit()
 
@@ -502,7 +546,9 @@ class TestPantryRoutes:
 
     def test_update_pantry_item_not_found(self, db_session):
         """Test PUT /api/pantry/{item_id} with invalid ID returns 404."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -535,7 +581,9 @@ class TestPantryRoutes:
 
     def test_delete_pantry_item_success(self, db_session):
         """Test DELETE /api/pantry/{item_id} removes item."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -543,7 +591,9 @@ class TestPantryRoutes:
         db_session.add(household)
         db_session.commit()
 
-        member = HouseholdMember(household_id=household.id, user_id=user.id, role="admin")
+        member = HouseholdMember(
+            household_id=household.id, user_id=user.id, role="admin"
+        )
         db_session.add(member)
         db_session.commit()
 
@@ -583,7 +633,9 @@ class TestPantryRoutes:
 
     def test_delete_pantry_item_not_found(self, db_session):
         """Test DELETE /api/pantry/{item_id} with invalid ID returns 404."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -614,7 +666,9 @@ class TestPantryRoutes:
 
     def test_get_expiring_items_success(self, db_session):
         """Test GET /api/pantry/expiring returns items expiring within 7 days."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -622,7 +676,9 @@ class TestPantryRoutes:
         db_session.add(household)
         db_session.commit()
 
-        member = HouseholdMember(household_id=household.id, user_id=user.id, role="admin")
+        member = HouseholdMember(
+            household_id=household.id, user_id=user.id, role="admin"
+        )
         db_session.add(member)
         db_session.commit()
 
@@ -676,7 +732,9 @@ class TestPantryRoutes:
 
     def test_get_low_stock_items_success(self, db_session):
         """Test GET /api/pantry/low-stock returns items below threshold."""
-        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -684,7 +742,9 @@ class TestPantryRoutes:
         db_session.add(household)
         db_session.commit()
 
-        member = HouseholdMember(household_id=household.id, user_id=user.id, role="admin")
+        member = HouseholdMember(
+            household_id=household.id, user_id=user.id, role="admin"
+        )
         db_session.add(member)
         db_session.commit()
 
