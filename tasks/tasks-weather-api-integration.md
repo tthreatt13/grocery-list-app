@@ -28,6 +28,7 @@ Integrate a weather API to provide 7-day forecasts based on zip code entry. The 
 **IMPORTANT:** As you complete each task, you must check it off in this markdown file by changing `- [ ]` to `- [x]`. This helps track progress and ensures you don't skip any steps.
 
 Example:
+
 - `- [ ] 1.1 Read file` → `- [x] 1.1 Read file` (after completing)
 
 Update the file after completing each sub-task, not just after completing an entire parent task.
@@ -70,17 +71,17 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 3.9 Write integration tests in `backend/tests/routes/test_weather.py` for weather endpoints
   - [x] 3.10 Run tests: `cd backend && pytest tests/routes/test_weather.py -v`
 
-- [ ] 4.0 Frontend: Update preferences form with zip code input
-  - [ ] 4.1 Update `HouseholdPreferences` interface in `lib/api/household.ts` to include `zip_code?: string | null`
-  - [ ] 4.2 Update `HouseholdPreferencesUpdate` interface in `lib/api/household.ts` to include `zip_code?: string | null`
-  - [ ] 4.3 Add zip code input field to `components/household/PreferencesForm.tsx` with label "Zip Code"
-  - [ ] 4.4 Add zip code validation (US zip code format: 5 digits or 5+4 format)
-  - [ ] 4.5 Pre-populate zip code field from existing preferences when editing
-  - [ ] 4.6 Update form state management to include zip_code field
-  - [ ] 4.7 Update form submission to include zip_code in the request
-  - [ ] 4.8 Add error display for invalid zip code format
-  - [ ] 4.9 Write test in `components/household/__tests__/PreferencesForm.test.tsx` for zip code input
-  - [ ] 4.10 Run tests: `npm test -- components/household/__tests__/PreferencesForm.test.tsx`
+- [x] 4.0 Frontend: Update preferences form with zip code input
+  - [x] 4.1 Update `HouseholdPreferences` interface in `lib/api/household.ts` to include `zip_code?: string | null`
+  - [x] 4.2 Update `HouseholdPreferencesUpdate` interface in `lib/api/household.ts` to include `zip_code?: string | null`
+  - [x] 4.3 Add zip code input field to `components/household/PreferencesForm.tsx` with label "Zip Code"
+  - [x] 4.4 Add zip code validation (US zip code format: 5 digits or 5+4 format)
+  - [x] 4.5 Pre-populate zip code field from existing preferences when editing
+  - [x] 4.6 Update form state management to include zip_code field
+  - [x] 4.7 Update form submission to include zip_code in the request
+  - [x] 4.8 Add error display for invalid zip code format
+  - [x] 4.9 Write test in `components/household/__tests__/PreferencesForm.test.tsx` for zip code input
+  - [x] 4.10 Run tests: `npm test -- components/household/__tests__/PreferencesForm.test.tsx`
 
 - [ ] 5.0 Frontend: Create weather forecast display component
   - [ ] 5.1 Create `components/household/WeatherForecast.tsx` component
@@ -109,4 +110,3 @@ Update the file after completing each sub-task, not just after completing an ent
   - [ ] 6.8 Update existing test in `app/household/__tests__/page.test.tsx` to include weather forecast
   - [ ] 6.9 Run tests: `npm test -- app/household/__tests__/page.test.tsx`
   - [ ] 6.10 Test end-to-end: Update zip code in preferences form and verify weather forecast appears
-
