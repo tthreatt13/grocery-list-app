@@ -10,7 +10,9 @@ class DailyForecast(BaseModel):
     date: str  # ISO date string (YYYY-MM-DD)
     high_temp: Optional[int] = None  # High temperature in Fahrenheit
     low_temp: Optional[int] = None  # Low temperature in Fahrenheit
-    precipitation_chance: Optional[int] = None  # Precipitation chance percentage (0-100)
+    precipitation_chance: Optional[int] = (
+        None  # Precipitation chance percentage (0-100)
+    )
     condition: Optional[str] = None  # Weather condition description
 
 
@@ -19,4 +21,3 @@ class WeatherForecastResponse(BaseModel):
 
     zip_code: str
     forecasts: List[DailyForecast]
-

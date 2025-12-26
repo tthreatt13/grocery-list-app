@@ -33,16 +33,16 @@ def custom_openapi():
     """Custom OpenAPI schema with security definitions."""
     if app.openapi_schema:
         return app.openapi_schema
-    
+
     from fastapi.openapi.utils import get_openapi
-    
+
     openapi_schema = get_openapi(
         title=app.title,
         version=app.version,
         description=app.description,
         routes=app.routes,
     )
-    
+
     # Add security scheme
     openapi_schema["components"]["securitySchemes"] = {
         "Bearer": {
@@ -52,7 +52,7 @@ def custom_openapi():
             "description": "Enter your JWT token. You can get a test token by running: python scripts/generate_test_token.py",
         }
     }
-    
+
     # Add security to all endpoints that require authentication
     # This makes the Authorize button appear in Swagger UI
     for path, path_item in openapi_schema.get("paths", {}).items():
@@ -63,7 +63,7 @@ def custom_openapi():
                 # In production, you might want to be more selective
                 if "security" not in operation:
                     operation["security"] = [{"Bearer": []}]
-    
+
     app.openapi_schema = openapi_schema
     return app.openapi_schema
 

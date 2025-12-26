@@ -436,4 +436,3 @@ class TestGetWeatherForecast:
 
         with pytest.raises(requests.RequestException):
             get_weather_forecast("80202")
-

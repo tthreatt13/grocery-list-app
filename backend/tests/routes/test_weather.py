@@ -65,7 +65,9 @@ class TestGetForecastByZip:
     """Tests for GET /api/weather/forecast/{zip_code} endpoint."""
 
     @patch("routes.weather.get_weather_forecast")
-    def test_get_forecast_by_zip_success(self, mock_get_forecast, db_session, sample_user, auth_headers):
+    def test_get_forecast_by_zip_success(
+        self, mock_get_forecast, db_session, sample_user, auth_headers
+    ):
         """Test successful forecast retrieval by zip code."""
         # Mock forecast data
         mock_forecast_data = [
@@ -119,7 +121,9 @@ class TestGetForecastByZip:
         mock_get_forecast.assert_called_once_with("80202")
 
     @patch("routes.weather.get_weather_forecast")
-    def test_get_forecast_by_zip_invalid_zip(self, mock_get_forecast, db_session, sample_user, auth_headers):
+    def test_get_forecast_by_zip_invalid_zip(
+        self, mock_get_forecast, db_session, sample_user, auth_headers
+    ):
         """Test forecast retrieval with invalid zip code."""
         mock_get_forecast.side_effect = ValueError("Invalid zip code format: 123")
 
@@ -148,7 +152,9 @@ class TestGetForecastByZip:
         assert "Invalid zip code" in response.json()["detail"]
 
     @patch("routes.weather.get_weather_forecast")
-    def test_get_forecast_by_zip_api_failure(self, mock_get_forecast, db_session, sample_user, auth_headers):
+    def test_get_forecast_by_zip_api_failure(
+        self, mock_get_forecast, db_session, sample_user, auth_headers
+    ):
         """Test forecast retrieval when weather API fails."""
         mock_get_forecast.side_effect = Exception("API request failed")
 
@@ -189,7 +195,12 @@ class TestGetMyForecast:
 
     @patch("routes.weather.get_weather_forecast")
     def test_get_my_forecast_success(
-        self, mock_get_forecast, db_session, sample_user, sample_household_with_preferences, auth_headers
+        self,
+        mock_get_forecast,
+        db_session,
+        sample_user,
+        sample_household_with_preferences,
+        auth_headers,
     ):
         """Test successful forecast retrieval for user's saved zip code."""
         # Mock forecast data
@@ -282,13 +293,13 @@ class TestGetMyForecast:
         assert response.status_code == 404
         assert "Zip code not set" in response.json()["detail"]
 
-    def test_get_my_forecast_not_member(
-        self, db_session, sample_user, auth_headers
-    ):
+    def test_get_my_forecast_not_member(self, db_session, sample_user, auth_headers):
         """Test forecast retrieval when user is not a member of the household."""
         # Create a second user to own the household
         other_user = User(
-            clerk_user_id="other_clerk_user", email="other@example.com", name="Other User"
+            clerk_user_id="other_clerk_user",
+            email="other@example.com",
+            name="Other User",
         )
         db_session.add(other_user)
         db_session.commit()
@@ -328,7 +339,12 @@ class TestGetMyForecast:
 
     @patch("routes.weather.get_weather_forecast")
     def test_get_my_forecast_invalid_zip(
-        self, mock_get_forecast, db_session, sample_user, sample_household_with_preferences, auth_headers
+        self,
+        mock_get_forecast,
+        db_session,
+        sample_user,
+        sample_household_with_preferences,
+        auth_headers,
     ):
         """Test forecast retrieval when saved zip code is invalid."""
         mock_get_forecast.side_effect = ValueError("Invalid zip code format: 80202")
@@ -385,5 +401,6 @@ class TestGetMyForecast:
         # Cleanup
         app.dependency_overrides.clear()
 
-        assert response.status_code == 422  # Validation error for missing required query param
-
+        assert (
+            response.status_code == 422
+        )  # Validation error for missing required query param

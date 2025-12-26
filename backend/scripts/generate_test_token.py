@@ -30,7 +30,7 @@ from models.user import User
 def create_test_user(db: Session, clerk_user_id: str, email: str, name: str) -> User:
     """Create a test user if it doesn't exist."""
     user = db.query(User).filter(User.clerk_user_id == clerk_user_id).first()
-    
+
     if not user:
         user = User(clerk_user_id=clerk_user_id, email=email, name=name)
         db.add(user)
@@ -39,7 +39,7 @@ def create_test_user(db: Session, clerk_user_id: str, email: str, name: str) -> 
         print(f"✓ Created new user: {user.email} (ID: {user.id})")
     else:
         print(f"✓ Using existing user: {user.email} (ID: {user.id})")
-    
+
     return user
 
 
@@ -54,16 +54,18 @@ def generate_token(clerk_user_id: str, email: str) -> str:
         "iat": current_time,  # Issued at
         "exp": current_time + (365 * 24 * 60 * 60),  # Expires in 1 year
     }
-    
+
     # Generate token (signature verification is disabled in auth middleware for testing)
     # Using HS256 algorithm for simplicity
     token = jwt.encode(token_payload, "secret", algorithm="HS256")
-    
+
     return token
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate a test JWT token for API testing")
+    parser = argparse.ArgumentParser(
+        description="Generate a test JWT token for API testing"
+    )
     parser.add_argument(
         "--email",
         type=str,
@@ -82,19 +84,19 @@ def main():
         default="Test User",
         help="Name for the test user (default: Test User)",
     )
-    
+
     args = parser.parse_args()
-    
+
     # Create database session
     db: Session = SessionLocal()
-    
+
     try:
         # Create or get test user
         user = create_test_user(db, args.clerk_id, args.email, args.name)
-        
+
         # Generate token
         token = generate_token(user.clerk_user_id, user.email)
-        
+
         # Print results
         print("\n" + "=" * 60)
         print("Test Token Generated Successfully!")
@@ -115,9 +117,11 @@ def main():
         print("Example Python requests:")
         print("-" * 60)
         print(f'headers = {{"Authorization": "Bearer {token}"}}')
-        print('response = requests.get("http://localhost:8000/api/weather/forecast/80202", headers=headers)')
+        print(
+            'response = requests.get("http://localhost:8000/api/weather/forecast/80202", headers=headers)'
+        )
         print("\n" + "=" * 60)
-        
+
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
@@ -127,4 +131,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

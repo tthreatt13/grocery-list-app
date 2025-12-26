@@ -149,4 +149,3 @@ def get_forecast_by_zip(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to retrieve weather forecast. Please try again later.",
         )
-
