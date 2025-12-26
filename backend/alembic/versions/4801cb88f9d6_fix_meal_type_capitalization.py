@@ -39,9 +39,7 @@ def upgrade() -> None:
 
     for old_value, new_value in meal_type_mappings:
         result = connection.execute(
-            sa.text(
-                "UPDATE grocery_items SET meal_type = :new_value WHERE meal_type = :old_value"
-            ),
+            sa.text("UPDATE grocery_items SET meal_type = :new_value WHERE meal_type = :old_value"),
             {"old_value": old_value, "new_value": new_value},
         )
         if result.rowcount > 0:

@@ -8,7 +8,6 @@ from jwt import PyJWTError, ExpiredSignatureError
 
 from database import get_db
 from models.user import User
-from config import settings
 
 
 def verify_clerk_token(token: str, db: Session) -> User:

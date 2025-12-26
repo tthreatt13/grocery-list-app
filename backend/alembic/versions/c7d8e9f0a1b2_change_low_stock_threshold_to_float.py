@@ -35,9 +35,7 @@ def upgrade() -> None:
             sa.Column("quantity", sa.String(), nullable=True),
             sa.Column("category", sa.String(), nullable=True),
             sa.Column("expiration_date", sa.DateTime(), nullable=True),
-            sa.Column(
-                "low_stock_threshold", sa.Float(), nullable=True
-            ),  # Changed to Float
+            sa.Column("low_stock_threshold", sa.Float(), nullable=True),  # Changed to Float
             sa.Column("created_at", sa.DateTime(), nullable=False),
             sa.Column("updated_at", sa.DateTime(), nullable=False),
             sa.ForeignKeyConstraint(["household_id"], ["households.id"]),
@@ -65,9 +63,7 @@ def upgrade() -> None:
         op.rename_table("pantry_items_new", "pantry_items")
 
         # Recreate indexes
-        op.create_index(
-            op.f("ix_pantry_items_id"), "pantry_items", ["id"], unique=False
-        )
+        op.create_index(op.f("ix_pantry_items_id"), "pantry_items", ["id"], unique=False)
         op.create_index(
             op.f("ix_pantry_items_category"), "pantry_items", ["category"], unique=False
         )
@@ -102,9 +98,7 @@ def downgrade() -> None:
             sa.Column("quantity", sa.String(), nullable=True),
             sa.Column("category", sa.String(), nullable=True),
             sa.Column("expiration_date", sa.DateTime(), nullable=True),
-            sa.Column(
-                "low_stock_threshold", sa.Integer(), nullable=True
-            ),  # Back to Integer
+            sa.Column("low_stock_threshold", sa.Integer(), nullable=True),  # Back to Integer
             sa.Column("created_at", sa.DateTime(), nullable=False),
             sa.Column("updated_at", sa.DateTime(), nullable=False),
             sa.ForeignKeyConstraint(["household_id"], ["households.id"]),
@@ -129,9 +123,7 @@ def downgrade() -> None:
         op.rename_table("pantry_items_new", "pantry_items")
 
         # Recreate indexes
-        op.create_index(
-            op.f("ix_pantry_items_id"), "pantry_items", ["id"], unique=False
-        )
+        op.create_index(op.f("ix_pantry_items_id"), "pantry_items", ["id"], unique=False)
         op.create_index(
             op.f("ix_pantry_items_category"), "pantry_items", ["category"], unique=False
         )

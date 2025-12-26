@@ -257,7 +257,8 @@ def invite_member(
         Created member record
 
     Raises:
-        HTTPException: If household not found, user not found, user not admin, or user already member
+        HTTPException: If household not found, user not found, user not admin,
+            or user already member
     """
     # Validate household exists
     validate_household_exists(db, household_id)
@@ -518,7 +519,7 @@ def get_my_preferences(
         HTTPException: If household not found or user not a member
     """
     # Validate household exists
-    household = validate_household_exists(db, household_id)
+    validate_household_exists(db, household_id)
 
     # Check user is a member
     require_household_member(db, household_id, current_user)
@@ -574,7 +575,7 @@ def update_my_preferences(
         HTTPException: If household not found or user not a member
     """
     # Validate household exists
-    household = validate_household_exists(db, household_id)
+    validate_household_exists(db, household_id)
 
     # Check user is a member
     require_household_member(db, household_id, current_user)

@@ -29,4 +29,7 @@ class HouseholdMember(Base):
 
     def __repr__(self):
         """String representation of HouseholdMember."""
-        return f"<HouseholdMember(household_id={self.household_id}, user_id={self.user_id}, role='{self.role}')>"
+        return (
+            f"<HouseholdMember(household_id={self.household_id}, "
+            f"user_id={self.user_id}, role='{self.role}')>"
+        )

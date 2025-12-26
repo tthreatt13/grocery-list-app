@@ -29,4 +29,7 @@ class Meal(Base):
 
     def __repr__(self):
         """String representation of Meal."""
-        return f"<Meal(id={self.id}, name='{self.name}', meal_type='{self.meal_type}', day={self.day_of_week})>"
+        return (
+            f"<Meal(id={self.id}, name='{self.name}', "
+            f"meal_type='{self.meal_type}', day={self.day_of_week})>"
+        )
