@@ -2,6 +2,7 @@
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 from typing import List
 from datetime import date, timedelta
 
@@ -226,12 +227,17 @@ async def generate_grocery_list(
     # Calculate the Monday of the week
     week_start = get_week_start_monday(request.week_start_date)
 
-    # Get all meals for this week
+    # Get all meals for this week, excluding "eat_out" meals
     meals = (
         db.query(Meal)
         .filter(
             Meal.household_id == request.household_id,
             Meal.week_start_date == week_start,
+            # Exclude "eat_out" meals from grocery list generation
+            or_(
+                Meal.meal_category != "eat_out",
+                Meal.meal_category.is_(None),
+            ),
         )
         .all()
     )
