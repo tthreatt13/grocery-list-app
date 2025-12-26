@@ -19,9 +19,12 @@ class Meal(Base):
     )  # breakfast, lunch, dinner, snack
     day_of_week = Column(Integer, nullable=False, index=True)  # 0=Monday, 6=Sunday
     week_start_date = Column(Date, nullable=False, index=True)  # Monday of the week
-    name = Column(String, nullable=False)
+    name = Column(String, nullable=True)
     ingredients = Column(Text, nullable=True)  # Comma-separated or newline-separated
     notes = Column(Text, nullable=True)
+    meal_category = Column(
+        String, nullable=True, default="normal"
+    )  # normal, quick_meal, eat_out
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     # Relationships
@@ -29,7 +32,8 @@ class Meal(Base):
 
     def __repr__(self):
         """String representation of Meal."""
+        name_str = self.name if self.name else "None"
         return (
-            f"<Meal(id={self.id}, name='{self.name}', "
+            f"<Meal(id={self.id}, name='{name_str}', "
             f"meal_type='{self.meal_type}', day={self.day_of_week})>"
         )

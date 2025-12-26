@@ -49,12 +49,7 @@ const mockSyncUser = clientApi.syncUser as jest.MockedFunction<
   typeof clientApi.syncUser
 >
 
-// Mock window.confirm
-const mockConfirm = jest.fn()
-Object.defineProperty(window, 'confirm', {
-  writable: true,
-  value: mockConfirm,
-})
+// Note: window.confirm is no longer used - we use ConfirmDeleteModal instead
 
 describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
   // Calculate current week start (Monday) for test meals - matching component logic
@@ -124,7 +119,6 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
     mockDeleteMeal.mockResolvedValue(undefined)
     mockUpdateMeal.mockResolvedValue(mockMealsResponse.meals[0])
     mockSyncUser.mockResolvedValue(undefined)
-    mockConfirm.mockClear()
   })
 
   describe('Mobile Flow', () => {
@@ -242,8 +236,6 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
 
   describe('Delete Functionality in Edit Modal', () => {
     it('should delete meal from edit modal', async () => {
-      mockConfirm.mockReturnValue(true) // User confirms deletion
-
       render(<MealPlannerPage />)
 
       // Wait for component to load - there are multiple "Scrambled Eggs" (desktop and mobile)
@@ -270,10 +262,24 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
       const deleteButton = screen.getByText('Delete')
       fireEvent.click(deleteButton)
 
-      // Should show confirmation dialog
-      expect(mockConfirm).toHaveBeenCalledWith(
-        'Are you sure you want to delete this meal?'
+      // Should show confirmation modal
+      await waitFor(() => {
+        expect(screen.getByText('Delete Meal?')).toBeInTheDocument()
+      })
+
+      // Click confirm button in confirmation modal (find it within the confirmation modal context)
+      const confirmationModal = screen
+        .getByText('Delete Meal?')
+        .closest('[role="dialog"]')
+      expect(confirmationModal).toBeInTheDocument()
+      const allDeleteButtons = screen.getAllByRole('button', {
+        name: /^Delete$/i,
+      })
+      const confirmButton = allDeleteButtons.find((btn) =>
+        confirmationModal!.contains(btn)
       )
+      expect(confirmButton).toBeInTheDocument()
+      fireEvent.click(confirmButton!)
 
       // Should call delete API
       await waitFor(() => {
@@ -287,8 +293,6 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
     })
 
     it('should not delete when user cancels confirmation', async () => {
-      mockConfirm.mockReturnValue(false) // User cancels
-
       render(<MealPlannerPage />)
 
       // Wait for component to load - there are multiple "Scrambled Eggs" (desktop and mobile)
@@ -315,22 +319,36 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
       const deleteButton = screen.getByText('Delete')
       fireEvent.click(deleteButton)
 
-      // Should show confirmation dialog
-      expect(mockConfirm).toHaveBeenCalledWith(
-        'Are you sure you want to delete this meal?'
+      // Should show confirmation modal
+      await waitFor(() => {
+        expect(screen.getByText('Delete Meal?')).toBeInTheDocument()
+      })
+
+      // Click cancel button in confirmation modal (find it within the confirmation modal context)
+      const confirmationModal = screen
+        .getByText('Delete Meal?')
+        .closest('[role="dialog"]')
+      expect(confirmationModal).toBeInTheDocument()
+      const allCancelButtons = screen.getAllByRole('button', {
+        name: /^Cancel$/i,
+      })
+      const cancelButton = allCancelButtons.find((btn) =>
+        confirmationModal!.contains(btn)
       )
+      expect(cancelButton).toBeInTheDocument()
+      fireEvent.click(cancelButton!)
 
       // Should NOT call delete API
       expect(mockDeleteMeal).not.toHaveBeenCalled()
 
-      // Modal should remain open
+      // Confirmation modal should close, but edit modal should remain open
       await waitFor(() => {
-        expect(screen.getByText('Edit Meal')).toBeInTheDocument()
+        expect(screen.queryByText('Delete Meal?')).not.toBeInTheDocument()
       })
+      expect(screen.getByText('Edit Meal')).toBeInTheDocument()
     })
 
     it('should handle delete errors gracefully', async () => {
-      mockConfirm.mockReturnValue(true)
       mockDeleteMeal.mockRejectedValue(new Error('Network error'))
 
       render(<MealPlannerPage />)
@@ -359,12 +377,34 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
       const deleteButton = screen.getByText('Delete')
       fireEvent.click(deleteButton)
 
-      // Should handle error and show error message
+      // Should show confirmation modal
+      await waitFor(() => {
+        expect(screen.getByText('Delete Meal?')).toBeInTheDocument()
+      })
+
+      // Click confirm button in confirmation modal (find it within the confirmation modal context)
+      const confirmationModal = screen
+        .getByText('Delete Meal?')
+        .closest('[role="dialog"]')
+      expect(confirmationModal).toBeInTheDocument()
+      const allDeleteButtons = screen.getAllByRole('button', {
+        name: /^Delete$/i,
+      })
+      const confirmButton = allDeleteButtons.find((btn) =>
+        confirmationModal!.contains(btn)
+      )
+      expect(confirmButton).toBeInTheDocument()
+      fireEvent.click(confirmButton!)
+
+      // Should handle error and show error message in the page (error state is set in page component)
       await waitFor(() => {
         expect(screen.getByText('Network error')).toBeInTheDocument()
       })
 
-      // Modal should remain open
+      // Confirmation modal should close on error, but edit modal should remain open
+      await waitFor(() => {
+        expect(screen.queryByText('Delete Meal?')).not.toBeInTheDocument()
+      })
       expect(screen.getByText('Edit Meal')).toBeInTheDocument()
     })
   })

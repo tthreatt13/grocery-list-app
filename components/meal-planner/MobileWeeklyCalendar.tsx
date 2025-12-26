@@ -1,7 +1,7 @@
 'use client'
 
 import { Meal, MealType } from '@/lib/types'
-import { formatDate, cn } from '@/lib/utils'
+import { formatDate, cn, getMealDisplayName } from '@/lib/utils'
 import { useRef, forwardRef, useImperativeHandle } from 'react'
 
 interface MobileWeeklyCalendarProps {
@@ -170,9 +170,29 @@ const MobileWeeklyCalendar = forwardRef<
                         )}
                       >
                         <div className="flex items-start justify-between mb-2">
-                          <h4 className="font-semibold text-gray-900 text-base flex-1">
-                            {meal.name}
-                          </h4>
+                          <div className="flex items-center gap-2 flex-1">
+                            <h4 className="font-semibold text-gray-900 text-base">
+                              {getMealDisplayName(meal)}
+                            </h4>
+                            {meal.mealCategory === 'quick_meal' && (
+                              <span
+                                className="text-amber-600 text-base"
+                                title="Quick Meal"
+                                aria-label="Quick Meal"
+                              >
+                                ⚡
+                              </span>
+                            )}
+                            {meal.mealCategory === 'eat_out' && (
+                              <span
+                                className="text-blue-600 text-base"
+                                title="Eat Out"
+                                aria-label="Eat Out"
+                              >
+                                🍴
+                              </span>
+                            )}
+                          </div>
                           <span
                             className={cn(
                               'text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap ml-2',

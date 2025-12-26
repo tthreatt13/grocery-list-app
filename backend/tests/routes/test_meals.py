@@ -923,3 +923,487 @@ class TestMealRoutes:
         assert "bread" in item_names
         assert "ham" in item_names
         assert "cheese" in item_names
+
+    def test_generate_grocery_list_excludes_eat_out_meals(
+        self, db_session, sample_user, sample_household
+    ):
+        """Test that 'eat_out' meals are excluded from grocery list generation."""
+        from models.meal import Meal
+        from datetime import date
+
+        week_start = date(2024, 4, 1)  # Monday
+        meals = [
+            Meal(
+                household_id=sample_household.id,
+                meal_type="breakfast",
+                day_of_week=0,  # Monday
+                week_start_date=week_start,
+                name="Home Cooked Breakfast",
+                ingredients="eggs, bacon, toast",
+                meal_category="normal",
+            ),
+            Meal(
+                household_id=sample_household.id,
+                meal_type="lunch",
+                day_of_week=0,  # Monday
+                week_start_date=week_start,
+                name="Restaurant Lunch",
+                ingredients="pizza, salad, breadsticks",
+                meal_category="eat_out",
+            ),
+            Meal(
+                household_id=sample_household.id,
+                meal_type="dinner",
+                day_of_week=0,  # Monday
+                week_start_date=week_start,
+                name="Home Cooked Dinner",
+                ingredients="chicken, rice, vegetables",
+                meal_category="normal",
+            ),
+        ]
+
+        for meal in meals:
+            db_session.add(meal)
+        db_session.commit()
+
+        from database import get_db
+
+        def override_get_db():
+            yield db_session
+
+        app.dependency_overrides[get_db] = override_get_db
+
+        from middleware.auth import get_current_user
+
+        def override_get_current_user():
+            return sample_user
+
+        app.dependency_overrides[get_current_user] = override_get_current_user
+
+        request_data = {
+            "week_start_date": "2024-04-01",
+            "household_id": sample_household.id,
+            "grocery_list_name": "Eat Out Exclusion Test",
+        }
+
+        client = TestClient(app)
+        response = client.post(
+            "/api/meals/generate-grocery-list",
+            json=request_data,
+            headers={"Authorization": "Bearer valid_token"},
+        )
+
+        app.dependency_overrides.clear()
+
+        assert response.status_code == 201
+        data = response.json()
+
+        # Verify grocery items were created
+        items = (
+            db_session.query(GroceryItem)
+            .filter_by(list_id=data["grocery_list_id"])
+            .all()
+        )
+
+        item_names = [item.name.lower() for item in items]
+
+        # Should include ingredients from normal meals (breakfast and dinner)
+        assert any(
+            "eggs" in name or "bacon" in name or "toast" in name for name in item_names
+        )
+        assert any(
+            "chicken" in name or "rice" in name or "vegetables" in name
+            for name in item_names
+        )
+
+        # Should NOT include ingredients from eat_out meal (lunch)
+        assert not any("pizza" in name for name in item_names)
+        assert not any("breadsticks" in name for name in item_names)
+
+        # Verify the message reflects correct meal count (should be 2 meals, not 3)
+        assert "2 meals" in data["message"] or "2 meal" in data["message"]
+
+    def test_create_meal_with_meal_category(
+        self, db_session, sample_user, sample_household
+    ):
+        """Test POST /api/meals creates a meal with meal_category."""
+        from database import get_db
+
+        def override_get_db():
+            yield db_session
+
+        app.dependency_overrides[get_db] = override_get_db
+
+        from middleware.auth import get_current_user
+
+        def override_get_current_user():
+            return sample_user
+
+        app.dependency_overrides[get_current_user] = override_get_current_user
+
+        meal_data = {
+            "household_id": sample_household.id,
+            "name": "Quick Sandwich",
+            "meal_type": "lunch",
+            "day_of_week": 1,
+            "week_start_date": "2024-01-01",
+            "ingredients": "bread, ham, cheese",
+            "meal_category": "quick_meal",
+        }
+
+        client = TestClient(app)
+        response = client.post(
+            "/api/meals",
+            json=meal_data,
+            headers={"Authorization": "Bearer valid_token"},
+        )
+
+        app.dependency_overrides.clear()
+
+        assert response.status_code == 201
+        data = response.json()
+        assert data["meal_category"] == "quick_meal"
+
+        # Verify in database
+        meal = db_session.query(Meal).filter_by(name="Quick Sandwich").first()
+        assert meal is not None
+        assert meal.meal_category == "quick_meal"
+
+    def test_create_meal_with_eat_out_category(
+        self, db_session, sample_user, sample_household
+    ):
+        """Test POST /api/meals creates a meal with eat_out category."""
+        from database import get_db
+
+        def override_get_db():
+            yield db_session
+
+        app.dependency_overrides[get_db] = override_get_db
+
+        from middleware.auth import get_current_user
+
+        def override_get_current_user():
+            return sample_user
+
+        app.dependency_overrides[get_current_user] = override_get_current_user
+
+        meal_data = {
+            "household_id": sample_household.id,
+            "name": "Restaurant Dinner",
+            "meal_type": "dinner",
+            "day_of_week": 2,
+            "week_start_date": "2024-01-01",
+            "ingredients": "pizza, salad",
+            "meal_category": "eat_out",
+        }
+
+        client = TestClient(app)
+        response = client.post(
+            "/api/meals",
+            json=meal_data,
+            headers={"Authorization": "Bearer valid_token"},
+        )
+
+        app.dependency_overrides.clear()
+
+        assert response.status_code == 201
+        data = response.json()
+        assert data["meal_category"] == "eat_out"
+
+        # Verify in database
+        meal = db_session.query(Meal).filter_by(name="Restaurant Dinner").first()
+        assert meal is not None
+        assert meal.meal_category == "eat_out"
+
+    def test_create_meal_defaults_to_normal_category(
+        self, db_session, sample_user, sample_household
+    ):
+        """Test POST /api/meals defaults to 'normal' category when not provided."""
+        from database import get_db
+
+        def override_get_db():
+            yield db_session
+
+        app.dependency_overrides[get_db] = override_get_db
+
+        from middleware.auth import get_current_user
+
+        def override_get_current_user():
+            return sample_user
+
+        app.dependency_overrides[get_current_user] = override_get_current_user
+
+        meal_data = {
+            "household_id": sample_household.id,
+            "name": "Default Category Meal",
+            "meal_type": "breakfast",
+            "day_of_week": 0,
+            "week_start_date": "2024-01-01",
+            "ingredients": "eggs, toast",
+        }
+
+        client = TestClient(app)
+        response = client.post(
+            "/api/meals",
+            json=meal_data,
+            headers={"Authorization": "Bearer valid_token"},
+        )
+
+        app.dependency_overrides.clear()
+
+        assert response.status_code == 201
+        data = response.json()
+        # Should default to "normal" when not provided
+        assert data["meal_category"] == "normal"
+
+        # Verify in database
+        meal = db_session.query(Meal).filter_by(name="Default Category Meal").first()
+        assert meal is not None
+        assert meal.meal_category == "normal"
+
+    def test_update_meal_category(self, db_session, sample_user, sample_meals):
+        """Test PUT /api/meals/{meal_id} updates meal_category."""
+        from database import get_db
+
+        def override_get_db():
+            yield db_session
+
+        app.dependency_overrides[get_db] = override_get_db
+
+        from middleware.auth import get_current_user
+
+        def override_get_current_user():
+            return sample_user
+
+        app.dependency_overrides[get_current_user] = override_get_current_user
+
+        meal = sample_meals[0]
+        # Initially should be None or "normal"
+        original_category = meal.meal_category
+
+        update_data = {"meal_category": "quick_meal"}
+
+        client = TestClient(app)
+        response = client.put(
+            f"/api/meals/{meal.id}",
+            json=update_data,
+            headers={"Authorization": "Bearer valid_token"},
+        )
+
+        app.dependency_overrides.clear()
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["meal_category"] == "quick_meal"
+
+        # Verify in database
+        db_session.refresh(meal)
+        assert meal.meal_category == "quick_meal"
+
+    def test_update_meal_category_to_eat_out(
+        self, db_session, sample_user, sample_meals
+    ):
+        """Test PUT /api/meals/{meal_id} can update meal_category to eat_out."""
+        from database import get_db
+
+        def override_get_db():
+            yield db_session
+
+        app.dependency_overrides[get_db] = override_get_db
+
+        from middleware.auth import get_current_user
+
+        def override_get_current_user():
+            return sample_user
+
+        app.dependency_overrides[get_current_user] = override_get_current_user
+
+        meal = sample_meals[0]
+        update_data = {"meal_category": "eat_out"}
+
+        client = TestClient(app)
+        response = client.put(
+            f"/api/meals/{meal.id}",
+            json=update_data,
+            headers={"Authorization": "Bearer valid_token"},
+        )
+
+        app.dependency_overrides.clear()
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["meal_category"] == "eat_out"
+
+        # Verify in database
+        db_session.refresh(meal)
+        assert meal.meal_category == "eat_out"
+
+    def test_get_weekly_meals_includes_meal_category(
+        self, db_session, sample_user, sample_household
+    ):
+        """Test GET /api/meals/week includes meal_category in response."""
+        from models.meal import Meal
+        from datetime import date
+        from database import get_db
+
+        week_start = date(2024, 5, 6)  # Monday
+        meals = [
+            Meal(
+                household_id=sample_household.id,
+                meal_type="breakfast",
+                day_of_week=0,
+                week_start_date=week_start,
+                name="Normal Breakfast",
+                ingredients="eggs, toast",
+                meal_category="normal",
+            ),
+            Meal(
+                household_id=sample_household.id,
+                meal_type="lunch",
+                day_of_week=0,
+                week_start_date=week_start,
+                name="Quick Lunch",
+                ingredients="sandwich",
+                meal_category="quick_meal",
+            ),
+            Meal(
+                household_id=sample_household.id,
+                meal_type="dinner",
+                day_of_week=0,
+                week_start_date=week_start,
+                name="Restaurant Dinner",
+                ingredients="pizza",
+                meal_category="eat_out",
+            ),
+        ]
+
+        for meal in meals:
+            db_session.add(meal)
+        db_session.commit()
+
+        def override_get_db():
+            yield db_session
+
+        app.dependency_overrides[get_db] = override_get_db
+
+        from middleware.auth import get_current_user
+
+        def override_get_current_user():
+            return sample_user
+
+        app.dependency_overrides[get_current_user] = override_get_current_user
+
+        client = TestClient(app)
+        response = client.get(
+            f"/api/meals/week?date=2024-05-06&household_id={sample_household.id}",
+            headers={"Authorization": "Bearer valid_token"},
+        )
+
+        app.dependency_overrides.clear()
+
+        assert response.status_code == 200
+        data = response.json()
+        assert "meals" in data
+        assert len(data["meals"]) == 3
+
+        # Verify all meals have meal_category
+        meal_categories = [meal["meal_category"] for meal in data["meals"]]
+        assert "normal" in meal_categories
+        assert "quick_meal" in meal_categories
+        assert "eat_out" in meal_categories
+
+    def test_generate_grocery_list_includes_quick_meal(
+        self, db_session, sample_user, sample_household
+    ):
+        """Test that 'quick_meal' meals are included in grocery list generation."""
+        from models.meal import Meal
+        from datetime import date
+
+        week_start = date(2024, 6, 3)  # Monday
+        meals = [
+            Meal(
+                household_id=sample_household.id,
+                meal_type="breakfast",
+                day_of_week=0,
+                week_start_date=week_start,
+                name="Normal Breakfast",
+                ingredients="eggs, bacon",
+                meal_category="normal",
+            ),
+            Meal(
+                household_id=sample_household.id,
+                meal_type="lunch",
+                day_of_week=0,
+                week_start_date=week_start,
+                name="Quick Lunch",
+                ingredients="bread, ham, cheese",
+                meal_category="quick_meal",
+            ),
+            Meal(
+                household_id=sample_household.id,
+                meal_type="dinner",
+                day_of_week=0,
+                week_start_date=week_start,
+                name="Restaurant Dinner",
+                ingredients="pizza, salad",
+                meal_category="eat_out",
+            ),
+        ]
+
+        for meal in meals:
+            db_session.add(meal)
+        db_session.commit()
+
+        from database import get_db
+
+        def override_get_db():
+            yield db_session
+
+        app.dependency_overrides[get_db] = override_get_db
+
+        from middleware.auth import get_current_user
+
+        def override_get_current_user():
+            return sample_user
+
+        app.dependency_overrides[get_current_user] = override_get_current_user
+
+        request_data = {
+            "week_start_date": "2024-06-03",
+            "household_id": sample_household.id,
+            "grocery_list_name": "Quick Meal Inclusion Test",
+        }
+
+        client = TestClient(app)
+        response = client.post(
+            "/api/meals/generate-grocery-list",
+            json=request_data,
+            headers={"Authorization": "Bearer valid_token"},
+        )
+
+        app.dependency_overrides.clear()
+
+        assert response.status_code == 201
+        data = response.json()
+
+        # Verify grocery items were created
+        items = (
+            db_session.query(GroceryItem)
+            .filter_by(list_id=data["grocery_list_id"])
+            .all()
+        )
+
+        item_names = [item.name.lower() for item in items]
+
+        # Should include ingredients from normal and quick_meal meals
+        assert any("eggs" in name or "bacon" in name for name in item_names)
+        assert any(
+            "bread" in name or "ham" in name or "cheese" in name for name in item_names
+        )
+
+        # Should NOT include ingredients from eat_out meal
+        assert not any("pizza" in name for name in item_names)
+        assert not any("salad" in name for name in item_names)
+
+        # Verify the message reflects correct meal count (should be 2 meals, not 3)
+        assert "2 meals" in data["message"] or "2 meal" in data["message"]

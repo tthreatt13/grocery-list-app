@@ -26,7 +26,10 @@ A modern, full-stack grocery list and meal planning application built for busy p
 - Plan meals for the entire week (Breakfast, Lunch, Dinner)
 - Visual calendar view with easy navigation between weeks
 - Add meals with ingredients and notes
-- Generate grocery lists automatically from your meal plan
+- Meal categories: Normal, Quick Meal, or Eat Out
+- Visual indicators for meal categories (⚡ for Quick Meal, 🍴 for Eat Out)
+- Generate grocery lists automatically from your meal plan (excludes Eat Out meals)
+- Delete confirmation modal to prevent accidental deletions
 - Mobile-optimized scrollable calendar
 - Quick stats showing meals planned and ingredients needed
 
@@ -199,6 +202,7 @@ grocery-list-app/
 │   │   ├── Input.tsx
 │   │   ├── Card.tsx
 │   │   ├── Modal.tsx
+│   │   ├── ConfirmDeleteModal.tsx
 │   │   ├── Badge.tsx
 │   │   ├── Checkbox.tsx
 │   │   └── Select.tsx
@@ -477,7 +481,7 @@ This is a **production-ready full-stack application** with complete backend inte
 - **Authentication**: Clerk integration for user management
 - **Dashboard**: Fully integrated with backend API
 - **Grocery Lists**: Complete backend integration with sorting, filtering, and archiving
-- **Meal Planner**: Full backend integration with meal-to-grocery-list generation
+- **Meal Planner**: Full backend integration with meal-to-grocery-list generation, meal categories (Normal/Quick Meal/Eat Out), and delete confirmation modal
 - **Pantry Inventory**: Complete backend integration with low-stock alerts
 - **Household Management**: Full backend integration with member roles and preferences
 - **Weather Integration**: 7-day weather forecasts with zip code preferences and caching

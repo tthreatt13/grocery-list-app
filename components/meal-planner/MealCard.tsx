@@ -1,5 +1,6 @@
 import { Meal } from '@/lib/types'
 import { Badge } from '@/components/ui/Badge'
+import { getMealDisplayName } from '@/lib/utils'
 import Image from 'next/image'
 
 interface MealCardProps {
@@ -27,6 +28,7 @@ export default function MealCard({ meal, onEdit, onDelete }: MealCardProps) {
   }
 
   const ingredientCount = meal.ingredients?.length || 0
+  const displayName = getMealDisplayName(meal)
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
@@ -35,7 +37,7 @@ export default function MealCard({ meal, onEdit, onDelete }: MealCardProps) {
         {meal.imageUrl ? (
           <Image
             src={meal.imageUrl}
-            alt={meal.name}
+            alt={displayName}
             fill
             className="object-cover"
           />
@@ -61,7 +63,27 @@ export default function MealCard({ meal, onEdit, onDelete }: MealCardProps) {
       {/* Card content */}
       <div className="p-4">
         <div className="flex items-start justify-between mb-2">
-          <h3 className="font-semibold text-gray-900 flex-1">{meal.name}</h3>
+          <div className="flex items-center gap-2 flex-1">
+            <h3 className="font-semibold text-gray-900">{displayName}</h3>
+            {meal.mealCategory === 'quick_meal' && (
+              <span
+                className="text-amber-600 text-lg"
+                title="Quick Meal"
+                aria-label="Quick Meal"
+              >
+                ⚡
+              </span>
+            )}
+            {meal.mealCategory === 'eat_out' && (
+              <span
+                className="text-blue-600 text-lg"
+                title="Eat Out"
+                aria-label="Eat Out"
+              >
+                🍴
+              </span>
+            )}
+          </div>
           <Badge variant={getMealTypeColor(meal.mealType)}>
             {meal.mealType}
           </Badge>
@@ -82,7 +104,10 @@ export default function MealCard({ meal, onEdit, onDelete }: MealCardProps) {
         {/* Action buttons */}
         <div className="flex items-center space-x-2 pt-3 border-t border-gray-100">
           <button
-            onClick={() => onEdit(meal)}
+            onClick={(e) => {
+              e.stopPropagation()
+              onEdit(meal)
+            }}
             className="flex-1 px-3 py-1.5 text-sm text-blue-600 hover:bg-blue-50 rounded transition-colors"
             aria-label="Edit meal"
           >
@@ -102,7 +127,10 @@ export default function MealCard({ meal, onEdit, onDelete }: MealCardProps) {
             Edit
           </button>
           <button
-            onClick={() => onDelete(meal.id)}
+            onClick={(e) => {
+              e.stopPropagation()
+              onDelete(meal.id)
+            }}
             className="px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded transition-colors"
             aria-label="Delete meal"
           >
