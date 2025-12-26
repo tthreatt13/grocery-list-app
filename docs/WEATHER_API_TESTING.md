@@ -5,12 +5,13 @@ This guide explains how to test the weather API endpoints that were created in t
 ## Prerequisites
 
 1. **Start the backend server:**
+
    ```bash
    cd backend
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    uvicorn main:app --reload
    ```
-   
+
    The server will start on `http://localhost:8000`
 
 2. **Get an authentication token:**
@@ -59,6 +60,7 @@ curl -X GET "http://localhost:8000/api/weather/forecast/80202" \
 ```
 
 **Example Response:**
+
 ```json
 {
   "zip_code": "80202",
@@ -92,6 +94,7 @@ curl -X GET "http://localhost:8000/api/weather/forecast/me?household_id=1" \
 ```
 
 **Prerequisites for this endpoint:**
+
 - User must be a member of the household
 - User must have a zip code saved in their preferences for that household
 
@@ -134,6 +137,7 @@ pytest tests/routes/test_weather.py -v
 ```
 
 This will run all 9 test cases covering:
+
 - Successful forecast retrieval
 - Invalid zip code handling
 - API failure handling
@@ -163,12 +167,14 @@ This will run all 9 test cases covering:
 Get 7-day weather forecast for any US zip code.
 
 **Parameters:**
+
 - `zip_code` (path parameter): US zip code (5 digits or 5+4 format)
   - Example: `80202` or `80202-1234`
 
 **Authentication:** Required (Bearer token)
 
 **Response:**
+
 - `200 OK`: Success with forecast data
 - `400 Bad Request`: Invalid zip code format
 - `500 Internal Server Error`: Weather API failure
@@ -178,11 +184,13 @@ Get 7-day weather forecast for any US zip code.
 Get 7-day weather forecast for current user's saved zip code.
 
 **Query Parameters:**
+
 - `household_id` (required): Household ID
 
 **Authentication:** Required (Bearer token)
 
 **Response:**
+
 - `200 OK`: Success with forecast data
 - `400 Bad Request`: Invalid zip code in preferences
 - `403 Forbidden`: User is not a member of the household
@@ -192,61 +200,75 @@ Get 7-day weather forecast for current user's saved zip code.
 ## Example Test Scenarios
 
 ### Scenario 1: Valid Zip Code
+
 ```bash
 curl -X GET "http://localhost:8000/api/weather/forecast/10001" \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
+
 Expected: `200 OK` with 7-day forecast
 
 ### Scenario 2: Invalid Zip Code
+
 ```bash
 curl -X GET "http://localhost:8000/api/weather/forecast/123" \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
+
 Expected: `400 Bad Request` with error message
 
 ### Scenario 3: Missing Authentication
+
 ```bash
 curl -X GET "http://localhost:8000/api/weather/forecast/80202"
 ```
+
 Expected: `401 Unauthorized`
 
 ### Scenario 4: User's Saved Zip Code
+
 ```bash
 # First, ensure user has zip_code set in preferences
 # Then:
 curl -X GET "http://localhost:8000/api/weather/forecast/me?household_id=1" \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
+
 Expected: `200 OK` with forecast for saved zip code
 
 ### Scenario 5: No Zip Code in Preferences
+
 ```bash
 # If user hasn't set zip_code in preferences:
 curl -X GET "http://localhost:8000/api/weather/forecast/me?household_id=1" \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
+
 Expected: `404 Not Found` with message about zip code not set
 
 ## Troubleshooting
 
 ### Issue: 401 Unauthorized
+
 - **Solution:** Ensure you're including a valid Bearer token in the Authorization header
 - Format: `Authorization: Bearer <token>`
 
 ### Issue: 404 Not Found (for `/forecast/me`)
-- **Solution:** 
+
+- **Solution:**
   1. Ensure the user has a zip code set in their preferences for the household
   2. Verify the household_id is correct
   3. Check that the user is a member of the household
 
 ### Issue: 500 Internal Server Error
-- **Solution:** 
+
+- **Solution:**
   - Check backend logs for detailed error messages
   - Verify internet connection (API calls external weather service)
   - Weather API may be temporarily unavailable
 
 ### Issue: Slow Response Times
+
 - **Note:** First request for a zip code may take 5-10 seconds as it:
   1. Geocodes the zip code
   2. Fetches gridpoint info
@@ -266,6 +288,7 @@ python scripts/generate_test_token.py
 ```
 
 **Options:**
+
 ```bash
 # Custom email
 python scripts/generate_test_token.py --email mytest@example.com
@@ -281,6 +304,7 @@ python scripts/generate_test_token.py --email test@example.com --clerk-id test_u
 ```
 
 The script will:
+
 1. Create a test user in the database (if it doesn't exist)
 2. Generate a JWT token for that user
 3. Print the token and example usage commands
@@ -344,4 +368,3 @@ If successful, you'll get user information. If you get a 404, the user doesn't e
 - **Geocoding:** Uses Nominatim (OpenStreetMap) for zip code to coordinates conversion
 - **Data Source:** Forecasts come from the National Weather Service (api.weather.gov)
 - **Token Security:** Test tokens are for development only. Signature verification is disabled in the auth middleware for testing purposes.
-
