@@ -51,6 +51,7 @@ function convertMealResponse(meal: MealResponse): Meal {
       : [],
     notes: meal.notes,
     createdBy: 'User',
+    mealCategory: meal.meal_category || 'normal',
   }
 }
 
@@ -257,6 +258,7 @@ export default function MealPlannerPage() {
     name: string
     notes?: string
     ingredients?: string
+    mealCategory?: 'normal' | 'quick_meal' | 'eat_out'
   }) => {
     if (!selectedHouseholdId) {
       throw new Error('No household selected')
@@ -275,6 +277,7 @@ export default function MealPlannerPage() {
           name: mealData.name,
           notes: mealData.notes || '',
           ingredients: mealData.ingredients || '',
+          meal_category: mealData.mealCategory || 'normal',
         },
         token
       )
@@ -302,6 +305,7 @@ export default function MealPlannerPage() {
           week_start_date: formatDateForAPI(currentWeekStart),
           notes: mealData.notes,
           ingredients: mealData.ingredients || '',
+          meal_category: mealData.mealCategory || 'normal',
         },
         token
       )

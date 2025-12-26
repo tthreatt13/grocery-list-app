@@ -133,6 +133,7 @@ async def create_meal(
         name=meal_data.name,
         ingredients=meal_data.ingredients,
         notes=meal_data.notes,
+        meal_category=meal_data.meal_category or "normal",
     )
 
     db.add(meal)

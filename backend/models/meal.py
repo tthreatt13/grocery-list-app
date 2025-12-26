@@ -22,6 +22,9 @@ class Meal(Base):
     name = Column(String, nullable=False)
     ingredients = Column(Text, nullable=True)  # Comma-separated or newline-separated
     notes = Column(Text, nullable=True)
+    meal_category = Column(
+        String, nullable=True, default="normal"
+    )  # normal, quick_meal, eat_out
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     # Relationships

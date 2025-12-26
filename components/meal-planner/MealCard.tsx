@@ -61,7 +61,27 @@ export default function MealCard({ meal, onEdit, onDelete }: MealCardProps) {
       {/* Card content */}
       <div className="p-4">
         <div className="flex items-start justify-between mb-2">
-          <h3 className="font-semibold text-gray-900 flex-1">{meal.name}</h3>
+          <div className="flex items-center gap-2 flex-1">
+            <h3 className="font-semibold text-gray-900">{meal.name}</h3>
+            {meal.mealCategory === 'quick_meal' && (
+              <span
+                className="text-amber-600 text-lg"
+                title="Quick Meal"
+                aria-label="Quick Meal"
+              >
+                ⚡
+              </span>
+            )}
+            {meal.mealCategory === 'eat_out' && (
+              <span
+                className="text-blue-600 text-lg"
+                title="Eat Out"
+                aria-label="Eat Out"
+              >
+                🍴
+              </span>
+            )}
+          </div>
           <Badge variant={getMealTypeColor(meal.mealType)}>
             {meal.mealType}
           </Badge>

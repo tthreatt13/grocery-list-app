@@ -14,6 +14,9 @@ class MealBase(BaseModel):
     week_start_date: date
     ingredients: Optional[str] = None
     notes: Optional[str] = None
+    meal_category: Optional[str] = Field(
+        None, pattern="^(normal|quick_meal|eat_out)$"
+    )  # normal, quick_meal, eat_out
 
 
 class MealCreate(MealBase):
@@ -31,6 +34,9 @@ class MealUpdate(BaseModel):
     week_start_date: Optional[date] = None
     ingredients: Optional[str] = None
     notes: Optional[str] = None
+    meal_category: Optional[str] = Field(
+        None, pattern="^(normal|quick_meal|eat_out)$"
+    )
 
     model_config = ConfigDict(extra="ignore")
 
