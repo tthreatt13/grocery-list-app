@@ -83,21 +83,21 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 4.9 Write test in `components/household/__tests__/PreferencesForm.test.tsx` for zip code input
   - [x] 4.10 Run tests: `npm test -- components/household/__tests__/PreferencesForm.test.tsx`
 
-- [ ] 5.0 Frontend: Create weather forecast display component
-  - [ ] 5.1 Create `components/household/WeatherForecast.tsx` component
-  - [ ] 5.2 Create `lib/api/weather.ts` with TypeScript interfaces and API functions
-  - [ ] 5.3 Define `DailyForecast` interface with: date, high_temp, low_temp, precipitation_chance, condition
-  - [ ] 5.4 Define `WeatherForecastResponse` interface with array of `DailyForecast`
-  - [ ] 5.5 Implement `getWeatherForecast(zipCode: string, token: string)` function in `lib/api/weather.ts`
-  - [ ] 5.6 Implement `getMyWeatherForecast(householdId: number, token: string)` function in `lib/api/weather.ts`
-  - [ ] 5.7 Design WeatherForecast component to display 7-day forecast in a responsive grid/card layout
-  - [ ] 5.8 Display each day with: date, high/low temperatures, precipitation chance, and weather condition icon
-  - [ ] 5.9 Add loading state while fetching weather data
-  - [ ] 5.10 Add error state with user-friendly error message
-  - [ ] 5.11 Add empty state when no zip code is set
-  - [ ] 5.12 Style component to match existing design system (use Tailwind classes)
-  - [ ] 5.13 Write test in `components/household/__tests__/WeatherForecast.test.tsx` for component rendering and states
-  - [ ] 5.14 Run tests: `npm test -- components/household/__tests__/WeatherForecast.test.tsx`
+- [x] 5.0 Frontend: Create weather forecast display component
+  - [x] 5.1 Create `components/household/WeatherForecast.tsx` component
+  - [x] 5.2 Create `lib/api/weather.ts` with TypeScript interfaces and API functions
+  - [x] 5.3 Define `DailyForecast` interface with: date, high_temp, low_temp, precipitation_chance, condition
+  - [x] 5.4 Define `WeatherForecastResponse` interface with array of `DailyForecast`
+  - [x] 5.5 Implement `getWeatherForecast(zipCode: string, token: string)` function in `lib/api/weather.ts`
+  - [x] 5.6 Implement `getMyWeatherForecast(householdId: number, token: string)` function in `lib/api/weather.ts`
+  - [x] 5.7 Design WeatherForecast component to display 7-day forecast in a responsive grid/card layout
+  - [x] 5.8 Display each day with: date, high/low temperatures, precipitation chance, and weather condition icon
+  - [x] 5.9 Add loading state while fetching weather data
+  - [x] 5.10 Add error state with user-friendly error message
+  - [x] 5.11 Add empty state when no zip code is set
+  - [x] 5.12 Style component to match existing design system (use Tailwind classes)
+  - [x] 5.13 Write test in `components/household/__tests__/WeatherForecast.test.tsx` for component rendering and states
+  - [x] 5.14 Run tests: `npm test -- components/household/__tests__/WeatherForecast.test.tsx`
 
 - [ ] 6.0 Frontend: Integrate weather display into household page
   - [ ] 6.1 Import WeatherForecast component in `app/household/page.tsx`
