@@ -58,15 +58,13 @@ class HouseholdUserPreferences(Base):
     diet_types = Column(
         JSONType, nullable=True
     )  # Array of strings: ["paleo", "mediterranean", etc.]
-    weekly_weather = Column(
-        String, nullable=True
-    )  # e.g., "cold", "hot", "mixed", "rainy"
     cooking_apparatus = Column(
         JSONType, nullable=True
     )  # Array of strings: ["oven", "slow_cooker", "instant_pot", etc.]
     previous_meals = Column(
         JSONType, nullable=True
     )  # Array of strings: meal names made this week
+    zip_code = Column(String, nullable=True)  # US zip code for weather forecasts
 
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)

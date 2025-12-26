@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Checkbox } from '@/components/ui/Checkbox'
-import { Select } from '@/components/ui/Select'
 import { Input } from '@/components/ui/Input'
 import {
   HouseholdPreferences,
@@ -28,15 +27,6 @@ const DIET_TYPES = [
   { value: 'gluten_free', label: 'Gluten-Free' },
   { value: 'dairy_free', label: 'Dairy-Free' },
   { value: 'none', label: 'None' },
-]
-
-// Weekly weather options
-const WEATHER_OPTIONS = [
-  { value: 'cold', label: 'Cold' },
-  { value: 'hot', label: 'Hot' },
-  { value: 'mixed', label: 'Mixed' },
-  { value: 'rainy', label: 'Rainy' },
-  { value: 'sunny', label: 'Sunny' },
 ]
 
 // Cooking apparatus options
@@ -64,9 +54,6 @@ export default function PreferencesForm({
   const [dietTypes, setDietTypes] = useState<string[]>(
     () => preferences?.diet_types || []
   )
-  const [weeklyWeather, setWeeklyWeather] = useState<string>(
-    () => preferences?.weekly_weather || ''
-  )
   const [cookingApparatus, setCookingApparatus] = useState<string[]>(
     () => preferences?.cooking_apparatus || []
   )
@@ -88,8 +75,6 @@ export default function PreferencesForm({
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setDietTypes(preferences.diet_types || [])
 
-      setWeeklyWeather(preferences.weekly_weather || '')
-
       setCookingApparatus(preferences.cooking_apparatus || [])
 
       setPreviousMeals(
@@ -104,8 +89,6 @@ export default function PreferencesForm({
       prevPreferencesIdRef.current = null
 
       setDietTypes([])
-
-      setWeeklyWeather('')
 
       setCookingApparatus([])
 
@@ -190,7 +173,6 @@ export default function PreferencesForm({
 
     const data: HouseholdPreferencesUpdate = {
       diet_types: dietTypes.length > 0 ? dietTypes : null,
-      weekly_weather: weeklyWeather || null,
       cooking_apparatus: cookingApparatus.length > 0 ? cookingApparatus : null,
       previous_meals: previousMealsArray.length > 0 ? previousMealsArray : null,
       zip_code: trimmedZipCode || null,
@@ -220,17 +202,6 @@ export default function PreferencesForm({
           Select all that apply. Select &quot;None&quot; if you don&apos;t
           follow any specific diet.
         </p>
-      </div>
-
-      {/* Weekly Weather */}
-      <div>
-        <Select
-          label="Weekly Weather"
-          options={WEATHER_OPTIONS}
-          value={weeklyWeather}
-          onChange={(e) => setWeeklyWeather(e.target.value)}
-          placeholder="Select weather for this week"
-        />
       </div>
 
       {/* Cooking Apparatus */}

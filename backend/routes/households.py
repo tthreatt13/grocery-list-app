@@ -539,9 +539,9 @@ def get_my_preferences(
             household_id=household_id,
             user_id=current_user.id,
             diet_types=None,
-            weekly_weather=None,
             cooking_apparatus=None,
             previous_meals=None,
+            zip_code=None,
             created_at=datetime.utcnow(),
             updated_at=datetime.utcnow(),
         )
@@ -595,21 +595,21 @@ def update_my_preferences(
             household_id=household_id,
             user_id=current_user.id,
             diet_types=preferences_data.diet_types,
-            weekly_weather=preferences_data.weekly_weather,
             cooking_apparatus=preferences_data.cooking_apparatus,
             previous_meals=preferences_data.previous_meals,
+            zip_code=preferences_data.zip_code,
         )
         db.add(preferences)
     else:
         # Update existing preferences
         if preferences_data.diet_types is not None:
             preferences.diet_types = preferences_data.diet_types
-        if preferences_data.weekly_weather is not None:
-            preferences.weekly_weather = preferences_data.weekly_weather
         if preferences_data.cooking_apparatus is not None:
             preferences.cooking_apparatus = preferences_data.cooking_apparatus
         if preferences_data.previous_meals is not None:
             preferences.previous_meals = preferences_data.previous_meals
+        if preferences_data.zip_code is not None:
+            preferences.zip_code = preferences_data.zip_code
 
     db.commit()
     db.refresh(preferences)

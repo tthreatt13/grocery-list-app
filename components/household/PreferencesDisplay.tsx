@@ -22,15 +22,6 @@ const DIET_TYPE_LABELS: Record<string, string> = {
   none: 'None',
 }
 
-// Map weather values to display labels
-const WEATHER_LABELS: Record<string, string> = {
-  cold: 'Cold',
-  hot: 'Hot',
-  mixed: 'Mixed',
-  rainy: 'Rainy',
-  sunny: 'Sunny',
-}
-
 // Map cooking apparatus values to display labels
 const COOKING_APPARATUS_LABELS: Record<string, string> = {
   oven: 'Oven',
@@ -49,10 +40,10 @@ export default function PreferencesDisplay({
   const hasAnyPreferences =
     preferences &&
     ((preferences.diet_types && preferences.diet_types.length > 0) ||
-      preferences.weekly_weather ||
       (preferences.cooking_apparatus &&
         preferences.cooking_apparatus.length > 0) ||
-      (preferences.previous_meals && preferences.previous_meals.length > 0))
+      (preferences.previous_meals && preferences.previous_meals.length > 0) ||
+      preferences.zip_code)
 
   if (!preferences || !hasAnyPreferences) {
     return (
@@ -80,19 +71,6 @@ export default function PreferencesDisplay({
               </Badge>
             ))}
           </div>
-        </div>
-      )}
-
-      {/* Weekly Weather */}
-      {preferences.weekly_weather && (
-        <div>
-          <h3 className="text-sm font-medium text-gray-700 mb-2">
-            Weekly Weather
-          </h3>
-          <p className="text-gray-900">
-            {WEATHER_LABELS[preferences.weekly_weather] ||
-              preferences.weekly_weather}
-          </p>
         </div>
       )}
 
@@ -126,6 +104,14 @@ export default function PreferencesDisplay({
               </Badge>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Zip Code */}
+      {preferences.zip_code && (
+        <div>
+          <h3 className="text-sm font-medium text-gray-700 mb-2">Zip Code</h3>
+          <p className="text-gray-900">{preferences.zip_code}</p>
         </div>
       )}
 
