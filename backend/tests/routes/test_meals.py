@@ -85,7 +85,9 @@ class TestMealRoutes:
 
         assert response.status_code == 422
 
-    def test_get_weekly_meals_empty_week(self, db_session, sample_user, sample_household):
+    def test_get_weekly_meals_empty_week(
+        self, db_session, sample_user, sample_household
+    ):
         """Test GET /api/meals/week returns empty list for week with no meals."""
         from database import get_db
 
@@ -169,7 +171,9 @@ class TestMealRoutes:
         app.dependency_overrides[get_current_user] = override_get_current_user
 
         client = TestClient(app)
-        response = client.get("/api/meals/99999", headers={"Authorization": "Bearer valid_token"})
+        response = client.get(
+            "/api/meals/99999", headers={"Authorization": "Bearer valid_token"}
+        )
 
         app.dependency_overrides.clear()
 
@@ -269,7 +273,9 @@ class TestMealRoutes:
         assert data["ingredients"] is None
         assert data["notes"] is None
 
-    def test_create_meal_invalid_meal_type(self, db_session, sample_user, sample_household):
+    def test_create_meal_invalid_meal_type(
+        self, db_session, sample_user, sample_household
+    ):
         """Test POST /api/meals with invalid meal_type returns 422."""
         from database import get_db
 
@@ -304,7 +310,9 @@ class TestMealRoutes:
 
         assert response.status_code == 422
 
-    def test_create_meal_invalid_day_of_week(self, db_session, sample_user, sample_household):
+    def test_create_meal_invalid_day_of_week(
+        self, db_session, sample_user, sample_household
+    ):
         """Test POST /api/meals with invalid day_of_week returns 422."""
         from database import get_db
 
@@ -570,7 +578,9 @@ class TestMealRoutes:
         assert "message" in data
 
         # Verify grocery list was created
-        grocery_list = db_session.query(GroceryList).filter_by(id=data["grocery_list_id"]).first()
+        grocery_list = (
+            db_session.query(GroceryList).filter_by(id=data["grocery_list_id"]).first()
+        )
         assert grocery_list is not None
         assert grocery_list.name == "Week of Jan 1st"
         assert grocery_list.household_id == sample_household.id
@@ -582,7 +592,9 @@ class TestMealRoutes:
         # Check that ingredients were parsed correctly
         item_names = [item.name.lower() for item in items]
         # At least some ingredients from our sample meals should be present
-        assert any("flour" in name or "eggs" in name or "pasta" in name for name in item_names)
+        assert any(
+            "flour" in name or "eggs" in name or "pasta" in name for name in item_names
+        )
 
         # Verify that meal types are preserved
         assert all(item.meal_type is not None for item in items)
@@ -591,7 +603,9 @@ class TestMealRoutes:
         assert "dinner" in meal_types
         assert "lunch" in meal_types
 
-    def test_generate_grocery_list_no_meals(self, db_session, sample_user, sample_household):
+    def test_generate_grocery_list_no_meals(
+        self, db_session, sample_user, sample_household
+    ):
         """Test POST /api/meals/generate-grocery-list with no meals in week."""
         from database import get_db
 
@@ -663,7 +677,9 @@ class TestMealRoutes:
         data = response.json()
 
         # Verify default name was used
-        grocery_list = db_session.query(GroceryList).filter_by(id=data["grocery_list_id"]).first()
+        grocery_list = (
+            db_session.query(GroceryList).filter_by(id=data["grocery_list_id"]).first()
+        )
         assert "Generated from Meal Plan" in grocery_list.name
 
     def test_generate_grocery_list_unauthorized(self):
@@ -712,7 +728,11 @@ class TestMealRoutes:
         data = response.json()
 
         # Verify grocery items were created with correct meal types
-        items = db_session.query(GroceryItem).filter_by(list_id=data["grocery_list_id"]).all()
+        items = (
+            db_session.query(GroceryItem)
+            .filter_by(list_id=data["grocery_list_id"])
+            .all()
+        )
 
         # Group items by meal type
         items_by_meal_type = {}
@@ -810,7 +830,11 @@ class TestMealRoutes:
         data = response.json()
 
         # Verify grocery items were created
-        items = db_session.query(GroceryItem).filter_by(list_id=data["grocery_list_id"]).all()
+        items = (
+            db_session.query(GroceryItem)
+            .filter_by(list_id=data["grocery_list_id"])
+            .all()
+        )
 
         # Find all egg items
         egg_items = [item for item in items if "eggs" in item.name.lower()]
@@ -885,7 +909,11 @@ class TestMealRoutes:
         data = response.json()
 
         # Verify only lunch items were created (breakfast had empty ingredients)
-        items = db_session.query(GroceryItem).filter_by(list_id=data["grocery_list_id"]).all()
+        items = (
+            db_session.query(GroceryItem)
+            .filter_by(list_id=data["grocery_list_id"])
+            .all()
+        )
 
         # Should only have lunch items
         assert len(items) == 3  # bread, ham, cheese

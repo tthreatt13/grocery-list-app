@@ -14,7 +14,9 @@ class Meal(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     household_id = Column(Integer, ForeignKey("households.id"), nullable=False)
-    meal_type = Column(String, nullable=False, index=True)  # breakfast, lunch, dinner, snack
+    meal_type = Column(
+        String, nullable=False, index=True
+    )  # breakfast, lunch, dinner, snack
     day_of_week = Column(Integer, nullable=False, index=True)  # 0=Monday, 6=Sunday
     week_start_date = Column(Date, nullable=False, index=True)  # Monday of the week
     name = Column(String, nullable=False)

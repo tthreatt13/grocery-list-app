@@ -7,7 +7,9 @@ from fastapi.testclient import TestClient
 class TestGetGroceryLists:
     """Tests for GET /api/grocery-lists endpoint."""
 
-    def test_get_all_grocery_lists_success(self, client, sample_grocery_list, sample_user):
+    def test_get_all_grocery_lists_success(
+        self, client, sample_grocery_list, sample_user
+    ):
         """Test getting all grocery lists for a user's households."""
         response = client.get("/api/grocery-lists")
 
@@ -112,7 +114,9 @@ class TestUpdateGroceryList:
         """Test updating grocery list name."""
         payload = {"name": "Updated Weekly List"}
 
-        response = client.put(f"/api/grocery-lists/{sample_grocery_list.id}", json=payload)
+        response = client.put(
+            f"/api/grocery-lists/{sample_grocery_list.id}", json=payload
+        )
 
         assert response.status_code == 200
         data = response.json()
@@ -132,7 +136,9 @@ class TestUpdateGroceryList:
         """Test updating grocery list with empty name."""
         payload = {"name": ""}
 
-        response = client.put(f"/api/grocery-lists/{sample_grocery_list.id}", json=payload)
+        response = client.put(
+            f"/api/grocery-lists/{sample_grocery_list.id}", json=payload
+        )
 
         assert response.status_code == 422
 
@@ -144,7 +150,9 @@ class TestArchiveGroceryList:
         """Test archiving a grocery list."""
         payload = {"is_archived": True}
 
-        response = client.put(f"/api/grocery-lists/{sample_grocery_list.id}", json=payload)
+        response = client.put(
+            f"/api/grocery-lists/{sample_grocery_list.id}", json=payload
+        )
 
         assert response.status_code == 200
         data = response.json()
@@ -194,7 +202,9 @@ class TestArchiveGroceryList:
         """Test archiving a list and updating its name in the same request."""
         payload = {"name": "Updated Archived List", "is_archived": True}
 
-        response = client.put(f"/api/grocery-lists/{sample_grocery_list.id}", json=payload)
+        response = client.put(
+            f"/api/grocery-lists/{sample_grocery_list.id}", json=payload
+        )
 
         assert response.status_code == 200
         data = response.json()
@@ -236,7 +246,9 @@ class TestCreateGroceryItem:
             "checked": False,
         }
 
-        response = client.post(f"/api/grocery-lists/{sample_grocery_list.id}/items", json=payload)
+        response = client.post(
+            f"/api/grocery-lists/{sample_grocery_list.id}/items", json=payload
+        )
 
         assert response.status_code == 201
         data = response.json()
@@ -250,7 +262,9 @@ class TestCreateGroceryItem:
         """Test adding an item with only required fields."""
         payload = {"name": "Eggs"}
 
-        response = client.post(f"/api/grocery-lists/{sample_grocery_list.id}/items", json=payload)
+        response = client.post(
+            f"/api/grocery-lists/{sample_grocery_list.id}/items", json=payload
+        )
 
         assert response.status_code == 201
         data = response.json()
@@ -269,7 +283,9 @@ class TestCreateGroceryItem:
         """Test adding an item without a name."""
         payload = {}
 
-        response = client.post(f"/api/grocery-lists/{sample_grocery_list.id}/items", json=payload)
+        response = client.post(
+            f"/api/grocery-lists/{sample_grocery_list.id}/items", json=payload
+        )
 
         assert response.status_code == 422
 
@@ -277,7 +293,9 @@ class TestCreateGroceryItem:
 class TestUpdateGroceryItem:
     """Tests for PUT /api/grocery-lists/{list_id}/items/{item_id} endpoint."""
 
-    def test_update_grocery_item_success(self, client, sample_grocery_list, sample_grocery_items):
+    def test_update_grocery_item_success(
+        self, client, sample_grocery_list, sample_grocery_items
+    ):
         """Test updating a grocery item."""
         item = sample_grocery_items[0]
         payload = {"name": "Green Apples", "quantity": "3 lbs", "checked": True}
@@ -333,18 +351,24 @@ class TestUpdateGroceryItem:
 class TestDeleteGroceryItem:
     """Tests for DELETE /api/grocery-lists/{list_id}/items/{item_id} endpoint."""
 
-    def test_delete_grocery_item_success(self, client, sample_grocery_list, sample_grocery_items):
+    def test_delete_grocery_item_success(
+        self, client, sample_grocery_list, sample_grocery_items
+    ):
         """Test deleting a grocery item."""
         item = sample_grocery_items[0]
 
-        response = client.delete(f"/api/grocery-lists/{sample_grocery_list.id}/items/{item.id}")
+        response = client.delete(
+            f"/api/grocery-lists/{sample_grocery_list.id}/items/{item.id}"
+        )
 
         assert response.status_code == 200
         assert "deleted" in response.json()["message"].lower()
 
     def test_delete_grocery_item_not_found(self, client, sample_grocery_list):
         """Test deleting a non-existent item."""
-        response = client.delete(f"/api/grocery-lists/{sample_grocery_list.id}/items/99999")
+        response = client.delete(
+            f"/api/grocery-lists/{sample_grocery_list.id}/items/99999"
+        )
 
         assert response.status_code == 404
 
@@ -352,7 +376,9 @@ class TestDeleteGroceryItem:
 class TestFilterGroceryItems:
     """Tests for GET /api/grocery-lists/{list_id}/items?category={category} endpoint."""
 
-    def test_filter_items_by_category(self, client, sample_grocery_list, sample_grocery_items):
+    def test_filter_items_by_category(
+        self, client, sample_grocery_list, sample_grocery_items
+    ):
         """Test filtering items by category."""
         response = client.get(
             f"/api/grocery-lists/{sample_grocery_list.id}/items",
@@ -366,7 +392,9 @@ class TestFilterGroceryItems:
         for item in data:
             assert item["category"] == "Produce"
 
-    def test_filter_items_no_matches(self, client, sample_grocery_list, sample_grocery_items):
+    def test_filter_items_no_matches(
+        self, client, sample_grocery_list, sample_grocery_items
+    ):
         """Test filtering with category that has no items."""
         response = client.get(
             f"/api/grocery-lists/{sample_grocery_list.id}/items",
@@ -378,7 +406,9 @@ class TestFilterGroceryItems:
         assert isinstance(data, list)
         assert len(data) == 0
 
-    def test_get_all_items_no_filter(self, client, sample_grocery_list, sample_grocery_items):
+    def test_get_all_items_no_filter(
+        self, client, sample_grocery_list, sample_grocery_items
+    ):
         """Test getting all items without filter."""
         response = client.get(f"/api/grocery-lists/{sample_grocery_list.id}/items")
 

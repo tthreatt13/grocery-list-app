@@ -12,11 +12,15 @@ from models.household_member import HouseholdMember
 class PermissionDeniedError(HTTPException):
     """Exception raised when user doesn't have required permissions."""
 
-    def __init__(self, detail: str = "You don't have permission to perform this action"):
+    def __init__(
+        self, detail: str = "You don't have permission to perform this action"
+    ):
         super().__init__(status_code=status.HTTP_403_FORBIDDEN, detail=detail)
 
 
-def get_household_member(db: Session, household_id: int, user_id: int) -> Optional[HouseholdMember]:
+def get_household_member(
+    db: Session, household_id: int, user_id: int
+) -> Optional[HouseholdMember]:
     """
     Get household member record for a user.
 
@@ -70,7 +74,9 @@ def is_household_admin(db: Session, household_id: int, user: User) -> bool:
     return member is not None and member.role == "admin"
 
 
-def require_household_member(db: Session, household_id: int, user: User) -> HouseholdMember:
+def require_household_member(
+    db: Session, household_id: int, user: User
+) -> HouseholdMember:
     """
     Require that user is a member of the household.
     Raises PermissionDeniedError if not.
@@ -88,11 +94,15 @@ def require_household_member(db: Session, household_id: int, user: User) -> Hous
     """
     member = get_household_member(db, household_id, user.id)
     if not member:
-        raise PermissionDeniedError(detail="You must be a household member to access this resource")
+        raise PermissionDeniedError(
+            detail="You must be a household member to access this resource"
+        )
     return member
 
 
-def require_household_admin(db: Session, household_id: int, user: User) -> HouseholdMember:
+def require_household_admin(
+    db: Session, household_id: int, user: User
+) -> HouseholdMember:
     """
     Require that user is an admin of the household.
     Raises PermissionDeniedError if not.
@@ -110,9 +120,13 @@ def require_household_admin(db: Session, household_id: int, user: User) -> House
     """
     member = get_household_member(db, household_id, user.id)
     if not member:
-        raise PermissionDeniedError(detail="You must be a household member to access this resource")
+        raise PermissionDeniedError(
+            detail="You must be a household member to access this resource"
+        )
     if member.role != "admin":
-        raise PermissionDeniedError(detail="You must be a household admin to perform this action")
+        raise PermissionDeniedError(
+            detail="You must be a household admin to perform this action"
+        )
     return member
 
 
@@ -146,7 +160,9 @@ def can_invite_members(db: Session, household_id: int, user: User) -> bool:
     return is_household_admin(db, household_id, user)
 
 
-def can_remove_member(db: Session, household_id: int, user: User, target_user_id: int) -> bool:
+def can_remove_member(
+    db: Session, household_id: int, user: User, target_user_id: int
+) -> bool:
     """
     Check if user can remove a member from household.
     Admins can remove any member. Members can remove themselves.

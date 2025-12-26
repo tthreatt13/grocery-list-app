@@ -68,7 +68,9 @@ def verify_clerk_token(token: str, db: Session) -> User:
         # Re-raise HTTP exceptions as-is
         raise
     except ExpiredSignatureError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token has expired")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Token has expired"
+        )
     except PyJWTError as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Invalid token: {str(e)}"

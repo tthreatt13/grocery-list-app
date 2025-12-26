@@ -58,7 +58,9 @@ class TestClerkWebhook:
     def test_webhook_user_updated(self, db_session):
         """Test webhook updates existing user in database."""
         # Create existing user
-        user = User(clerk_user_id="user_existing", email="old@example.com", name="Old Name")
+        user = User(
+            clerk_user_id="user_existing", email="old@example.com", name="Old Name"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -78,7 +80,9 @@ class TestClerkWebhook:
     def test_webhook_user_deleted(self, db_session):
         """Test webhook deletes user from database."""
         # Create user to be deleted
-        user = User(clerk_user_id="user_todelete", email="delete@example.com", name="Delete Me")
+        user = User(
+            clerk_user_id="user_todelete", email="delete@example.com", name="Delete Me"
+        )
         db_session.add(user)
         db_session.commit()
 

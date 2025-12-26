@@ -21,7 +21,9 @@ class TestUserRoutes:
     def test_get_current_user_success(self, db_session):
         """Test GET /users/me returns current user info."""
         # Create test user
-        user = User(clerk_user_id="user_123abc", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123abc", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -42,7 +44,9 @@ class TestUserRoutes:
         app.dependency_overrides[get_current_user] = override_get_current_user
 
         client = TestClient(app)
-        response = client.get("/api/users/me", headers={"Authorization": "Bearer valid_token"})
+        response = client.get(
+            "/api/users/me", headers={"Authorization": "Bearer valid_token"}
+        )
 
         # Cleanup
         app.dependency_overrides.clear()
@@ -65,7 +69,9 @@ class TestUserRoutes:
     def test_update_current_user_success(self, db_session):
         """Test POST /users/me updates user profile."""
         # Create test user
-        user = User(clerk_user_id="user_123abc", email="test@example.com", name="Old Name")
+        user = User(
+            clerk_user_id="user_123abc", email="test@example.com", name="Old Name"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -112,7 +118,9 @@ class TestUserRoutes:
 
     def test_update_current_user_invalid_data(self, db_session):
         """Test POST /users/me with invalid data returns 422."""
-        user = User(clerk_user_id="user_123abc", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123abc", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 
@@ -147,7 +155,9 @@ class TestUserRoutes:
 
     def test_update_current_user_empty_name(self, db_session):
         """Test POST /users/me with empty name is allowed."""
-        user = User(clerk_user_id="user_123abc", email="test@example.com", name="Test User")
+        user = User(
+            clerk_user_id="user_123abc", email="test@example.com", name="Test User"
+        )
         db_session.add(user)
         db_session.commit()
 

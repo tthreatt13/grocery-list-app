@@ -115,7 +115,9 @@ def get_gridpoint_info(lat: float, lon: float) -> Dict[str, str]:
             or not properties.get("gridX")
             or not properties.get("gridY")
         ):
-            raise ValueError(f"Invalid gridpoint response for coordinates ({lat}, {lon})")
+            raise ValueError(
+                f"Invalid gridpoint response for coordinates ({lat}, {lon})"
+            )
 
         gridpoint_info = {
             "office": properties["gridId"],
@@ -134,7 +136,9 @@ def get_gridpoint_info(lat: float, lon: float) -> Dict[str, str]:
         raise
     except (KeyError, ValueError) as e:
         logger.error(f"Failed to parse gridpoint response for ({lat}, {lon}): {e}")
-        raise ValueError(f"Could not retrieve gridpoint info for coordinates ({lat}, {lon})") from e
+        raise ValueError(
+            f"Could not retrieve gridpoint info for coordinates ({lat}, {lon})"
+        ) from e
 
 
 def fetch_forecast(office: str, gridX: str, gridY: str) -> Dict:
@@ -171,11 +175,17 @@ def fetch_forecast(office: str, gridX: str, gridY: str) -> Dict:
         return data
 
     except requests.RequestException as e:
-        logger.error(f"Weather.gov forecast API request failed for {office}/{gridX},{gridY}: {e}")
+        logger.error(
+            f"Weather.gov forecast API request failed for {office}/{gridX},{gridY}: {e}"
+        )
         raise
     except ValueError as e:
-        logger.error(f"Failed to parse forecast response for {office}/{gridX},{gridY}: {e}")
-        raise ValueError(f"Could not retrieve forecast for {office}/{gridX},{gridY}") from e
+        logger.error(
+            f"Failed to parse forecast response for {office}/{gridX},{gridY}: {e}"
+        )
+        raise ValueError(
+            f"Could not retrieve forecast for {office}/{gridX},{gridY}"
+        ) from e
 
 
 def parse_forecast(forecast_data: Dict) -> List[Dict]:
@@ -254,15 +264,17 @@ def parse_forecast(forecast_data: Dict) -> List[Dict]:
 
             if day_period:
                 high_temp = day_period.get("temperature")
-                precipitation_chance = day_period.get("probabilityOfPrecipitation", {}).get("value")
+                precipitation_chance = day_period.get(
+                    "probabilityOfPrecipitation", {}
+                ).get("value")
                 condition = day_period.get("shortForecast", "N/A")
             elif night_period:
                 # If only night period available, use it for both
                 low_temp = night_period.get("temperature")
                 high_temp = low_temp
-                precipitation_chance = night_period.get("probabilityOfPrecipitation", {}).get(
-                    "value"
-                )
+                precipitation_chance = night_period.get(
+                    "probabilityOfPrecipitation", {}
+                ).get("value")
                 condition = night_period.get("shortForecast", "N/A")
 
             # Get low temp from night period if available
@@ -336,7 +348,9 @@ def cache_forecast(zip_code: str, forecast_data: List[Dict]) -> None:
     """
     expiry_time = time.time() + CACHE_TTL_SECONDS
     _forecast_cache[zip_code] = (forecast_data, expiry_time)
-    logger.debug(f"Cached forecast for zip code {zip_code} (expires in {CACHE_TTL_SECONDS}s)")
+    logger.debug(
+        f"Cached forecast for zip code {zip_code} (expires in {CACHE_TTL_SECONDS}s)"
+    )
 
 
 def get_weather_forecast(zip_code: str) -> List[Dict]:
