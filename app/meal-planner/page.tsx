@@ -373,15 +373,20 @@ export default function MealPlannerPage() {
       return []
     }
 
+    // Filter out "eat_out" meals - they don't need ingredients
+    const mealsForGroceryList = weekMeals.filter(
+      (meal) => meal.mealCategory !== 'eat_out'
+    )
+
     // Filter to only meals that have ingredients
-    const mealsWithIngredients = weekMeals.filter(
+    const mealsWithIngredients = mealsForGroceryList.filter(
       (meal) => meal.ingredients && meal.ingredients.length > 0
     )
     if (mealsWithIngredients.length === 0) {
       return []
     }
 
-    const ingredientsWithMealType = weekMeals
+    const ingredientsWithMealType = mealsWithIngredients
       .flatMap((meal) =>
         (meal.ingredients || []).map((ingredient) => ({
           ingredient,

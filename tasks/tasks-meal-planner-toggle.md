@@ -26,5 +26,5 @@ Update the file after completing each sub-task, not just after completing an ent
 - [x] 2.0 Add Category Selection to AddMealModal Component
 - [x] 3.0 Update Page Component to Handle Meal Categories
 - [x] 4.0 Add Visual Indicators to Calendar Components
-- [ ] 5.0 Update Grocery List Generation to Filter Eat Out Meals
+- [x] 5.0 Update Grocery List Generation to Filter Eat Out Meals
 - [ ] 6.0 Testing and Validation

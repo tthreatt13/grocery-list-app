@@ -923,3 +923,97 @@ class TestMealRoutes:
         assert "bread" in item_names
         assert "ham" in item_names
         assert "cheese" in item_names
+
+    def test_generate_grocery_list_excludes_eat_out_meals(
+        self, db_session, sample_user, sample_household
+    ):
+        """Test that 'eat_out' meals are excluded from grocery list generation."""
+        from models.meal import Meal
+        from datetime import date
+
+        week_start = date(2024, 4, 1)  # Monday
+        meals = [
+            Meal(
+                household_id=sample_household.id,
+                meal_type="breakfast",
+                day_of_week=0,  # Monday
+                week_start_date=week_start,
+                name="Home Cooked Breakfast",
+                ingredients="eggs, bacon, toast",
+                meal_category="normal",
+            ),
+            Meal(
+                household_id=sample_household.id,
+                meal_type="lunch",
+                day_of_week=0,  # Monday
+                week_start_date=week_start,
+                name="Restaurant Lunch",
+                ingredients="pizza, salad, breadsticks",
+                meal_category="eat_out",
+            ),
+            Meal(
+                household_id=sample_household.id,
+                meal_type="dinner",
+                day_of_week=0,  # Monday
+                week_start_date=week_start,
+                name="Home Cooked Dinner",
+                ingredients="chicken, rice, vegetables",
+                meal_category="normal",
+            ),
+        ]
+
+        for meal in meals:
+            db_session.add(meal)
+        db_session.commit()
+
+        from database import get_db
+
+        def override_get_db():
+            yield db_session
+
+        app.dependency_overrides[get_db] = override_get_db
+
+        from middleware.auth import get_current_user
+
+        def override_get_current_user():
+            return sample_user
+
+        app.dependency_overrides[get_current_user] = override_get_current_user
+
+        request_data = {
+            "week_start_date": "2024-04-01",
+            "household_id": sample_household.id,
+            "grocery_list_name": "Eat Out Exclusion Test",
+        }
+
+        client = TestClient(app)
+        response = client.post(
+            "/api/meals/generate-grocery-list",
+            json=request_data,
+            headers={"Authorization": "Bearer valid_token"},
+        )
+
+        app.dependency_overrides.clear()
+
+        assert response.status_code == 201
+        data = response.json()
+
+        # Verify grocery items were created
+        items = (
+            db_session.query(GroceryItem)
+            .filter_by(list_id=data["grocery_list_id"])
+            .all()
+        )
+
+        item_names = [item.name.lower() for item in items]
+
+        # Should include ingredients from normal meals (breakfast and dinner)
+        assert any("eggs" in name or "bacon" in name or "toast" in name for name in item_names)
+        assert any("chicken" in name or "rice" in name or "vegetables" in name for name in item_names)
+
+        # Should NOT include ingredients from eat_out meal (lunch)
+        assert not any("pizza" in name for name in item_names)
+        assert not any("breadsticks" in name for name in item_names)
+
+        # Verify the message reflects correct meal count (should be 2 meals, not 3)
+        assert "2 meals" in data["message"] or "2 meal" in data["message"]
