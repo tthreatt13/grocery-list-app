@@ -10,6 +10,7 @@ import EditMemberForm from '@/components/household/EditMemberForm'
 import SharedListsView from '@/components/household/SharedListsView'
 import PreferencesForm from '@/components/household/PreferencesForm'
 import PreferencesDisplay from '@/components/household/PreferencesDisplay'
+import WeatherForecast from '@/components/household/WeatherForecast'
 import { HouseholdMember, MemberRole } from '@/lib/types'
 import {
   getHouseholds,
@@ -74,6 +75,7 @@ export default function HouseholdPage() {
   const [isPreferencesLoading, setIsPreferencesLoading] = useState(false)
   const [isSavingPreferences, setIsSavingPreferences] = useState(false)
   const [isEditingPreferences, setIsEditingPreferences] = useState(false)
+  const [authToken, setAuthToken] = useState<string | null>(null)
 
   // Sync user to backend on mount
   useEffect(() => {
@@ -140,6 +142,22 @@ export default function HouseholdPage() {
 
     fetchHouseholds()
   }, [getToken, userSynced])
+
+  // Get auth token when user is available
+  useEffect(() => {
+    async function fetchToken() {
+      if (!user) return
+      try {
+        const token = await getToken()
+        if (token) {
+          setAuthToken(token)
+        }
+      } catch (err) {
+        console.error('Error getting token:', err)
+      }
+    }
+    fetchToken()
+  }, [getToken, user])
 
   // Fetch household details when household is selected
   useEffect(() => {
@@ -649,25 +667,39 @@ export default function HouseholdPage() {
             </p>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            {isPreferencesLoading ? (
-              <div className="text-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-                <p className="text-gray-600">Loading preferences...</p>
-              </div>
-            ) : isEditingPreferences ? (
-              <PreferencesForm
-                preferences={preferences}
-                onSubmit={handleSavePreferences}
-                onCancel={handleCancelEditPreferences}
-                isLoading={isSavingPreferences}
-              />
-            ) : (
-              <PreferencesDisplay
-                preferences={preferences}
-                onEdit={() => setIsEditingPreferences(true)}
-              />
-            )}
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg shadow p-6">
+              {isPreferencesLoading ? (
+                <div className="text-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+                  <p className="text-gray-600">Loading preferences...</p>
+                </div>
+              ) : isEditingPreferences ? (
+                <PreferencesForm
+                  preferences={preferences}
+                  onSubmit={handleSavePreferences}
+                  onCancel={handleCancelEditPreferences}
+                  isLoading={isSavingPreferences}
+                />
+              ) : (
+                <PreferencesDisplay
+                  preferences={preferences}
+                  onEdit={() => setIsEditingPreferences(true)}
+                />
+              )}
+            </div>
+
+            {/* Weather Forecast Section */}
+            {selectedHouseholdId &&
+              preferences &&
+              !isPreferencesLoading &&
+              authToken && (
+                <WeatherForecast
+                  householdId={selectedHouseholdId}
+                  zipCode={preferences.zip_code || null}
+                  token={authToken}
+                />
+              )}
           </div>
         </div>
       )}

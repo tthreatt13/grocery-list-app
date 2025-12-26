@@ -99,14 +99,14 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 5.13 Write test in `components/household/__tests__/WeatherForecast.test.tsx` for component rendering and states
   - [x] 5.14 Run tests: `npm test -- components/household/__tests__/WeatherForecast.test.tsx`
 
-- [ ] 6.0 Frontend: Integrate weather display into household page
-  - [ ] 6.1 Import WeatherForecast component in `app/household/page.tsx`
-  - [ ] 6.2 Add state for weather forecast data and loading/error states
-  - [ ] 6.3 Fetch weather forecast when preferences are loaded and zip_code exists
-  - [ ] 6.4 Add useEffect hook to fetch weather data when zip_code changes
-  - [ ] 6.5 Display WeatherForecast component in the preferences section of household page
-  - [ ] 6.6 Handle error cases gracefully (show error message, don't break page)
-  - [ ] 6.7 Refresh weather data when user updates zip code in preferences
-  - [ ] 6.8 Update existing test in `app/household/__tests__/page.test.tsx` to include weather forecast
-  - [ ] 6.9 Run tests: `npm test -- app/household/__tests__/page.test.tsx`
-  - [ ] 6.10 Test end-to-end: Update zip code in preferences form and verify weather forecast appears
+- [x] 6.0 Frontend: Integrate weather display into household page
+  - [x] 6.1 Import WeatherForecast component in `app/household/page.tsx`
+  - [x] 6.2 Add state for weather forecast data and loading/error states
+  - [x] 6.3 Fetch weather forecast when preferences are loaded and zip_code exists
+  - [x] 6.4 Add useEffect hook to fetch weather data when zip_code changes
+  - [x] 6.5 Display WeatherForecast component in the preferences section of household page
+  - [x] 6.6 Handle error cases gracefully (show error message, don't break page)
+  - [x] 6.7 Refresh weather data when user updates zip code in preferences
+  - [x] 6.8 Update existing test in `app/household/__tests__/page.test.tsx` to include weather forecast
+  - [x] 6.9 Run tests: `npm test -- app/household/__tests__/page.test.tsx`
+  - [x] 6.10 Test end-to-end: Update zip code in preferences form and verify weather forecast appears
