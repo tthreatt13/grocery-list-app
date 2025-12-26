@@ -46,7 +46,9 @@ def check_migration_version() -> Tuple[bool, str]:
         with engine.connect() as conn:
             result = conn.execute(text("SELECT version_num FROM alembic_version"))
             version = result.scalar()
-            expected_version = "d1e2f3a4b5c6"
+            expected_version = (
+                "1406e9442b77"  # Latest migration: make_meal_name_nullable
+            )
             return version == expected_version, version or "None"
     except Exception as e:
         return False, f"Error: {str(e)}"
@@ -70,12 +72,12 @@ def main():
     print("Checking Alembic migration version...")
     migration_ok, version = check_migration_version()
     if migration_ok:
-        print(f"✓ Migration version: {version} (expected: d1e2f3a4b5c6)")
+        print(f"✓ Migration version: {version} (expected: 1406e9442b77)")
     else:
         errors.append(
-            f"✗ Migration version mismatch: {version} (expected: d1e2f3a4b5c6)"
+            f"✗ Migration version mismatch: {version} (expected: 1406e9442b77)"
         )
-        print(f"✗ Migration version: {version} (expected: d1e2f3a4b5c6)")
+        print(f"✗ Migration version: {version} (expected: 1406e9442b77)")
     print()
 
     # Required tables
@@ -155,11 +157,61 @@ def main():
             else:
                 errors.append(f"✗ Column 'household_user_preferences.{col}' is missing")
                 print(f"✗ Column 'household_user_preferences.{col}' is missing")
+
+        # Check zip_code column (added in migration e4a05e381069)
+        if check_column_exists(inspector, "household_user_preferences", "zip_code"):
+            print("✓ Column 'household_user_preferences.zip_code' exists")
+        else:
+            errors.append(
+                "✗ Column 'household_user_preferences.zip_code' is missing "
+                "(added in migration e4a05e381069)"
+            )
+            print("✗ Column 'household_user_preferences.zip_code' is missing")
     else:
         errors.append(
-            "✗ Table 'household_user_preferences' is missing (added in migration d1e2f3a4b5c6)"
+            "✗ Table 'household_user_preferences' is missing "
+            "(added in migration d1e2f3a4b5c6)"
         )
         print("✗ Table 'household_user_preferences' is missing")
+
+    # meals table columns (check for latest migrations)
+    if check_table_exists(inspector, "meals"):
+        print("✓ Table 'meals' exists")
+
+        # Check meal_category column (added in migration 626841e03296)
+        if check_column_exists(inspector, "meals", "meal_category"):
+            print("✓ Column 'meals.meal_category' exists")
+        else:
+            errors.append(
+                "✗ Column 'meals.meal_category' is missing "
+                "(added in migration 626841e03296)"
+            )
+            print("✗ Column 'meals.meal_category' is missing")
+
+        # Check that name column is nullable (changed in migration 1406e9442b77)
+        if check_column_exists(inspector, "meals", "name"):
+            # Note: We can't easily check nullability in a cross-database way,
+            # but we can verify the column exists
+            print(
+                "✓ Column 'meals.name' exists "
+                "(should be nullable per migration 1406e9442b77)"
+            )
+        else:
+            errors.append("✗ Column 'meals.name' is missing")
+            print("✗ Column 'meals.name' is missing")
+    else:
+        errors.append("✗ Table 'meals' is missing")
+        print("✗ Table 'meals' is missing")
+
+    # grocery_lists.is_archived (added in migration e6680da276e3)
+    if check_column_exists(inspector, "grocery_lists", "is_archived"):
+        print("✓ Column 'grocery_lists.is_archived' exists")
+    else:
+        errors.append(
+            "✗ Column 'grocery_lists.is_archived' is missing "
+            "(added in migration e6680da276e3)"
+        )
+        print("✗ Column 'grocery_lists.is_archived' is missing")
 
     print()
     print("=" * 70)
