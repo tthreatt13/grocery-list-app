@@ -1,6 +1,6 @@
 # Grocery List App
 
-A modern, full-stack grocery list and meal planning application built for busy parents. Plan your weekly meals, manage your grocery lists, track pantry inventory, and coordinate with household members - all in one beautiful interface with real-time backend integration.
+A modern, full-stack grocery list and meal planning application built for busy parents. Plan your weekly meals, manage your grocery lists, track pantry inventory, coordinate with household members, and view weather forecasts to make informed meal planning decisions - all in one beautiful interface with real-time backend integration.
 
 ![Next.js](https://img.shields.io/badge/Next.js-14+-black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue)
@@ -46,6 +46,15 @@ A modern, full-stack grocery list and meal planning application built for busy p
 - See who last edited shared lists
 - View all shared grocery lists in one place
 - Real-time collaboration with backend integration
+- Save zip code preferences for personalized weather forecasts
+
+### 🌤️ Weather Integration
+
+- View 7-day weather forecasts directly in the household page
+- Save your zip code in household preferences for automatic weather updates
+- See high/low temperatures and precipitation chances
+- Make informed meal planning decisions based on upcoming weather
+- Weather data cached for optimal performance
 
 ## 🚀 Getting Started
 
@@ -171,8 +180,12 @@ grocery-list-app/
 │   │   ├── households.py
 │   │   ├── grocery_lists.py
 │   │   ├── pantry.py
-│   │   └── meals.py
+│   │   ├── meals.py
+│   │   └── weather.py           # Weather API endpoints
 │   ├── schemas/                 # Pydantic request/response schemas
+│   │   └── weather.py           # Weather response schemas
+│   ├── services/                # Business logic services
+│   │   └── weather.py           # Weather API integration service
 │   ├── middleware/              # Authentication & permissions
 │   │   ├── auth.py
 │   │   └── permissions.py
@@ -214,7 +227,8 @@ grocery-list-app/
 │   │   ├── InviteMemberForm.tsx
 │   │   ├── EditMemberForm.tsx
 │   │   ├── PreferencesForm.tsx
-│   │   └── SharedListsView.tsx
+│   │   ├── SharedListsView.tsx
+│   │   └── WeatherForecast.tsx  # Weather forecast display
 │   └── layout/                  # Layout components
 │       ├── Navbar.tsx
 │       └── MobileNav.tsx
@@ -224,7 +238,8 @@ grocery-list-app/
 │   │   ├── grocery.ts          # Grocery API calls
 │   │   ├── pantry.ts           # Pantry API calls
 │   │   ├── meals.ts            # Meals API calls
-│   │   └── household.ts        # Household API calls
+│   │   ├── household.ts        # Household API calls
+│   │   └── weather.ts          # Weather API calls
 │   ├── adapters/                # Data transformation layer
 │   │   └── groceryAdapters.ts
 │   ├── types.ts                 # TypeScript type definitions
@@ -331,6 +346,17 @@ npm run format
 npm run format:check
 ```
 
+### Continuous Integration
+
+The project uses GitHub Actions for automated testing and linting:
+
+- **Automated Testing**: Runs on every push and pull request
+- **Linting**: ESLint checks ensure code quality
+- **Test Coverage**: Comprehensive test suites for frontend and backend
+- **CI Pipeline**: Validates code before merging
+
+All tests and linting must pass before code can be merged.
+
 ## 🛠️ Built With
 
 ### Frontend
@@ -351,6 +377,7 @@ npm run format:check
 - **[Alembic](https://alembic.sqlalchemy.org/)** - Database migration tool
 - **[Pydantic](https://pydantic.dev/)** - Data validation using Python type hints
 - **[Pytest](https://pytest.org/)** - Python testing framework
+- **[api.weather.gov](https://www.weather.gov/documentation/services-web-api)** - National Weather Service API for forecasts
 
 ## 🏛️ Architecture
 
@@ -411,9 +438,11 @@ This is a **production-ready full-stack application** with complete backend inte
 - **Meal Planner**: Full backend integration with meal-to-grocery-list generation
 - **Pantry Inventory**: Complete backend integration with low-stock alerts
 - **Household Management**: Full backend integration with member roles and preferences
+- **Weather Integration**: 7-day weather forecasts with zip code preferences and caching
 - **Database Models**: Complete schema for all entities with migrations
 - **API Client**: Type-safe frontend API layer with error handling
 - **Testing**: Comprehensive test suites for both frontend and backend
+- **CI/CD**: GitHub Actions pipeline for automated testing and linting
 - **Deployment**: Railway backend deployment with automatic migrations
 - **Database Migrations**: Automatic migration system with pre-deployment checks
 
@@ -436,6 +465,8 @@ See [DEPLOYMENT_CHECKLIST.md](docs/DEPLOYMENT_CHECKLIST.md) for deployment proce
 - [ ] Mobile app (React Native)
 - [ ] Export/import functionality
 - [ ] Meal plan templates
+- [ ] Weather-based meal recommendations
+- [ ] Multiple location support for weather forecasts
 
 ## 🎯 Target Users
 
@@ -445,6 +476,7 @@ See [DEPLOYMENT_CHECKLIST.md](docs/DEPLOYMENT_CHECKLIST.md) for deployment proce
 - Manage grocery shopping without forgetting items
 - Keep track of pantry inventory to reduce waste
 - Coordinate meal planning and shopping with their partner
+- Make weather-informed meal planning decisions
 
 ## 🤝 Contributing
 
@@ -504,6 +536,8 @@ For questions or feedback, please open an issue on GitHub.
 - [Production Database Verification](docs/PRODUCTION_DATABASE_VERIFICATION.md) - Database schema verification
 - [Integration Status](docs/INTEGRATION_STATUS.md) - Current integration status
 - [CORS Configuration](docs/CORS_CONFIGURATION.md) - CORS troubleshooting guide
+- [Weather API Integration](docs/prd/prd-weather-api-integration.md) - Weather feature PRD and documentation
+- [Weather API Testing](docs/WEATHER_API_TESTING.md) - Weather API testing guide
 
 ## 🔧 Development Tools
 
