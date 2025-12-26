@@ -9,7 +9,6 @@ const mockPreferences: HouseholdPreferences = {
   household_id: 1,
   user_id: 1,
   diet_types: ['paleo', 'mediterranean'],
-  weekly_weather: 'cold',
   cooking_apparatus: ['oven', 'slow_cooker'],
   previous_meals: ['Chicken Stir Fry', 'Pasta Carbonara'],
   zip_code: '12345',
@@ -30,7 +29,6 @@ describe('PreferencesForm', () => {
     )
 
     expect(screen.getByText('Diet Types')).toBeInTheDocument()
-    expect(screen.getByText('Weekly Weather')).toBeInTheDocument()
     expect(screen.getByText('Available Cooking Apparatus')).toBeInTheDocument()
     expect(
       screen.getByLabelText(/Previous Meals Made This Week/i)
@@ -48,10 +46,6 @@ describe('PreferencesForm', () => {
     const mediterraneanCheckbox = screen.getByLabelText('Mediterranean')
     expect(paleoCheckbox).toBeChecked()
     expect(mediterraneanCheckbox).toBeChecked()
-
-    // Check weather select
-    const weatherSelect = screen.getByLabelText('Weekly Weather')
-    expect(weatherSelect).toHaveValue('cold')
 
     // Check cooking apparatus checkboxes
     const ovenCheckbox = screen.getByLabelText('Oven')
@@ -115,10 +109,6 @@ describe('PreferencesForm', () => {
     await user.click(screen.getByLabelText('Vegetarian'))
     await user.click(screen.getByLabelText('Vegan'))
 
-    // Select weather
-    const weatherSelect = screen.getByLabelText('Weekly Weather')
-    await user.selectOptions(weatherSelect, 'hot')
-
     // Select cooking apparatus
     await user.click(screen.getByLabelText('Oven'))
     await user.click(screen.getByLabelText('Grill'))
@@ -142,7 +132,6 @@ describe('PreferencesForm', () => {
     await waitFor(() => {
       expect(mockOnSubmit).toHaveBeenCalledWith({
         diet_types: ['vegetarian', 'vegan'],
-        weekly_weather: 'hot',
         cooking_apparatus: ['oven', 'grill'],
         previous_meals: ['Tofu Scramble', 'Veggie Burger'],
         zip_code: '90210',
@@ -164,7 +153,6 @@ describe('PreferencesForm', () => {
     await waitFor(() => {
       expect(mockOnSubmit).toHaveBeenCalledWith({
         diet_types: null,
-        weekly_weather: null,
         cooking_apparatus: null,
         previous_meals: null,
         zip_code: null,
@@ -290,7 +278,6 @@ describe('PreferencesForm', () => {
     await waitFor(() => {
       expect(mockOnSubmit).toHaveBeenCalledWith({
         diet_types: null,
-        weekly_weather: null,
         cooking_apparatus: null,
         previous_meals: null,
         zip_code: '12345-6789',
@@ -312,7 +299,6 @@ describe('PreferencesForm', () => {
     await waitFor(() => {
       expect(mockOnSubmit).toHaveBeenCalledWith({
         diet_types: null,
-        weekly_weather: null,
         cooking_apparatus: null,
         previous_meals: null,
         zip_code: null,

@@ -822,9 +822,9 @@ class TestHouseholdPreferences:
         data = response.json()
         assert data["household_id"] == sample_household_with_members.id
         assert data["diet_types"] is None
-        assert data["weekly_weather"] is None
         assert data["cooking_apparatus"] is None
         assert data["previous_meals"] is None
+        assert data["zip_code"] is None
 
     def test_create_preferences(
         self,
@@ -837,7 +837,6 @@ class TestHouseholdPreferences:
         """Test creating new preferences."""
         preferences_data = {
             "diet_types": ["paleo", "mediterranean"],
-            "weekly_weather": "cold",
             "cooking_apparatus": ["oven", "slow_cooker"],
             "previous_meals": ["Chicken Stir Fry", "Pasta Carbonara"],
         }
@@ -853,7 +852,6 @@ class TestHouseholdPreferences:
         assert data["household_id"] == sample_household_with_members.id
         assert data["user_id"] == sample_user.id
         assert data["diet_types"] == ["paleo", "mediterranean"]
-        assert data["weekly_weather"] == "cold"
         assert data["cooking_apparatus"] == ["oven", "slow_cooker"]
         assert data["previous_meals"] == ["Chicken Stir Fry", "Pasta Carbonara"]
 
@@ -873,7 +871,6 @@ class TestHouseholdPreferences:
             household_id=sample_household_with_members.id,
             user_id=sample_user.id,
             diet_types=["keto"],
-            weekly_weather="hot",
             cooking_apparatus=["grill"],
             previous_meals=["Grilled Chicken"],
         )
@@ -883,7 +880,6 @@ class TestHouseholdPreferences:
         # Update preferences
         update_data = {
             "diet_types": ["vegetarian"],
-            "weekly_weather": "mixed",
             "cooking_apparatus": ["oven", "instant_pot"],
             "previous_meals": ["Vegetable Stir Fry", "Lentil Soup"],
         }
@@ -897,7 +893,6 @@ class TestHouseholdPreferences:
         assert response.status_code == 200
         data = response.json()
         assert data["diet_types"] == ["vegetarian"]
-        assert data["weekly_weather"] == "mixed"
         assert data["cooking_apparatus"] == ["oven", "instant_pot"]
         assert data["previous_meals"] == ["Vegetable Stir Fry", "Lentil Soup"]
 
@@ -913,7 +908,6 @@ class TestHouseholdPreferences:
         # Create preferences
         create_data = {
             "diet_types": ["vegan"],
-            "weekly_weather": "sunny",
             "cooking_apparatus": ["air_fryer"],
             "previous_meals": ["Tofu Scramble"],
         }
@@ -933,7 +927,6 @@ class TestHouseholdPreferences:
         assert response.status_code == 200
         data = response.json()
         assert data["diet_types"] == ["vegan"]
-        assert data["weekly_weather"] == "sunny"
         assert data["cooking_apparatus"] == ["air_fryer"]
         assert data["previous_meals"] == ["Tofu Scramble"]
 
@@ -953,3 +946,98 @@ class TestHouseholdPreferences:
         )
 
         assert response.status_code == 403
+
+    def test_create_preferences_with_zip_code(
+        self,
+        client,
+        db_session,
+        sample_user,
+        sample_household_with_members,
+        auth_headers,
+    ):
+        """Test creating preferences with zip_code field."""
+        preferences_data = {
+            "diet_types": ["paleo"],
+            "zip_code": "90210",
+        }
+
+        response = client.put(
+            f"/api/households/{sample_household_with_members.id}/preferences/me",
+            json=preferences_data,
+            headers=auth_headers,
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["household_id"] == sample_household_with_members.id
+        assert data["user_id"] == sample_user.id
+        assert data["zip_code"] == "90210"
+        assert data["diet_types"] == ["paleo"]
+
+    def test_update_preferences_with_zip_code(
+        self,
+        client,
+        db_session,
+        sample_user,
+        sample_household_with_members,
+        auth_headers,
+    ):
+        """Test updating preferences to include zip_code."""
+        from models.household_user_preferences import HouseholdUserPreferences
+
+        # Create initial preferences without zip_code
+        initial_prefs = HouseholdUserPreferences(
+            household_id=sample_household_with_members.id,
+            user_id=sample_user.id,
+            diet_types=["keto"],
+        )
+        db_session.add(initial_prefs)
+        db_session.commit()
+
+        # Update preferences to add zip_code
+        update_data = {
+            "zip_code": "10001",
+        }
+
+        response = client.put(
+            f"/api/households/{sample_household_with_members.id}/preferences/me",
+            json=update_data,
+            headers=auth_headers,
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["zip_code"] == "10001"
+        assert data["diet_types"] == ["keto"]  # Should remain unchanged
+
+    def test_get_preferences_with_zip_code(
+        self,
+        client,
+        db_session,
+        sample_user,
+        sample_household_with_members,
+        auth_headers,
+    ):
+        """Test getting preferences that include zip_code."""
+        # Create preferences with zip_code
+        create_data = {
+            "zip_code": "60601",
+            "diet_types": ["vegan"],
+        }
+
+        client.put(
+            f"/api/households/{sample_household_with_members.id}/preferences/me",
+            json=create_data,
+            headers=auth_headers,
+        )
+
+        # Get preferences
+        response = client.get(
+            f"/api/households/{sample_household_with_members.id}/preferences/me",
+            headers=auth_headers,
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["zip_code"] == "60601"
+        assert data["diet_types"] == ["vegan"]
