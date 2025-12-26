@@ -12,6 +12,7 @@ const mockPreferences: HouseholdPreferences = {
   weekly_weather: 'cold',
   cooking_apparatus: ['oven', 'slow_cooker'],
   previous_meals: ['Chicken Stir Fry', 'Pasta Carbonara'],
+  zip_code: '12345',
   created_at: '2025-01-01T00:00:00Z',
   updated_at: '2025-01-01T00:00:00Z',
 }
@@ -34,6 +35,7 @@ describe('PreferencesForm', () => {
     expect(
       screen.getByLabelText(/Previous Meals Made This Week/i)
     ).toBeInTheDocument()
+    expect(screen.getByLabelText(/Zip Code/i)).toBeInTheDocument()
   })
 
   it('initializes form with existing preferences', () => {
@@ -62,6 +64,10 @@ describe('PreferencesForm', () => {
       /Previous Meals Made This Week/i
     )
     expect(previousMealsInput).toHaveValue('Chicken Stir Fry, Pasta Carbonara')
+
+    // Check zip code input
+    const zipCodeInput = screen.getByLabelText(/Zip Code/i)
+    expect(zipCodeInput).toHaveValue('12345')
   })
 
   it('handles diet type selection', async () => {
@@ -123,6 +129,10 @@ describe('PreferencesForm', () => {
     )
     await user.type(previousMealsInput, 'Tofu Scramble, Veggie Burger')
 
+    // Enter zip code
+    const zipCodeInput = screen.getByLabelText(/Zip Code/i)
+    await user.type(zipCodeInput, '90210')
+
     // Submit form
     const submitButton = screen.getByRole('button', {
       name: /Save Preferences/i,
@@ -135,6 +145,7 @@ describe('PreferencesForm', () => {
         weekly_weather: 'hot',
         cooking_apparatus: ['oven', 'grill'],
         previous_meals: ['Tofu Scramble', 'Veggie Burger'],
+        zip_code: '90210',
       })
     })
   })
@@ -156,6 +167,7 @@ describe('PreferencesForm', () => {
         weekly_weather: null,
         cooking_apparatus: null,
         previous_meals: null,
+        zip_code: null,
       })
     })
   })
@@ -202,5 +214,129 @@ describe('PreferencesForm', () => {
     await user.click(cancelButton)
 
     expect(mockOnCancel).toHaveBeenCalled()
+  })
+
+  it('handles zip code input and validation', async () => {
+    const user = userEvent.setup()
+    render(<PreferencesForm preferences={null} onSubmit={mockOnSubmit} />)
+
+    const zipCodeInput = screen.getByLabelText(/Zip Code/i)
+
+    // Test valid 5-digit zip code
+    await user.type(zipCodeInput, '12345')
+    await user.tab() // Trigger blur event
+    expect(zipCodeInput).toHaveValue('12345')
+    expect(screen.queryByText(/valid US zip code/i)).not.toBeInTheDocument()
+
+    // Test valid 5+4 format
+    await user.clear(zipCodeInput)
+    await user.type(zipCodeInput, '12345-6789')
+    await user.tab()
+    expect(zipCodeInput).toHaveValue('12345-6789')
+    expect(screen.queryByText(/valid US zip code/i)).not.toBeInTheDocument()
+
+    // Test invalid format
+    await user.clear(zipCodeInput)
+    await user.type(zipCodeInput, '1234')
+    await user.tab()
+    expect(
+      screen.getByText(/Please enter a valid US zip code/i)
+    ).toBeInTheDocument()
+
+    // Test invalid format with letters
+    await user.clear(zipCodeInput)
+    await user.type(zipCodeInput, 'abcde')
+    await user.tab()
+    expect(
+      screen.getByText(/Please enter a valid US zip code/i)
+    ).toBeInTheDocument()
+  })
+
+  it('prevents form submission with invalid zip code', async () => {
+    const user = userEvent.setup()
+    mockOnSubmit.mockResolvedValue(undefined)
+
+    render(<PreferencesForm preferences={null} onSubmit={mockOnSubmit} />)
+
+    const zipCodeInput = screen.getByLabelText(/Zip Code/i)
+    await user.type(zipCodeInput, '1234') // Invalid zip code
+
+    const submitButton = screen.getByRole('button', {
+      name: /Save Preferences/i,
+    })
+    await user.click(submitButton)
+
+    // Form should not submit, error should be shown
+    expect(
+      screen.getByText(/Please enter a valid US zip code/i)
+    ).toBeInTheDocument()
+    expect(mockOnSubmit).not.toHaveBeenCalled()
+  })
+
+  it('submits form with valid zip code in 5+4 format', async () => {
+    const user = userEvent.setup()
+    mockOnSubmit.mockResolvedValue(undefined)
+
+    render(<PreferencesForm preferences={null} onSubmit={mockOnSubmit} />)
+
+    const zipCodeInput = screen.getByLabelText(/Zip Code/i)
+    await user.type(zipCodeInput, '12345-6789')
+
+    const submitButton = screen.getByRole('button', {
+      name: /Save Preferences/i,
+    })
+    await user.click(submitButton)
+
+    await waitFor(() => {
+      expect(mockOnSubmit).toHaveBeenCalledWith({
+        diet_types: null,
+        weekly_weather: null,
+        cooking_apparatus: null,
+        previous_meals: null,
+        zip_code: '12345-6789',
+      })
+    })
+  })
+
+  it('submits form with empty zip code', async () => {
+    const user = userEvent.setup()
+    mockOnSubmit.mockResolvedValue(undefined)
+
+    render(<PreferencesForm preferences={null} onSubmit={mockOnSubmit} />)
+
+    const submitButton = screen.getByRole('button', {
+      name: /Save Preferences/i,
+    })
+    await user.click(submitButton)
+
+    await waitFor(() => {
+      expect(mockOnSubmit).toHaveBeenCalledWith({
+        diet_types: null,
+        weekly_weather: null,
+        cooking_apparatus: null,
+        previous_meals: null,
+        zip_code: null,
+      })
+    })
+  })
+
+  it('clears zip code error when user starts typing', async () => {
+    const user = userEvent.setup()
+    render(<PreferencesForm preferences={null} onSubmit={mockOnSubmit} />)
+
+    const zipCodeInput = screen.getByLabelText(/Zip Code/i)
+
+    // Enter invalid zip code and trigger blur
+    await user.type(zipCodeInput, '1234')
+    await user.tab()
+    expect(
+      screen.getByText(/Please enter a valid US zip code/i)
+    ).toBeInTheDocument()
+
+    // Start typing again - error should clear
+    await user.type(zipCodeInput, '5')
+    expect(
+      screen.queryByText(/Please enter a valid US zip code/i)
+    ).not.toBeInTheDocument()
   })
 })

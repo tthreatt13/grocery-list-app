@@ -73,6 +73,10 @@ export default function PreferencesForm({
   const [previousMeals, setPreviousMeals] = useState<string>(() =>
     preferences?.previous_meals ? preferences.previous_meals.join(', ') : ''
   )
+  const [zipCode, setZipCode] = useState<string>(
+    () => preferences?.zip_code || ''
+  )
+  const [zipCodeError, setZipCodeError] = useState<string>('')
 
   // Update form state when preferences change (different household or preferences updated)
   // Using ref to track previous household_id avoids setState-in-effect for same preferences
@@ -91,6 +95,10 @@ export default function PreferencesForm({
       setPreviousMeals(
         preferences.previous_meals ? preferences.previous_meals.join(', ') : ''
       )
+
+      setZipCode(preferences.zip_code || '')
+
+      setZipCodeError('')
     } else if (!preferences && prevPreferencesIdRef.current !== null) {
       // Preferences cleared - reset form
       prevPreferencesIdRef.current = null
@@ -102,6 +110,10 @@ export default function PreferencesForm({
       setCookingApparatus([])
 
       setPreviousMeals('')
+
+      setZipCode('')
+
+      setZipCodeError('')
     }
   }, [preferences])
 
@@ -130,8 +142,45 @@ export default function PreferencesForm({
     })
   }
 
+  // Validate US zip code format: 5 digits or 5+4 format (e.g., 12345 or 12345-6789)
+  const validateZipCode = (zip: string): boolean => {
+    if (!zip.trim()) {
+      return true // Empty is valid (optional field)
+    }
+    // Match 5 digits or 5 digits + hyphen + 4 digits
+    const zipCodeRegex = /^\d{5}(-\d{4})?$/
+    return zipCodeRegex.test(zip.trim())
+  }
+
+  const handleZipCodeChange = (value: string) => {
+    setZipCode(value)
+    // Clear error when user starts typing
+    if (zipCodeError) {
+      setZipCodeError('')
+    }
+  }
+
+  const handleZipCodeBlur = () => {
+    if (zipCode.trim() && !validateZipCode(zipCode)) {
+      setZipCodeError(
+        'Please enter a valid US zip code (e.g., 12345 or 12345-6789)'
+      )
+    } else {
+      setZipCodeError('')
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Validate zip code before submission
+    const trimmedZipCode = zipCode.trim()
+    if (trimmedZipCode && !validateZipCode(trimmedZipCode)) {
+      setZipCodeError(
+        'Please enter a valid US zip code (e.g., 12345 or 12345-6789)'
+      )
+      return
+    }
 
     // Parse previous meals from comma-separated string
     const previousMealsArray = previousMeals
@@ -144,6 +193,7 @@ export default function PreferencesForm({
       weekly_weather: weeklyWeather || null,
       cooking_apparatus: cookingApparatus.length > 0 ? cookingApparatus : null,
       previous_meals: previousMealsArray.length > 0 ? previousMealsArray : null,
+      zip_code: trimmedZipCode || null,
     }
 
     await onSubmit(data)
@@ -214,6 +264,23 @@ export default function PreferencesForm({
         />
         <p className="mt-1 text-xs text-gray-500">
           Enter meals you&apos;ve already made this week, separated by commas.
+        </p>
+      </div>
+
+      {/* Zip Code */}
+      <div>
+        <Input
+          label="Zip Code"
+          type="text"
+          value={zipCode}
+          onChange={(e) => handleZipCodeChange(e.target.value)}
+          onBlur={handleZipCodeBlur}
+          placeholder="e.g., 12345 or 12345-6789"
+          error={zipCodeError}
+          maxLength={10}
+        />
+        <p className="mt-1 text-xs text-gray-500">
+          Enter your zip code to receive weather forecasts for meal planning.
         </p>
       </div>
 

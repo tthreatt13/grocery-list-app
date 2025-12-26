@@ -48,6 +48,7 @@ export interface HouseholdPreferences {
   weekly_weather?: string | null
   cooking_apparatus?: string[] | null
   previous_meals?: string[] | null
+  zip_code?: string | null
   created_at: string
   updated_at: string
 }
@@ -57,6 +58,7 @@ export interface HouseholdPreferencesUpdate {
   weekly_weather?: string | null
   cooking_apparatus?: string[] | null
   previous_meals?: string[] | null
+  zip_code?: string | null
 }
 
 // Request Types
