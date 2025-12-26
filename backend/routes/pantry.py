@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
-from sqlalchemy import or_
 
 from database import get_db
 from middleware.auth import get_current_user
@@ -17,9 +16,7 @@ from schemas.pantry import PantryItemCreate, PantryItemUpdate, PantryItemRespons
 router = APIRouter(prefix="/api/pantry", tags=["pantry"])
 
 
-def check_household_membership(
-    household_id: int, user: User, db: Session
-) -> HouseholdMember:
+def check_household_membership(household_id: int, user: User, db: Session) -> HouseholdMember:
     """
     Verify that user is a member of the household.
 
@@ -70,9 +67,7 @@ def check_item_access(item_id: int, user: User, db: Session) -> PantryItem:
     item = db.query(PantryItem).filter(PantryItem.id == item_id).first()
 
     if not item:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Pantry item not found"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pantry item not found")
 
     # Check if user is member of the household
     check_household_membership(item.household_id, user, db)

@@ -57,9 +57,7 @@ async def clerk_webhook(
             name = f"{first_name} {last_name}".strip() or None
 
             # Check if user already exists
-            existing_user = (
-                db.query(User).filter(User.clerk_user_id == clerk_user_id).first()
-            )
+            existing_user = db.query(User).filter(User.clerk_user_id == clerk_user_id).first()
 
             if existing_user:
                 return {"message": "User already exists", "user_id": existing_user.id}

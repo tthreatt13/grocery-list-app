@@ -63,9 +63,7 @@ def generate_token(clerk_user_id: str, email: str) -> str:
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Generate a test JWT token for API testing"
-    )
+    parser = argparse.ArgumentParser(description="Generate a test JWT token for API testing")
     parser.add_argument(
         "--email",
         type=str,

@@ -12,9 +12,7 @@ class TestUserModel:
 
     def test_create_user_with_all_fields(self, db_session):
         """Test creating a user with all required fields."""
-        user = User(
-            clerk_user_id="user_123abc", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123abc", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
         db_session.refresh(user)
@@ -28,9 +26,7 @@ class TestUserModel:
 
     def test_clerk_user_id_is_unique(self, db_session):
         """Test that clerk_user_id must be unique."""
-        user1 = User(
-            clerk_user_id="user_duplicate", email="user1@example.com", name="User 1"
-        )
+        user1 = User(clerk_user_id="user_duplicate", email="user1@example.com", name="User 1")
         db_session.add(user1)
         db_session.commit()
 
@@ -46,9 +42,7 @@ class TestUserModel:
 
     def test_email_is_unique(self, db_session):
         """Test that email must be unique."""
-        user1 = User(
-            clerk_user_id="user_123", email="duplicate@example.com", name="User 1"
-        )
+        user1 = User(clerk_user_id="user_123", email="duplicate@example.com", name="User 1")
         db_session.add(user1)
         db_session.commit()
 
@@ -90,9 +84,7 @@ class TestUserModel:
 
     def test_updated_at_changes_on_update(self, db_session):
         """Test that updated_at timestamp changes when user is updated."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Original Name"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Original Name")
         db_session.add(user)
         db_session.commit()
         db_session.refresh(user)
@@ -109,9 +101,7 @@ class TestUserModel:
 
     def test_user_repr(self, db_session):
         """Test user string representation."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
         db_session.refresh(user)
@@ -122,15 +112,11 @@ class TestUserModel:
 
     def test_query_user_by_clerk_id(self, db_session):
         """Test querying user by clerk_user_id."""
-        user = User(
-            clerk_user_id="user_findme", email="findme@example.com", name="Find Me"
-        )
+        user = User(clerk_user_id="user_findme", email="findme@example.com", name="Find Me")
         db_session.add(user)
         db_session.commit()
 
-        found_user = (
-            db_session.query(User).filter_by(clerk_user_id="user_findme").first()
-        )
+        found_user = db_session.query(User).filter_by(clerk_user_id="user_findme").first()
 
         assert found_user is not None
         assert found_user.email == "findme@example.com"
@@ -138,9 +124,7 @@ class TestUserModel:
 
     def test_query_user_by_email(self, db_session):
         """Test querying user by email."""
-        user = User(
-            clerk_user_id="user_123", email="query@example.com", name="Query User"
-        )
+        user = User(clerk_user_id="user_123", email="query@example.com", name="Query User")
         db_session.add(user)
         db_session.commit()
 

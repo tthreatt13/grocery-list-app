@@ -14,9 +14,7 @@ class TestHouseholdModel:
     def test_create_household_with_all_fields(self, db_session):
         """Test creating a household with all required fields."""
         # Create a user first
-        user = User(
-            clerk_user_id="user_123", email="creator@example.com", name="Creator User"
-        )
+        user = User(clerk_user_id="user_123", email="creator@example.com", name="Creator User")
         db_session.add(user)
         db_session.commit()
 
@@ -33,9 +31,7 @@ class TestHouseholdModel:
 
     def test_household_name_required(self, db_session):
         """Test that household name is required."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -55,9 +51,7 @@ class TestHouseholdModel:
 
     def test_created_by_references_user(self, db_session):
         """Test that created_by must reference an existing user."""
-        household = Household(
-            name="Test Household", created_by=99999  # Non-existent user
-        )
+        household = Household(name="Test Household", created_by=99999)  # Non-existent user
         db_session.add(household)
 
         with pytest.raises(IntegrityError):
@@ -65,9 +59,7 @@ class TestHouseholdModel:
 
     def test_household_creator_relationship(self, db_session):
         """Test the relationship to the creator user."""
-        user = User(
-            clerk_user_id="user_creator", email="creator@example.com", name="Creator"
-        )
+        user = User(clerk_user_id="user_creator", email="creator@example.com", name="Creator")
         db_session.add(user)
         db_session.commit()
 
@@ -83,9 +75,7 @@ class TestHouseholdModel:
 
     def test_multiple_households_same_creator(self, db_session):
         """Test that one user can create multiple households."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -103,9 +93,7 @@ class TestHouseholdModel:
 
     def test_household_repr(self, db_session):
         """Test household string representation."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -120,9 +108,7 @@ class TestHouseholdModel:
 
     def test_query_household_by_name(self, db_session):
         """Test querying household by name."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 

@@ -33,9 +33,7 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index(op.f("ix_users_id"), "users", ["id"], unique=False)
-    op.create_index(
-        op.f("ix_users_clerk_user_id"), "users", ["clerk_user_id"], unique=True
-    )
+    op.create_index(op.f("ix_users_clerk_user_id"), "users", ["clerk_user_id"], unique=True)
     op.create_index(op.f("ix_users_email"), "users", ["email"], unique=True)
 
     # Create households table
@@ -72,9 +70,7 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("household_id", "user_id", name="unique_household_user"),
     )
-    op.create_index(
-        op.f("ix_household_members_id"), "household_members", ["id"], unique=False
-    )
+    op.create_index(op.f("ix_household_members_id"), "household_members", ["id"], unique=False)
 
     # Create grocery_lists table
     op.create_table(
@@ -115,9 +111,7 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index(op.f("ix_grocery_items_id"), "grocery_items", ["id"], unique=False)
-    op.create_index(
-        op.f("ix_grocery_items_category"), "grocery_items", ["category"], unique=False
-    )
+    op.create_index(op.f("ix_grocery_items_category"), "grocery_items", ["category"], unique=False)
 
     # Create pantry_items table
     op.create_table(
@@ -138,9 +132,7 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index(op.f("ix_pantry_items_id"), "pantry_items", ["id"], unique=False)
-    op.create_index(
-        op.f("ix_pantry_items_category"), "pantry_items", ["category"], unique=False
-    )
+    op.create_index(op.f("ix_pantry_items_category"), "pantry_items", ["category"], unique=False)
     op.create_index(
         op.f("ix_pantry_items_expiration_date"),
         "pantry_items",
@@ -168,12 +160,8 @@ def upgrade() -> None:
     )
     op.create_index(op.f("ix_meals_id"), "meals", ["id"], unique=False)
     op.create_index(op.f("ix_meals_meal_type"), "meals", ["meal_type"], unique=False)
-    op.create_index(
-        op.f("ix_meals_day_of_week"), "meals", ["day_of_week"], unique=False
-    )
-    op.create_index(
-        op.f("ix_meals_week_start_date"), "meals", ["week_start_date"], unique=False
-    )
+    op.create_index(op.f("ix_meals_day_of_week"), "meals", ["day_of_week"], unique=False)
+    op.create_index(op.f("ix_meals_week_start_date"), "meals", ["week_start_date"], unique=False)
 
 
 def downgrade() -> None:

@@ -15,9 +15,7 @@ class TestGroceryItemModel:
 
     def test_create_grocery_item_full(self, db_session):
         """Test creating a grocery item with all fields."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -54,9 +52,7 @@ class TestGroceryItemModel:
 
     def test_create_grocery_item_minimal(self, db_session):
         """Test creating a grocery item with only required fields."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -92,9 +88,7 @@ class TestGroceryItemModel:
 
     def test_name_required(self, db_session):
         """Test that name is required."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -116,9 +110,7 @@ class TestGroceryItemModel:
 
     def test_checked_defaults_to_false(self, db_session):
         """Test that checked defaults to False."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -141,9 +133,7 @@ class TestGroceryItemModel:
 
     def test_check_item(self, db_session):
         """Test marking an item as checked."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -170,9 +160,7 @@ class TestGroceryItemModel:
 
     def test_grocery_list_relationship(self, db_session):
         """Test the relationship to grocery list."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -180,9 +168,7 @@ class TestGroceryItemModel:
         db_session.add(household)
         db_session.commit()
 
-        grocery_list = GroceryList(
-            household_id=household.id, name="My List", created_by=user.id
-        )
+        grocery_list = GroceryList(household_id=household.id, name="My List", created_by=user.id)
         db_session.add(grocery_list)
         db_session.commit()
 
@@ -196,9 +182,7 @@ class TestGroceryItemModel:
 
     def test_multiple_items_per_list(self, db_session):
         """Test that a list can have multiple items."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -225,9 +209,7 @@ class TestGroceryItemModel:
 
     def test_filter_by_category(self, db_session):
         """Test filtering items by category."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -243,16 +225,12 @@ class TestGroceryItemModel:
 
         dairy1 = GroceryItem(list_id=grocery_list.id, name="Milk", category="Dairy")
         dairy2 = GroceryItem(list_id=grocery_list.id, name="Cheese", category="Dairy")
-        produce = GroceryItem(
-            list_id=grocery_list.id, name="Apples", category="Produce"
-        )
+        produce = GroceryItem(list_id=grocery_list.id, name="Apples", category="Produce")
         db_session.add_all([dairy1, dairy2, produce])
         db_session.commit()
 
         dairy_items = (
-            db_session.query(GroceryItem)
-            .filter_by(list_id=grocery_list.id, category="Dairy")
-            .all()
+            db_session.query(GroceryItem).filter_by(list_id=grocery_list.id, category="Dairy").all()
         )
 
         assert len(dairy_items) == 2
@@ -260,9 +238,7 @@ class TestGroceryItemModel:
 
     def test_grocery_item_repr(self, db_session):
         """Test grocery item string representation."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 

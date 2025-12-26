@@ -63,18 +63,14 @@ class GroceryListBase(BaseModel):
 class GroceryListCreate(GroceryListBase):
     """Schema for creating a grocery list."""
 
-    household_id: int = Field(
-        ..., gt=0, description="Household ID this list belongs to"
-    )
+    household_id: int = Field(..., gt=0, description="Household ID this list belongs to")
 
 
 class GroceryListUpdate(BaseModel):
     """Schema for updating a grocery list."""
 
     name: Optional[str] = Field(None, min_length=1, max_length=200)
-    is_archived: Optional[bool] = Field(
-        None, description="Whether to archive/unarchive the list"
-    )
+    is_archived: Optional[bool] = Field(None, description="Whether to archive/unarchive the list")
 
 
 class GroceryListResponse(GroceryListBase):
