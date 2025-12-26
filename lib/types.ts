@@ -39,7 +39,7 @@ export interface PantryItem {
 
 export interface Meal {
   id: string
-  name: string
+  name?: string
   mealType: MealType
   date: Date
   notes?: string

@@ -3,14 +3,14 @@
 import { Meal } from '@/lib/types'
 import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
-import { formatDate } from '@/lib/utils'
+import { formatDate, getMealDisplayName } from '@/lib/utils'
 
 interface MealDetailsModalProps {
   isOpen: boolean
   onClose: () => void
   meal: Meal | null
   onEdit: (_meal: Meal) => void
-  onDelete: (_mealId: string) => void
+  onDelete: (_mealId: string) => Promise<void>
 }
 
 export default function MealDetailsModal({
@@ -22,9 +22,14 @@ export default function MealDetailsModal({
 }: MealDetailsModalProps) {
   if (!meal) return null
 
-  const handleDelete = () => {
-    if (confirm('Are you sure you want to delete this meal?')) {
-      onDelete(meal.id)
+  const handleDelete = async () => {
+    try {
+      await onDelete(meal.id)
+    } catch (error) {
+      // Error handling is done in the parent component
+      console.error('Error deleting meal:', error)
+    } finally {
+      // Always close the modal after delete attempt
       onClose()
     }
   }
@@ -69,7 +74,9 @@ export default function MealDetailsModal({
 
         {/* Meal Info */}
         <div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-2">{meal.name}</h3>
+          <h3 className="text-2xl font-bold text-gray-900 mb-2">
+            {getMealDisplayName(meal)}
+          </h3>
           <div className="flex items-center space-x-2 mb-3">
             <span
               className={`text-sm font-medium px-3 py-1 rounded-full ${getMealTypeColor(

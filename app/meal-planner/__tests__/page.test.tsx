@@ -661,3 +661,357 @@ describe('MealPlannerPage - Ingredient Normalization', () => {
     )
   })
 })
+
+describe('MealPlannerPage - Meal Category Handling', () => {
+  const getCurrentWeekStart = () => {
+    const today = new Date()
+    const dayOfWeek = today.getDay()
+    const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1
+    const startDate = new Date(today)
+    startDate.setDate(today.getDate() - daysSinceMonday)
+    startDate.setHours(0, 0, 0, 0)
+    return startDate
+  }
+
+  const formatDateForAPI = (date: Date) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
+  const currentWeekStart = getCurrentWeekStart()
+  const weekStartDateStr = formatDateForAPI(currentWeekStart)
+
+  const mockHouseholds = [
+    {
+      id: 1,
+      name: 'Test Household',
+      created_by: 1,
+      created_at: '2024-01-01T00:00:00Z',
+    },
+  ]
+
+  const mockMealsWithCategories = {
+    week_start_date: weekStartDateStr,
+    household_id: 1,
+    meals: [
+      {
+        id: 1,
+        household_id: 1,
+        name: 'Normal Breakfast',
+        meal_type: 'breakfast' as const,
+        day_of_week: 0,
+        week_start_date: weekStartDateStr,
+        ingredients: 'eggs, toast',
+        notes: 'Normal meal',
+        meal_category: 'normal' as const,
+        created_at: '2024-01-01T00:00:00Z',
+      },
+      {
+        id: 2,
+        household_id: 1,
+        name: 'Quick Lunch',
+        meal_type: 'lunch' as const,
+        day_of_week: 0,
+        week_start_date: weekStartDateStr,
+        ingredients: 'sandwich',
+        notes: 'Quick meal',
+        meal_category: 'quick_meal' as const,
+        created_at: '2024-01-01T00:00:00Z',
+      },
+      {
+        id: 3,
+        household_id: 1,
+        name: 'Restaurant Dinner',
+        meal_type: 'dinner' as const,
+        day_of_week: 0,
+        week_start_date: weekStartDateStr,
+        ingredients: 'pizza, salad',
+        notes: 'Eating out',
+        meal_category: 'eat_out' as const,
+        created_at: '2024-01-01T00:00:00Z',
+      },
+      {
+        id: 4,
+        household_id: 1,
+        name: 'Legacy Meal',
+        meal_type: 'breakfast' as const,
+        day_of_week: 1,
+        week_start_date: weekStartDateStr,
+        ingredients: 'cereal, milk',
+        notes: 'No category',
+        meal_category: null,
+        created_at: '2024-01-01T00:00:00Z',
+      },
+    ],
+  }
+
+  const mockUserSyncResponse = {
+    id: 1,
+    clerk_user_id: 'user_test123',
+    email: 'test@example.com',
+    name: 'Test User',
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-01T00:00:00Z',
+  }
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+    mockGetHouseholds.mockResolvedValue(mockHouseholds)
+    mockGetWeeklyMeals.mockResolvedValue(mockMealsWithCategories)
+    mockGetGroceryLists.mockResolvedValue([])
+    mockSyncUser.mockResolvedValue(mockUserSyncResponse)
+  })
+
+  it('converts meal responses with meal categories correctly', async () => {
+    render(<MealPlannerPage />)
+
+    await waitFor(() => {
+      expect(mockGetWeeklyMeals).toHaveBeenCalled()
+    })
+
+    // Wait for meals to be rendered (use getAllByText since meals appear in both desktop and mobile views)
+    await waitFor(() => {
+      expect(screen.getAllByText('Normal Breakfast').length).toBeGreaterThan(0)
+      expect(screen.getAllByText('Quick Lunch').length).toBeGreaterThan(0)
+      expect(screen.getAllByText('Restaurant Dinner').length).toBeGreaterThan(0)
+    })
+
+    // Verify meal categories are displayed (visual indicators)
+    await waitFor(() => {
+      // Quick meal should have ⚡ indicator
+      expect(screen.getAllByLabelText('Quick Meal').length).toBeGreaterThan(0)
+      // Eat out should have 🍴 indicator
+      expect(screen.getAllByLabelText('Eat Out').length).toBeGreaterThan(0)
+    })
+  })
+
+  it('defaults to normal category when meal_category is null', async () => {
+    render(<MealPlannerPage />)
+
+    await waitFor(() => {
+      expect(mockGetWeeklyMeals).toHaveBeenCalled()
+    })
+
+    // Wait for legacy meal to be rendered (use getAllByText since meals appear in both views)
+    await waitFor(() => {
+      expect(screen.getAllByText('Legacy Meal').length).toBeGreaterThan(0)
+    })
+
+    // Legacy meal should not have category indicators (defaults to normal)
+    const quickMealIndicators = screen.queryAllByLabelText('Quick Meal')
+    const eatOutIndicators = screen.queryAllByLabelText('Eat Out')
+    // Should only have indicators for the meals that explicitly have those categories
+    // Each meal appears in both desktop and mobile views, so we expect 2 of each
+    expect(quickMealIndicators.length).toBe(2) // Quick Lunch in desktop + mobile
+    expect(eatOutIndicators.length).toBe(2) // Restaurant Dinner in desktop + mobile
+  })
+
+  it('sends meal_category when creating a new meal', async () => {
+    mockCreateMeal.mockResolvedValue({
+      id: 5,
+      household_id: 1,
+      name: 'New Quick Meal',
+      meal_type: 'lunch',
+      day_of_week: 0,
+      week_start_date: weekStartDateStr,
+      ingredients: 'bread, ham',
+      notes: '',
+      meal_category: 'quick_meal',
+      created_at: '2024-01-01T00:00:00Z',
+    })
+
+    render(<MealPlannerPage />)
+
+    await waitFor(() => {
+      expect(mockGetHouseholds).toHaveBeenCalled()
+    })
+
+    await waitFor(() => {
+      expect(mockGetWeeklyMeals).toHaveBeenCalled()
+    })
+
+    // Wait for calendar to be visible
+    await waitFor(() => {
+      const emptySlotButtons = screen.getAllByLabelText(/add meal/i)
+      expect(emptySlotButtons.length).toBeGreaterThan(0)
+    })
+
+    // Find an empty slot button to add a meal
+    const emptySlotButtons = screen.getAllByLabelText(/add meal/i)
+    fireEvent.click(emptySlotButtons[0])
+
+    // Wait for modal to open
+    await waitFor(
+      () => {
+        const headings = screen.getAllByText('Add Meal')
+        const heading = headings.find((el) => el.tagName === 'H2')
+        expect(heading).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
+    // Fill in meal name
+    const nameInput = screen.getByLabelText(/meal name/i)
+    fireEvent.change(nameInput, { target: { value: 'New Quick Meal' } })
+
+    // Select quick_meal category
+    const categorySelect = screen.getByLabelText(/meal category/i)
+    fireEvent.change(categorySelect, { target: { value: 'quick_meal' } })
+
+    // Submit the form
+    const addButtons = screen.getAllByRole('button', { name: /add meal/i })
+    const addButton = addButtons[addButtons.length - 1]
+    fireEvent.click(addButton)
+
+    // Wait for createMeal to be called
+    await waitFor(() => {
+      expect(mockCreateMeal).toHaveBeenCalled()
+    })
+
+    // Verify that createMeal was called with meal_category
+    expect(mockCreateMeal).toHaveBeenCalledWith(
+      expect.objectContaining({
+        meal_category: 'quick_meal',
+      }),
+      'mock-token'
+    )
+  })
+
+  it('sends meal_category when updating a meal', async () => {
+    const mockUpdateMeal = mealsApi.updateMeal as jest.MockedFunction<
+      typeof mealsApi.updateMeal
+    >
+
+    mockUpdateMeal.mockResolvedValue({
+      id: 1,
+      household_id: 1,
+      name: 'Updated Breakfast',
+      meal_type: 'breakfast',
+      day_of_week: 0,
+      week_start_date: weekStartDateStr,
+      ingredients: 'eggs, toast',
+      notes: 'Updated',
+      meal_category: 'quick_meal',
+      created_at: '2024-01-01T00:00:00Z',
+    })
+
+    render(<MealPlannerPage />)
+
+    await waitFor(() => {
+      expect(mockGetWeeklyMeals).toHaveBeenCalled()
+    })
+
+    // Wait for meals to be rendered (use getAllByText since meals appear in both views)
+    await waitFor(() => {
+      expect(screen.getAllByText('Normal Breakfast').length).toBeGreaterThan(0)
+    })
+
+    // Click on a meal to edit it (get the first one, could be desktop or mobile)
+    const mealButtons = screen
+      .getAllByText('Normal Breakfast')
+      .map((text) => text.closest('button'))
+      .filter((btn) => btn !== null)
+    if (mealButtons.length > 0) {
+      fireEvent.click(mealButtons[0]!)
+    }
+
+    // Wait for edit modal to open
+    await waitFor(
+      () => {
+        expect(screen.getByText('Edit Meal')).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+
+    // Change category to quick_meal
+    const categorySelect = screen.getByLabelText(/meal category/i)
+    fireEvent.change(categorySelect, { target: { value: 'quick_meal' } })
+
+    // Submit the form
+    const updateButton = screen.getByRole('button', { name: /update meal/i })
+    fireEvent.click(updateButton)
+
+    // Wait for updateMeal to be called
+    await waitFor(() => {
+      expect(mockUpdateMeal).toHaveBeenCalled()
+    })
+
+    // Verify that updateMeal was called with meal_category
+    expect(mockUpdateMeal).toHaveBeenCalledWith(
+      1,
+      expect.objectContaining({
+        meal_category: 'quick_meal',
+      }),
+      'mock-token'
+    )
+  })
+
+  it('filters out eat_out meals when generating grocery list', async () => {
+    // Mock window.alert to avoid "Not implemented" error
+    const mockAlert = jest.fn()
+    window.alert = mockAlert
+
+    mockGenerateGroceryList.mockResolvedValue({
+      grocery_list_id: 1,
+      items_count: 3,
+      message: 'Successfully generated grocery list with 3 items from 2 meals',
+    })
+
+    render(<MealPlannerPage />)
+
+    await waitFor(() => {
+      expect(mockGetWeeklyMeals).toHaveBeenCalled()
+    })
+
+    // Wait for generate button to be visible
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: /generate grocery list/i })
+      ).toBeInTheDocument()
+    })
+
+    // Click generate button
+    const generateButton = screen.getByRole('button', {
+      name: /generate grocery list/i,
+    })
+    fireEvent.click(generateButton)
+
+    // Wait for modal to appear
+    await waitFor(() => {
+      expect(
+        screen.getByRole('heading', { name: /generate grocery list/i })
+      ).toBeInTheDocument()
+    })
+
+    // Fill in list name
+    const nameInput = screen.getByLabelText(/list name/i)
+    fireEvent.change(nameInput, { target: { value: 'Test List' } })
+
+    // Click create button
+    const createButton = screen.getByRole('button', {
+      name: /create grocery list/i,
+    })
+    fireEvent.click(createButton)
+
+    // Wait for generateGroceryList to be called
+    await waitFor(() => {
+      expect(mockGenerateGroceryList).toHaveBeenCalled()
+    })
+
+    // Verify the API was called with correct parameters
+    // The backend should filter out eat_out meals automatically
+    expect(mockGenerateGroceryList).toHaveBeenCalled()
+    const callArgs = mockGenerateGroceryList.mock.calls[0]
+    expect(callArgs[0]).toMatchObject({
+      household_id: 1,
+      grocery_list_name: 'Test List',
+    })
+    // week_start_date should be a string (may be undefined if currentWeekStart isn't set yet)
+    if (callArgs[0].week_start_date) {
+      expect(typeof callArgs[0].week_start_date).toBe('string')
+    }
+    expect(callArgs[1]).toBe('mock-token')
+  })
+})

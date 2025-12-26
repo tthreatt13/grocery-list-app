@@ -167,8 +167,8 @@ class TestMealModel:
         with pytest.raises(IntegrityError):
             db_session.commit()
 
-    def test_name_required(self, db_session):
-        """Test that name is required."""
+    def test_name_optional(self, db_session):
+        """Test that name is optional and meals can be created without a name."""
         user = User(
             clerk_user_id="user_123", email="test@example.com", name="Test User"
         )
@@ -186,11 +186,15 @@ class TestMealModel:
             meal_type="dinner",
             day_of_week=1,
             week_start_date=week_start,
+            meal_category="quick_meal",
         )
         db_session.add(meal)
+        db_session.commit()
+        db_session.refresh(meal)
 
-        with pytest.raises(IntegrityError):
-            db_session.commit()
+        assert meal.id is not None
+        assert meal.name is None
+        assert meal.meal_category == "quick_meal"
 
     def test_household_relationship(self, db_session):
         """Test the relationship to household."""

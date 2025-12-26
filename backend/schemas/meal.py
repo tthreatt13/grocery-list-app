@@ -8,7 +8,7 @@ from pydantic import BaseModel, ConfigDict, Field
 class MealBase(BaseModel):
     """Base meal schema with common fields."""
 
-    name: str = Field(..., min_length=1, max_length=200)
+    name: Optional[str] = Field(None, max_length=200)
     meal_type: str = Field(..., pattern="^(breakfast|lunch|dinner|snack)$")
     day_of_week: int = Field(..., ge=0, le=6)  # 0=Monday, 6=Sunday
     week_start_date: date
@@ -28,15 +28,13 @@ class MealCreate(MealBase):
 class MealUpdate(BaseModel):
     """Schema for updating a meal."""
 
-    name: Optional[str] = Field(None, min_length=1, max_length=200)
+    name: Optional[str] = Field(None, max_length=200)
     meal_type: Optional[str] = Field(None, pattern="^(breakfast|lunch|dinner|snack)$")
     day_of_week: Optional[int] = Field(None, ge=0, le=6)
     week_start_date: Optional[date] = None
     ingredients: Optional[str] = None
     notes: Optional[str] = None
-    meal_category: Optional[str] = Field(
-        None, pattern="^(normal|quick_meal|eat_out)$"
-    )
+    meal_category: Optional[str] = Field(None, pattern="^(normal|quick_meal|eat_out)$")
 
     model_config = ConfigDict(extra="ignore")
 
