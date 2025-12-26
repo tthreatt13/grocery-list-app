@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from typing import List
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 
 from database import get_db
 from middleware.auth import get_current_user
@@ -87,9 +87,7 @@ async def get_weekly_meals(
         .all()
     )
 
-    return WeeklyPlanResponse(
-        week_start_date=week_start, household_id=household_id, meals=meals
-    )
+    return WeeklyPlanResponse(week_start_date=week_start, household_id=household_id, meals=meals)
 
 
 @router.get("/meals/{meal_id}", response_model=MealResponse)
@@ -102,9 +100,7 @@ async def get_meal(
     meal = db.query(Meal).filter(Meal.id == meal_id).first()
 
     if not meal:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Meal not found"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Meal not found")
 
     # Check permission: user must be a household member
     require_household_member(db, meal.household_id, current_user)
@@ -153,9 +149,7 @@ async def update_meal(
     meal = db.query(Meal).filter(Meal.id == meal_id).first()
 
     if not meal:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Meal not found"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Meal not found")
 
     # Check permission: user must be a household member
     require_household_member(db, meal.household_id, current_user)
@@ -165,9 +159,7 @@ async def update_meal(
 
     # If week_start_date is being updated, ensure it's a Monday
     if "week_start_date" in update_data and update_data["week_start_date"]:
-        update_data["week_start_date"] = get_week_start_monday(
-            update_data["week_start_date"]
-        )
+        update_data["week_start_date"] = get_week_start_monday(update_data["week_start_date"])
 
     for field, value in update_data.items():
         setattr(meal, field, value)
@@ -188,9 +180,7 @@ async def delete_meal(
     meal = db.query(Meal).filter(Meal.id == meal_id).first()
 
     if not meal:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Meal not found"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Meal not found")
 
     # Check permission: user must be a household member
     require_household_member(db, meal.household_id, current_user)
@@ -268,5 +258,8 @@ async def generate_grocery_list(
     return GenerateGroceryListResponse(
         grocery_list_id=grocery_list.id,
         items_count=items_count,
-        message=f"Successfully generated grocery list with {items_count} items from {len(meals)} meals",
+        message=(
+            f"Successfully generated grocery list with {items_count} items "
+            f"from {len(meals)} meals"
+        ),
     )

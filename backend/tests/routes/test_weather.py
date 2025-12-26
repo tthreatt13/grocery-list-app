@@ -376,9 +376,7 @@ class TestGetMyForecast:
         assert response.status_code == 400
         assert "Invalid zip code" in response.json()["detail"]
 
-    def test_get_my_forecast_missing_household_id(
-        self, db_session, sample_user, auth_headers
-    ):
+    def test_get_my_forecast_missing_household_id(self, db_session, sample_user, auth_headers):
         """Test forecast retrieval without household_id query parameter."""
         # Override dependencies
         from database import get_db
@@ -401,6 +399,4 @@ class TestGetMyForecast:
         # Cleanup
         app.dependency_overrides.clear()
 
-        assert (
-            response.status_code == 422
-        )  # Validation error for missing required query param
+        assert response.status_code == 422  # Validation error for missing required query param

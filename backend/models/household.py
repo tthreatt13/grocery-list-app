@@ -18,9 +18,7 @@ class Household(Base):
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     # Relationships
-    creator = relationship(
-        "User", foreign_keys=[created_by], backref="created_households"
-    )
+    creator = relationship("User", foreign_keys=[created_by], backref="created_households")
     # members - many-to-many through household_members (will be added later)
     # grocery_lists - one-to-many (will be added later)
     # pantry_items - one-to-many (will be added later)

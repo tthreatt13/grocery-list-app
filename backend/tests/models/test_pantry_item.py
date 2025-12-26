@@ -14,9 +14,7 @@ class TestPantryItemModel:
 
     def test_create_pantry_item_full(self, db_session):
         """Test creating a pantry item with all fields."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -50,9 +48,7 @@ class TestPantryItemModel:
 
     def test_create_pantry_item_minimal(self, db_session):
         """Test creating a pantry item with only required fields."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -82,9 +78,7 @@ class TestPantryItemModel:
 
     def test_name_required(self, db_session):
         """Test that name is required."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -100,9 +94,7 @@ class TestPantryItemModel:
 
     def test_household_relationship(self, db_session):
         """Test the relationship to household."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -120,9 +112,7 @@ class TestPantryItemModel:
 
     def test_multiple_items_per_household(self, db_session):
         """Test that a household can have multiple pantry items."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -143,9 +133,7 @@ class TestPantryItemModel:
 
     def test_filter_by_category(self, db_session):
         """Test filtering pantry items by category."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -170,9 +158,7 @@ class TestPantryItemModel:
 
     def test_expiring_items(self, db_session):
         """Test querying items that are expiring soon."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -213,9 +199,7 @@ class TestPantryItemModel:
 
     def test_updated_at_changes(self, db_session):
         """Test that updated_at timestamp changes on update."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -240,9 +224,7 @@ class TestPantryItemModel:
 
     def test_pantry_item_repr(self, db_session):
         """Test pantry item string representation."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 

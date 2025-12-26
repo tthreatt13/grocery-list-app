@@ -27,6 +27,4 @@ class GroceryItem(Base):
 
     def __repr__(self):
         """String representation of GroceryItem."""
-        return (
-            f"<GroceryItem(id={self.id}, name='{self.name}', checked={self.checked})>"
-        )
+        return f"<GroceryItem(id={self.id}, name='{self.name}', checked={self.checked})>"

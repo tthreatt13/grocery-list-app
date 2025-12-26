@@ -5,6 +5,7 @@ Revises: e4a05e381069
 Create Date: 2025-12-26 12:00:00.000000
 
 """
+
 from typing import Sequence, Union
 
 from alembic import op
@@ -12,8 +13,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'f7a8b9c0d1e2'
-down_revision: Union[str, Sequence[str], None] = 'e4a05e381069'
+revision: str = "f7a8b9c0d1e2"
+down_revision: Union[str, Sequence[str], None] = "e4a05e381069"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -29,4 +30,3 @@ def downgrade() -> None:
         "household_user_preferences",
         sa.Column("weekly_weather", sa.String(), nullable=True),
     )
-

@@ -52,11 +52,7 @@ def get_user_households(
         List of households user is a member of
     """
     # Get all household memberships for user
-    memberships = (
-        db.query(HouseholdMember)
-        .filter(HouseholdMember.user_id == current_user.id)
-        .all()
-    )
+    memberships = db.query(HouseholdMember).filter(HouseholdMember.user_id == current_user.id).all()
 
     # Get all households from memberships
     household_ids = [m.household_id for m in memberships]
@@ -92,11 +88,7 @@ def get_household(
     require_household_member(db, household_id, current_user)
 
     # Get all members with user details
-    members = (
-        db.query(HouseholdMember)
-        .filter(HouseholdMember.household_id == household_id)
-        .all()
-    )
+    members = db.query(HouseholdMember).filter(HouseholdMember.household_id == household_id).all()
 
     # Create response with member details
     member_responses = []
@@ -150,9 +142,7 @@ def create_household(
     db.refresh(household)
 
     # Add creator as admin member
-    member = HouseholdMember(
-        household_id=household.id, user_id=current_user.id, role="admin"
-    )
+    member = HouseholdMember(household_id=household.id, user_id=current_user.id, role="admin")
     db.add(member)
     db.commit()
 
@@ -223,9 +213,7 @@ def delete_household(
     require_household_admin(db, household_id, current_user)
 
     # Delete all members first (due to foreign key constraints)
-    db.query(HouseholdMember).filter(
-        HouseholdMember.household_id == household_id
-    ).delete()
+    db.query(HouseholdMember).filter(HouseholdMember.household_id == household_id).delete()
 
     # Delete household
     db.delete(household)
@@ -257,7 +245,8 @@ def invite_member(
         Created member record
 
     Raises:
-        HTTPException: If household not found, user not found, user not admin, or user already member
+        HTTPException: If household not found, user not found, user not admin,
+            or user already member
     """
     # Validate household exists
     validate_household_exists(db, household_id)
@@ -380,9 +369,7 @@ def update_member_role(
     return response
 
 
-@router.delete(
-    "/{household_id}/members/{user_id}", status_code=status.HTTP_204_NO_CONTENT
-)
+@router.delete("/{household_id}/members/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 def remove_member(
     household_id: int,
     user_id: int,
@@ -495,9 +482,7 @@ def get_shared_lists(
     return response
 
 
-@router.get(
-    "/{household_id}/preferences/me", response_model=HouseholdPreferencesResponse
-)
+@router.get("/{household_id}/preferences/me", response_model=HouseholdPreferencesResponse)
 def get_my_preferences(
     household_id: int,
     current_user: User = Depends(get_current_user),
@@ -518,7 +503,7 @@ def get_my_preferences(
         HTTPException: If household not found or user not a member
     """
     # Validate household exists
-    household = validate_household_exists(db, household_id)
+    validate_household_exists(db, household_id)
 
     # Check user is a member
     require_household_member(db, household_id, current_user)
@@ -549,9 +534,7 @@ def get_my_preferences(
     return preferences
 
 
-@router.put(
-    "/{household_id}/preferences/me", response_model=HouseholdPreferencesResponse
-)
+@router.put("/{household_id}/preferences/me", response_model=HouseholdPreferencesResponse)
 def update_my_preferences(
     household_id: int,
     preferences_data: HouseholdPreferencesUpdate,
@@ -574,7 +557,7 @@ def update_my_preferences(
         HTTPException: If household not found or user not a member
     """
     # Validate household exists
-    household = validate_household_exists(db, household_id)
+    validate_household_exists(db, household_id)
 
     # Check user is a member
     require_household_member(db, household_id, current_user)

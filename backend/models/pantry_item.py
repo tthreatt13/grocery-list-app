@@ -20,9 +20,7 @@ class PantryItem(Base):
     expiration_date = Column(DateTime, nullable=True, index=True)
     low_stock_threshold = Column(Float, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(
-        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
-    )
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     # Relationships
     household = relationship("Household", backref="pantry_items")

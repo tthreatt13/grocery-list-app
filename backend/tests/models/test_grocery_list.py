@@ -14,9 +14,7 @@ class TestGroceryListModel:
 
     def test_create_grocery_list(self, db_session):
         """Test creating a grocery list with all fields."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -41,9 +39,7 @@ class TestGroceryListModel:
 
     def test_household_id_required(self, db_session):
         """Test that household_id is required."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -55,9 +51,7 @@ class TestGroceryListModel:
 
     def test_name_required(self, db_session):
         """Test that name is required."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -73,9 +67,7 @@ class TestGroceryListModel:
 
     def test_created_by_required(self, db_session):
         """Test that created_by is required."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -91,9 +83,7 @@ class TestGroceryListModel:
 
     def test_household_relationship(self, db_session):
         """Test the relationship to household."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -101,9 +91,7 @@ class TestGroceryListModel:
         db_session.add(household)
         db_session.commit()
 
-        grocery_list = GroceryList(
-            household_id=household.id, name="Test List", created_by=user.id
-        )
+        grocery_list = GroceryList(household_id=household.id, name="Test List", created_by=user.id)
         db_session.add(grocery_list)
         db_session.commit()
         db_session.refresh(grocery_list)
@@ -113,9 +101,7 @@ class TestGroceryListModel:
 
     def test_creator_relationship(self, db_session):
         """Test the relationship to creator user."""
-        user = User(
-            clerk_user_id="user_123", email="creator@example.com", name="Creator User"
-        )
+        user = User(clerk_user_id="user_123", email="creator@example.com", name="Creator User")
         db_session.add(user)
         db_session.commit()
 
@@ -123,9 +109,7 @@ class TestGroceryListModel:
         db_session.add(household)
         db_session.commit()
 
-        grocery_list = GroceryList(
-            household_id=household.id, name="Test List", created_by=user.id
-        )
+        grocery_list = GroceryList(household_id=household.id, name="Test List", created_by=user.id)
         db_session.add(grocery_list)
         db_session.commit()
         db_session.refresh(grocery_list)
@@ -135,9 +119,7 @@ class TestGroceryListModel:
 
     def test_multiple_lists_per_household(self, db_session):
         """Test that a household can have multiple grocery lists."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -145,12 +127,8 @@ class TestGroceryListModel:
         db_session.add(household)
         db_session.commit()
 
-        list1 = GroceryList(
-            household_id=household.id, name="Weekly List", created_by=user.id
-        )
-        list2 = GroceryList(
-            household_id=household.id, name="Party List", created_by=user.id
-        )
+        list1 = GroceryList(household_id=household.id, name="Weekly List", created_by=user.id)
+        list2 = GroceryList(household_id=household.id, name="Party List", created_by=user.id)
         db_session.add_all([list1, list2])
         db_session.commit()
 
@@ -161,9 +139,7 @@ class TestGroceryListModel:
 
     def test_updated_at_changes(self, db_session):
         """Test that updated_at timestamp changes on update."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -190,9 +166,7 @@ class TestGroceryListModel:
 
     def test_grocery_list_repr(self, db_session):
         """Test grocery list string representation."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -213,9 +187,7 @@ class TestGroceryListModel:
 
     def test_is_archived_defaults_to_false(self, db_session):
         """Test that is_archived defaults to False."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -223,9 +195,7 @@ class TestGroceryListModel:
         db_session.add(household)
         db_session.commit()
 
-        grocery_list = GroceryList(
-            household_id=household.id, name="Test List", created_by=user.id
-        )
+        grocery_list = GroceryList(household_id=household.id, name="Test List", created_by=user.id)
         db_session.add(grocery_list)
         db_session.commit()
         db_session.refresh(grocery_list)
@@ -234,9 +204,7 @@ class TestGroceryListModel:
 
     def test_is_archived_can_be_toggled(self, db_session):
         """Test that is_archived can be set to True and back to False."""
-        user = User(
-            clerk_user_id="user_123", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -244,9 +212,7 @@ class TestGroceryListModel:
         db_session.add(household)
         db_session.commit()
 
-        grocery_list = GroceryList(
-            household_id=household.id, name="Test List", created_by=user.id
-        )
+        grocery_list = GroceryList(household_id=household.id, name="Test List", created_by=user.id)
         db_session.add(grocery_list)
         db_session.commit()
         db_session.refresh(grocery_list)

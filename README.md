@@ -332,6 +332,8 @@ pytest --cov=. --cov-report=html
 
 ### Code Quality
 
+**Frontend:**
+
 ```bash
 # Run ESLint
 npm run lint
@@ -344,18 +346,58 @@ npm run format
 
 # Check formatting
 npm run format:check
+
+# Run tests
+npm test
+
+# Run tests in CI mode
+npm run test:ci
+```
+
+**Backend:**
+
+```bash
+cd backend
+source venv/bin/activate
+
+# Run linting (flake8)
+flake8 . --exclude=venv,alembic/versions,__pycache__,.pytest_cache --max-line-length=100
+
+# Format code with Black
+black --line-length 100 .
+
+# Check formatting
+black --check --line-length 100 .
+
+# Run tests
+pytest
+
+# Run tests with coverage
+pytest --cov=. --cov-report=html
 ```
 
 ### Continuous Integration
 
 The project uses GitHub Actions for automated testing and linting:
 
-- **Automated Testing**: Runs on every push and pull request
-- **Linting**: ESLint checks ensure code quality
-- **Test Coverage**: Comprehensive test suites for frontend and backend
-- **CI Pipeline**: Validates code before merging
+- **Frontend Testing**: Jest tests run on every push and pull request
+- **Backend Testing**: Pytest tests (238+ tests) validate all API endpoints and models
+- **Frontend Linting**: ESLint checks ensure TypeScript/React code quality
+- **Backend Linting**: Flake8 validates Python code style and imports
+- **Code Formatting**: Prettier (frontend) and Black (backend) ensure consistent formatting
+- **Test Coverage**: Comprehensive test suites for both frontend and backend
+- **CI Pipeline**: All checks must pass before code can be merged
 
-All tests and linting must pass before code can be merged.
+**Pre-commit Checklist:**
+Before committing and pushing, ensure:
+
+- ✅ All frontend tests pass (`npm test`)
+- ✅ All backend tests pass (`pytest`)
+- ✅ Frontend linting passes (`npm run lint`)
+- ✅ Backend linting passes (`flake8`)
+- ✅ Code is properly formatted (`npm run format:check` and `black --check`)
+
+All tests, linting, and formatting checks must pass before code can be merged.
 
 ## 🛠️ Built With
 
@@ -506,11 +548,30 @@ Contributions are welcome! This is an active full-stack project with both fronte
 
 1. **Write tests first** (TDD approach)
 2. **Implement feature**
-3. **Run tests**: `npm test` (frontend) and `pytest` (backend)
-4. **Check linting**: `npm run lint`
-5. **Format code**: `npm run format`
+3. **Run all checks before committing**:
+   - Frontend tests: `npm test`
+   - Backend tests: `cd backend && source venv/bin/activate && pytest`
+   - Frontend linting: `npm run lint`
+   - Backend linting: `cd backend && source venv/bin/activate && flake8 . --exclude=venv,alembic/versions,__pycache__,.pytest_cache --max-line-length=100`
+   - Frontend formatting: `npm run format:check`
+   - Backend formatting: `cd backend && source venv/bin/activate && black --check --line-length 100 .`
+4. **Fix any issues** found by linting or formatting
+5. **Format code**: `npm run format` (frontend) and `black --line-length 100 .` (backend)
 6. **For database changes**: Create migration, test locally, run pre-deploy check
 7. **Commit and push**: Migrations run automatically on Railway deployment
+
+**Quick Pre-commit Check:**
+
+```bash
+# Frontend
+npm test && npm run lint && npm run format:check
+
+# Backend
+cd backend && source venv/bin/activate && \
+  pytest && \
+  flake8 . --exclude=venv,alembic/versions,__pycache__,.pytest_cache --max-line-length=100 && \
+  black --check --line-length 100 .
+```
 
 ## 📄 License
 

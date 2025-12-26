@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session, joinedload
 
 from database import get_db
-from middleware.auth import get_current_user, get_current_user_optional
+from middleware.auth import get_current_user_optional
 from middleware.permissions import require_household_member
 from models.grocery_list import GroceryList
 from models.grocery_item import GroceryItem
@@ -87,9 +87,7 @@ def get_grocery_list(list_id: int, db: Session = Depends(get_db)):
     return grocery_list
 
 
-@router.post(
-    "", response_model=GroceryListResponse, status_code=status.HTTP_201_CREATED
-)
+@router.post("", response_model=GroceryListResponse, status_code=status.HTTP_201_CREATED)
 def create_grocery_list(list_data: GroceryListCreate, db: Session = Depends(get_db)):
     """
     Create a new grocery list.
@@ -104,9 +102,7 @@ def create_grocery_list(list_data: GroceryListCreate, db: Session = Depends(get_
         404: If household not found
     """
     # Verify household exists
-    household = (
-        db.query(Household).filter(Household.id == list_data.household_id).first()
-    )
+    household = db.query(Household).filter(Household.id == list_data.household_id).first()
     if not household:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -132,9 +128,7 @@ def create_grocery_list(list_data: GroceryListCreate, db: Session = Depends(get_
 
 
 @router.put("/{list_id}", response_model=GroceryListResponse)
-def update_grocery_list(
-    list_id: int, list_data: GroceryListUpdate, db: Session = Depends(get_db)
-):
+def update_grocery_list(list_id: int, list_data: GroceryListUpdate, db: Session = Depends(get_db)):
     """
     Update a grocery list.
 

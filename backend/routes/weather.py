@@ -79,9 +79,7 @@ def get_my_forecast(
             for forecast in daily_forecasts
         ]
 
-        return WeatherForecastResponse(
-            zip_code=preferences.zip_code, forecasts=forecast_items
-        )
+        return WeatherForecastResponse(zip_code=preferences.zip_code, forecasts=forecast_items)
 
     except ValueError as e:
         logger.error(f"Invalid zip code or forecast error: {e}")

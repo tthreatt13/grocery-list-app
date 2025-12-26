@@ -23,10 +23,11 @@ class HouseholdMember(Base):
     user = relationship("User", backref="household_memberships")
 
     # Unique constraint: user can only be in a household once
-    __table_args__ = (
-        UniqueConstraint("household_id", "user_id", name="unique_household_user"),
-    )
+    __table_args__ = (UniqueConstraint("household_id", "user_id", name="unique_household_user"),)
 
     def __repr__(self):
         """String representation of HouseholdMember."""
-        return f"<HouseholdMember(household_id={self.household_id}, user_id={self.user_id}, role='{self.role}')>"
+        return (
+            f"<HouseholdMember(household_id={self.household_id}, "
+            f"user_id={self.user_id}, role='{self.role}')>"
+        )

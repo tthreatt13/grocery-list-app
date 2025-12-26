@@ -25,9 +25,7 @@ class TestClerkAuthMiddleware:
         mock_clerk_data = {"sub": "user_123abc", "email": "test@example.com"}
 
         # Create test user in database
-        user = User(
-            clerk_user_id="user_123abc", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123abc", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 
@@ -103,9 +101,7 @@ class TestGetCurrentUserDependency:
         from middleware.auth import get_current_user
 
         # Create test user
-        user = User(
-            clerk_user_id="user_123abc", email="test@example.com", name="Test User"
-        )
+        user = User(clerk_user_id="user_123abc", email="test@example.com", name="Test User")
         db_session.add(user)
         db_session.commit()
 

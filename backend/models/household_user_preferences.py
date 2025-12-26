@@ -61,16 +61,12 @@ class HouseholdUserPreferences(Base):
     cooking_apparatus = Column(
         JSONType, nullable=True
     )  # Array of strings: ["oven", "slow_cooker", "instant_pot", etc.]
-    previous_meals = Column(
-        JSONType, nullable=True
-    )  # Array of strings: meal names made this week
+    previous_meals = Column(JSONType, nullable=True)  # Array of strings: meal names made this week
     zip_code = Column(String, nullable=True)  # US zip code for weather forecasts
 
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(
-        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
-    )
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     # Relationships
     household = relationship("Household", backref="user_preferences")
@@ -78,11 +74,11 @@ class HouseholdUserPreferences(Base):
 
     # Unique constraint: one preference record per user per household
     __table_args__ = (
-        UniqueConstraint(
-            "household_id", "user_id", name="unique_household_user_preferences"
-        ),
+        UniqueConstraint("household_id", "user_id", name="unique_household_user_preferences"),
     )
 
     def __repr__(self):
         """String representation of HouseholdUserPreferences."""
-        return f"<HouseholdUserPreferences(household_id={self.household_id}, user_id={self.user_id})>"
+        return (
+            f"<HouseholdUserPreferences(household_id={self.household_id}, user_id={self.user_id})>"
+        )
