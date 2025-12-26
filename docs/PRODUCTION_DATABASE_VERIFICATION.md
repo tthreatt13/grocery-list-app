@@ -216,8 +216,8 @@ Expected columns:
 - `household_id` (integer)
 - `user_id` (integer)
 - `diet_types` (jsonb, nullable) ⚠️ **Important: Added in migration d1e2f3a4b5c6**
-- `weekly_weather` (character varying, nullable)
 - `cooking_apparatus` (jsonb, nullable)
+- `zip_code` (character varying, nullable) ⚠️ **Important: Added in migration e4a05e381069, weekly_weather removed in f7a8b9c0d1e2**
 - `previous_meals` (jsonb, nullable)
 - `created_at` (timestamp without time zone)
 - `updated_at` (timestamp without time zone)
@@ -228,7 +228,7 @@ Expected columns:
 SELECT version_num FROM alembic_version;
 ```
 
-Expected: `e6680da276e3` (the latest migration revision ID)
+Expected: `f7a8b9c0d1e2` (the latest migration revision ID)
 
 ### Method 4: Test Application Endpoints
 
@@ -268,6 +268,12 @@ All migrations that should be applied in production:
 
 6. **e6680da276e3** - `add_is_archived_to_grocery_lists.py`
    - Adds `is_archived` column to `grocery_lists` table
+
+7. **e4a05e381069** - `add_zip_code_to_household_user_preferences.py`
+   - Adds `zip_code` column to `household_user_preferences` table
+
+8. **f7a8b9c0d1e2** - `remove_weekly_weather_from_preferences.py`
+   - Removes `weekly_weather` column from `household_user_preferences` table
 
 ## Troubleshooting
 
@@ -388,7 +394,7 @@ Before considering production database ready:
 - [ ] `DATABASE_URL` environment variable is set in Railway
 - [ ] PostgreSQL service is running in Railway dashboard
 - [ ] Railway deployment logs show migrations running successfully
-- [ ] Migration version matches latest revision (`e6680da276e3`)
+- [ ] Migration version matches latest revision (`f7a8b9c0d1e2`)
 - [ ] All expected tables exist (9 tables including `alembic_version`)
 - [ ] `grocery_items` table has `meal_type` column
 - [ ] `pantry_items` table has `low_stock_threshold` as float/double precision
