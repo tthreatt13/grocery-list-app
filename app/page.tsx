@@ -2,14 +2,10 @@
 
 import { useEffect, useState, useMemo } from 'react'
 import { useAuth } from '@clerk/nextjs'
-import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { getGroceryListsWithItems } from '@/lib/api/grocery'
 import { transformGroceryLists } from '@/lib/adapters/groceryAdapters'
 import { GroceryList } from '@/lib/types'
-import { getPantryItems, PantryItemResponse } from '@/lib/api/pantry'
-import { getWeeklyMeals, getWeekStartDate, MealResponse } from '@/lib/api/meals'
-import { getHouseholds } from '@/lib/api/household'
 import {
   getDashboardInsights,
   UrgentItem,
@@ -28,8 +24,6 @@ import { getUserContext } from '@/lib/utils/contextDetection'
 export default function Home() {
   const { isLoaded, isSignedIn, getToken } = useAuth()
   const [groceryLists, setGroceryLists] = useState<GroceryList[]>([])
-  const [pantryItems, setPantryItems] = useState<PantryItemResponse[]>([])
-  const [weeklyMeals, setWeeklyMeals] = useState<MealResponse[]>([])
   const [urgentItems, setUrgentItems] = useState<UrgentItem[]>([])
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [stats, setStats] = useState<DashboardStats | null>(null)
@@ -71,51 +65,6 @@ export default function Home() {
         } catch (err) {
           console.error('Error fetching dashboard insights:', err)
           // Don't fail the whole dashboard if insights fail
-        }
-
-        // Fetch households to get pantry and meal data
-        try {
-          const households = await getHouseholds(token)
-
-          // Fetch pantry items for all households
-          if (households.length > 0) {
-            const allPantryItems: PantryItemResponse[] = []
-            for (const household of households) {
-              try {
-                const items = await getPantryItems(household.id, token)
-                allPantryItems.push(...items)
-              } catch (err) {
-                console.error(
-                  `Error fetching pantry for household ${household.id}:`,
-                  err
-                )
-              }
-            }
-            setPantryItems(allPantryItems)
-
-            // Fetch meals for current week for all households
-            const weekStart = getWeekStartDate()
-            const allMeals: MealResponse[] = []
-            for (const household of households) {
-              try {
-                const weeklyPlan = await getWeeklyMeals(
-                  weekStart,
-                  household.id,
-                  token
-                )
-                allMeals.push(...weeklyPlan.meals)
-              } catch (err) {
-                console.error(
-                  `Error fetching meals for household ${household.id}:`,
-                  err
-                )
-              }
-            }
-            setWeeklyMeals(allMeals)
-          }
-        } catch (err) {
-          console.error('Error fetching household data:', err)
-          // Don't fail the whole dashboard if pantry/meals fail
         }
       } catch (err) {
         console.error('Error fetching dashboard data:', err)
@@ -179,8 +128,6 @@ export default function Home() {
           urgentItems={filteredUrgentItems}
           suggestions={filteredSuggestions}
           groceryLists={groceryLists}
-          pantryItems={pantryItems}
-          weeklyMeals={weeklyMeals}
           stats={stats}
           getToken={getToken}
           onItemAdded={async () => {

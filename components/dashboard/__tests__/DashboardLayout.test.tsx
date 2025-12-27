@@ -4,8 +4,6 @@ import { DashboardViewMode } from '@/lib/utils/contextDetection'
 import { UrgentItem } from '@/lib/api/dashboard'
 import { Suggestion } from '@/lib/api/dashboard'
 import { GroceryList } from '@/lib/types'
-import { PantryItemResponse } from '@/lib/api/pantry'
-import { MealResponse } from '@/lib/api/meals'
 
 // Mock child components
 jest.mock('../UrgentActionItems', () => {
@@ -76,9 +74,6 @@ const mockGroceryLists: GroceryList[] = [
   },
 ]
 
-const mockPantryItems: PantryItemResponse[] = []
-const mockWeeklyMeals: MealResponse[] = []
-
 const mockGetToken = jest.fn().mockResolvedValue('mock-token')
 
 const defaultProps = {
@@ -86,8 +81,7 @@ const defaultProps = {
   urgentItems: mockUrgentItems,
   suggestions: mockSuggestions,
   groceryLists: mockGroceryLists,
-  pantryItems: mockPantryItems,
-  weeklyMeals: mockWeeklyMeals,
+  stats: null,
   getToken: mockGetToken,
   onItemAdded: jest.fn(),
   onItemDismissed: jest.fn(),
@@ -113,23 +107,6 @@ describe('DashboardLayout', () => {
   it('renders smart suggestions section', () => {
     render(<DashboardLayout {...defaultProps} />)
     expect(screen.getByTestId('smart-suggestions')).toBeInTheDocument()
-  })
-
-  it('renders grocery lists stats section', () => {
-    render(<DashboardLayout {...defaultProps} />)
-    expect(screen.getByText(/grocery lists/i)).toBeInTheDocument()
-  })
-
-  it('renders pantry stats section', () => {
-    render(<DashboardLayout {...defaultProps} />)
-    // Check for pantry section heading
-    const pantryHeadings = screen.getAllByText(/^pantry$/i)
-    expect(pantryHeadings.length).toBeGreaterThan(0)
-  })
-
-  it('renders meal planner stats section', () => {
-    render(<DashboardLayout {...defaultProps} />)
-    expect(screen.getByText(/meal planner/i)).toBeInTheDocument()
   })
 
   it('renders quick actions section', () => {
@@ -176,7 +153,6 @@ describe('DashboardLayout', () => {
 
       // In shopping mode, urgent items should be prominently displayed
       expect(screen.getByTestId('urgent-action-items')).toBeInTheDocument()
-      expect(screen.getByText(/grocery lists/i)).toBeInTheDocument()
     })
 
     it('displays context-appropriate message for shopping', () => {
@@ -191,11 +167,6 @@ describe('DashboardLayout', () => {
 
       expect(screen.getByTestId('urgent-action-items')).toBeInTheDocument()
       expect(screen.getByTestId('smart-suggestions')).toBeInTheDocument()
-      expect(screen.getByText(/grocery lists/i)).toBeInTheDocument()
-      // "Pantry" appears in multiple places, so check that it exists
-      const pantryTexts = screen.getAllByText(/^pantry$/i)
-      expect(pantryTexts.length).toBeGreaterThan(0)
-      expect(screen.getByText(/meal planner/i)).toBeInTheDocument()
     })
 
     it('displays context-appropriate message for routine review', () => {
@@ -238,27 +209,6 @@ describe('DashboardLayout', () => {
     expect(screen.getByTestId('smart-suggestions')).toBeInTheDocument()
   })
 
-  it('displays correct grocery list stats', () => {
-    render(<DashboardLayout {...defaultProps} />)
-    // Should show active lists count
-    expect(screen.getByText(/active lists/i)).toBeInTheDocument()
-  })
-
-  it('displays correct pantry stats', () => {
-    render(<DashboardLayout {...defaultProps} />)
-    // Should show pantry stats - "Total Items" appears in multiple sections, so use getAllByText
-    const totalItemsTexts = screen.getAllByText(/total items/i)
-    expect(totalItemsTexts.length).toBeGreaterThan(0)
-    // Check for pantry-specific stats like "Low Stock"
-    expect(screen.getByText(/low stock/i)).toBeInTheDocument()
-  })
-
-  it('displays correct meal planner stats', () => {
-    render(<DashboardLayout {...defaultProps} />)
-    // Should show meal planner stats
-    expect(screen.getByText(/meals this week/i)).toBeInTheDocument()
-  })
-
   it('renders quick action buttons', () => {
     render(<DashboardLayout {...defaultProps} />)
     // Should have links to different sections
@@ -281,6 +231,6 @@ describe('DashboardLayout', () => {
 
   it('handles empty grocery lists', () => {
     render(<DashboardLayout {...defaultProps} groceryLists={[]} />)
-    expect(screen.getByText(/grocery lists/i)).toBeInTheDocument()
+    expect(screen.getByText(/no recent lists/i)).toBeInTheDocument()
   })
 })

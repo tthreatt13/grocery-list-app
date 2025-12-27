@@ -1,13 +1,11 @@
 'use client'
 
-import React, { useMemo } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { formatRelativeTime } from '@/lib/utils'
 import { GroceryList } from '@/lib/types'
-import { PantryItemResponse } from '@/lib/api/pantry'
-import { MealResponse } from '@/lib/api/meals'
 import { UrgentItem, Suggestion, DashboardStats } from '@/lib/api/dashboard'
 import { DashboardViewMode } from '@/lib/utils/contextDetection'
 import UrgentActionItems from './UrgentActionItems'
@@ -19,8 +17,6 @@ interface DashboardLayoutProps {
   urgentItems: UrgentItem[]
   suggestions: Suggestion[]
   groceryLists: GroceryList[]
-  pantryItems: PantryItemResponse[]
-  weeklyMeals: MealResponse[]
   stats: DashboardStats | null
   getToken: () => Promise<string | null>
   onItemAdded?: () => void
@@ -34,8 +30,6 @@ export default function DashboardLayout({
   urgentItems,
   suggestions,
   groceryLists,
-  pantryItems,
-  weeklyMeals,
   stats,
   getToken,
   onItemAdded,
@@ -43,40 +37,7 @@ export default function DashboardLayout({
   onSuggestionAccepted,
   onSuggestionDismissed,
 }: DashboardLayoutProps) {
-  // Calculate stats from real data
-  const totalLists = groceryLists.filter((list) => !list.isArchived).length
-  const totalItems = groceryLists.reduce(
-    (acc, list) => acc + list.items.length,
-    0
-  )
-  const completedItems = groceryLists.reduce(
-    (acc, list) => acc + list.items.filter((item) => item.checked).length,
-    0
-  )
   const recentLists = groceryLists.slice(0, 3)
-
-  // Calculate pantry stats
-  const totalPantryItems = pantryItems.length
-  const lowStockItems = pantryItems.filter(
-    (item) =>
-      item.low_stock_threshold &&
-      parseInt(item.quantity || '0') <= item.low_stock_threshold
-  ).length
-  // Calculate expiring soon items client-side only to avoid hydration mismatch
-  const expiringSoonItems = useMemo(() => {
-    if (typeof window === 'undefined') return 0
-    return pantryItems.filter((item) => {
-      if (!item.expiration_date) return false
-      const daysUntilExpiration = Math.ceil(
-        (new Date(item.expiration_date).getTime() - new Date().getTime()) /
-          (1000 * 60 * 60 * 24)
-      )
-      return daysUntilExpiration >= 0 && daysUntilExpiration <= 5
-    }).length
-  }, [pantryItems])
-
-  // Calculate meal planner stats
-  const mealsThisWeek = weeklyMeals.length
 
   // Get context-appropriate welcome message
   const getWelcomeMessage = () => {
@@ -114,275 +75,6 @@ export default function DashboardLayout({
     )
   }
 
-  const renderStatsSections = () => {
-    return (
-      <>
-        {/* Stats Grid - Grocery Lists */}
-        <div className="mb-8">
-          <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">
-            Grocery Lists
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Card>
-              <div className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Active Lists
-                    </p>
-                    <p className="text-3xl font-bold text-gray-900 mt-2">
-                      {totalLists}
-                    </p>
-                  </div>
-                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                    <svg
-                      className="w-6 h-6 text-green-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            <Card>
-              <div className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Total Items
-                    </p>
-                    <p className="text-3xl font-bold text-gray-900 mt-2">
-                      {totalItems}
-                    </p>
-                  </div>
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <svg
-                      className="w-6 h-6 text-blue-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            <Card>
-              <div className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Completed
-                    </p>
-                    <p className="text-3xl font-bold text-gray-900 mt-2">
-                      {completedItems}
-                    </p>
-                  </div>
-                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <svg
-                      className="w-6 h-6 text-purple-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </div>
-        </div>
-
-        {/* Stats Grid - Pantry */}
-        <div className="mb-8">
-          <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">
-            Pantry
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Card>
-              <div className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Total Items
-                    </p>
-                    <p className="text-3xl font-bold text-gray-900 mt-2">
-                      {totalPantryItems}
-                    </p>
-                  </div>
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <svg
-                      className="w-6 h-6 text-blue-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            <Card>
-              <div className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Low Stock
-                    </p>
-                    <p className="text-3xl font-bold text-gray-900 mt-2">
-                      {lowStockItems}
-                    </p>
-                  </div>
-                  <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                    <svg
-                      className="w-6 h-6 text-yellow-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            <Card>
-              <div className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Expiring Soon
-                    </p>
-                    <p className="text-3xl font-bold text-gray-900 mt-2">
-                      {expiringSoonItems}
-                    </p>
-                  </div>
-                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <svg
-                      className="w-6 h-6 text-orange-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </div>
-        </div>
-
-        {/* Stats Grid - Meal Planner */}
-        <div className="mb-8">
-          <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">
-            Meal Planner
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Card>
-              <div className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Meals This Week
-                    </p>
-                    <p className="text-3xl font-bold text-gray-900 mt-2">
-                      {mealsThisWeek}
-                    </p>
-                  </div>
-                  <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center">
-                    <svg
-                      className="w-6 h-6 text-emerald-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            <Card>
-              <div className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Planned Days
-                    </p>
-                    <p className="text-3xl font-bold text-gray-900 mt-2">
-                      {new Set(weeklyMeals.map((m) => m.day_of_week)).size}
-                    </p>
-                  </div>
-                  <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
-                    <svg
-                      className="w-6 h-6 text-indigo-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </div>
-        </div>
-      </>
-    )
-  }
 
   const renderQuickActions = () => {
     return (
@@ -551,9 +243,6 @@ export default function DashboardLayout({
 
       {/* Insights & Patterns Display */}
       {stats && <InsightsDisplay stats={stats} />}
-
-      {/* Stats Sections */}
-      {renderStatsSections()}
 
       {/* Quick Actions */}
       {renderQuickActions()}
