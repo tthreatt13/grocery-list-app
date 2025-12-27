@@ -68,13 +68,13 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 4.5 Implement different view modes (morning planning, shopping, routine review)
   - [x] 4.6 Update dashboard page to use context-aware layout
   - [x] 4.7 Write integration tests for context-aware views
-- [ ] 5.0 Implement Insights & Patterns Display
-  - [ ] 5.1 Write tests for InsightsDisplay component
-  - [ ] 5.2 Create InsightsDisplay component for consumption trends and patterns
-  - [ ] 5.3 Implement visual indicators for patterns (e.g., most purchased items)
-  - [ ] 5.4 Add actionable stats display (e.g., "You've saved X this month")
-  - [ ] 5.5 Integrate InsightsDisplay into dashboard page
-  - [ ] 5.6 Write integration tests for insights section
+- [x] 5.0 Implement Insights & Patterns Display
+  - [x] 5.1 Write tests for InsightsDisplay component
+  - [x] 5.2 Create InsightsDisplay component for consumption trends and patterns
+  - [x] 5.3 Implement visual indicators for patterns (e.g., most purchased items)
+  - [x] 5.4 Add actionable stats display (e.g., "You've saved X this month")
+  - [x] 5.5 Integrate InsightsDisplay into dashboard page
+  - [x] 5.6 Write integration tests for insights section
 - [ ] 6.0 Testing, integration, and performance optimization
   - [ ] 6.1 Run all tests and ensure they pass (`npm test`)
   - [ ] 6.2 Run ESLint and fix all errors (`npm run lint`)

@@ -14,6 +14,7 @@ import {
   getDashboardInsights,
   UrgentItem,
   Suggestion,
+  DashboardStats,
 } from '@/lib/api/dashboard'
 import DashboardLayout from '@/components/dashboard/DashboardLayout'
 import {
@@ -31,6 +32,7 @@ export default function Home() {
   const [weeklyMeals, setWeeklyMeals] = useState<MealResponse[]>([])
   const [urgentItems, setUrgentItems] = useState<UrgentItem[]>([])
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
+  const [stats, setStats] = useState<DashboardStats | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [dismissedSuggestions, setDismissedSuggestions] = useState<Set<string>>(
@@ -60,11 +62,12 @@ export default function Home() {
         const transformedLists = transformGroceryLists(apiLists)
         setGroceryLists(transformedLists)
 
-        // Fetch dashboard insights (urgent items and suggestions)
+        // Fetch dashboard insights (urgent items, suggestions, and stats)
         try {
           const insights = await getDashboardInsights(token)
           setUrgentItems(insights.urgent_items)
           setSuggestions(insights.suggestions)
+          setStats(insights.stats)
         } catch (err) {
           console.error('Error fetching dashboard insights:', err)
           // Don't fail the whole dashboard if insights fail
@@ -178,6 +181,7 @@ export default function Home() {
           groceryLists={groceryLists}
           pantryItems={pantryItems}
           weeklyMeals={weeklyMeals}
+          stats={stats}
           getToken={getToken}
           onItemAdded={async () => {
             // Refresh dashboard data when item is added
@@ -187,6 +191,7 @@ export default function Home() {
                 const insights = await getDashboardInsights(token)
                 setUrgentItems(insights.urgent_items)
                 setSuggestions(insights.suggestions)
+                setStats(insights.stats)
                 // Also refresh grocery lists to show the new item
                 const apiLists = await getGroceryListsWithItems(token)
                 const transformedLists = transformGroceryLists(apiLists)
@@ -213,6 +218,7 @@ export default function Home() {
               try {
                 const insights = await getDashboardInsights(token)
                 setSuggestions(insights.suggestions)
+                setStats(insights.stats)
                 // Also refresh grocery lists if a list was created
                 const apiLists = await getGroceryListsWithItems(token)
                 const transformedLists = transformGroceryLists(apiLists)
