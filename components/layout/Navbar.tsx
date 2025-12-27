@@ -11,9 +11,9 @@ export default function Navbar() {
 
   const navLinks = [
     { href: '/', label: 'Dashboard' },
-    { href: '/grocery-lists', label: 'Lists' },
     { href: '/pantry', label: 'Pantry' },
     { href: '/meal-planner', label: 'Planner' },
+    { href: '/grocery-lists', label: 'Lists' },
     { href: '/household', label: 'Family' },
   ]
 
