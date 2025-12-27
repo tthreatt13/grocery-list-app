@@ -37,7 +37,13 @@ export default function DashboardLayout({
   onSuggestionAccepted,
   onSuggestionDismissed,
 }: DashboardLayoutProps) {
-  const recentLists = groceryLists.slice(0, 3)
+  // Get the 3 most recent lists, sorted by updatedAt from most recent to oldest
+  const recentLists = [...groceryLists]
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    )
+    .slice(0, 3)
 
   // Get context-appropriate welcome message
   const getWelcomeMessage = () => {
