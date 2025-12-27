@@ -35,13 +35,13 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
   // Get shopping efficiency message
   const getShoppingEfficiencyMessage = () => {
     if (completionRate >= 80) {
-      return 'Excellent! You\'re staying on top of your shopping list.'
+      return "Excellent! You're staying on top of your shopping list."
     }
     if (completionRate >= 60) {
       return 'Good progress! Keep up the momentum.'
     }
     if (completionRate >= 40) {
-      return 'You\'re making progress. Every item checked off counts!'
+      return "You're making progress. Every item checked off counts!"
     }
     if (stats.total_items === 0) {
       return 'Start adding items to your grocery lists to track your progress.'
@@ -313,17 +313,13 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
               <div className="grid grid-cols-2 gap-4 pt-2">
                 <div>
                   <p className="text-xs text-gray-500 mb-1">Low Stock</p>
-                  <p
-                    className={`text-xl font-bold ${getPantryHealthColor()}`}
-                  >
+                  <p className={`text-xl font-bold ${getPantryHealthColor()}`}>
                     {stats.low_stock_count}
                   </p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 mb-1">Expiring Soon</p>
-                  <p
-                    className={`text-xl font-bold ${getPantryHealthColor()}`}
-                  >
+                  <p className={`text-xl font-bold ${getPantryHealthColor()}`}>
                     {stats.expiring_soon_count}
                   </p>
                 </div>
@@ -380,4 +376,3 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
     </div>
   )
 }
-
