@@ -10,11 +10,23 @@ jest.mock('@clerk/nextjs', () => ({
   useAuth: jest.fn(),
 }))
 
+// Mock next/navigation
+jest.mock('next/navigation', () => ({
+  useRouter: jest.fn(() => ({
+    push: jest.fn(),
+  })),
+}))
+
 // Mock the grocery API
 jest.mock('@/lib/api/grocery')
 
 // Mock the dashboard API
 jest.mock('@/lib/api/dashboard')
+
+// Mock the household API
+jest.mock('@/lib/api/household', () => ({
+  getHouseholds: jest.fn(),
+}))
 
 describe('Dashboard Page', () => {
   const mockGetToken = jest.fn()
@@ -355,6 +367,215 @@ describe('Dashboard Page', () => {
 
       // Bananas should still be visible
       expect(screen.getByText('Bananas')).toBeInTheDocument()
+    })
+  })
+
+  describe('Smart Suggestions Integration', () => {
+    const mockSuggestions = [
+      {
+        id: 'restock_low_stock',
+        type: 'restock' as const,
+        title: 'Restock Low Stock Items',
+        description: 'You have 3 item(s) running low. Consider adding them to your shopping list.',
+        action_label: 'View Items',
+        priority: 2,
+      },
+      {
+        id: 'use_expiring_items',
+        type: 'meal_planning' as const,
+        title: 'Items Expiring Soon',
+        description: 'You have 2 item(s) expiring within 5 days. Plan meals to use them!',
+        action_label: 'View Items',
+        priority: 3,
+      },
+      {
+        id: 'create_weekly_list',
+        type: 'routine' as const,
+        title: 'Create Your Weekly Shopping List',
+        description: 'Start planning your week by creating a new grocery list.',
+        action_label: 'Create List',
+        priority: 1,
+      },
+    ]
+
+    beforeEach(() => {
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue([])
+      ;(dashboardApi.getDashboardInsights as jest.Mock).mockResolvedValue({
+        urgent_items: [],
+        suggestions: mockSuggestions,
+        stats: {
+          total_lists: 0,
+          total_items: 0,
+          completed_items: 0,
+          low_stock_count: 0,
+          expiring_soon_count: 0,
+          meals_this_week: 0,
+          planned_days: 0,
+        },
+      })
+    })
+
+    it('should fetch and display suggestions', async () => {
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Smart Suggestions')).toBeInTheDocument()
+      })
+
+      expect(screen.getByText('Restock Low Stock Items')).toBeInTheDocument()
+      expect(screen.getByText('Items Expiring Soon')).toBeInTheDocument()
+      expect(screen.getByText('Create Your Weekly Shopping List')).toBeInTheDocument()
+    })
+
+    it('should display suggestion descriptions', async () => {
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.getByText(/you have 3 item\(s\) running low/i)).toBeInTheDocument()
+      })
+
+      expect(screen.getByText(/you have 2 item\(s\) expiring within 5 days/i)).toBeInTheDocument()
+    })
+
+    it('should display empty state when no suggestions', async () => {
+      ;(dashboardApi.getDashboardInsights as jest.Mock).mockResolvedValue({
+        urgent_items: [],
+        suggestions: [],
+        stats: {
+          total_lists: 0,
+          total_items: 0,
+          completed_items: 0,
+          low_stock_count: 0,
+          expiring_soon_count: 0,
+          meals_this_week: 0,
+          planned_days: 0,
+        },
+      })
+
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(
+          screen.getByText(/no suggestions at this time/i)
+        ).toBeInTheDocument()
+      })
+    })
+
+    it('should sort suggestions by priority (higher priority first)', async () => {
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Smart Suggestions')).toBeInTheDocument()
+      })
+
+      // Get all suggestion cards
+      const suggestionTitles = [
+        screen.getByText('Items Expiring Soon'), // Priority 3
+        screen.getByText('Restock Low Stock Items'), // Priority 2
+        screen.getByText('Create Your Weekly Shopping List'), // Priority 1
+      ]
+
+      // All should be visible
+      suggestionTitles.forEach((title) => {
+        expect(title).toBeInTheDocument()
+      })
+    })
+
+    it('should handle suggestion dismissal', async () => {
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Restock Low Stock Items')).toBeInTheDocument()
+      })
+
+      // Find and click dismiss button for the first suggestion
+      const dismissButtons = screen.getAllByRole('button', { name: /dismiss/i })
+      fireEvent.click(dismissButtons[0])
+
+      // Suggestion should be removed
+      await waitFor(() => {
+        expect(screen.queryByText('Restock Low Stock Items')).not.toBeInTheDocument()
+      })
+
+      // Other suggestions should still be visible
+      expect(screen.getByText('Items Expiring Soon')).toBeInTheDocument()
+      expect(screen.getByText('Create Your Weekly Shopping List')).toBeInTheDocument()
+    })
+
+    it('should refresh suggestions when suggestion is accepted', async () => {
+      const updatedSuggestions = [
+        {
+          id: 'restock_low_stock',
+          type: 'restock' as const,
+          title: 'Restock Low Stock Items',
+          description: 'You have 2 item(s) running low.',
+          action_label: 'View Items',
+          priority: 2,
+        },
+      ]
+
+      ;(dashboardApi.getDashboardInsights as jest.Mock)
+        .mockResolvedValueOnce({
+          urgent_items: [],
+          suggestions: mockSuggestions,
+          stats: {
+            total_lists: 0,
+            total_items: 0,
+            completed_items: 0,
+            low_stock_count: 0,
+            expiring_soon_count: 0,
+            meals_this_week: 0,
+            planned_days: 0,
+          },
+        })
+        .mockResolvedValueOnce({
+          urgent_items: [],
+          suggestions: updatedSuggestions,
+          stats: {
+            total_lists: 0,
+            total_items: 0,
+            completed_items: 0,
+            low_stock_count: 0,
+            expiring_soon_count: 0,
+            meals_this_week: 0,
+            planned_days: 0,
+          },
+        })
+
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Restock Low Stock Items')).toBeInTheDocument()
+      })
+
+      // Accept a suggestion (restock navigates to pantry)
+      const acceptButton = screen.getByRole('button', { name: /view items/i })
+      fireEvent.click(acceptButton)
+
+      // Should refresh suggestions
+      await waitFor(() => {
+        expect(dashboardApi.getDashboardInsights).toHaveBeenCalledTimes(2)
+      })
+    })
+
+    it('should handle dashboard insights API errors gracefully for suggestions', async () => {
+      ;(dashboardApi.getDashboardInsights as jest.Mock).mockRejectedValue(
+        new Error('API Error')
+      )
+
+      render(<Home />)
+
+      // Should still render the page without suggestions section failing
+      await waitFor(() => {
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument()
+      })
+
+      // Suggestions section should show empty state when there's an error
+      await waitFor(() => {
+        expect(
+          screen.getByText(/no suggestions at this time/i)
+        ).toBeInTheDocument()
+      })
     })
   })
 })

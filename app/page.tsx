@@ -12,8 +12,9 @@ import { GroceryList } from '@/lib/types'
 import { getPantryItems, PantryItemResponse } from '@/lib/api/pantry'
 import { getWeeklyMeals, getWeekStartDate, MealResponse } from '@/lib/api/meals'
 import { getHouseholds } from '@/lib/api/household'
-import { getDashboardInsights, UrgentItem } from '@/lib/api/dashboard'
+import { getDashboardInsights, UrgentItem, Suggestion } from '@/lib/api/dashboard'
 import UrgentActionItems from '@/components/dashboard/UrgentActionItems'
+import SmartSuggestions from '@/components/dashboard/SmartSuggestions'
 
 export default function Home() {
   const { isLoaded, isSignedIn, getToken } = useAuth()
@@ -21,6 +22,7 @@ export default function Home() {
   const [pantryItems, setPantryItems] = useState<PantryItemResponse[]>([])
   const [weeklyMeals, setWeeklyMeals] = useState<MealResponse[]>([])
   const [urgentItems, setUrgentItems] = useState<UrgentItem[]>([])
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -44,10 +46,11 @@ export default function Home() {
         const transformedLists = transformGroceryLists(apiLists)
         setGroceryLists(transformedLists)
 
-        // Fetch dashboard insights (urgent items)
+        // Fetch dashboard insights (urgent items and suggestions)
         try {
           const insights = await getDashboardInsights(token)
           setUrgentItems(insights.urgent_items)
+          setSuggestions(insights.suggestions)
         } catch (err) {
           console.error('Error fetching dashboard insights:', err)
           // Don't fail the whole dashboard if insights fail
@@ -196,6 +199,7 @@ export default function Home() {
               try {
                 const insights = await getDashboardInsights(token)
                 setUrgentItems(insights.urgent_items)
+                setSuggestions(insights.suggestions)
                 // Also refresh grocery lists to show the new item
                 const apiLists = await getGroceryListsWithItems(token)
                 const transformedLists = transformGroceryLists(apiLists)
@@ -208,6 +212,34 @@ export default function Home() {
           onItemDismissed={async (itemId: number) => {
             // Remove dismissed item from the list
             setUrgentItems((prev) => prev.filter((item) => item.id !== itemId))
+          }}
+        />
+
+        {/* Smart Suggestions */}
+        <SmartSuggestions
+          suggestions={suggestions}
+          getToken={getToken}
+          onSuggestionAccepted={async (suggestionId: string) => {
+            // Refresh dashboard data when suggestion is accepted
+            const token = await getToken()
+            if (token) {
+              try {
+                const insights = await getDashboardInsights(token)
+                setSuggestions(insights.suggestions)
+                // Also refresh grocery lists if a list was created
+                const apiLists = await getGroceryListsWithItems(token)
+                const transformedLists = transformGroceryLists(apiLists)
+                setGroceryLists(transformedLists)
+              } catch (err) {
+                console.error('Error refreshing dashboard:', err)
+              }
+            }
+          }}
+          onSuggestionDismissed={async (suggestionId: string) => {
+            // Remove dismissed suggestion from the list
+            setSuggestions((prev) =>
+              prev.filter((suggestion) => suggestion.id !== suggestionId)
+            )
           }}
         />
 
