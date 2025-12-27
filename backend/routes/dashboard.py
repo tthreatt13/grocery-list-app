@@ -41,7 +41,7 @@ def parse_quantity_string(quantity_str: Optional[str]) -> float:
 
     # Extract numeric part using regex (matches frontend logic exactly)
     # Frontend uses: /^([\d.]+)\s*(.*)$/
-    match = re.match(r'^([\d.]+)\s*(.*)$', quantity_str)
+    match = re.match(r"^([\d.]+)\s*(.*)$", quantity_str)
     if match:
         try:
             return float(match.group(1))
@@ -191,9 +191,7 @@ def get_suggestions(
     return suggestions
 
 
-def get_dashboard_stats(
-    db: Session, household_ids: List[int]
-) -> DashboardStats:
+def get_dashboard_stats(db: Session, household_ids: List[int]) -> DashboardStats:
     """Calculate dashboard statistics."""
     if not household_ids:
         return DashboardStats(
@@ -329,4 +327,3 @@ def get_dashboard_insights(
         suggestions=suggestions,
         stats=stats,
     )
-

@@ -31,12 +31,16 @@ def upgrade() -> None:
             sa.Column("id", sa.Integer(), nullable=False),
             sa.Column("household_id", sa.Integer(), nullable=False),
             sa.Column("user_id", sa.Integer(), nullable=False),
-            sa.Column("diet_types", sa.Text(), nullable=True),  # JSON stored as TEXT in SQLite
+            sa.Column(
+                "diet_types", sa.Text(), nullable=True
+            ),  # JSON stored as TEXT in SQLite
             sa.Column("weekly_weather", sa.String(), nullable=True),
             sa.Column(
                 "cooking_apparatus", sa.Text(), nullable=True
             ),  # JSON stored as TEXT in SQLite
-            sa.Column("previous_meals", sa.Text(), nullable=True),  # JSON stored as TEXT in SQLite
+            sa.Column(
+                "previous_meals", sa.Text(), nullable=True
+            ),  # JSON stored as TEXT in SQLite
             sa.Column("created_at", sa.DateTime(), nullable=False),
             sa.Column("updated_at", sa.DateTime(), nullable=False),
             sa.ForeignKeyConstraint(["household_id"], ["households.id"]),

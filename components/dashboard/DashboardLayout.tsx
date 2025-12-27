@@ -75,7 +75,6 @@ export default function DashboardLayout({
     )
   }
 
-
   const renderQuickActions = () => {
     return (
       <div className="mb-8">

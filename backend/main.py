@@ -7,7 +7,16 @@ from fastapi.security import HTTPBearer
 import time
 
 from config import settings
-from routes import auth, users, grocery_lists, pantry, households, meals, weather, dashboard
+from routes import (
+    auth,
+    users,
+    grocery_lists,
+    pantry,
+    households,
+    meals,
+    weather,
+    dashboard,
+)
 
 # Configure logging
 logging.basicConfig(

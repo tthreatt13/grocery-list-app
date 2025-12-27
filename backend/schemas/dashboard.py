@@ -10,7 +10,9 @@ class UrgentItem(BaseModel):
 
     id: int
     name: str
-    type: str = Field(..., description="Type of urgent item: 'expiring_soon' or 'low_stock'")
+    type: str = Field(
+        ..., description="Type of urgent item: 'expiring_soon' or 'low_stock'"
+    )
     household_id: int
     category: Optional[str] = None
     quantity: Optional[str] = None
@@ -28,10 +30,14 @@ class Suggestion(BaseModel):
     """Schema for smart suggestions."""
 
     id: str = Field(..., description="Unique suggestion ID")
-    type: str = Field(..., description="Type of suggestion: 'restock', 'meal_planning', 'routine'")
+    type: str = Field(
+        ..., description="Type of suggestion: 'restock', 'meal_planning', 'routine'"
+    )
     title: str
     description: str
-    action_label: str = Field(..., description="Label for the action button (e.g., 'Add to List')")
+    action_label: str = Field(
+        ..., description="Label for the action button (e.g., 'Add to List')"
+    )
     action_data: Optional[dict] = Field(
         None, description="Data needed to perform the action (e.g., item name, list ID)"
     )
@@ -58,4 +64,3 @@ class DashboardInsightsResponse(BaseModel):
     urgent_items: List[UrgentItem] = Field(default_factory=list)
     suggestions: List[Suggestion] = Field(default_factory=list)
     stats: DashboardStats
-
