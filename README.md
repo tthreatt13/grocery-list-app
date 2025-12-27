@@ -1,6 +1,6 @@
 # Grocery List App
 
-A modern, full-stack grocery list and meal planning application built for busy parents. Plan your weekly meals, manage your grocery lists, track pantry inventory, coordinate with household members, and view weather forecasts to make informed meal planning decisions - all in one beautiful interface with real-time backend integration.
+A modern, full-stack grocery list and meal planning application built for busy parents. Plan your weekly meals, manage your grocery lists, track pantry inventory, coordinate with household members, and view weather forecasts to make informed meal planning decisions - all in one beautiful interface with real-time backend integration. The smart dashboard provides actionable insights, urgent item alerts, and personalized suggestions to streamline your grocery planning workflow.
 
 ![Next.js](https://img.shields.io/badge/Next.js-14+-black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue)
@@ -11,6 +11,27 @@ A modern, full-stack grocery list and meal planning application built for busy p
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 ## ✨ Features
+
+### 🏠 Smart Dashboard
+
+- **Context-aware welcome messages** that adapt based on time of day and day of week
+- **Urgent Action Items** section highlighting items that need immediate attention:
+  - Low stock pantry items with one-click "Add to List" functionality
+  - Items expiring soon with expiration date tracking
+  - Dismiss items you've already handled
+- **Smart Suggestions** engine providing personalized recommendations:
+  - Restock suggestions for low inventory items
+  - Meal planning reminders based on your schedule
+  - Routine shopping list suggestions
+  - Accept suggestions with one click or dismiss them
+- **Insights & Patterns Display** showing actionable statistics:
+  - Shopping efficiency with completion rate tracking
+  - Meal planning coverage for the week
+  - Pantry health status with low stock and expiring item counts
+  - Active lists summary
+- **Quick Actions** grid for fast navigation to key features
+- **Recent Lists** section showing your most recently updated grocery lists
+- **Responsive design** optimized for mobile and desktop viewing
 
 ### 🛒 Grocery Lists
 
@@ -184,9 +205,11 @@ grocery-list-app/
 │   │   ├── grocery_lists.py
 │   │   ├── pantry.py
 │   │   ├── meals.py
-│   │   └── weather.py           # Weather API endpoints
+│   │   ├── weather.py           # Weather API endpoints
+│   │   └── dashboard.py         # Dashboard insights API endpoint
 │   ├── schemas/                 # Pydantic request/response schemas
-│   │   └── weather.py           # Weather response schemas
+│   │   ├── weather.py           # Weather response schemas
+│   │   └── dashboard.py        # Dashboard insights schemas
 │   ├── services/                # Business logic services
 │   │   └── weather.py           # Weather API integration service
 │   ├── middleware/              # Authentication & permissions
@@ -233,6 +256,11 @@ grocery-list-app/
 │   │   ├── PreferencesForm.tsx
 │   │   ├── SharedListsView.tsx
 │   │   └── WeatherForecast.tsx  # Weather forecast display
+│   ├── dashboard/               # Dashboard components
+│   │   ├── DashboardLayout.tsx  # Context-aware dashboard layout
+│   │   ├── UrgentActionItems.tsx # Urgent items display
+│   │   ├── SmartSuggestions.tsx # Smart suggestions engine
+│   │   └── InsightsDisplay.tsx  # Insights and patterns display
 │   └── layout/                  # Layout components
 │       ├── Navbar.tsx
 │       └── MobileNav.tsx
@@ -243,11 +271,15 @@ grocery-list-app/
 │   │   ├── pantry.ts           # Pantry API calls
 │   │   ├── meals.ts            # Meals API calls
 │   │   ├── household.ts        # Household API calls
-│   │   └── weather.ts          # Weather API calls
+│   │   ├── weather.ts          # Weather API calls
+│   │   └── dashboard.ts        # Dashboard insights API calls
 │   ├── adapters/                # Data transformation layer
 │   │   └── groceryAdapters.ts
+│   ├── utils/                   # Utility functions
+│   │   ├── contextDetection.ts # Context detection (time of day, shopping days)
+│   │   └── dismissedItems.ts   # Dismissed items management (sessionStorage)
 │   ├── types.ts                 # TypeScript type definitions
-│   ├── utils.ts                 # Utility functions
+│   ├── utils.ts                 # General utility functions
 │   └── mockData.ts              # Mock data for development
 ├── docs/                        # Project documentation
 │   ├── DEPLOYMENT_CHECKLIST.md  # Deployment guide
@@ -479,7 +511,13 @@ This is a **production-ready full-stack application** with complete backend inte
 
 - **Backend API**: Complete FastAPI backend with PostgreSQL database
 - **Authentication**: Clerk integration for user management
-- **Dashboard**: Fully integrated with backend API
+- **Dashboard**: Fully redesigned with actionable insights and smart suggestions:
+  - Context-aware dashboard layout (morning planning, shopping, routine review)
+  - Urgent action items for low stock and expiring items
+  - Smart suggestions engine with personalized recommendations
+  - Insights display with shopping efficiency, meal planning coverage, and pantry health
+  - Quick actions and recent lists sections
+  - Session-based dismissed items management
 - **Grocery Lists**: Complete backend integration with sorting, filtering, and archiving
 - **Meal Planner**: Full backend integration with meal-to-grocery-list generation, meal categories (Normal/Quick Meal/Eat Out), and delete confirmation modal
 - **Pantry Inventory**: Complete backend integration with low-stock alerts
@@ -487,6 +525,8 @@ This is a **production-ready full-stack application** with complete backend inte
 - **Weather Integration**: 7-day weather forecasts with zip code preferences and caching
 - **Database Models**: Complete schema for all entities with migrations
 - **API Client**: Type-safe frontend API layer with error handling
+- **Dashboard Insights API**: New backend endpoint (`/api/dashboard/insights`) aggregating urgent items, suggestions, and statistics
+- **Context Detection**: Utilities for detecting time of day, day of week, and shopping patterns
 - **Testing**: Comprehensive test suites for both frontend and backend
 - **CI/CD**: GitHub Actions pipeline for automated testing and linting
 - **Deployment**: Railway backend deployment with automatic migrations
@@ -513,6 +553,9 @@ See [DEPLOYMENT_CHECKLIST.md](docs/DEPLOYMENT_CHECKLIST.md) for deployment proce
 - [ ] Meal plan templates
 - [ ] Weather-based meal recommendations
 - [ ] Multiple location support for weather forecasts
+- [ ] Advanced analytics and trend tracking
+- [ ] Customizable dashboard widgets
+- [ ] Machine learning-based shopping predictions
 
 ## 🎯 Target Users
 
