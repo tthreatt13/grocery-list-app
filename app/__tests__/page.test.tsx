@@ -376,7 +376,8 @@ describe('Dashboard Page', () => {
         id: 'restock_low_stock',
         type: 'restock' as const,
         title: 'Restock Low Stock Items',
-        description: 'You have 3 item(s) running low. Consider adding them to your shopping list.',
+        description:
+          'You have 3 item(s) running low. Consider adding them to your shopping list.',
         action_label: 'View Items',
         priority: 2,
       },
@@ -384,7 +385,8 @@ describe('Dashboard Page', () => {
         id: 'use_expiring_items',
         type: 'meal_planning' as const,
         title: 'Items Expiring Soon',
-        description: 'You have 2 item(s) expiring within 5 days. Plan meals to use them!',
+        description:
+          'You have 2 item(s) expiring within 5 days. Plan meals to use them!',
         action_label: 'View Items',
         priority: 3,
       },
@@ -424,17 +426,23 @@ describe('Dashboard Page', () => {
 
       expect(screen.getByText('Restock Low Stock Items')).toBeInTheDocument()
       expect(screen.getByText('Items Expiring Soon')).toBeInTheDocument()
-      expect(screen.getByText('Create Your Weekly Shopping List')).toBeInTheDocument()
+      expect(
+        screen.getByText('Create Your Weekly Shopping List')
+      ).toBeInTheDocument()
     })
 
     it('should display suggestion descriptions', async () => {
       render(<Home />)
 
       await waitFor(() => {
-        expect(screen.getByText(/you have 3 item\(s\) running low/i)).toBeInTheDocument()
+        expect(
+          screen.getByText(/you have 3 item\(s\) running low/i)
+        ).toBeInTheDocument()
       })
 
-      expect(screen.getByText(/you have 2 item\(s\) expiring within 5 days/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/you have 2 item\(s\) expiring within 5 days/i)
+      ).toBeInTheDocument()
     })
 
     it('should display empty state when no suggestions', async () => {
@@ -494,12 +502,16 @@ describe('Dashboard Page', () => {
 
       // Suggestion should be removed
       await waitFor(() => {
-        expect(screen.queryByText('Restock Low Stock Items')).not.toBeInTheDocument()
+        expect(
+          screen.queryByText('Restock Low Stock Items')
+        ).not.toBeInTheDocument()
       })
 
       // Other suggestions should still be visible
       expect(screen.getByText('Items Expiring Soon')).toBeInTheDocument()
-      expect(screen.getByText('Create Your Weekly Shopping List')).toBeInTheDocument()
+      expect(
+        screen.getByText('Create Your Weekly Shopping List')
+      ).toBeInTheDocument()
     })
 
     it('should refresh suggestions when suggestion is accepted', async () => {
@@ -576,6 +588,152 @@ describe('Dashboard Page', () => {
           screen.getByText(/no suggestions at this time/i)
         ).toBeInTheDocument()
       })
+    })
+  })
+
+  describe('Context-Aware Views Integration', () => {
+    beforeEach(() => {
+      // Mock date to control context detection
+      jest.useFakeTimers()
+    })
+
+    afterEach(() => {
+      jest.useRealTimers()
+    })
+
+    it('should display morning planning context message in the morning', async () => {
+      // Set time to Monday morning (8 AM)
+      jest.setSystemTime(new Date(2024, 0, 8, 8, 0, 0))
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue([])
+      ;(dashboardApi.getDashboardInsights as jest.Mock).mockResolvedValue({
+        urgent_items: [],
+        suggestions: [],
+      })
+      const { getHouseholds } = require('@/lib/api/household')
+      getHouseholds.mockResolvedValue([])
+
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument()
+      })
+
+      // Should show morning planning message
+      await waitFor(() => {
+        expect(
+          screen.getByText(/good morning! let's plan your day/i)
+        ).toBeInTheDocument()
+      })
+    })
+
+    it('should display shopping context message on shopping days', async () => {
+      // Set time to Saturday morning (10 AM) - shopping day
+      jest.setSystemTime(new Date(2024, 0, 6, 10, 0, 0))
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue([])
+      ;(dashboardApi.getDashboardInsights as jest.Mock).mockResolvedValue({
+        urgent_items: [],
+        suggestions: [],
+      })
+      const { getHouseholds } = require('@/lib/api/household')
+      getHouseholds.mockResolvedValue([])
+
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument()
+      })
+
+      // Should show shopping message
+      await waitFor(() => {
+        expect(
+          screen.getByText(/happy shopping! here's what you need/i)
+        ).toBeInTheDocument()
+      })
+    })
+
+    it('should display routine review context message in the evening', async () => {
+      // Set time to Monday evening (7 PM)
+      jest.setSystemTime(new Date(2024, 0, 8, 19, 0, 0))
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue([])
+      ;(dashboardApi.getDashboardInsights as jest.Mock).mockResolvedValue({
+        urgent_items: [],
+        suggestions: [],
+      })
+      const { getHouseholds } = require('@/lib/api/household')
+      getHouseholds.mockResolvedValue([])
+
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument()
+      })
+
+      // Should show routine review message
+      await waitFor(() => {
+        expect(
+          screen.getByText(/here's your grocery overview/i)
+        ).toBeInTheDocument()
+      })
+    })
+
+    it('should render all dashboard sections regardless of context', async () => {
+      // Set time to Monday morning
+      jest.setSystemTime(new Date(2024, 0, 8, 8, 0, 0))
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue([])
+      ;(dashboardApi.getDashboardInsights as jest.Mock).mockResolvedValue({
+        urgent_items: [],
+        suggestions: [],
+      })
+      const { getHouseholds } = require('@/lib/api/household')
+      getHouseholds.mockResolvedValue([])
+
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument()
+      })
+
+      // All sections should be present
+      await waitFor(() => {
+        expect(screen.getByText(/urgent action items/i)).toBeInTheDocument()
+        expect(screen.getByText(/smart suggestions/i)).toBeInTheDocument()
+        expect(screen.getByText(/grocery lists/i)).toBeInTheDocument()
+        expect(screen.getAllByText(/^pantry$/i).length).toBeGreaterThan(0)
+        expect(screen.getByText(/meal planner/i)).toBeInTheDocument()
+        expect(screen.getByText(/quick actions/i)).toBeInTheDocument()
+        // "Recent Lists" appears in heading and empty state, so use getAllByText
+        expect(screen.getAllByText(/recent lists/i).length).toBeGreaterThan(0)
+      })
+    })
+
+    it('should adapt welcome message based on time of day', async () => {
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue([])
+      ;(dashboardApi.getDashboardInsights as jest.Mock).mockResolvedValue({
+        urgent_items: [],
+        suggestions: [],
+      })
+      const { getHouseholds } = require('@/lib/api/household')
+      getHouseholds.mockResolvedValue([])
+
+      // Test morning
+      jest.setSystemTime(new Date(2024, 0, 8, 8, 0, 0))
+      render(<Home />)
+      await waitFor(() => {
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument()
+      })
+      expect(
+        screen.getByText(/good morning! let's plan your day/i)
+      ).toBeInTheDocument()
+
+      // Test evening - need to render a new instance since context is computed once
+      jest.setSystemTime(new Date(2024, 0, 8, 19, 0, 0))
+      const { container } = render(<Home />)
+      await waitFor(() => {
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument()
+      })
+      expect(
+        screen.getByText(/here's your grocery overview/i)
+      ).toBeInTheDocument()
     })
   })
 })

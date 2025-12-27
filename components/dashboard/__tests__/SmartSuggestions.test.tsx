@@ -25,7 +25,8 @@ const mockSuggestions: Suggestion[] = [
     id: 'restock_low_stock',
     type: 'restock',
     title: 'Restock Low Stock Items',
-    description: 'You have 3 item(s) running low. Consider adding them to your shopping list.',
+    description:
+      'You have 3 item(s) running low. Consider adding them to your shopping list.',
     action_label: 'View Items',
     priority: 2,
   },
@@ -33,7 +34,8 @@ const mockSuggestions: Suggestion[] = [
     id: 'use_expiring_items',
     type: 'meal_planning',
     title: 'Items Expiring Soon',
-    description: 'You have 2 item(s) expiring within 5 days. Plan meals to use them!',
+    description:
+      'You have 2 item(s) expiring within 5 days. Plan meals to use them!',
     action_label: 'View Items',
     priority: 3,
   },
@@ -98,7 +100,9 @@ describe('SmartSuggestions', () => {
 
     expect(screen.getByText('Restock Low Stock Items')).toBeInTheDocument()
     expect(screen.getByText('Items Expiring Soon')).toBeInTheDocument()
-    expect(screen.getByText('Create Your Weekly Shopping List')).toBeInTheDocument()
+    expect(
+      screen.getByText('Create Your Weekly Shopping List')
+    ).toBeInTheDocument()
   })
 
   it('shows empty state when no suggestions', () => {
@@ -111,9 +115,7 @@ describe('SmartSuggestions', () => {
       />
     )
 
-    expect(
-      screen.getByText(/no suggestions at this time/i)
-    ).toBeInTheDocument()
+    expect(screen.getByText(/no suggestions at this time/i)).toBeInTheDocument()
   })
 
   it('displays suggestion descriptions', () => {
@@ -142,8 +144,16 @@ describe('SmartSuggestions', () => {
     )
 
     // Buttons have aria-labels, so we need to check by aria-label or text content
-    expect(screen.getByRole('button', { name: /accept suggestion: restock low stock items/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /accept suggestion: create your weekly shopping list/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', {
+        name: /accept suggestion: restock low stock items/i,
+      })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', {
+        name: /accept suggestion: create your weekly shopping list/i,
+      })
+    ).toBeInTheDocument()
     // Check that buttons contain the action label text (multiple instances are fine)
     expect(screen.getAllByText('View Items').length).toBeGreaterThan(0)
     expect(screen.getByText('Create List')).toBeInTheDocument()
@@ -176,7 +186,9 @@ describe('SmartSuggestions', () => {
     const dismissButton = screen.getByRole('button', { name: /dismiss/i })
     fireEvent.click(dismissButton)
 
-    expect(mockOnSuggestionDismissed).toHaveBeenCalledWith(mockSuggestions[0].id)
+    expect(mockOnSuggestionDismissed).toHaveBeenCalledWith(
+      mockSuggestions[0].id
+    )
   })
 
   it('navigates to pantry when restock suggestion is accepted', () => {
@@ -189,7 +201,9 @@ describe('SmartSuggestions', () => {
       />
     )
 
-    const acceptButton = screen.getByRole('button', { name: /accept suggestion: restock low stock items/i })
+    const acceptButton = screen.getByRole('button', {
+      name: /accept suggestion: restock low stock items/i,
+    })
     fireEvent.click(acceptButton)
 
     expect(mockPush).toHaveBeenCalledWith('/pantry')
@@ -206,7 +220,9 @@ describe('SmartSuggestions', () => {
       />
     )
 
-    const acceptButton = screen.getByRole('button', { name: /accept suggestion: items expiring soon/i })
+    const acceptButton = screen.getByRole('button', {
+      name: /accept suggestion: items expiring soon/i,
+    })
     fireEvent.click(acceptButton)
 
     expect(mockPush).toHaveBeenCalledWith('/meal-planner')
@@ -216,7 +232,12 @@ describe('SmartSuggestions', () => {
   it('opens create list modal when routine suggestion is accepted', async () => {
     const { getHouseholds } = require('@/lib/api/household')
     getHouseholds.mockResolvedValue([
-      { id: 1, name: 'My Household', created_by: 1, created_at: '2024-11-10T00:00:00Z' },
+      {
+        id: 1,
+        name: 'My Household',
+        created_by: 1,
+        created_at: '2024-11-10T00:00:00Z',
+      },
     ])
 
     render(
@@ -228,12 +249,16 @@ describe('SmartSuggestions', () => {
       />
     )
 
-    const acceptButton = screen.getByRole('button', { name: /accept suggestion: create your weekly shopping list/i })
+    const acceptButton = screen.getByRole('button', {
+      name: /accept suggestion: create your weekly shopping list/i,
+    })
     fireEvent.click(acceptButton)
 
     await waitFor(() => {
       // Check for modal title specifically
-      expect(screen.getByRole('heading', { name: /create a new grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('heading', { name: /create a new grocery list/i })
+      ).toBeInTheDocument()
     })
   })
 
@@ -241,7 +266,12 @@ describe('SmartSuggestions', () => {
     const { getHouseholds } = require('@/lib/api/household')
     const { createGroceryList } = require('@/lib/api/grocery')
     getHouseholds.mockResolvedValue([
-      { id: 1, name: 'My Household', created_by: 1, created_at: '2024-11-10T00:00:00Z' },
+      {
+        id: 1,
+        name: 'My Household',
+        created_by: 1,
+        created_at: '2024-11-10T00:00:00Z',
+      },
     ])
     createGroceryList.mockResolvedValue({
       id: 2,
@@ -262,12 +292,16 @@ describe('SmartSuggestions', () => {
       />
     )
 
-    const acceptButton = screen.getByRole('button', { name: /accept suggestion: create your weekly shopping list/i })
+    const acceptButton = screen.getByRole('button', {
+      name: /accept suggestion: create your weekly shopping list/i,
+    })
     fireEvent.click(acceptButton)
 
     await waitFor(() => {
       // Check for modal title specifically
-      expect(screen.getByRole('heading', { name: /create a new grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('heading', { name: /create a new grocery list/i })
+      ).toBeInTheDocument()
     })
 
     const nameInput = screen.getByLabelText(/list name/i)
@@ -285,7 +319,9 @@ describe('SmartSuggestions', () => {
         }),
         'mock-token'
       )
-      expect(mockOnSuggestionAccepted).toHaveBeenCalledWith(mockSuggestions[2].id)
+      expect(mockOnSuggestionAccepted).toHaveBeenCalledWith(
+        mockSuggestions[2].id
+      )
     })
   })
 
@@ -326,7 +362,12 @@ describe('SmartSuggestions', () => {
     const { getHouseholds } = require('@/lib/api/household')
     const { createGroceryList } = require('@/lib/api/grocery')
     getHouseholds.mockResolvedValue([
-      { id: 1, name: 'My Household', created_by: 1, created_at: '2024-11-10T00:00:00Z' },
+      {
+        id: 1,
+        name: 'My Household',
+        created_by: 1,
+        created_at: '2024-11-10T00:00:00Z',
+      },
     ])
     createGroceryList.mockRejectedValue(new Error('Failed to create list'))
 
@@ -343,12 +384,16 @@ describe('SmartSuggestions', () => {
       />
     )
 
-    const acceptButton = screen.getByRole('button', { name: /accept suggestion: create your weekly shopping list/i })
+    const acceptButton = screen.getByRole('button', {
+      name: /accept suggestion: create your weekly shopping list/i,
+    })
     fireEvent.click(acceptButton)
 
     await waitFor(() => {
       // Check for modal title specifically
-      expect(screen.getByRole('heading', { name: /create a new grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('heading', { name: /create a new grocery list/i })
+      ).toBeInTheDocument()
     })
 
     // Wait for households to load (input should be available)
@@ -373,7 +418,12 @@ describe('SmartSuggestions', () => {
   it('closes create list modal when cancel button is clicked', async () => {
     const { getHouseholds } = require('@/lib/api/household')
     getHouseholds.mockResolvedValue([
-      { id: 1, name: 'My Household', created_by: 1, created_at: '2024-11-10T00:00:00Z' },
+      {
+        id: 1,
+        name: 'My Household',
+        created_by: 1,
+        created_at: '2024-11-10T00:00:00Z',
+      },
     ])
 
     render(
@@ -385,12 +435,16 @@ describe('SmartSuggestions', () => {
       />
     )
 
-    const acceptButton = screen.getByRole('button', { name: /accept suggestion: create your weekly shopping list/i })
+    const acceptButton = screen.getByRole('button', {
+      name: /accept suggestion: create your weekly shopping list/i,
+    })
     fireEvent.click(acceptButton)
 
     await waitFor(() => {
       // Check for modal title specifically
-      expect(screen.getByRole('heading', { name: /create a new grocery list/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('heading', { name: /create a new grocery list/i })
+      ).toBeInTheDocument()
     })
 
     const cancelButton = screen.getByRole('button', { name: /cancel/i })
@@ -403,4 +457,3 @@ describe('SmartSuggestions', () => {
     })
   })
 })
-
