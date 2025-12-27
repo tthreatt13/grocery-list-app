@@ -1,7 +1,8 @@
 """Dashboard insights API endpoints."""
 
+import re
 from datetime import datetime, timedelta
-from typing import List
+from typing import List, Optional
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import func, and_, or_
@@ -22,6 +23,36 @@ from schemas.dashboard import (
 )
 
 router = APIRouter(prefix="/api/dashboard", tags=["dashboard"])
+
+
+def parse_quantity_string(quantity_str: Optional[str]) -> float:
+    """
+    Parse quantity string to extract numeric value.
+    Handles formats like "5 cups", "2.5 lbs", "10", etc.
+    Returns 0.0 if quantity cannot be parsed.
+    Matches frontend parsing logic exactly.
+    """
+    if not quantity_str:
+        return 0.0
+
+    quantity_str = quantity_str.strip()
+    if not quantity_str:
+        return 0.0
+
+    # Extract numeric part using regex (matches frontend logic exactly)
+    # Frontend uses: /^([\d.]+)\s*(.*)$/
+    match = re.match(r'^([\d.]+)\s*(.*)$', quantity_str)
+    if match:
+        try:
+            return float(match.group(1))
+        except (ValueError, TypeError):
+            return 0.0
+
+    # Fallback: try to parse entire string as float
+    try:
+        return float(quantity_str)
+    except (ValueError, TypeError):
+        return 0.0
 
 
 def get_user_household_ids(db: Session, user_id: int) -> List[int]:
@@ -80,37 +111,20 @@ def get_urgent_items(db: Session, household_ids: List[int]) -> List[UrgentItem]:
     )
 
     for item in low_stock_items:
-        # Parse quantity as float if possible, otherwise skip comparison
-        try:
-            current_qty = float(item.quantity or "0")
-            if current_qty <= item.low_stock_threshold:
-                urgent_items.append(
-                    UrgentItem(
-                        id=item.id,
-                        name=item.name,
-                        type="low_stock",
-                        household_id=item.household_id,
-                        category=item.category,
-                        quantity=item.quantity,
-                        current_quantity=item.quantity,
-                        low_stock_threshold=item.low_stock_threshold,
-                    )
+        current_qty = parse_quantity_string(item.quantity)
+        if current_qty <= item.low_stock_threshold:
+            urgent_items.append(
+                UrgentItem(
+                    id=item.id,
+                    name=item.name,
+                    type="low_stock",
+                    household_id=item.household_id,
+                    category=item.category,
+                    quantity=item.quantity,
+                    current_quantity=item.quantity,
+                    low_stock_threshold=item.low_stock_threshold,
                 )
-        except (ValueError, TypeError):
-            # If quantity can't be parsed, check if it's empty or zero-like
-            if not item.quantity or item.quantity.strip() == "0":
-                urgent_items.append(
-                    UrgentItem(
-                        id=item.id,
-                        name=item.name,
-                        type="low_stock",
-                        household_id=item.household_id,
-                        category=item.category,
-                        quantity=item.quantity,
-                        current_quantity=item.quantity,
-                        low_stock_threshold=item.low_stock_threshold,
-                    )
-                )
+            )
 
     return urgent_items
 
@@ -244,13 +258,9 @@ def get_dashboard_stats(
 
     low_stock_count = 0
     for item in low_stock_items:
-        try:
-            current_qty = float(item.quantity or "0")
-            if current_qty <= item.low_stock_threshold:
-                low_stock_count += 1
-        except (ValueError, TypeError):
-            if not item.quantity or item.quantity.strip() == "0":
-                low_stock_count += 1
+        current_qty = parse_quantity_string(item.quantity)
+        if current_qty <= item.low_stock_threshold:
+            low_stock_count += 1
 
     # Meal planner stats
     week_start = datetime.utcnow().date()
