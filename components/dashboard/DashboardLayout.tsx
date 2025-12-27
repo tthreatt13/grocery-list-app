@@ -8,10 +8,11 @@ import { formatRelativeTime } from '@/lib/utils'
 import { GroceryList } from '@/lib/types'
 import { PantryItemResponse } from '@/lib/api/pantry'
 import { MealResponse } from '@/lib/api/meals'
-import { UrgentItem, Suggestion } from '@/lib/api/dashboard'
+import { UrgentItem, Suggestion, DashboardStats } from '@/lib/api/dashboard'
 import { DashboardViewMode } from '@/lib/utils/contextDetection'
 import UrgentActionItems from './UrgentActionItems'
 import SmartSuggestions from './SmartSuggestions'
+import InsightsDisplay from './InsightsDisplay'
 
 interface DashboardLayoutProps {
   viewMode: DashboardViewMode
@@ -20,6 +21,7 @@ interface DashboardLayoutProps {
   groceryLists: GroceryList[]
   pantryItems: PantryItemResponse[]
   weeklyMeals: MealResponse[]
+  stats: DashboardStats | null
   getToken: () => Promise<string | null>
   onItemAdded?: () => void
   onItemDismissed?: (itemId: number) => void
@@ -34,6 +36,7 @@ export default function DashboardLayout({
   groceryLists,
   pantryItems,
   weeklyMeals,
+  stats,
   getToken,
   onItemAdded,
   onItemDismissed,
@@ -545,6 +548,9 @@ export default function DashboardLayout({
 
       {/* Primary Sections - Always shown first */}
       {renderPrimarySections()}
+
+      {/* Insights & Patterns Display */}
+      {stats && <InsightsDisplay stats={stats} />}
 
       {/* Stats Sections */}
       {renderStatsSections()}

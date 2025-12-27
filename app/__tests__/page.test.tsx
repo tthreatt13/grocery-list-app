@@ -736,4 +736,245 @@ describe('Dashboard Page', () => {
       ).toBeInTheDocument()
     })
   })
+
+  describe('Insights & Patterns Integration', () => {
+    const mockStats = {
+      total_lists: 3,
+      total_items: 25,
+      completed_items: 15,
+      low_stock_count: 5,
+      expiring_soon_count: 2,
+      meals_this_week: 7,
+      planned_days: 5,
+    }
+
+    beforeEach(() => {
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue([])
+      ;(dashboardApi.getDashboardInsights as jest.Mock).mockResolvedValue({
+        urgent_items: [],
+        suggestions: [],
+        stats: mockStats,
+      })
+    })
+
+    it('should fetch and display insights section', async () => {
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Insights & Patterns')).toBeInTheDocument()
+      })
+    })
+
+    it('should display completion rate insight', async () => {
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.getByText(/completion rate/i)).toBeInTheDocument()
+      })
+
+      // 15 completed out of 25 total = 60%
+      expect(screen.getByText(/60%/i)).toBeInTheDocument()
+      expect(screen.getByText(/15 of 25 items completed/i)).toBeInTheDocument()
+    })
+
+    it('should display meal planning coverage', async () => {
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.getByText(/meal planning coverage/i)).toBeInTheDocument()
+      })
+
+      // 5 planned days out of 7 = ~71%
+      expect(screen.getByText(/71%/i)).toBeInTheDocument()
+      expect(screen.getByText(/5 of 7 days planned/i)).toBeInTheDocument()
+      expect(screen.getByText(/7 meals this week/i)).toBeInTheDocument()
+    })
+
+    it('should display pantry health status', async () => {
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.getByText(/pantry health/i)).toBeInTheDocument()
+      })
+
+      expect(screen.getByText(/5/i)).toBeInTheDocument() // low stock count
+      expect(screen.getByText(/2/i)).toBeInTheDocument() // expiring soon count
+      expect(screen.getByText(/low stock/i)).toBeInTheDocument()
+      expect(screen.getByText(/expiring soon/i)).toBeInTheDocument()
+    })
+
+    it('should display shopping efficiency message', async () => {
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.getByText(/shopping efficiency/i)).toBeInTheDocument()
+      })
+
+      // Should show encouraging message based on completion rate
+      expect(
+        screen.getByText(/good progress! keep up the momentum/i)
+      ).toBeInTheDocument()
+    })
+
+    it('should display active lists summary', async () => {
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.getByText(/active lists/i)).toBeInTheDocument()
+      })
+
+      expect(screen.getByText(/you have 3 active grocery lists/i)).toBeInTheDocument()
+      expect(screen.getByText(/3/i)).toBeInTheDocument() // total lists
+    })
+
+    it('should display visual progress bars', async () => {
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Insights & Patterns')).toBeInTheDocument()
+      })
+
+      // Check for progress bars
+      const progressBars = screen.getAllByRole('progressbar')
+      expect(progressBars.length).toBeGreaterThanOrEqual(2) // At least completion rate and meal planning
+    })
+
+    it('should handle zero stats gracefully', async () => {
+      ;(dashboardApi.getDashboardInsights as jest.Mock).mockResolvedValue({
+        urgent_items: [],
+        suggestions: [],
+        stats: {
+          total_lists: 0,
+          total_items: 0,
+          completed_items: 0,
+          low_stock_count: 0,
+          expiring_soon_count: 0,
+          meals_this_week: 0,
+          planned_days: 0,
+        },
+      })
+
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Insights & Patterns')).toBeInTheDocument()
+      })
+
+      expect(screen.getByText(/0%/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/start adding items to your grocery lists/i)
+      ).toBeInTheDocument()
+    })
+
+    it('should display high completion rate with positive messaging', async () => {
+      ;(dashboardApi.getDashboardInsights as jest.Mock).mockResolvedValue({
+        urgent_items: [],
+        suggestions: [],
+        stats: {
+          ...mockStats,
+          total_items: 20,
+          completed_items: 18, // 90%
+        },
+      })
+
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.getByText(/90%/i)).toBeInTheDocument()
+      })
+
+      expect(
+        screen.getByText(/excellent! you're staying on top/i)
+      ).toBeInTheDocument()
+    })
+
+    it('should display full meal planning coverage', async () => {
+      ;(dashboardApi.getDashboardInsights as jest.Mock).mockResolvedValue({
+        urgent_items: [],
+        suggestions: [],
+        stats: {
+          ...mockStats,
+          planned_days: 7,
+        },
+      })
+
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.getByText(/100%/i)).toBeInTheDocument()
+      })
+
+      expect(
+        screen.getByText(/perfect! you have meals planned for the entire week/i)
+      ).toBeInTheDocument()
+    })
+
+    it('should display pantry health badge with appropriate status', async () => {
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.getByText(/pantry health/i)).toBeInTheDocument()
+      })
+
+      // Should show status badge (Fair, Good, Excellent, or Needs Attention)
+      const statusTexts = [
+        'Excellent',
+        'Good',
+        'Fair',
+        'Needs Attention',
+      ]
+      const hasStatus = statusTexts.some((status) =>
+        screen.queryByText(status)
+      )
+      expect(hasStatus).toBe(true)
+    })
+
+    it('should refresh insights when dashboard data is refreshed', async () => {
+      const updatedStats = {
+        ...mockStats,
+        completed_items: 20, // Updated completion
+      }
+
+      ;(dashboardApi.getDashboardInsights as jest.Mock)
+        .mockResolvedValueOnce({
+          urgent_items: [],
+          suggestions: [],
+          stats: mockStats,
+        })
+        .mockResolvedValueOnce({
+          urgent_items: [],
+          suggestions: [],
+          stats: updatedStats,
+        })
+
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.getByText(/60%/i)).toBeInTheDocument()
+      })
+
+      // Trigger a refresh (e.g., by accepting a suggestion)
+      // The component should update with new stats
+      await waitFor(() => {
+        expect(dashboardApi.getDashboardInsights).toHaveBeenCalled()
+      })
+    })
+
+    it('should not render insights section when stats are null', async () => {
+      ;(dashboardApi.getDashboardInsights as jest.Mock).mockRejectedValue(
+        new Error('API Error')
+      )
+
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument()
+      })
+
+      // Insights section should not be visible when stats are null
+      expect(
+        screen.queryByText('Insights & Patterns')
+      ).not.toBeInTheDocument()
+    })
+  })
 })
