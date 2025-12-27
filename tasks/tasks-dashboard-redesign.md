@@ -15,8 +15,17 @@
 - `lib/api/__tests__/dashboard.test.ts` - Frontend tests for dashboard API client
 - `components/dashboard/UrgentActionItems.tsx` - Urgent action items component
 - `components/dashboard/__tests__/UrgentActionItems.test.tsx` - Tests for UrgentActionItems component
-- `app/page.tsx` - Dashboard page with integrated UrgentActionItems
-- `app/__tests__/page.test.tsx` - Integration tests for dashboard page including urgent items
+- `components/dashboard/SmartSuggestions.tsx` - Smart suggestions component
+- `components/dashboard/__tests__/SmartSuggestions.test.tsx` - Tests for SmartSuggestions component
+- `components/dashboard/InsightsDisplay.tsx` - Insights and patterns display component
+- `components/dashboard/__tests__/InsightsDisplay.test.tsx` - Tests for InsightsDisplay component
+- `components/dashboard/DashboardLayout.tsx` - Context-aware dashboard layout component
+- `components/dashboard/__tests__/DashboardLayout.test.tsx` - Tests for DashboardLayout component
+- `lib/utils/contextDetection.ts` - Context detection utilities (time of day, day of week)
+- `lib/utils/__tests__/contextDetection.test.ts` - Tests for context detection utilities
+- `lib/utils/dismissedItems.ts` - Utilities for managing dismissed items (sessionStorage)
+- `app/page.tsx` - Dashboard page with integrated dashboard components
+- `app/__tests__/page.test.tsx` - Integration tests for dashboard page
 
 ### Notes
 
@@ -75,12 +84,12 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 5.4 Add actionable stats display (e.g., "You've saved X this month")
   - [x] 5.5 Integrate InsightsDisplay into dashboard page
   - [x] 5.6 Write integration tests for insights section
-- [ ] 6.0 Testing, integration, and performance optimization
-  - [ ] 6.1 Run all tests and ensure they pass (`npm test`)
-  - [ ] 6.2 Run ESLint and fix all errors (`npm run lint`)
-  - [ ] 6.3 Format code with Prettier (`npm run format`)
-  - [ ] 6.4 Run test coverage and ensure adequate coverage
-  - [ ] 6.5 Test dashboard load time and optimize if needed
-  - [ ] 6.6 Test mobile responsiveness
-  - [ ] 6.7 Verify all dashboard features work end-to-end
-  - [ ] 6.8 Update relevant files list in this document
+- [x] 6.0 Testing, integration, and performance optimization
+  - [x] 6.1 Run all tests and ensure they pass (`npm test`)
+  - [x] 6.2 Run ESLint and fix all errors (`npm run lint`)
+  - [x] 6.3 Format code with Prettier (`npm run format`)
+  - [x] 6.4 Run test coverage and ensure adequate coverage
+  - [x] 6.5 Test dashboard load time and optimize if needed
+  - [x] 6.6 Test mobile responsiveness
+  - [x] 6.7 Verify all dashboard features work end-to-end
+  - [x] 6.8 Update relevant files list in this document

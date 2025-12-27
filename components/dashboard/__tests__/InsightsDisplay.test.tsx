@@ -136,4 +136,3 @@ describe('InsightsDisplay', () => {
     expect(screen.getByText(/100%/i)).toBeInTheDocument()
   })
 })
-
