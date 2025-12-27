@@ -12,12 +12,15 @@ import { GroceryList } from '@/lib/types'
 import { getPantryItems, PantryItemResponse } from '@/lib/api/pantry'
 import { getWeeklyMeals, getWeekStartDate, MealResponse } from '@/lib/api/meals'
 import { getHouseholds } from '@/lib/api/household'
+import { getDashboardInsights, UrgentItem } from '@/lib/api/dashboard'
+import UrgentActionItems from '@/components/dashboard/UrgentActionItems'
 
 export default function Home() {
   const { isLoaded, isSignedIn, getToken } = useAuth()
   const [groceryLists, setGroceryLists] = useState<GroceryList[]>([])
   const [pantryItems, setPantryItems] = useState<PantryItemResponse[]>([])
   const [weeklyMeals, setWeeklyMeals] = useState<MealResponse[]>([])
+  const [urgentItems, setUrgentItems] = useState<UrgentItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -40,6 +43,15 @@ export default function Home() {
         const apiLists = await getGroceryListsWithItems(token)
         const transformedLists = transformGroceryLists(apiLists)
         setGroceryLists(transformedLists)
+
+        // Fetch dashboard insights (urgent items)
+        try {
+          const insights = await getDashboardInsights(token)
+          setUrgentItems(insights.urgent_items)
+        } catch (err) {
+          console.error('Error fetching dashboard insights:', err)
+          // Don't fail the whole dashboard if insights fail
+        }
 
         // Fetch households to get pantry and meal data
         try {
@@ -172,6 +184,32 @@ export default function Home() {
             Here&apos;s what&apos;s happening with your grocery planning today.
           </p>
         </div>
+
+        {/* Urgent Action Items */}
+        <UrgentActionItems
+          items={urgentItems}
+          getToken={getToken}
+          onItemAdded={async () => {
+            // Refresh dashboard data when item is added
+            const token = await getToken()
+            if (token) {
+              try {
+                const insights = await getDashboardInsights(token)
+                setUrgentItems(insights.urgent_items)
+                // Also refresh grocery lists to show the new item
+                const apiLists = await getGroceryListsWithItems(token)
+                const transformedLists = transformGroceryLists(apiLists)
+                setGroceryLists(transformedLists)
+              } catch (err) {
+                console.error('Error refreshing dashboard:', err)
+              }
+            }
+          }}
+          onItemDismissed={async (itemId: number) => {
+            // Remove dismissed item from the list
+            setUrgentItems((prev) => prev.filter((item) => item.id !== itemId))
+          }}
+        />
 
         {/* Stats Grid - Grocery Lists */}
         <div className="mb-8">

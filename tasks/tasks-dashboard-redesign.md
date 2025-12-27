@@ -13,6 +13,10 @@
 
 - `lib/api/dashboard.ts` - Frontend API client for dashboard insights
 - `lib/api/__tests__/dashboard.test.ts` - Frontend tests for dashboard API client
+- `components/dashboard/UrgentActionItems.tsx` - Urgent action items component
+- `components/dashboard/__tests__/UrgentActionItems.test.tsx` - Tests for UrgentActionItems component
+- `app/page.tsx` - Dashboard page with integrated UrgentActionItems
+- `app/__tests__/page.test.tsx` - Integration tests for dashboard page including urgent items
 
 ### Notes
 
@@ -42,13 +46,13 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 1.6 Write and run backend tests to ensure endpoint works correctly
   - [x] 1.7 Create frontend API client function for dashboard insights
   - [x] 1.8 Write frontend tests for API client
-- [ ] 2.0 Implement Urgent Action Items section
-  - [ ] 2.1 Write tests for UrgentActionItems component
-  - [ ] 2.2 Create UrgentActionItems component to display urgent items
-  - [ ] 2.3 Implement card-based UI for urgent items with visual indicators
-  - [ ] 2.4 Add one-click actions (e.g., "Add to List", "Mark as Done")
-  - [ ] 2.5 Integrate UrgentActionItems into dashboard page
-  - [ ] 2.6 Write integration tests for urgent items section
+- [x] 2.0 Implement Urgent Action Items section
+  - [x] 2.1 Write tests for UrgentActionItems component
+  - [x] 2.2 Create UrgentActionItems component to display urgent items
+  - [x] 2.3 Implement card-based UI for urgent items with visual indicators
+  - [x] 2.4 Add one-click actions (e.g., "Add to List", "Mark as Done")
+  - [x] 2.5 Integrate UrgentActionItems into dashboard page
+  - [x] 2.6 Write integration tests for urgent items section
 - [ ] 3.0 Implement Smart Suggestions Engine
   - [ ] 3.1 Write tests for SmartSuggestions component
   - [ ] 3.2 Create SmartSuggestions component to display personalized recommendations
