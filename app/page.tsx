@@ -15,6 +15,12 @@ import { getHouseholds } from '@/lib/api/household'
 import { getDashboardInsights, UrgentItem, Suggestion } from '@/lib/api/dashboard'
 import UrgentActionItems from '@/components/dashboard/UrgentActionItems'
 import SmartSuggestions from '@/components/dashboard/SmartSuggestions'
+import {
+  getDismissedSuggestions,
+  getDismissedUrgentItems,
+  dismissSuggestion,
+  dismissUrgentItem,
+} from '@/lib/utils/dismissedItems'
 
 export default function Home() {
   const { isLoaded, isSignedIn, getToken } = useAuth()
@@ -25,6 +31,12 @@ export default function Home() {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [dismissedSuggestions, setDismissedSuggestions] = useState<Set<string>>(
+    () => getDismissedSuggestions()
+  )
+  const [dismissedUrgentItems, setDismissedUrgentItems] = useState<Set<number>>(
+    () => getDismissedUrgentItems()
+  )
 
   useEffect(() => {
     async function fetchDashboardData() {
@@ -113,6 +125,17 @@ export default function Home() {
     fetchDashboardData()
   }, [isLoaded, isSignedIn, getToken])
 
+  // Filter out dismissed items before displaying
+  const filteredUrgentItems = useMemo(() => {
+    return urgentItems.filter((item) => !dismissedUrgentItems.has(item.id))
+  }, [urgentItems, dismissedUrgentItems])
+
+  const filteredSuggestions = useMemo(() => {
+    return suggestions.filter(
+      (suggestion) => !dismissedSuggestions.has(suggestion.id)
+    )
+  }, [suggestions, dismissedSuggestions])
+
   // Calculate stats from real data
   const totalLists = groceryLists.filter((list) => !list.isArchived).length
   const totalItems = groceryLists.reduce(
@@ -190,7 +213,7 @@ export default function Home() {
 
         {/* Urgent Action Items */}
         <UrgentActionItems
-          items={urgentItems}
+          items={filteredUrgentItems}
           getToken={getToken}
           onItemAdded={async () => {
             // Refresh dashboard data when item is added
@@ -210,14 +233,20 @@ export default function Home() {
             }
           }}
           onItemDismissed={async (itemId: number) => {
-            // Remove dismissed item from the list
+            // Save to sessionStorage and update state
+            dismissUrgentItem(itemId)
+            setDismissedUrgentItems((prev) => {
+              const updated = new Set(prev)
+              updated.add(itemId)
+              return updated
+            })
             setUrgentItems((prev) => prev.filter((item) => item.id !== itemId))
           }}
         />
 
         {/* Smart Suggestions */}
         <SmartSuggestions
-          suggestions={suggestions}
+          suggestions={filteredSuggestions}
           getToken={getToken}
           onSuggestionAccepted={async (suggestionId: string) => {
             // Refresh dashboard data when suggestion is accepted
@@ -236,7 +265,13 @@ export default function Home() {
             }
           }}
           onSuggestionDismissed={async (suggestionId: string) => {
-            // Remove dismissed suggestion from the list
+            // Save to sessionStorage and update state
+            dismissSuggestion(suggestionId)
+            setDismissedSuggestions((prev) => {
+              const updated = new Set(prev)
+              updated.add(suggestionId)
+              return updated
+            })
             setSuggestions((prev) =>
               prev.filter((suggestion) => suggestion.id !== suggestionId)
             )
