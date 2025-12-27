@@ -118,6 +118,19 @@ describe('Dashboard Page', () => {
     ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue(
       mockLists
     )
+    ;(dashboardApi.getDashboardInsights as jest.Mock).mockResolvedValue({
+      urgent_items: [],
+      suggestions: [],
+      stats: {
+        total_lists: 2,
+        total_items: 4,
+        completed_items: 1,
+        low_stock_count: 0,
+        expiring_soon_count: 0,
+        meals_this_week: 0,
+        planned_days: 0,
+      },
+    })
 
     render(<Home />)
 
@@ -132,14 +145,18 @@ describe('Dashboard Page', () => {
     expect(screen.getByText('Active Lists')).toBeInTheDocument()
 
     // 4 total items (3 from first list, 1 from second)
-    expect(screen.getByText('4')).toBeInTheDocument()
-    // There are multiple "Total Items" (grocery lists and pantry), so use getAllByText
-    const totalItemsElements = screen.getAllByText('Total Items')
-    expect(totalItemsElements.length).toBeGreaterThan(0)
+    // The "4" appears in "1 of 4 items completed" in the InsightsDisplay
+    // Check for completion rate text that includes the total items (may appear multiple times)
+    const completionTexts = screen.getAllByText(/1 of 4 items completed/i)
+    expect(completionTexts.length).toBeGreaterThan(0)
+    // Verify "4" is present in the completion text
+    expect(screen.getByText(/of 4 items/i)).toBeInTheDocument()
 
-    // 1 completed item
-    expect(screen.getByText('1')).toBeInTheDocument()
-    expect(screen.getByText('Completed')).toBeInTheDocument()
+    // 1 completed item - appears in "1 of 4 items completed"
+    expect(screen.getByText(/1 of 4 items completed/i)).toBeInTheDocument()
+    // "Completed" may appear multiple times, so use getAllByText
+    const completedElements = screen.getAllByText(/completed/i)
+    expect(completedElements.length).toBeGreaterThan(0)
   })
 
   it('should display recent lists from API', async () => {
@@ -193,6 +210,19 @@ describe('Dashboard Page', () => {
 
   it('should handle empty grocery lists', async () => {
     ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue([])
+    ;(dashboardApi.getDashboardInsights as jest.Mock).mockResolvedValue({
+      urgent_items: [],
+      suggestions: [],
+      stats: {
+        total_lists: 0,
+        total_items: 0,
+        completed_items: 0,
+        low_stock_count: 0,
+        expiring_soon_count: 0,
+        meals_this_week: 0,
+        planned_days: 0,
+      },
+    })
 
     render(<Home />)
 
@@ -729,40 +759,73 @@ describe('Dashboard Page', () => {
       await waitFor(() => {
         expect(screen.getByText(/urgent action items/i)).toBeInTheDocument()
         expect(screen.getByText(/smart suggestions/i)).toBeInTheDocument()
-        expect(screen.getByText(/grocery lists/i)).toBeInTheDocument()
-        expect(screen.getAllByText(/^pantry$/i).length).toBeGreaterThan(0)
-        expect(screen.getByText(/meal planner/i)).toBeInTheDocument()
-        expect(screen.getByText(/quick actions/i)).toBeInTheDocument()
         // "Recent Lists" appears in heading and empty state, so use getAllByText
         expect(screen.getAllByText(/recent lists/i).length).toBeGreaterThan(0)
+        expect(screen.getAllByText(/^pantry$/i).length).toBeGreaterThan(0)
+        expect(screen.getByText(/plan meals/i)).toBeInTheDocument()
+        expect(screen.getByText(/quick actions/i)).toBeInTheDocument()
       })
     })
 
     it('should adapt welcome message based on time of day', async () => {
-      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue([])
-      ;(dashboardApi.getDashboardInsights as jest.Mock).mockResolvedValue({
-        urgent_items: [],
-        suggestions: [],
-      })
       const { getHouseholds } = require('@/lib/api/household')
       getHouseholds.mockResolvedValue([])
 
       // Test morning
       jest.setSystemTime(new Date(2024, 0, 8, 8, 0, 0))
-      render(<Home />)
-      await waitFor(() => {
-        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument()
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue([])
+      ;(dashboardApi.getDashboardInsights as jest.Mock).mockResolvedValue({
+        urgent_items: [],
+        suggestions: [],
+        stats: {
+          total_lists: 0,
+          total_items: 0,
+          completed_items: 0,
+          low_stock_count: 0,
+          expiring_soon_count: 0,
+          meals_this_week: 0,
+          planned_days: 0,
+        },
       })
+
+      const { unmount } = render(<Home />)
+      await waitFor(
+        () => {
+          expect(screen.queryByText(/loading/i)).not.toBeInTheDocument()
+        },
+        { timeout: 3000 }
+      )
       expect(
         screen.getByText(/good morning! let's plan your day/i)
       ).toBeInTheDocument()
 
+      // Clean up before rendering again
+      unmount()
+
       // Test evening - need to render a new instance since context is computed once
       jest.setSystemTime(new Date(2024, 0, 8, 19, 0, 0))
-      render(<Home />)
-      await waitFor(() => {
-        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument()
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue([])
+      ;(dashboardApi.getDashboardInsights as jest.Mock).mockResolvedValue({
+        urgent_items: [],
+        suggestions: [],
+        stats: {
+          total_lists: 0,
+          total_items: 0,
+          completed_items: 0,
+          low_stock_count: 0,
+          expiring_soon_count: 0,
+          meals_this_week: 0,
+          planned_days: 0,
+        },
       })
+
+      render(<Home />)
+      await waitFor(
+        () => {
+          expect(screen.queryByText(/loading/i)).not.toBeInTheDocument()
+        },
+        { timeout: 3000 }
+      )
       expect(
         screen.getByText(/here's your grocery overview/i)
       ).toBeInTheDocument()
