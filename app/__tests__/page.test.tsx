@@ -1,7 +1,8 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import Home from '../page'
 import * as groceryApi from '@/lib/api/grocery'
+import * as dashboardApi from '@/lib/api/dashboard'
 import { useAuth } from '@clerk/nextjs'
 
 // Mock Clerk auth
@@ -11,6 +12,9 @@ jest.mock('@clerk/nextjs', () => ({
 
 // Mock the grocery API
 jest.mock('@/lib/api/grocery')
+
+// Mock the dashboard API
+jest.mock('@/lib/api/dashboard')
 
 describe('Dashboard Page', () => {
   const mockGetToken = jest.fn()
@@ -189,6 +193,19 @@ describe('Dashboard Page', () => {
     const mockToken = 'test-auth-token'
     mockGetToken.mockResolvedValue(mockToken)
     ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue([])
+    ;(dashboardApi.getDashboardInsights as jest.Mock).mockResolvedValue({
+      urgent_items: [],
+      suggestions: [],
+      stats: {
+        total_lists: 0,
+        total_items: 0,
+        completed_items: 0,
+        low_stock_count: 0,
+        expiring_soon_count: 0,
+        meals_this_week: 0,
+        planned_days: 0,
+      },
+    })
 
     render(<Home />)
 
@@ -196,6 +213,148 @@ describe('Dashboard Page', () => {
       expect(groceryApi.getGroceryListsWithItems).toHaveBeenCalledWith(
         mockToken
       )
+    })
+  })
+
+  describe('Urgent Action Items Integration', () => {
+    const mockUrgentItems = [
+      {
+        id: 1,
+        name: 'Milk',
+        type: 'low_stock' as const,
+        household_id: 1,
+        category: 'Dairy',
+        current_quantity: '0.5',
+        low_stock_threshold: 1,
+      },
+      {
+        id: 2,
+        name: 'Bananas',
+        type: 'expiring_soon' as const,
+        household_id: 1,
+        category: 'Produce',
+        expiration_date: '2024-11-15T00:00:00Z',
+        days_until_expiration: 2,
+      },
+    ]
+
+    beforeEach(() => {
+      ;(groceryApi.getGroceryListsWithItems as jest.Mock).mockResolvedValue([])
+      ;(dashboardApi.getDashboardInsights as jest.Mock).mockResolvedValue({
+        urgent_items: mockUrgentItems,
+        suggestions: [],
+        stats: {
+          total_lists: 0,
+          total_items: 0,
+          completed_items: 0,
+          low_stock_count: 1,
+          expiring_soon_count: 1,
+          meals_this_week: 0,
+          planned_days: 0,
+        },
+      })
+    })
+
+    it('should fetch and display urgent items', async () => {
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Urgent Action Items')).toBeInTheDocument()
+      })
+
+      expect(screen.getByText('Milk')).toBeInTheDocument()
+      expect(screen.getByText('Bananas')).toBeInTheDocument()
+    })
+
+    it('should call getDashboardInsights with token', async () => {
+      const mockToken = 'test-auth-token'
+      mockGetToken.mockResolvedValue(mockToken)
+
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(dashboardApi.getDashboardInsights).toHaveBeenCalledWith(
+          mockToken
+        )
+      })
+    })
+
+    it('should display empty state when no urgent items', async () => {
+      ;(dashboardApi.getDashboardInsights as jest.Mock).mockResolvedValue({
+        urgent_items: [],
+        suggestions: [],
+        stats: {
+          total_lists: 0,
+          total_items: 0,
+          completed_items: 0,
+          low_stock_count: 0,
+          expiring_soon_count: 0,
+          meals_this_week: 0,
+          planned_days: 0,
+        },
+      })
+
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(
+          screen.getByText(/no urgent items requiring attention/i)
+        ).toBeInTheDocument()
+      })
+    })
+
+    it('should handle dashboard insights API errors gracefully', async () => {
+      ;(dashboardApi.getDashboardInsights as jest.Mock).mockRejectedValue(
+        new Error('API Error')
+      )
+
+      render(<Home />)
+
+      // Should still render the page without urgent items section failing
+      await waitFor(() => {
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument()
+      })
+
+      // Urgent items section should show empty state when there's an error
+      // (component initializes with empty array, so it shows empty state)
+      await waitFor(() => {
+        expect(
+          screen.getByText(/no urgent items requiring attention/i)
+        ).toBeInTheDocument()
+      })
+    })
+
+    it('should refresh urgent items when item is dismissed', async () => {
+      ;(groceryApi.getGroceryLists as jest.Mock).mockResolvedValue([
+        {
+          id: 1,
+          name: 'Weekly Shopping',
+          household_id: 1,
+          created_by: 1,
+          created_at: '2024-11-10T00:00:00Z',
+          updated_at: '2024-11-10T00:00:00Z',
+          is_archived: false,
+        },
+      ])
+
+      render(<Home />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Milk')).toBeInTheDocument()
+      })
+
+      const dismissButton = screen.getByRole('button', {
+        name: /dismiss milk/i,
+      })
+      fireEvent.click(dismissButton)
+
+      // Item should be removed from the list
+      await waitFor(() => {
+        expect(screen.queryByText('Milk')).not.toBeInTheDocument()
+      })
+
+      // Bananas should still be visible
+      expect(screen.getByText('Bananas')).toBeInTheDocument()
     })
   })
 })
