@@ -25,7 +25,12 @@ class TestGetDashboardInsights:
     """Tests for GET /api/dashboard/insights endpoint."""
 
     def test_get_dashboard_insights_success(
-        self, authenticated_client, sample_user, sample_household, sample_grocery_list, db_session
+        self,
+        authenticated_client,
+        sample_user,
+        sample_household,
+        sample_grocery_list,
+        db_session,
     ):
         """Test getting dashboard insights with all data."""
         # Create pantry items with different states
@@ -92,7 +97,9 @@ class TestGetDashboardInsights:
         assert "expiring_soon_count" in stats
         assert "meals_this_week" in stats
 
-    def test_get_dashboard_insights_empty_data(self, authenticated_client, sample_user, db_session):
+    def test_get_dashboard_insights_empty_data(
+        self, authenticated_client, sample_user, db_session
+    ):
         """Test getting dashboard insights when no data exists."""
         response = authenticated_client.get("/api/dashboard/insights")
 
@@ -230,4 +237,3 @@ class TestGetDashboardInsights:
         assert stats["total_lists"] == 1
         assert stats["total_items"] == 3
         assert stats["completed_items"] == 1  # One item is checked
-
