@@ -230,9 +230,7 @@ export default function SmartSuggestions({
 
   const handleCreateModalSuccess = () => {
     if (onSuggestionAccepted) {
-      const routineSuggestion = suggestions.find(
-        (s) => s.type === 'routine'
-      )
+      const routineSuggestion = suggestions.find((s) => s.type === 'routine')
       if (routineSuggestion) {
         onSuggestionAccepted(routineSuggestion.id)
       }
@@ -333,7 +331,8 @@ export default function SmartSuggestions({
               No suggestions at this time
             </p>
             <p className="text-sm text-gray-500 mt-1">
-              We&apos;ll provide personalized recommendations as you use the app!
+              We&apos;ll provide personalized recommendations as you use the
+              app!
             </p>
           </div>
         </Card>
@@ -371,7 +370,9 @@ export default function SmartSuggestions({
                   </div>
 
                   {/* Suggestion Description */}
-                  <p className="text-sm text-gray-600">{suggestion.description}</p>
+                  <p className="text-sm text-gray-600">
+                    {suggestion.description}
+                  </p>
                 </div>
               </div>
 
@@ -412,4 +413,3 @@ export default function SmartSuggestions({
     </div>
   )
 }
-

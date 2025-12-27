@@ -105,4 +105,3 @@ export function dismissUrgentItem(id: number): void {
     console.error('Failed to save dismissed urgent item:', error)
   }
 }
-

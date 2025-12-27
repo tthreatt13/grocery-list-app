@@ -60,14 +60,14 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 3.4 Add logic to handle suggestion acceptance (e.g., add to grocery list)
   - [x] 3.5 Integrate SmartSuggestions into dashboard page
   - [x] 3.6 Write integration tests for suggestions section
-- [ ] 4.0 Implement Context-Aware Views and layout system
-  - [ ] 4.1 Write tests for context detection utilities (time of day, day of week)
-  - [ ] 4.2 Create utility functions to detect user context (morning, evening, shopping day)
-  - [ ] 4.3 Write tests for DashboardLayout component with context-aware rendering
-  - [ ] 4.4 Create DashboardLayout component that adapts based on context
-  - [ ] 4.5 Implement different view modes (morning planning, shopping, routine review)
-  - [ ] 4.6 Update dashboard page to use context-aware layout
-  - [ ] 4.7 Write integration tests for context-aware views
+- [x] 4.0 Implement Context-Aware Views and layout system
+  - [x] 4.1 Write tests for context detection utilities (time of day, day of week)
+  - [x] 4.2 Create utility functions to detect user context (morning, evening, shopping day)
+  - [x] 4.3 Write tests for DashboardLayout component with context-aware rendering
+  - [x] 4.4 Create DashboardLayout component that adapts based on context
+  - [x] 4.5 Implement different view modes (morning planning, shopping, routine review)
+  - [x] 4.6 Update dashboard page to use context-aware layout
+  - [x] 4.7 Write integration tests for context-aware views
 - [ ] 5.0 Implement Insights & Patterns Display
   - [ ] 5.1 Write tests for InsightsDisplay component
   - [ ] 5.2 Create InsightsDisplay component for consumption trends and patterns
