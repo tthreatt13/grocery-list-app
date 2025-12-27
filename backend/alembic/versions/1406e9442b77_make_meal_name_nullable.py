@@ -5,6 +5,7 @@ Revises: 626841e03296
 Create Date: 2025-12-26 14:44:32.534893
 
 """
+
 from typing import Sequence, Union
 
 from alembic import op
@@ -12,8 +13,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '1406e9442b77'
-down_revision: Union[str, Sequence[str], None] = '626841e03296'
+revision: str = "1406e9442b77"
+down_revision: Union[str, Sequence[str], None] = "626841e03296"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -63,8 +64,12 @@ def upgrade() -> None:
 
         # Recreate indexes
         op.create_index(op.f("ix_meals_id"), "meals", ["id"], unique=False)
-        op.create_index(op.f("ix_meals_meal_type"), "meals", ["meal_type"], unique=False)
-        op.create_index(op.f("ix_meals_day_of_week"), "meals", ["day_of_week"], unique=False)
+        op.create_index(
+            op.f("ix_meals_meal_type"), "meals", ["meal_type"], unique=False
+        )
+        op.create_index(
+            op.f("ix_meals_day_of_week"), "meals", ["day_of_week"], unique=False
+        )
         op.create_index(
             op.f("ix_meals_week_start_date"), "meals", ["week_start_date"], unique=False
         )
@@ -120,8 +125,12 @@ def downgrade() -> None:
 
         # Recreate indexes
         op.create_index(op.f("ix_meals_id"), "meals", ["id"], unique=False)
-        op.create_index(op.f("ix_meals_meal_type"), "meals", ["meal_type"], unique=False)
-        op.create_index(op.f("ix_meals_day_of_week"), "meals", ["day_of_week"], unique=False)
+        op.create_index(
+            op.f("ix_meals_meal_type"), "meals", ["meal_type"], unique=False
+        )
+        op.create_index(
+            op.f("ix_meals_day_of_week"), "meals", ["day_of_week"], unique=False
+        )
         op.create_index(
             op.f("ix_meals_week_start_date"), "meals", ["week_start_date"], unique=False
         )
