@@ -9,11 +9,7 @@ import { Modal } from '@/components/ui/Modal'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
 import { Suggestion } from '@/lib/api/dashboard'
-import {
-  getGroceryLists,
-  createGroceryList,
-  GroceryListResponse,
-} from '@/lib/api/grocery'
+import { createGroceryList } from '@/lib/api/grocery'
 import { getHouseholds, HouseholdResponse } from '@/lib/api/household'
 
 interface SmartSuggestionsProps {

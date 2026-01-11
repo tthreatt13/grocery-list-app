@@ -2,7 +2,6 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { useRouter } from 'next/navigation'
 import SmartSuggestions from '../SmartSuggestions'
 import { Suggestion } from '@/lib/api/dashboard'
-import { GroceryListResponse } from '@/lib/api/grocery'
 
 // Mock next/navigation
 jest.mock('next/navigation', () => ({
@@ -46,18 +45,6 @@ const mockSuggestions: Suggestion[] = [
     description: 'Start planning your week by creating a new grocery list.',
     action_label: 'Create List',
     priority: 1,
-  },
-]
-
-const mockGroceryLists: GroceryListResponse[] = [
-  {
-    id: 1,
-    household_id: 1,
-    name: 'Weekly Shopping',
-    created_by: 1,
-    created_at: '2024-11-10T00:00:00Z',
-    updated_at: '2024-11-10T00:00:00Z',
-    is_archived: false,
   },
 ]
 

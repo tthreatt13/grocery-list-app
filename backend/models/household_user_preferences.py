@@ -85,4 +85,7 @@ class HouseholdUserPreferences(Base):
 
     def __repr__(self):
         """String representation of HouseholdUserPreferences."""
-        return f"<HouseholdUserPreferences(household_id={self.household_id}, user_id={self.user_id})>"
+        return (
+            f"<HouseholdUserPreferences(household_id={self.household_id}, "
+            f"user_id={self.user_id})>"
+        )
