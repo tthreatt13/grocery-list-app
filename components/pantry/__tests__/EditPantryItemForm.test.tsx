@@ -90,7 +90,62 @@ describe('EditPantryItemForm', () => {
     expect(mockOnSubmit).not.toHaveBeenCalled()
   })
 
-  it('validates quantity cannot be zero or negative', async () => {
+  it('allows quantity to be zero', async () => {
+    const user = userEvent.setup()
+    render(
+      <EditPantryItemForm
+        item={mockItem}
+        onSubmit={mockOnSubmit}
+        onCancel={mockOnCancel}
+      />
+    )
+
+    const quantityInput = screen.getByLabelText(/quantity/i) as HTMLInputElement
+
+    await user.clear(quantityInput)
+    await user.type(quantityInput, '0')
+
+    await user.click(screen.getByRole('button', { name: /save changes/i }))
+
+    await waitFor(() => {
+      expect(mockOnSubmit).toHaveBeenCalledTimes(1)
+      expect(mockOnSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          quantity: 0,
+        })
+      )
+    })
+  })
+
+  it('validates quantity cannot be negative', async () => {
+    const user = userEvent.setup()
+    render(
+      <EditPantryItemForm
+        item={mockItem}
+        onSubmit={mockOnSubmit}
+        onCancel={mockOnCancel}
+      />
+    )
+
+    const quantityInput = screen.getByLabelText(/quantity/i) as HTMLInputElement
+
+    await user.clear(quantityInput)
+    await user.type(quantityInput, '-1')
+
+    await user.click(screen.getByRole('button', { name: /save changes/i }))
+
+    await waitFor(
+      () => {
+        expect(
+          screen.getByText(/quantity must be 0 or greater/i)
+        ).toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+    expect(mockOnSubmit).not.toHaveBeenCalled()
+  })
+
+  it('validates quantity cannot be empty', async () => {
     const user = userEvent.setup()
     render(
       <EditPantryItemForm
@@ -111,7 +166,7 @@ describe('EditPantryItemForm', () => {
     await waitFor(
       () => {
         expect(
-          screen.getByText(/quantity must be greater than 0/i)
+          screen.getByText(/quantity must be 0 or greater/i)
         ).toBeInTheDocument()
       },
       { timeout: 3000 }

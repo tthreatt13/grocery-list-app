@@ -18,6 +18,7 @@ export default [
       '*.config.mjs',
       'backend/venv/**',
       'backend/**/*.py',
+      'backend/htmlcov/**',
     ],
   },
   {

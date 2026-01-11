@@ -147,9 +147,7 @@ describe('DashboardLayout', () => {
 
   describe('shopping view mode', () => {
     it('prioritizes urgent items and grocery lists for shopping', () => {
-      const { container } = render(
-        <DashboardLayout {...defaultProps} viewMode="shopping" />
-      )
+      render(<DashboardLayout {...defaultProps} viewMode="shopping" />)
 
       // In shopping mode, urgent items should be prominently displayed
       expect(screen.getByTestId('urgent-action-items')).toBeInTheDocument()

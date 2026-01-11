@@ -3,9 +3,9 @@
 import re
 from datetime import datetime, timedelta
 from typing import List, Optional
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from sqlalchemy import func, and_, or_
+from sqlalchemy import func
 
 from database import get_db
 from middleware.auth import get_current_user
@@ -146,7 +146,10 @@ def get_suggestions(
                 id="restock_low_stock",
                 type="restock",
                 title="Restock Low Stock Items",
-                description=f"You have {len(low_stock_items)} item(s) running low. Consider adding them to your shopping list.",
+                description=(
+                    f"You have {len(low_stock_items)} item(s) running low. "
+                    "Consider adding them to your shopping list."
+                ),
                 action_label="View Items",
                 priority=2,
             )
@@ -160,7 +163,10 @@ def get_suggestions(
                 id="use_expiring_items",
                 type="meal_planning",
                 title="Items Expiring Soon",
-                description=f"You have {len(expiring_items)} item(s) expiring within 5 days. Plan meals to use them!",
+                description=(
+                    f"You have {len(expiring_items)} item(s) expiring within 5 days. "
+                    "Plan meals to use them!"
+                ),
                 action_label="View Items",
                 priority=3,
             )
@@ -171,7 +177,7 @@ def get_suggestions(
         db.query(GroceryList)
         .filter(
             GroceryList.household_id.in_(household_ids),
-            GroceryList.is_archived == False,
+            GroceryList.is_archived.is_(False),
         )
         .count()
     )
@@ -209,7 +215,7 @@ def get_dashboard_stats(db: Session, household_ids: List[int]) -> DashboardStats
         db.query(GroceryList)
         .filter(
             GroceryList.household_id.in_(household_ids),
-            GroceryList.is_archived == False,
+            GroceryList.is_archived.is_(False),
         )
         .all()
     )
@@ -225,7 +231,7 @@ def get_dashboard_stats(db: Session, household_ids: List[int]) -> DashboardStats
 
     completed_items = (
         db.query(GroceryItem)
-        .filter(GroceryItem.list_id.in_(list_ids), GroceryItem.checked == True)
+        .filter(GroceryItem.list_id.in_(list_ids), GroceryItem.checked.is_(True))
         .count()
         if list_ids
         else 0

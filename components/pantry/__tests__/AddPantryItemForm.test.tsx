@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import AddPantryItemForm from '../AddPantryItemForm'
 import { ItemCategory } from '@/lib/types'
@@ -60,23 +60,52 @@ describe('AddPantryItemForm', () => {
     expect(mockOnSubmit).not.toHaveBeenCalled()
   })
 
-  it('validates quantity cannot be zero', async () => {
+  it('allows quantity to be zero', async () => {
     const user = userEvent.setup()
     render(
       <AddPantryItemForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />
     )
 
     const nameInput = screen.getByLabelText(/item name/i)
-    const quantityInput = screen.getByLabelText(/quantity/i) as HTMLInputElement
+    const quantityInput = screen.getByLabelText(/quantity/i)
 
     await user.type(nameInput, 'Test Item')
-
-    // Use fireEvent to directly change the value to 0
-    fireEvent.change(quantityInput, { target: { value: 0 } })
+    await user.clear(quantityInput)
+    await user.type(quantityInput, '0')
 
     await user.click(screen.getByRole('button', { name: /add item/i }))
 
-    // Just verify submission didn't happen with invalid quantity
+    await waitFor(() => {
+      expect(mockOnSubmit).toHaveBeenCalledTimes(1)
+      expect(mockOnSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: 'Test Item',
+          quantity: 0,
+        })
+      )
+    })
+  })
+
+  it('validates quantity cannot be negative', async () => {
+    const user = userEvent.setup()
+    render(
+      <AddPantryItemForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />
+    )
+
+    const nameInput = screen.getByLabelText(/item name/i)
+    const quantityInput = screen.getByLabelText(/quantity/i)
+
+    await user.type(nameInput, 'Test Item')
+    await user.clear(quantityInput)
+    await user.type(quantityInput, '-1')
+
+    await user.click(screen.getByRole('button', { name: /add item/i }))
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/quantity must be 0 or greater/i)
+      ).toBeInTheDocument()
+    })
     expect(mockOnSubmit).not.toHaveBeenCalled()
   })
 

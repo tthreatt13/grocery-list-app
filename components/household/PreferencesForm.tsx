@@ -127,7 +127,7 @@ export default function PreferencesForm({
         }
 
         const previousWeekMonday = getPreviousWeekMonday()
-        console.log(
+        console.warn(
           '[PreferencesForm] Fetching meals for previous week Monday:',
           previousWeekMonday
         )
@@ -138,7 +138,7 @@ export default function PreferencesForm({
           preferences.household_id,
           token
         )
-        console.log(
+        console.warn(
           '[PreferencesForm] Received meals response:',
           response.meals.length,
           'meals'
@@ -160,7 +160,7 @@ export default function PreferencesForm({
         setFetchedMeals(uniqueMealNames)
         hasFetchedMealsRef.current = true
 
-        console.log(
+        console.warn(
           '[PreferencesForm] Extracted meal names:',
           uniqueMealNames,
           'Existing previous_meals:',
@@ -190,7 +190,7 @@ export default function PreferencesForm({
         const mergedMeals = [...existingMeals, ...newUniqueMeals]
 
         if (newUniqueMeals.length > 0) {
-          console.log(
+          console.warn(
             '[PreferencesForm] Merging meal planner data with existing meals. Added:',
             newUniqueMeals.join(', '),
             'Total meals:',
@@ -199,12 +199,12 @@ export default function PreferencesForm({
           setPreviousMeals(mergedMeals.join(', '))
           mealPlannerDataAppliedRef.current = true
         } else if (uniqueMealNames.length > 0) {
-          console.log(
+          console.warn(
             '[PreferencesForm] All fetched meals already exist in previous_meals (case-insensitive match)'
           )
           mealPlannerDataAppliedRef.current = true
         } else {
-          console.log(
+          console.warn(
             '[PreferencesForm] No meals found in meal planner for previous week'
           )
         }
@@ -220,6 +220,7 @@ export default function PreferencesForm({
     }
 
     fetchPreviousWeekMeals()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preferences?.household_id, getToken, isMounted])
 
   // Reset meal fetching flag when preferences change (different household)
