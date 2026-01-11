@@ -2,7 +2,7 @@
 
 A modern, full-stack grocery list and meal planning application built for busy parents. Plan your weekly meals, manage your grocery lists, track pantry inventory, coordinate with household members, and view weather forecasts to make informed meal planning decisions - all in one beautiful interface with real-time backend integration. The smart dashboard provides actionable insights, urgent item alerts, and personalized suggestions to streamline your grocery planning workflow.
 
-![Next.js](https://img.shields.io/badge/Next.js-14+-black)
+![Next.js](https://img.shields.io/badge/Next.js-16+-black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.0+-38bdf8)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.109+-009688)
@@ -59,6 +59,9 @@ A modern, full-stack grocery list and meal planning application built for busy p
 - Keep track of all pantry items in one place
 - Set expiration dates and get alerts for items expiring soon
 - Low stock warnings with customizable thresholds
+- Generate grocery lists from low-stock items with one click
+- Add low-stock items to existing grocery lists or create new lists
+- Select which items to include when generating lists
 - Search and filter by category
 - Visual grid layout with item details
 - Track when items were added and last updated
@@ -123,6 +126,8 @@ alembic upgrade head
 uvicorn main:app --reload
 # Or use the start script (runs migrations automatically):
 ./start.sh
+# Or use the Python wrapper script:
+python start_backend.py
 ```
 
 3. **Set up the frontend:**
@@ -187,6 +192,7 @@ grocery-list-app/
 │   ├── config.py                # Configuration and settings
 │   ├── database.py              # Database connection setup
 │   ├── start.sh                 # Startup script (runs migrations)
+│   ├── start_backend.py         # Python wrapper script for starting backend
 │   ├── pre_deploy_check.sh      # Pre-deployment verification
 │   ├── verify_schema.py         # Database schema verification
 │   ├── Dockerfile               # Docker configuration for Railway
@@ -439,7 +445,7 @@ All tests, linting, and formatting checks must pass before code can be merged.
 
 ### Frontend
 
-- **[Next.js 14](https://nextjs.org/)** - React framework with App Router
+- **[Next.js 16](https://nextjs.org/)** - React framework with App Router
 - **[TypeScript](https://www.typescriptlang.org/)** - Type safety and better DX
 - **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
 - **[React](https://react.dev/)** - UI library
@@ -520,7 +526,7 @@ This is a **production-ready full-stack application** with complete backend inte
   - Session-based dismissed items management
 - **Grocery Lists**: Complete backend integration with sorting, filtering, and archiving
 - **Meal Planner**: Full backend integration with meal-to-grocery-list generation, meal categories (Normal/Quick Meal/Eat Out), and delete confirmation modal
-- **Pantry Inventory**: Complete backend integration with low-stock alerts
+- **Pantry Inventory**: Complete backend integration with low-stock alerts and grocery list generation (create new lists or add to existing lists)
 - **Household Management**: Full backend integration with member roles and preferences
 - **Weather Integration**: 7-day weather forecasts with zip code preferences and caching
 - **Database Models**: Complete schema for all entities with migrations
@@ -646,6 +652,8 @@ For questions or feedback, please open an issue on GitHub.
 - [CORS Configuration](docs/CORS_CONFIGURATION.md) - CORS troubleshooting guide
 - [Weather API Integration](docs/prd/prd-weather-api-integration.md) - Weather feature PRD and documentation
 - [Weather API Testing](docs/WEATHER_API_TESTING.md) - Weather API testing guide
+- [Increasing Jest Coverage](docs/INCREASING_JEST_COVERAGE.md) - Guide for improving test coverage
+- [Sequence Diagram](docs/SEQUENCE_DIAGRAM.md) - Application flow and architecture diagrams
 
 ## 🔧 Development Tools
 
