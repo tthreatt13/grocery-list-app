@@ -33,8 +33,8 @@ export default function AddPantryItemForm({
     }
 
     const quantityNum = parseFloat(quantity)
-    if (!quantity || isNaN(quantityNum) || quantityNum <= 0) {
-      newErrors.quantity = 'Quantity must be greater than 0'
+    if (!quantity || isNaN(quantityNum) || quantityNum < 0) {
+      newErrors.quantity = 'Quantity must be 0 or greater'
     }
 
     if (lowStockThreshold) {
@@ -89,7 +89,7 @@ export default function AddPantryItemForm({
   }))
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
       <div>
         <Input
           label="Item Name"

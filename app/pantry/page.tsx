@@ -122,6 +122,15 @@ export default function PantryPage() {
     fetchData()
   }, [getToken, selectedHouseholdId])
 
+  // Sort grocery lists by creation date (newest first)
+  const sortedGroceryLists = useMemo(() => {
+    return [...groceryLists].sort((a, b) => {
+      const dateA = new Date(a.created_at).getTime()
+      const dateB = new Date(b.created_at).getTime()
+      return dateB - dateA // Descending order (newest first)
+    })
+  }, [groceryLists])
+
   // Filter items based on search and category
   const filteredItems = items.filter((item) => {
     const matchesSearch = item.name
@@ -925,7 +934,7 @@ export default function PantryPage() {
         lowStockItems={lowStockItemsList}
         onCreateList={handleGenerateGroceryList}
         onAddToList={handleAddToGroceryList}
-        existingLists={groceryLists}
+        existingLists={sortedGroceryLists}
         isCreating={isCreatingList}
       />
     </div>
