@@ -76,8 +76,8 @@ export default function EditPantryItemForm({
     }
 
     const quantityNum = parseFloat(quantity)
-    if (!quantity || isNaN(quantityNum) || quantityNum <= 0) {
-      newErrors.quantity = 'Quantity must be greater than 0'
+    if (!quantity || isNaN(quantityNum) || quantityNum < 0) {
+      newErrors.quantity = 'Quantity must be 0 or greater'
     }
 
     if (lowStockThreshold) {
@@ -144,7 +144,7 @@ export default function EditPantryItemForm({
             type="number"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
-            min="0.01"
+            min="0"
             step="0.01"
             error={errors.quantity}
             disabled={isSubmitting}

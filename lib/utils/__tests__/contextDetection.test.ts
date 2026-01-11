@@ -3,7 +3,6 @@ import {
   getDayOfWeek,
   isShoppingDay,
   getUserContext,
-  DashboardViewMode,
 } from '../contextDetection'
 
 describe('contextDetection', () => {

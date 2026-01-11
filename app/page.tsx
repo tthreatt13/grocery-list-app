@@ -158,7 +158,7 @@ export default function Home() {
             })
             setUrgentItems((prev) => prev.filter((item) => item.id !== itemId))
           }}
-          onSuggestionAccepted={async (suggestionId: string) => {
+          onSuggestionAccepted={async (_suggestionId: string) => {
             // Refresh dashboard data when suggestion is accepted
             const token = await getToken()
             if (token) {

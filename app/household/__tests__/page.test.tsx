@@ -3,7 +3,6 @@ import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 import HouseholdPage from '../page'
 import * as householdApi from '@/lib/api/household'
-import * as weatherApi from '@/lib/api/weather'
 import { useAuth, useUser } from '@clerk/nextjs'
 import { syncUser } from '@/lib/api/client'
 
@@ -29,7 +28,7 @@ jest.mock('@/components/household/WeatherForecast', () => {
   return function MockWeatherForecast({
     householdId,
     zipCode,
-    token,
+    token: _token,
   }: {
     householdId: number
     zipCode: string | null
@@ -133,11 +132,11 @@ describe('HouseholdPage', () => {
       isSignedIn: true,
       userId: 'user_123',
       getToken: mockGetToken,
-    } as any)
+    } as ReturnType<typeof useAuth>)
     mockUseUser.mockReturnValue({
       isLoaded: true,
       user: mockUser,
-    } as any)
+    } as ReturnType<typeof useUser>)
     mockSyncUser.mockResolvedValue(undefined)
     mockGetHouseholds.mockResolvedValue(mockHouseholds)
     mockGetHousehold.mockResolvedValue(mockHouseholdWithMembers)
