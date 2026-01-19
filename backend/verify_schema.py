@@ -232,7 +232,9 @@ def main():
         print(f"\n⚠️  Found {len(warnings)} warning(s):")
         for warning in warnings:
             print(f"  {warning}")
-        print("\n⚠️  Some columns may have unexpected types. Verify manually if needed.")
+        print(
+            "\n⚠️  Some columns may have unexpected types. Verify manually if needed."
+        )
 
     if not errors and not warnings:
         print("\n✅ Database schema is fully up to date!")
