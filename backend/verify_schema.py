@@ -59,9 +59,12 @@ def main():
     print("=" * 70)
     print("Database Schema Verification")
     print("=" * 70)
-    print(
-        f"Database URL: {settings.database_url.split('@')[1] if '@' in settings.database_url else 'Local SQLite'}"
+    db_url_display = (
+        settings.database_url.split("@")[1]
+        if "@" in settings.database_url
+        else "Local SQLite"
     )
+    print(f"Database URL: {db_url_display}")
     print()
 
     inspector = inspect(engine)
@@ -110,11 +113,13 @@ def main():
         print("✓ Column 'grocery_items.meal_type' exists")
     else:
         errors.append(
-            "✗ Column 'grocery_items.meal_type' is missing (added in migration b1f2c3d4e5f6)"
+            "✗ Column 'grocery_items.meal_type' is missing "
+            "(added in migration b1f2c3d4e5f6)"
         )
         print("✗ Column 'grocery_items.meal_type' is missing")
 
-    # pantry_items.low_stock_threshold should be float (changed in migration c7d8e9f0a1b2)
+    # pantry_items.low_stock_threshold should be float
+    # (changed in migration c7d8e9f0a1b2)
     if check_column_exists(inspector, "pantry_items", "low_stock_threshold"):
         col_type = get_column_type(inspector, "pantry_items", "low_stock_threshold")
         if (
@@ -125,10 +130,12 @@ def main():
             print(f"✓ Column 'pantry_items.low_stock_threshold' exists as {col_type}")
         else:
             warnings.append(
-                f"⚠ Column 'pantry_items.low_stock_threshold' is {col_type}, expected float (changed in migration c7d8e9f0a1b2)"
+                f"⚠ Column 'pantry_items.low_stock_threshold' is {col_type}, "
+                f"expected float (changed in migration c7d8e9f0a1b2)"
             )
             print(
-                f"⚠ Column 'pantry_items.low_stock_threshold' is {col_type}, expected float"
+                f"⚠ Column 'pantry_items.low_stock_threshold' is "
+                f"{col_type}, expected float"
             )
     else:
         errors.append("✗ Column 'pantry_items.low_stock_threshold' is missing")
@@ -145,14 +152,17 @@ def main():
                 col_type = get_column_type(inspector, "household_user_preferences", col)
                 if "json" in col_type.lower() or "text" in col_type.lower():
                     print(
-                        f"✓ Column 'household_user_preferences.{col}' exists as {col_type}"
+                        f"✓ Column 'household_user_preferences.{col}' exists "
+                        f"as {col_type}"
                     )
                 else:
                     warnings.append(
-                        f"⚠ Column 'household_user_preferences.{col}' is {col_type}, expected JSON"
+                        f"⚠ Column 'household_user_preferences.{col}' is "
+                        f"{col_type}, expected JSON"
                     )
                     print(
-                        f"⚠ Column 'household_user_preferences.{col}' is {col_type}, expected JSON"
+                        f"⚠ Column 'household_user_preferences.{col}' is "
+                        f"{col_type}, expected JSON"
                     )
             else:
                 errors.append(f"✗ Column 'household_user_preferences.{col}' is missing")
@@ -232,7 +242,9 @@ def main():
         print(f"\n⚠️  Found {len(warnings)} warning(s):")
         for warning in warnings:
             print(f"  {warning}")
-        print("\n⚠️  Some columns may have unexpected types. Verify manually if needed.")
+        print(
+            "\n⚠️  Some columns may have unexpected types. Verify manually if needed."
+        )
 
     if not errors and not warnings:
         print("\n✅ Database schema is fully up to date!")

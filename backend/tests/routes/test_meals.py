@@ -1,5 +1,6 @@
 """Tests for meal planner routes."""
 
+import json
 import pytest
 from unittest.mock import patch, Mock
 from fastapi.testclient import TestClient

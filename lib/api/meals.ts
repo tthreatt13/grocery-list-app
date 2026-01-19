@@ -3,6 +3,7 @@
  */
 
 import { get, post, put, del } from './client'
+import type { AISuggestRequest, AISuggestResponse } from '@/lib/types'
 
 // API Response Types (matching backend schemas)
 export interface MealResponse {
@@ -148,4 +149,28 @@ export function getWeekStartDate(date: Date = new Date()): string {
  */
 export function formatDateForAPI(date: Date): string {
   return date.toISOString().split('T')[0]
+}
+
+/**
+ * Get AI meal suggestions from the backend
+ */
+export async function getAIMealSuggestions(
+  data: AISuggestRequest,
+  token: string
+): Promise<AISuggestResponse> {
+  return post<AISuggestResponse>('/api/meals/ai-suggest', data, token)
+}
+
+/**
+ * Get all meals for a household (for diagnostic purposes)
+ * Returns all meals regardless of week, useful for debugging date-related issues
+ */
+export async function getAllMeals(
+  householdId: number,
+  token: string
+): Promise<MealResponse[]> {
+  return get<MealResponse[]>(
+    `/api/meals/all?household_id=${householdId}`,
+    token
+  )
 }

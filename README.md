@@ -36,15 +36,25 @@ A modern, full-stack grocery list and meal planning application built for busy p
 ### 🛒 Grocery Lists
 
 - Create and manage multiple grocery lists
+- **Automatic sorting** by creation date (newest first)
+- **Edit list names** directly from the list detail page
+- **Reuse items from previous lists** - Quickly add items from past shopping lists
 - Add items with quantities, categories, and notes
 - Check off items as you shop with satisfying strike-through
 - Filter items by category (Produce, Dairy, Meat, Bakery, etc.)
 - Share lists with household members
 - Track shopping progress with visual progress bars
+- Archive completed lists
 
 ### 🍳 Weekly Meal Planner
 
 - Plan meals for the entire week (Breakfast, Lunch, Dinner)
+- **AI-Powered Meal Planning Assistant** with interactive chat interface:
+  - Get intelligent meal suggestions based on your pantry inventory, preferences, existing meals, and weather
+  - Chat with Claude AI to refine suggestions (e.g., "make Monday's dinner vegetarian" or "suggest something quick for Wednesday")
+  - Context-aware suggestions that use pantry items to reduce waste
+  - Apply AI-suggested meals directly to your meal plan with one click
+  - Optionally generate grocery lists from AI-suggested meals
 - Visual calendar view with easy navigation between weeks
 - Add meals with ingredients and notes
 - Meal categories: Normal, Quick Meal, or Eat Out
@@ -73,6 +83,10 @@ A modern, full-stack grocery list and meal planning application built for busy p
 - See who last edited shared lists
 - View all shared grocery lists in one place
 - Real-time collaboration with backend integration
+- **Household Preferences** for personalized meal planning:
+  - Dietary preferences (Paleo, Mediterranean, Keto, Vegetarian, Vegan, Pescatarian, Gluten-Free, Dairy-Free, or None)
+  - Weather preferences (Cold, Hot, Mixed, Rainy, Sunny)
+  - Cooking apparatus selection (Oven, Stovetop, Grill, Slow Cooker, Instant Pot, Air Fryer, Microwave)
 - Save zip code preferences for personalized weather forecasts
 
 ### 🌤️ Weather Integration
@@ -118,6 +132,7 @@ pip install -r requirements.txt
 # Set up environment variables
 # Copy railway-env-template.txt and create .env file with your settings
 # For local development, DATABASE_URL can use SQLite: sqlite:///./grocery_app.db
+# ANTHROPIC_API_KEY is required for AI meal planning features (get from https://console.anthropic.com/)
 
 # Set up the database
 alembic upgrade head
@@ -158,6 +173,7 @@ npm run dev
 
 - `DATABASE_URL` - Database connection string (PostgreSQL or SQLite)
 - `CLERK_SECRET_KEY` - Clerk authentication secret key
+- `ANTHROPIC_API_KEY` - Anthropic Claude API key for AI meal planning (get from https://console.anthropic.com/)
 - `ENVIRONMENT` - Environment name (development/production)
 - `ALLOWED_ORIGINS` - Comma-separated list of allowed CORS origins (optional)
 
@@ -217,7 +233,8 @@ grocery-list-app/
 │   │   ├── weather.py           # Weather response schemas
 │   │   └── dashboard.py        # Dashboard insights schemas
 │   ├── services/                # Business logic services
-│   │   └── weather.py           # Weather API integration service
+│   │   ├── weather.py           # Weather API integration service
+│   │   └── meal_planning_ai.py  # AI meal planning service (Anthropic Claude integration)
 │   ├── middleware/              # Authentication & permissions
 │   │   ├── auth.py
 │   │   └── permissions.py
@@ -254,6 +271,8 @@ grocery-list-app/
 │   │   ├── MealCard.tsx
 │   │   ├── AddMealModal.tsx
 │   │   ├── MealDetailsModal.tsx
+│   │   ├── AIMealPlanningAssistant.tsx  # AI-powered meal planning assistant
+│   │   ├── MealSuggestionCard.tsx      # Meal suggestion display component
 │   │   └── GenerateGroceryListFromMealsModal.tsx
 │   ├── household/               # Household components
 │   │   ├── MemberCard.tsx
@@ -285,7 +304,7 @@ grocery-list-app/
 │   │   ├── contextDetection.ts # Context detection (time of day, shopping days)
 │   │   └── dismissedItems.ts   # Dismissed items management (sessionStorage)
 │   ├── types.ts                 # TypeScript type definitions
-│   ├── utils.ts                 # General utility functions
+│   ├── utils.ts                 # General utility functions (including ingredient normalization)
 │   └── mockData.ts              # Mock data for development
 ├── docs/                        # Project documentation
 │   ├── DEPLOYMENT_CHECKLIST.md  # Deployment guide
@@ -346,6 +365,9 @@ The project uses Jest and React Testing Library for unit and integration tests.
 # Run all tests
 npm test
 
+# Run tests in CI mode (matches CI behavior - use before committing)
+npm run test:ci
+
 # Run tests in watch mode
 npm run test:watch
 
@@ -356,9 +378,16 @@ npm run test:coverage
 ### Test Coverage
 
 - **Frontend**: UI components, feature components, API adapters, utility functions
+  - Comprehensive test suites for meal planner, grocery lists, pantry, household preferences
+  - Utility function tests including ingredient normalization
+  - Component interaction tests with React Testing Library
 - **Backend**: Models, routes, middleware, database operations
+  - 238+ backend tests validating all API endpoints and models
+  - AI meal planning service tests with mocked Anthropic API
+  - Comprehensive route integration tests
 - **Integration**: End-to-end API communication with type safety
 - **TDD Approach**: Tests written first, then implementation follows
+- **CI Mode**: Use `npm run test:ci` before committing to match CI behavior (runs with `--runInBand --ci` flags)
 
 ### Backend Testing
 
@@ -402,14 +431,19 @@ npm run test:ci
 cd backend
 source venv/bin/activate
 
-# Run linting (flake8)
-flake8 . --exclude=venv,alembic/versions,__pycache__,.pytest_cache --max-line-length=100
+# ⚠️ IMPORTANT: Ensure you're using Black 23.11.0 (matches CI)
+# Check version: black --version
+# Install correct version: pip install black==23.11.0
+# Different Black versions format code differently and will cause CI failures!
+
+# Run linting (flake8) - matches CI exactly
+flake8 . --exclude=alembic/versions --select=E9,F63,F7,F82 --count --show-source --statistics
 
 # Format code with Black
-black --line-length 100 .
+black --exclude="/(alembic/versions|venv)/" .
 
-# Check formatting
-black --check --line-length 100 .
+# Check formatting - matches CI exactly
+black --check --exclude="/(alembic/versions|venv)/" .
 
 # Run tests
 pytest
@@ -422,22 +456,30 @@ pytest --cov=. --cov-report=html
 
 The project uses GitHub Actions for automated testing and linting:
 
-- **Frontend Testing**: Jest tests run on every push and pull request
+- **Frontend Testing**: Jest tests run on every push and pull request using `npm run test:ci` (CI mode with `--runInBand --ci` flags)
 - **Backend Testing**: Pytest tests (238+ tests) validate all API endpoints and models
 - **Frontend Linting**: ESLint checks ensure TypeScript/React code quality
-- **Backend Linting**: Flake8 validates Python code style and imports
+- **Backend Linting**: Flake8 validates Python code style with specific error codes (E9,F63,F7,F82)
 - **Code Formatting**: Prettier (frontend) and Black (backend) ensure consistent formatting
+  - **⚠️ Black Version**: Must use Black `23.11.0` (pinned in `backend/requirements.txt`) to match CI
+  - Different Black versions format code differently, causing CI failures
 - **Test Coverage**: Comprehensive test suites for both frontend and backend
 - **CI Pipeline**: All checks must pass before code can be merged
+- **Exact CI Match**: Local pre-commit checks use the exact same commands as CI to prevent failures
 
 **Pre-commit Checklist:**
 Before committing and pushing, ensure:
 
-- ✅ All frontend tests pass (`npm test`)
+- ✅ All frontend tests pass (`npm run test:ci`) - **Use test:ci to match CI behavior**
 - ✅ All backend tests pass (`pytest`)
 - ✅ Frontend linting passes (`npm run lint`)
-- ✅ Backend linting passes (`flake8`)
-- ✅ Code is properly formatted (`npm run format:check` and `black --check`)
+- ✅ Backend linting passes (`flake8 . --exclude=alembic/versions --select=E9,F63,F7,F82 --count --show-source --statistics`)
+- ✅ Code is properly formatted (`npm run format:check` and `black --check --exclude="/(alembic/versions|venv)/" .`)
+- ✅ **Black version matches CI**: Use `black==23.11.0` (check with `black --version`)
+
+**⚠️ CRITICAL:** These checks MUST pass before committing. They exactly match what CI runs. Failure to run these checks locally will result in CI failures.
+
+**⚠️ Black Version Compatibility:** Different versions of Black format code differently. Always use Black `23.11.0` (as specified in `backend/requirements.txt`) to ensure your local formatting matches CI. If you format with a newer version locally, CI will fail.
 
 All tests, linting, and formatting checks must pass before code can be merged.
 
@@ -461,6 +503,7 @@ All tests, linting, and formatting checks must pass before code can be merged.
 - **[Alembic](https://alembic.sqlalchemy.org/)** - Database migration tool
 - **[Pydantic](https://pydantic.dev/)** - Data validation using Python type hints
 - **[Pytest](https://pytest.org/)** - Python testing framework
+- **[Anthropic Claude](https://www.anthropic.com/)** - AI-powered meal planning assistant
 - **[api.weather.gov](https://www.weather.gov/documentation/services-web-api)** - National Weather Service API for forecasts
 
 ## 🏛️ Architecture
@@ -524,16 +567,22 @@ This is a **production-ready full-stack application** with complete backend inte
   - Insights display with shopping efficiency, meal planning coverage, and pantry health
   - Quick actions and recent lists sections
   - Session-based dismissed items management
-- **Grocery Lists**: Complete backend integration with sorting, filtering, and archiving
-- **Meal Planner**: Full backend integration with meal-to-grocery-list generation, meal categories (Normal/Quick Meal/Eat Out), and delete confirmation modal
+- **Grocery Lists**: Complete backend integration with sorting, filtering, archiving, list name editing, and reuse items from previous lists functionality
+- **Meal Planner**: Full backend integration with meal-to-grocery-list generation, meal categories (Normal/Quick Meal/Eat Out), delete confirmation modal, and **AI-powered meal planning assistant** with Claude integration:
+  - Interactive chat interface for refining meal suggestions
+  - Context-aware suggestions using pantry inventory, preferences, existing meals, and weather
+  - One-click meal application to meal plan
+  - Optional grocery list generation from AI-suggested meals
+  - Ingredient normalization utility for consistent ingredient formatting
 - **Pantry Inventory**: Complete backend integration with low-stock alerts and grocery list generation (create new lists or add to existing lists)
-- **Household Management**: Full backend integration with member roles and preferences
+- **Household Management**: Full backend integration with member roles and household preferences (dietary preferences, weather preferences, cooking apparatus selection)
 - **Weather Integration**: 7-day weather forecasts with zip code preferences and caching
 - **Database Models**: Complete schema for all entities with migrations
 - **API Client**: Type-safe frontend API layer with error handling
 - **Dashboard Insights API**: New backend endpoint (`/api/dashboard/insights`) aggregating urgent items, suggestions, and statistics
 - **Context Detection**: Utilities for detecting time of day, day of week, and shopping patterns
-- **Testing**: Comprehensive test suites for both frontend and backend
+- **Utility Functions**: Ingredient normalization, category sorting, meal type sorting, and date formatting utilities
+- **Testing**: Comprehensive test suites for both frontend and backend (including meal planner, grocery lists, pantry, household preferences, and utility functions)
 - **CI/CD**: GitHub Actions pipeline for automated testing and linting
 - **Deployment**: Railway backend deployment with automatic migrations
 - **Database Migrations**: Automatic migration system with pre-deployment checks
@@ -557,7 +606,7 @@ See [DEPLOYMENT_CHECKLIST.md](docs/DEPLOYMENT_CHECKLIST.md) for deployment proce
 - [ ] Mobile app (React Native)
 - [ ] Export/import functionality
 - [ ] Meal plan templates
-- [ ] Weather-based meal recommendations
+- [ ] Enhanced weather-based meal recommendations (basic weather awareness now available via AI assistant)
 - [ ] Multiple location support for weather forecasts
 - [ ] Advanced analytics and trend tracking
 - [ ] Customizable dashboard widgets
@@ -601,29 +650,31 @@ Contributions are welcome! This is an active full-stack project with both fronte
 
 1. **Write tests first** (TDD approach)
 2. **Implement feature**
-3. **Run all checks before committing**:
-   - Frontend tests: `npm test`
+3. **Run all checks before committing** (these match CI exactly):
+   - Frontend tests: `npm run test:ci` - **Use test:ci to match CI behavior**
    - Backend tests: `cd backend && source venv/bin/activate && pytest`
    - Frontend linting: `npm run lint`
-   - Backend linting: `cd backend && source venv/bin/activate && flake8 . --exclude=venv,alembic/versions,__pycache__,.pytest_cache --max-line-length=100`
+   - Backend linting: `cd backend && source venv/bin/activate && flake8 . --exclude=alembic/versions --select=E9,F63,F7,F82 --count --show-source --statistics`
    - Frontend formatting: `npm run format:check`
-   - Backend formatting: `cd backend && source venv/bin/activate && black --check --line-length 100 .`
+   - Backend formatting: `cd backend && source venv/bin/activate && black --check --exclude="/(alembic/versions|venv)/" .`
+   - **⚠️ Ensure Black version**: `black --version` should show `23.11.0` (matches CI)
 4. **Fix any issues** found by linting or formatting
-5. **Format code**: `npm run format` (frontend) and `black --line-length 100 .` (backend)
+5. **Format code**: `npm run format` (frontend) and `black --exclude="/(alembic/versions|venv)/" .` (backend)
+   - **⚠️ Use Black 23.11.0**: Install with `pip install black==23.11.0` to match CI
 6. **For database changes**: Create migration, test locally, run pre-deploy check
 7. **Commit and push**: Migrations run automatically on Railway deployment
 
-**Quick Pre-commit Check:**
+**Quick Pre-commit Check (matches CI exactly):**
 
 ```bash
 # Frontend
-npm test && npm run lint && npm run format:check
+npm run test:ci && npm run lint && npm run format:check
 
-# Backend
+# Backend (ensure Black 23.11.0 is installed: pip install black==23.11.0)
 cd backend && source venv/bin/activate && \
   pytest && \
-  flake8 . --exclude=venv,alembic/versions,__pycache__,.pytest_cache --max-line-length=100 && \
-  black --check --line-length 100 .
+  flake8 . --exclude=alembic/versions --select=E9,F63,F7,F82 --count --show-source --statistics && \
+  black --check --exclude="/(alembic/versions|venv)/" .
 ```
 
 ## 📄 License

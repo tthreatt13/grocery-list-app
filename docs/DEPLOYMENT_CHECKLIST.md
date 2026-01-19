@@ -29,6 +29,9 @@ Before deploying database changes to Railway, ensure the following:
 
 - [ ] `DATABASE_URL` is set in Railway Variables tab
 - [ ] `DATABASE_URL` uses format: `${{Postgres.DATABASE_URL}}`
+- [ ] `CLERK_SECRET_KEY` is set in Railway Variables tab
+- [ ] `ANTHROPIC_API_KEY` is set in Railway Variables tab (required for AI meal planning features)
+- [ ] `ENVIRONMENT` is set to `production` in Railway Variables tab
 - [ ] PostgreSQL service is running in Railway dashboard
 - [ ] `railway.json` has correct `startCommand: "./start.sh"`
 
