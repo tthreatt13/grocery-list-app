@@ -13,6 +13,7 @@ const mockSuggestion: MealSuggestion = {
 
 const mockOnSelect = jest.fn()
 const mockOnEdit = jest.fn()
+const mockOnAdd = jest.fn()
 
 // Helper to create a Monday date
 const createMonday = () => {
@@ -25,6 +26,7 @@ describe('MealSuggestionCard', () => {
   beforeEach(() => {
     mockOnSelect.mockClear()
     mockOnEdit.mockClear()
+    mockOnAdd.mockClear()
   })
 
   it('renders meal name', () => {
@@ -35,6 +37,7 @@ describe('MealSuggestionCard', () => {
         isSelected={false}
         onSelect={mockOnSelect}
         onEdit={mockOnEdit}
+        index={0}
       />
     )
     expect(screen.getByText('Spaghetti Bolognese')).toBeInTheDocument()
@@ -48,6 +51,7 @@ describe('MealSuggestionCard', () => {
         isSelected={false}
         onSelect={mockOnSelect}
         onEdit={mockOnEdit}
+        index={0}
       />
     )
     expect(screen.getByText(/dinner/i)).toBeInTheDocument()
@@ -65,6 +69,7 @@ describe('MealSuggestionCard', () => {
         isSelected={false}
         onSelect={mockOnSelect}
         onEdit={mockOnEdit}
+        index={0}
       />
     )
     // Should show Mon (short format) since day_of_week is 0 (Monday)
@@ -79,6 +84,7 @@ describe('MealSuggestionCard', () => {
         isSelected={false}
         onSelect={mockOnSelect}
         onEdit={mockOnEdit}
+        index={0}
       />
     )
     expect(screen.getByText('Pasta')).toBeInTheDocument()
@@ -94,6 +100,7 @@ describe('MealSuggestionCard', () => {
         isSelected={false}
         onSelect={mockOnSelect}
         onEdit={mockOnEdit}
+        index={0}
       />
     )
     expect(screen.getByText('A classic Italian dish')).toBeInTheDocument()
@@ -108,6 +115,7 @@ describe('MealSuggestionCard', () => {
         isSelected={false}
         onSelect={mockOnSelect}
         onEdit={mockOnEdit}
+        index={0}
       />
     )
     expect(screen.queryByText('A classic Italian dish')).not.toBeInTheDocument()
@@ -121,6 +129,7 @@ describe('MealSuggestionCard', () => {
         isSelected={false}
         onSelect={mockOnSelect}
         onEdit={mockOnEdit}
+        index={0}
       />
     )
     // Pantry items should be highlighted (check for visual indicator)
@@ -136,6 +145,7 @@ describe('MealSuggestionCard', () => {
         isSelected={false}
         onSelect={mockOnSelect}
         onEdit={mockOnEdit}
+        index={0}
       />
     )
     // Should show indicator that pantry items are used
@@ -150,6 +160,7 @@ describe('MealSuggestionCard', () => {
         isSelected={false}
         onSelect={mockOnSelect}
         onEdit={mockOnEdit}
+        index={0}
       />
     )
     const checkbox = screen.getByRole('checkbox')
@@ -165,6 +176,7 @@ describe('MealSuggestionCard', () => {
         isSelected={true}
         onSelect={mockOnSelect}
         onEdit={mockOnEdit}
+        index={0}
       />
     )
     const checkbox = screen.getByRole('checkbox')
@@ -180,6 +192,7 @@ describe('MealSuggestionCard', () => {
         isSelected={false}
         onSelect={mockOnSelect}
         onEdit={mockOnEdit}
+        index={0}
       />
     )
     const editButton = screen.getByLabelText(/edit/i)
@@ -195,6 +208,7 @@ describe('MealSuggestionCard', () => {
         isSelected={true}
         onSelect={mockOnSelect}
         onEdit={mockOnEdit}
+        index={0}
       />
     )
     const checkbox = screen.getByRole('checkbox')
@@ -213,6 +227,7 @@ describe('MealSuggestionCard', () => {
         isSelected={false}
         onSelect={mockOnSelect}
         onEdit={mockOnEdit}
+        index={0}
       />
     )
     // Should still render the meal
@@ -231,8 +246,63 @@ describe('MealSuggestionCard', () => {
         isSelected={false}
         onSelect={mockOnSelect}
         onEdit={mockOnEdit}
+        index={0}
       />
     )
     expect(screen.getByText('Spaghetti Bolognese')).toBeInTheDocument()
+  })
+
+  it('shows Add button when onAdd prop is provided', () => {
+    render(
+      <MealSuggestionCard
+        suggestion={mockSuggestion}
+        weekStartDate={createMonday()}
+        isSelected={false}
+        onSelect={mockOnSelect}
+        onEdit={mockOnEdit}
+        onAdd={mockOnAdd}
+        index={0}
+      />
+    )
+    const addButton = screen.getByLabelText(
+      /add.*spaghetti bolognese.*to meal plan/i
+    )
+    expect(addButton).toBeInTheDocument()
+  })
+
+  it('does not show Add button when onAdd prop is not provided', () => {
+    render(
+      <MealSuggestionCard
+        suggestion={mockSuggestion}
+        weekStartDate={createMonday()}
+        isSelected={false}
+        onSelect={mockOnSelect}
+        onEdit={mockOnEdit}
+        index={0}
+      />
+    )
+    const addButton = screen.queryByLabelText(
+      /add.*spaghetti bolognese.*to meal plan/i
+    )
+    expect(addButton).not.toBeInTheDocument()
+  })
+
+  it('calls onAdd when Add button is clicked', () => {
+    render(
+      <MealSuggestionCard
+        suggestion={mockSuggestion}
+        weekStartDate={createMonday()}
+        isSelected={false}
+        onSelect={mockOnSelect}
+        onEdit={mockOnEdit}
+        onAdd={mockOnAdd}
+        index={0}
+      />
+    )
+    const addButton = screen.getByLabelText(
+      /add.*spaghetti bolognese.*to meal plan/i
+    )
+    fireEvent.click(addButton)
+    expect(mockOnAdd).toHaveBeenCalledWith(mockSuggestion, 0)
   })
 })

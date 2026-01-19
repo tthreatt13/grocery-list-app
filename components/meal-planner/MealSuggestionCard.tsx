@@ -10,6 +10,8 @@ interface MealSuggestionCardProps {
   isSelected: boolean
   onSelect: (selected: boolean) => void
   onEdit: (suggestion: MealSuggestion) => void
+  onAdd?: (suggestion: MealSuggestion, index: number) => void
+  index: number
 }
 
 export default function MealSuggestionCard({
@@ -18,6 +20,8 @@ export default function MealSuggestionCard({
   isSelected,
   onSelect,
   onEdit,
+  onAdd,
+  index,
 }: MealSuggestionCardProps) {
   // Calculate the actual date for this meal
   // weekStartDate should be a Monday, and day_of_week is 0=Monday, 1=Tuesday, etc.
@@ -123,6 +127,28 @@ export default function MealSuggestionCard({
 
           {/* Actions */}
           <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
+            {onAdd && (
+              <button
+                onClick={() => onAdd(suggestion, index)}
+                className="text-sm text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-1"
+                aria-label={`Add ${suggestion.meal_name} to meal plan`}
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                Add
+              </button>
+            )}
             <button
               onClick={() => onEdit(suggestion)}
               className="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"

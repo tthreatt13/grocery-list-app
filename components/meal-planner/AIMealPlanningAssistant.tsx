@@ -179,6 +179,53 @@ export default function AIMealPlanningAssistant({
     setIsEditModalOpen(false)
   }
 
+  const handleAddSingleMeal = async (
+    suggestion: MealSuggestion,
+    index: number
+  ) => {
+    try {
+      setIsApplyingMeals(true)
+      setError(null)
+      await onMealsApplied([suggestion])
+      // Remove the added meal from suggestions using index-based filtering
+      setSuggestions(suggestions.filter((_, i) => i !== index))
+      // Populate input field with meal name
+      setUserMessage(suggestion.meal_name)
+      setError(null) // Clear any errors on success
+    } catch (err) {
+      let errorMessage = 'Failed to add meal. Please try again.'
+      if (err instanceof Error) {
+        if (
+          err.message.includes('401') ||
+          err.message.includes('Unauthorized')
+        ) {
+          errorMessage = 'Authentication required. Please sign in again.'
+        } else if (
+          err.message.includes('403') ||
+          err.message.includes('Forbidden')
+        ) {
+          errorMessage = 'You do not have permission to perform this action.'
+        } else if (
+          err.message.includes('500') ||
+          err.message.includes('Internal Server Error')
+        ) {
+          errorMessage = 'Server error. Please try again later.'
+        } else if (
+          err.message.includes('Network') ||
+          err.message.includes('fetch')
+        ) {
+          errorMessage =
+            'Network error. Please check your connection and try again.'
+        } else {
+          errorMessage = err.message
+        }
+      }
+      setError(errorMessage)
+    } finally {
+      setIsApplyingMeals(false)
+    }
+  }
+
   const handleApplyMeals = async () => {
     const selectedMeals = suggestions.filter((_, index) =>
       selectedMealIds.has(index)
@@ -351,6 +398,8 @@ export default function AIMealPlanningAssistant({
                 isSelected={selectedMealIds.has(index)}
                 onSelect={(selected) => handleSelectMeal(index, selected)}
                 onEdit={handleEditSuggestion}
+                onAdd={handleAddSingleMeal}
+                index={index}
               />
             ))}
           </div>
