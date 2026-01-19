@@ -63,15 +63,9 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 4.4 Implement meal selection and editing functionality
   - [x] 4.5 Implement apply meals functionality
 
-- [ ] 5.0 Integration and Optional Features
-  - [ ] 5.1 Integrate AI assistant component into app/meal-planner/page.tsx
-  - [ ] 5.2 Add optional grocery list generation after meals are applied
-  - [ ] 5.3 Style chat interface for desktop and mobile responsiveness
-  - [ ] 5.4 Add error handling and loading states throughout
-
-- [ ] 6.0 Testing
-  - [ ] 6.1 Write unit tests for AI service context gathering functions
-  - [ ] 6.2 Write unit tests for prompt formatting
-  - [ ] 6.3 Write integration tests for AI suggest endpoint (with mocked Anthropic API)
-  - [ ] 6.4 Write component tests for AIMealPlanningAssistant
-  - [ ] 6.5 Write component tests for MealSuggestionCard
+- [x] 5.0 Integration and Optional Features
+  - [x] 5.1 Integrate AI assistant component into app/meal-planner/page.tsx
+  - [x] 5.2 Add optional grocery list generation after meals are applied
+  - [x] 5.3 Style chat interface for desktop and mobile responsiveness
+  - [x] 5.4 Add error handling and loading states throughout
+  - [x] 5.5 Write integration tests for AI suggest endpoint (with mocked Anthropic API) in backend/tests/routes/test_meals.py

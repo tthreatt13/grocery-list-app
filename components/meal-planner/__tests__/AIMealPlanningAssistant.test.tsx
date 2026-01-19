@@ -44,6 +44,8 @@ const mockChatHistory: ChatMessage[] = [
 describe('AIMealPlanningAssistant', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    // Reset getToken mock to return a valid token
+    mockGetToken.mockResolvedValue('mock-token')
     mockGetAIMealSuggestions.mockResolvedValue({
       suggestions: mockSuggestions,
       conversation_history: mockChatHistory,
@@ -322,6 +324,7 @@ describe('AIMealPlanningAssistant', () => {
     fireEvent.click(sendButton)
 
     await waitFor(() => {
+      // The error handling now shows the actual error message
       expect(screen.getByText(/API request failed/i)).toBeInTheDocument()
     })
   })
