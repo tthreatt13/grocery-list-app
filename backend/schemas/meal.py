@@ -73,3 +73,37 @@ class GenerateGroceryListResponse(BaseModel):
     grocery_list_id: int
     items_count: int
     message: str
+
+
+class MealSuggestion(BaseModel):
+    """Schema for AI-generated meal suggestion."""
+
+    meal_name: str = Field(..., max_length=200)
+    meal_type: str = Field(..., pattern="^(breakfast|lunch|dinner|snack)$")
+    day_of_week: int = Field(..., ge=0, le=6)  # 0=Monday, 6=Sunday
+    ingredients: List[str] = Field(default_factory=list)
+    uses_pantry_items: List[str] = Field(default_factory=list)
+    notes: Optional[str] = None
+
+
+class ChatMessage(BaseModel):
+    """Schema for chat message in conversation history."""
+
+    role: str = Field(..., pattern="^(user|assistant)$")
+    content: str
+
+
+class AISuggestRequest(BaseModel):
+    """Schema for AI meal suggestion request."""
+
+    household_id: int
+    week_start_date: date
+    user_message: str
+    conversation_history: List[ChatMessage] = Field(default_factory=list)
+
+
+class AISuggestResponse(BaseModel):
+    """Schema for AI meal suggestion response."""
+
+    suggestions: List[MealSuggestion]
+    conversation_history: List[ChatMessage] = Field(default_factory=list)

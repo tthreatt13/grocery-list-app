@@ -20,6 +20,9 @@ class Settings(BaseSettings):
     clerk_publishable_key: str = ""
     clerk_api_url: str = "https://api.clerk.com/v1"
 
+    # Anthropic AI
+    anthropic_api_key: str = "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"
+
     # API Configuration
     api_prefix: str = "/api"
     # Default CORS origins (safe, explicit list).
