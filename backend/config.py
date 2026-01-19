@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     clerk_api_url: str = "https://api.clerk.com/v1"
 
     # Anthropic AI
-    anthropic_api_key: str = "sk-ant-api03-REMOVED_FROM_HISTORY"
+    anthropic_api_key: str = ""
 
     # API Configuration
     api_prefix: str = "/api"

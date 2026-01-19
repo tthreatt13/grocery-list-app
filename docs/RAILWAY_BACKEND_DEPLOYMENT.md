@@ -124,11 +124,13 @@ class Settings(BaseSettings):
 
 - `DATABASE_URL`: `${{Postgres.DATABASE_URL}}` (auto-connected to PostgreSQL)
 - `ENVIRONMENT`: `production`
-- `CLERK_SECRET_KEY`: `sk_test_PLACEHOLDER_REPLACE_WITH_ACTUAL_CLERK_SECRET_KEY`
+- `CLERK_SECRET_KEY`: Get from [Clerk Dashboard](https://clerk.com/dashboard)
+- `ANTHROPIC_API_KEY`: Get from [Anthropic Console](https://console.anthropic.com/) (required for AI meal planning features)
 
 **Required Updates:**
 
 - Replace `CLERK_SECRET_KEY` with actual Clerk secret key from dashboard
+- Replace `ANTHROPIC_API_KEY` with actual Anthropic API key from console (required for AI meal planning assistant)
 - Add any additional environment-specific variables as needed
 
 ### 4. GitHub Integration
@@ -318,6 +320,13 @@ allowed_origins = [
 - Check Clerk dashboard for API key validity
 - Ensure JWT tokens are being sent in requests
 
+**5. AI Meal Planning Issues**
+
+- Verify `ANTHROPIC_API_KEY` is set correctly in Railway Variables tab
+- Check Anthropic console for API key validity and usage limits
+- Ensure API key starts with `sk-ant-api03-` (for API v3)
+- AI meal planning features will fail gracefully if API key is missing or invalid
+
 ### Debugging Commands
 
 ```bash
@@ -373,10 +382,11 @@ railway shell
 
 ### Immediate Actions Required
 
-1. **Update Clerk Secret Key**: Replace placeholder with actual key
-2. **Verify Database Migrations**: Migrations run automatically, but verify they completed successfully (see [PRODUCTION_DATABASE_VERIFICATION.md](./PRODUCTION_DATABASE_VERIFICATION.md))
-3. **Deploy Frontend**: Deploy to Vercel with Railway backend URL
-4. **End-to-End Testing**: Test all application features
+1. **Update Clerk Secret Key**: Replace placeholder with actual key from Clerk dashboard
+2. **Update Anthropic API Key**: Set `ANTHROPIC_API_KEY` in Railway Variables tab (get from https://console.anthropic.com/) - required for AI meal planning features
+3. **Verify Database Migrations**: Migrations run automatically, but verify they completed successfully (see [PRODUCTION_DATABASE_VERIFICATION.md](./PRODUCTION_DATABASE_VERIFICATION.md))
+4. **Deploy Frontend**: Deploy to Vercel with Railway backend URL
+5. **End-to-End Testing**: Test all application features including AI meal planning assistant
 
 ### Future Enhancements
 

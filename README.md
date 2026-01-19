@@ -45,6 +45,12 @@ A modern, full-stack grocery list and meal planning application built for busy p
 ### 🍳 Weekly Meal Planner
 
 - Plan meals for the entire week (Breakfast, Lunch, Dinner)
+- **AI-Powered Meal Planning Assistant** with interactive chat interface:
+  - Get intelligent meal suggestions based on your pantry inventory, preferences, existing meals, and weather
+  - Chat with Claude AI to refine suggestions (e.g., "make Monday's dinner vegetarian" or "suggest something quick for Wednesday")
+  - Context-aware suggestions that use pantry items to reduce waste
+  - Apply AI-suggested meals directly to your meal plan with one click
+  - Optionally generate grocery lists from AI-suggested meals
 - Visual calendar view with easy navigation between weeks
 - Add meals with ingredients and notes
 - Meal categories: Normal, Quick Meal, or Eat Out
@@ -118,6 +124,7 @@ pip install -r requirements.txt
 # Set up environment variables
 # Copy railway-env-template.txt and create .env file with your settings
 # For local development, DATABASE_URL can use SQLite: sqlite:///./grocery_app.db
+# ANTHROPIC_API_KEY is required for AI meal planning features (get from https://console.anthropic.com/)
 
 # Set up the database
 alembic upgrade head
@@ -158,6 +165,7 @@ npm run dev
 
 - `DATABASE_URL` - Database connection string (PostgreSQL or SQLite)
 - `CLERK_SECRET_KEY` - Clerk authentication secret key
+- `ANTHROPIC_API_KEY` - Anthropic Claude API key for AI meal planning (get from https://console.anthropic.com/)
 - `ENVIRONMENT` - Environment name (development/production)
 - `ALLOWED_ORIGINS` - Comma-separated list of allowed CORS origins (optional)
 
@@ -217,7 +225,8 @@ grocery-list-app/
 │   │   ├── weather.py           # Weather response schemas
 │   │   └── dashboard.py        # Dashboard insights schemas
 │   ├── services/                # Business logic services
-│   │   └── weather.py           # Weather API integration service
+│   │   ├── weather.py           # Weather API integration service
+│   │   └── meal_planning_ai.py  # AI meal planning service (Anthropic Claude integration)
 │   ├── middleware/              # Authentication & permissions
 │   │   ├── auth.py
 │   │   └── permissions.py
@@ -254,6 +263,8 @@ grocery-list-app/
 │   │   ├── MealCard.tsx
 │   │   ├── AddMealModal.tsx
 │   │   ├── MealDetailsModal.tsx
+│   │   ├── AIMealPlanningAssistant.tsx  # AI-powered meal planning assistant
+│   │   ├── MealSuggestionCard.tsx      # Meal suggestion display component
 │   │   └── GenerateGroceryListFromMealsModal.tsx
 │   ├── household/               # Household components
 │   │   ├── MemberCard.tsx
@@ -461,6 +472,7 @@ All tests, linting, and formatting checks must pass before code can be merged.
 - **[Alembic](https://alembic.sqlalchemy.org/)** - Database migration tool
 - **[Pydantic](https://pydantic.dev/)** - Data validation using Python type hints
 - **[Pytest](https://pytest.org/)** - Python testing framework
+- **[Anthropic Claude](https://www.anthropic.com/)** - AI-powered meal planning assistant
 - **[api.weather.gov](https://www.weather.gov/documentation/services-web-api)** - National Weather Service API for forecasts
 
 ## 🏛️ Architecture
@@ -525,7 +537,7 @@ This is a **production-ready full-stack application** with complete backend inte
   - Quick actions and recent lists sections
   - Session-based dismissed items management
 - **Grocery Lists**: Complete backend integration with sorting, filtering, and archiving
-- **Meal Planner**: Full backend integration with meal-to-grocery-list generation, meal categories (Normal/Quick Meal/Eat Out), and delete confirmation modal
+- **Meal Planner**: Full backend integration with meal-to-grocery-list generation, meal categories (Normal/Quick Meal/Eat Out), delete confirmation modal, and **AI-powered meal planning assistant** with Claude integration
 - **Pantry Inventory**: Complete backend integration with low-stock alerts and grocery list generation (create new lists or add to existing lists)
 - **Household Management**: Full backend integration with member roles and preferences
 - **Weather Integration**: 7-day weather forecasts with zip code preferences and caching
@@ -557,7 +569,7 @@ See [DEPLOYMENT_CHECKLIST.md](docs/DEPLOYMENT_CHECKLIST.md) for deployment proce
 - [ ] Mobile app (React Native)
 - [ ] Export/import functionality
 - [ ] Meal plan templates
-- [ ] Weather-based meal recommendations
+- [ ] Enhanced weather-based meal recommendations (basic weather awareness now available via AI assistant)
 - [ ] Multiple location support for weather forecasts
 - [ ] Advanced analytics and trend tracking
 - [ ] Customizable dashboard widgets
