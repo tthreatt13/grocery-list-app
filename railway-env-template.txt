@@ -10,6 +10,9 @@ ENVIRONMENT=production
 # Clerk Authentication (get from https://clerk.com dashboard)
 CLERK_SECRET_KEY=sk_test_YOUR_ACTUAL_CLERK_SECRET_KEY_HERE
 
+# Anthropic AI (get from https://console.anthropic.com/)
+ANTHROPIC_API_KEY=sk-ant-api03-REMOVED_FROM_HISTORY
+
 # Instructions:
 # 1. Go to Railway dashboard > Your Project > Variables tab
 # 2. Add each variable above (except DATABASE_URL which is automatic)
