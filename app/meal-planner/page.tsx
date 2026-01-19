@@ -42,6 +42,7 @@ function convertMealResponse(meal: MealResponse): Meal {
   const weekStart = new Date(year, month - 1, day) // month is 0-indexed in JS
   const mealDate = new Date(weekStart)
   mealDate.setDate(weekStart.getDate() + meal.day_of_week)
+  mealDate.setHours(0, 0, 0, 0) // Normalize to midnight for consistent date comparison
 
   return {
     id: meal.id.toString(),
@@ -533,6 +534,12 @@ export default function MealPlannerPage() {
       return
     }
 
+    if (!currentWeekStart) {
+      setError('Week start date is not set. Please refresh the page.')
+      console.error('handleAIMealsApplied: currentWeekStart is null')
+      return
+    }
+
     try {
       setIsApplyingAIMeals(true)
       setError(null)
@@ -541,47 +548,243 @@ export default function MealPlannerPage() {
         throw new Error('Authentication required')
       }
 
+      console.warn('handleAIMealsApplied: Starting meal creation', {
+        suggestionsCount: suggestions.length,
+        selectedHouseholdId,
+        currentWeekStart: currentWeekStart.toISOString(),
+        weekStartDateFormatted: formatDateForAPI(currentWeekStart),
+      })
+
       // Create meals from suggestions
       // Note: suggestion.day_of_week is already in backend format (0=Monday, 6=Sunday)
       const createdMeals: Meal[] = []
+      const failedMeals: Array<{ mealName: string; error: string }> = []
+
       for (const suggestion of suggestions) {
         try {
+          // Handle ingredients: check for null/undefined, handle empty arrays, format as comma-separated string
+          const ingredientsString =
+            suggestion.ingredients && suggestion.ingredients.length > 0
+              ? suggestion.ingredients.join(', ')
+              : ''
+
+          const weekStartDateFormatted = formatDateForAPI(currentWeekStart)
+          console.warn('handleAIMealsApplied: Creating meal', {
+            mealName: suggestion.meal_name,
+            mealType: suggestion.meal_type,
+            dayOfWeek: suggestion.day_of_week,
+            weekStartDate: weekStartDateFormatted,
+            ingredientsCount: suggestion.ingredients?.length || 0,
+          })
+
           const newMealResponse = await createMeal(
             {
               household_id: selectedHouseholdId,
               name: suggestion.meal_name,
               meal_type: suggestion.meal_type,
               day_of_week: suggestion.day_of_week,
-              week_start_date: formatDateForAPI(currentWeekStart),
+              week_start_date: weekStartDateFormatted,
               notes: suggestion.notes,
-              ingredients: suggestion.ingredients.join(', '),
+              ingredients: ingredientsString,
               meal_category: 'normal',
             },
             token
           )
           const convertedMeal = convertMealResponse(newMealResponse)
           createdMeals.push(convertedMeal)
+          console.warn('handleAIMealsApplied: Meal created successfully', {
+            mealId: newMealResponse.id,
+            mealName: suggestion.meal_name,
+            convertedMealDate: convertedMeal.date.toISOString(),
+          })
         } catch (err) {
-          console.error(`Failed to create meal "${suggestion.meal_name}":`, err)
+          // Collect error information for each failed meal
+          const errorMessage =
+            err instanceof Error
+              ? err.message
+              : 'Unknown error occurred while creating meal'
+          const mealName = suggestion.meal_name || 'Unnamed meal'
+
+          // Log error with full context
+          console.error(`Failed to create meal "${mealName}":`, {
+            error: err,
+            mealName: suggestion.meal_name,
+            mealType: suggestion.meal_type,
+            dayOfWeek: suggestion.day_of_week,
+            errorMessage,
+          })
+
+          // Store failed meal information
+          failedMeals.push({
+            mealName,
+            error: errorMessage,
+          })
+
           // Continue with other meals
         }
       }
 
-      // Update meals state
-      setMeals([...meals, ...createdMeals])
+      // Refetch meals from API to ensure UI consistency
+      if (createdMeals.length > 0) {
+        try {
+          // Small delay to ensure backend has committed the meals
+          await new Promise((resolve) => setTimeout(resolve, 100))
 
-      // Show success message
+          const weekDate = formatDateForAPI(currentWeekStart)
+          const createdMealIds = new Set(
+            createdMeals.map((m) => parseInt(m.id))
+          )
+
+          console.warn('handleAIMealsApplied: Refetching meals', {
+            weekDate,
+            selectedHouseholdId,
+            createdMealsCount: createdMeals.length,
+            createdMealIds: Array.from(createdMealIds),
+          })
+
+          const response = await getWeeklyMeals(
+            weekDate,
+            selectedHouseholdId,
+            token
+          )
+          console.warn('handleAIMealsApplied: Meals refetched', {
+            mealsCount: response.meals.length,
+            mealIds: response.meals.map((m) => m.id),
+          })
+
+          // Verify that refetched meals include the created meals
+          const refetchedMealIds = new Set(response.meals.map((m) => m.id))
+          const missingMealIds = Array.from(createdMealIds).filter(
+            (id) => !refetchedMealIds.has(id)
+          )
+
+          if (missingMealIds.length > 0) {
+            console.warn(
+              'handleAIMealsApplied: Some created meals not found in refetch, retrying',
+              {
+                missingMealIds,
+              }
+            )
+            // Retry once after a longer delay
+            await new Promise((resolve) => setTimeout(resolve, 500))
+            const retryResponse = await getWeeklyMeals(
+              weekDate,
+              selectedHouseholdId,
+              token
+            )
+            const retryMealIds = new Set(retryResponse.meals.map((m) => m.id))
+            const stillMissing = Array.from(createdMealIds).filter(
+              (id) => !retryMealIds.has(id)
+            )
+
+            if (stillMissing.length > 0) {
+              console.warn(
+                'handleAIMealsApplied: Some meals still missing after retry, using fallback',
+                {
+                  stillMissing,
+                }
+              )
+              // Use fallback: merge created meals with refetched meals
+              const convertedMeals =
+                retryResponse.meals.map(convertMealResponse)
+              const existingMealIds = new Set(convertedMeals.map((m) => m.id))
+              const newMeals = createdMeals.filter(
+                (m) => !existingMealIds.has(m.id)
+              )
+              setMeals([...convertedMeals, ...newMeals])
+            } else {
+              const convertedMeals =
+                retryResponse.meals.map(convertMealResponse)
+              setMeals(convertedMeals)
+            }
+          } else {
+            const convertedMeals = response.meals.map(convertMealResponse)
+            console.warn('handleAIMealsApplied: Updating meals state', {
+              convertedMealsCount: convertedMeals.length,
+              convertedMealDates: convertedMeals.map((m) =>
+                m.date.toISOString()
+              ),
+            })
+            setMeals(convertedMeals)
+          }
+        } catch (refetchError) {
+          console.error('handleAIMealsApplied: Refetch failed', {
+            error: refetchError,
+            weekDate: formatDateForAPI(currentWeekStart),
+            selectedHouseholdId,
+          })
+
+          // Fallback: Use the created meals directly if refetch fails
+          console.warn(
+            'handleAIMealsApplied: Falling back to using created meals directly',
+            {
+              createdMealsCount: createdMeals.length,
+            }
+          )
+          // Merge created meals with existing meals, avoiding duplicates
+          setMeals((prevMeals) => {
+            const existingMealIds = new Set(prevMeals.map((m) => m.id))
+            const newMeals = createdMeals.filter(
+              (m) => !existingMealIds.has(m.id)
+            )
+            return [...prevMeals, ...newMeals]
+          })
+
+          // Show warning about refetch failure
+          setError(
+            'Meals were created but could not refresh the list. Please refresh the page to see all meals.'
+          )
+        }
+      }
+
+      // Show success message with detailed error information if any meals failed
       if (createdMeals.length > 0) {
         const hasIngredients = createdMeals.some(
           (m) => m.ingredients && m.ingredients.length > 0
         )
-        const failedCount = suggestions.length - createdMeals.length
+        const failedCount = failedMeals.length
         let message = `Successfully added ${createdMeals.length} meal${
           createdMeals.length !== 1 ? 's' : ''
         } to your meal plan!`
 
         if (failedCount > 0) {
-          message += ` (${failedCount} meal${failedCount !== 1 ? 's' : ''} failed to create)`
+          // Build detailed error message for failed meals
+          const failedMealNames = failedMeals.map((f) => f.mealName).join(', ')
+          message += ` (${failedCount} meal${failedCount !== 1 ? 's' : ''} failed: ${failedMealNames})`
+
+          // Show error details if there are failures
+          if (failedMeals.length > 0) {
+            // Format error details for single-line display
+            const errorDetails = failedMeals
+              .map((f) => {
+                // Simplify error messages for display
+                let displayError = f.error
+                if (
+                  displayError.includes('401') ||
+                  displayError.includes('Unauthorized')
+                ) {
+                  displayError = 'Authentication error'
+                } else if (
+                  displayError.includes('403') ||
+                  displayError.includes('Forbidden')
+                ) {
+                  displayError = 'Permission denied'
+                } else if (
+                  displayError.includes('500') ||
+                  displayError.includes('Internal Server Error')
+                ) {
+                  displayError = 'Server error'
+                } else if (
+                  displayError.includes('Network') ||
+                  displayError.includes('fetch')
+                ) {
+                  displayError = 'Network error'
+                }
+                return `${f.mealName} (${displayError})`
+              })
+              .join('; ')
+            setError(`Some meals failed to create: ${errorDetails}`)
+          }
         }
 
         if (hasIngredients) {
@@ -592,21 +795,57 @@ export default function MealPlannerPage() {
         setTimeout(() => {
           setSuccessMessage(null)
         }, 8000)
-
-        // Note: User can manually click "Generate Grocery List" button if they want
-        // We don't auto-open the modal to keep it optional
       } else {
-        let errorMessage = 'Failed to create any meals. Please try again.'
-        if (suggestions.length > 0) {
-          errorMessage = `Failed to create ${suggestions.length} meal${
-            suggestions.length !== 1 ? 's' : ''
-          }. Please check your connection and try again.`
+        // All meals failed - show detailed error message
+        let errorMessage = 'Failed to create any meals. '
+
+        if (failedMeals.length > 0) {
+          // Format error details for single-line display
+          const errorDetails = failedMeals
+            .map((f) => {
+              // Simplify error messages for display
+              let displayError = f.error
+              if (
+                displayError.includes('401') ||
+                displayError.includes('Unauthorized')
+              ) {
+                displayError = 'Authentication error'
+              } else if (
+                displayError.includes('403') ||
+                displayError.includes('Forbidden')
+              ) {
+                displayError = 'Permission denied'
+              } else if (
+                displayError.includes('500') ||
+                displayError.includes('Internal Server Error')
+              ) {
+                displayError = 'Server error'
+              } else if (
+                displayError.includes('Network') ||
+                displayError.includes('fetch')
+              ) {
+                displayError = 'Network error'
+              }
+              return `${f.mealName} (${displayError})`
+            })
+            .join('; ')
+          errorMessage += `Errors: ${errorDetails}`
+        } else {
+          errorMessage += 'Please check your connection and try again.'
         }
+
         setError(errorMessage)
+        setSuccessMessage(null)
       }
     } catch (err) {
-      console.error('Error applying AI meals:', err)
-      let errorMessage = 'Failed to apply meals. Please try again.'
+      // Log the error with full context
+      console.error('Error applying AI meals:', {
+        error: err,
+        suggestionsCount: suggestions.length,
+        selectedHouseholdId,
+      })
+
+      let errorMessage = 'Failed to apply meals. '
       if (err instanceof Error) {
         if (
           err.message.includes('401') ||
@@ -630,10 +869,13 @@ export default function MealPlannerPage() {
           errorMessage =
             'Network error. Please check your connection and try again.'
         } else {
-          errorMessage = err.message
+          errorMessage += err.message
         }
+      } else {
+        errorMessage += 'An unexpected error occurred. Please try again.'
       }
       setError(errorMessage)
+      setSuccessMessage(null)
     } finally {
       setIsApplyingAIMeals(false)
     }

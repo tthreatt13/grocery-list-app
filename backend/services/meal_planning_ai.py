@@ -310,7 +310,7 @@ def call_anthropic_api(prompt: str, api_key: str) -> Any:
     try:
         client = Anthropic(api_key=api_key)
         response = client.messages.create(
-            model="claude-3-5-sonnet-20241022",  # Using Sonnet for cost/performance balance
+            model="claude-sonnet-4-20250514",  # Updated to current recommended model (claude-3-5-sonnet-20241022 was deprecated)
             max_tokens=4096,
             messages=[
                 {
@@ -353,19 +353,38 @@ def parse_llm_response(response: Any) -> Dict[str, List[Dict[str, Any]]]:
                 raise ValueError("Empty response from LLM")
 
             # Try to extract JSON from the response (might be wrapped in markdown code blocks)
+            original_text = text_content
             text_content = text_content.strip()
+            
+            # Store original for fallback
+            original_stripped = text_content
+            
             if "```json" in text_content:
                 # Extract JSON from markdown code block
                 start = text_content.find("```json") + 7
                 end = text_content.find("```", start)
                 if end != -1:
-                    text_content = text_content[start:end].strip()
+                    extracted = text_content[start:end].strip()
+                    # Only use extracted if it's not empty
+                    if extracted:
+                        text_content = extracted
+                    else:
+                        text_content = original_stripped
             elif "```" in text_content:
                 # Extract from generic code block
                 start = text_content.find("```") + 3
                 end = text_content.find("```", start)
                 if end != -1:
-                    text_content = text_content[start:end].strip()
+                    extracted = text_content[start:end].strip()
+                    # Only use extracted if it's not empty
+                    if extracted:
+                        text_content = extracted
+                    else:
+                        text_content = original_stripped
+
+            # Check if text_content is empty before parsing
+            if not text_content:
+                raise ValueError(f"Empty text content after extraction - LLM response may be malformed. Original response length: {len(original_text)}")
 
             # Parse JSON
             parsed = json.loads(text_content)
