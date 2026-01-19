@@ -17,9 +17,15 @@ from main import app
 class TestAISuggestMeals:
     """Test cases for AI meal suggestion endpoint."""
 
+    @patch("config.settings")
     @patch("services.meal_planning_ai.Anthropic")
     def test_ai_suggest_meals_success(
-        self, mock_anthropic_class, db_session, sample_user, sample_household
+        self,
+        mock_anthropic_class,
+        mock_settings,
+        db_session,
+        sample_user,
+        sample_household,
     ):
         """Test POST /api/meals/ai-suggest returns meal suggestions successfully."""
         from database import get_db
@@ -35,6 +41,9 @@ class TestAISuggestMeals:
             return sample_user
 
         app.dependency_overrides[get_current_user] = override_get_current_user
+
+        # Mock settings to provide API key
+        mock_settings.anthropic_api_key = "test-api-key"
 
         # Mock Anthropic API response
         mock_anthropic_instance = Mock()
@@ -107,9 +116,15 @@ class TestAISuggestMeals:
         # Verify Anthropic API was called
         mock_anthropic_instance.messages.create.assert_called_once()
 
+    @patch("config.settings")
     @patch("services.meal_planning_ai.Anthropic")
     def test_ai_suggest_meals_with_conversation_history(
-        self, mock_anthropic_class, db_session, sample_user, sample_household
+        self,
+        mock_anthropic_class,
+        mock_settings,
+        db_session,
+        sample_user,
+        sample_household,
     ):
         """Test POST /api/meals/ai-suggest with conversation history."""
         from database import get_db
@@ -125,6 +140,9 @@ class TestAISuggestMeals:
             return sample_user
 
         app.dependency_overrides[get_current_user] = override_get_current_user
+
+        # Mock settings to provide API key
+        mock_settings.anthropic_api_key = "test-api-key"
 
         # Mock Anthropic API response
         mock_anthropic_instance = Mock()
@@ -241,9 +259,15 @@ class TestAISuggestMeals:
 
         assert response.status_code == 403
 
+    @patch("config.settings")
     @patch("services.meal_planning_ai.Anthropic")
     def test_ai_suggest_meals_api_error(
-        self, mock_anthropic_class, db_session, sample_user, sample_household
+        self,
+        mock_anthropic_class,
+        mock_settings,
+        db_session,
+        sample_user,
+        sample_household,
     ):
         """Test POST /api/meals/ai-suggest handles Anthropic API errors."""
         from database import get_db
@@ -259,6 +283,9 @@ class TestAISuggestMeals:
             return sample_user
 
         app.dependency_overrides[get_current_user] = override_get_current_user
+
+        # Mock settings to provide API key
+        mock_settings.anthropic_api_key = "test-api-key"
 
         # Mock Anthropic API to raise an error
         mock_anthropic_instance = Mock()
@@ -335,9 +362,15 @@ class TestAISuggestMeals:
         data = response.json()
         assert "detail" in data
 
+    @patch("config.settings")
     @patch("services.meal_planning_ai.Anthropic")
     def test_ai_suggest_meals_auto_adjusts_week_start(
-        self, mock_anthropic_class, db_session, sample_user, sample_household
+        self,
+        mock_anthropic_class,
+        mock_settings,
+        db_session,
+        sample_user,
+        sample_household,
     ):
         """Test POST /api/meals/ai-suggest automatically adjusts week_start_date to Monday."""
         from database import get_db
@@ -353,6 +386,9 @@ class TestAISuggestMeals:
             return sample_user
 
         app.dependency_overrides[get_current_user] = override_get_current_user
+
+        # Mock settings to provide API key
+        mock_settings.anthropic_api_key = "test-api-key"
 
         # Mock Anthropic API response
         mock_anthropic_instance = Mock()
