@@ -34,6 +34,7 @@ export default function AIMealPlanningAssistant({
   const [editingSuggestion, setEditingSuggestion] =
     useState<MealSuggestion | null>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isApplyingMeals, setIsApplyingMeals] = useState(false)
 
   const chatEndRef = useRef<HTMLDivElement>(null)
 
@@ -63,6 +64,10 @@ export default function AIMealPlanningAssistant({
 
     try {
       const token = await getToken()
+      if (!token) {
+        throw new Error('Authentication required. Please sign in again.')
+      }
+
       const weekStartDateStr = formatDateForAPI(weekStartDate)
 
       const response = await getAIMealSuggestions(
@@ -87,14 +92,38 @@ export default function AIMealPlanningAssistant({
       // Update suggestions
       setSuggestions(response.suggestions)
       setSelectedMealIds(new Set()) // Clear previous selections
+      setError(null) // Clear any previous errors
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'Failed to get meal suggestions. Please try again.'
-      )
-      // Remove the user message on error
-      setConversationHistory(conversationHistory)
+      let errorMessage = 'Failed to get meal suggestions. Please try again.'
+      if (err instanceof Error) {
+        if (
+          err.message.includes('401') ||
+          err.message.includes('Unauthorized')
+        ) {
+          errorMessage = 'Authentication required. Please sign in again.'
+        } else if (
+          err.message.includes('403') ||
+          err.message.includes('Forbidden')
+        ) {
+          errorMessage = 'You do not have permission to access this feature.'
+        } else if (
+          err.message.includes('500') ||
+          err.message.includes('Internal Server Error')
+        ) {
+          errorMessage = 'Server error. Please try again later.'
+        } else if (
+          err.message.includes('Network') ||
+          err.message.includes('fetch')
+        ) {
+          errorMessage =
+            'Network error. Please check your connection and try again.'
+        } else {
+          errorMessage = err.message
+        }
+      }
+      setError(errorMessage)
+      // Keep the user message in the conversation so they can see what they asked
+      // The error will be displayed below
     } finally {
       setIsLoading(false)
     }
@@ -161,16 +190,44 @@ export default function AIMealPlanningAssistant({
     }
 
     try {
+      setIsApplyingMeals(true)
+      setError(null)
       await onMealsApplied(selectedMeals)
       // Clear selections after successful apply
       setSelectedMealIds(new Set())
-      setError(null)
+      setSuggestions([]) // Clear suggestions after applying
+      setError(null) // Clear any errors on success
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'Failed to apply meals. Please try again.'
-      )
+      let errorMessage = 'Failed to apply meals. Please try again.'
+      if (err instanceof Error) {
+        if (
+          err.message.includes('401') ||
+          err.message.includes('Unauthorized')
+        ) {
+          errorMessage = 'Authentication required. Please sign in again.'
+        } else if (
+          err.message.includes('403') ||
+          err.message.includes('Forbidden')
+        ) {
+          errorMessage = 'You do not have permission to perform this action.'
+        } else if (
+          err.message.includes('500') ||
+          err.message.includes('Internal Server Error')
+        ) {
+          errorMessage = 'Server error. Please try again later.'
+        } else if (
+          err.message.includes('Network') ||
+          err.message.includes('fetch')
+        ) {
+          errorMessage =
+            'Network error. Please check your connection and try again.'
+        } else {
+          errorMessage = err.message
+        }
+      }
+      setError(errorMessage)
+    } finally {
+      setIsApplyingMeals(false)
     }
   }
 
@@ -198,12 +255,12 @@ export default function AIMealPlanningAssistant({
   return (
     <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
       {/* Header */}
-      <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
-        <div>
-          <h3 className="text-lg font-semibold text-gray-900">
+      <div className="px-3 md:px-4 py-3 border-b border-gray-200 flex items-center justify-between gap-2">
+        <div className="flex-1 min-w-0">
+          <h3 className="text-base md:text-lg font-semibold text-gray-900">
             AI Meal Planning Assistant
           </h3>
-          <p className="text-sm text-gray-600">
+          <p className="text-xs md:text-sm text-gray-600 hidden sm:block">
             Get personalized meal suggestions for your week
           </p>
         </div>
@@ -213,20 +270,22 @@ export default function AIMealPlanningAssistant({
             size="sm"
             onClick={handleClearConversation}
             aria-label="Clear conversation"
+            className="flex-shrink-0"
           >
-            Clear
+            <span className="hidden sm:inline">Clear</span>
+            <span className="sm:hidden">✕</span>
           </Button>
         )}
       </div>
 
       {/* Chat Messages */}
-      <div className="h-64 overflow-y-auto px-4 py-3 space-y-3">
+      <div className="h-48 md:h-64 overflow-y-auto px-3 md:px-4 py-3 space-y-3">
         {conversationHistory.length === 0 && (
-          <div className="text-center text-gray-500 py-8">
-            <p className="mb-2">
+          <div className="text-center text-gray-500 py-6 md:py-8">
+            <p className="mb-2 text-sm md:text-base">
               👋 Start a conversation to get meal suggestions!
             </p>
-            <p className="text-sm">
+            <p className="text-xs md:text-sm px-2">
               Try: &quot;Suggest some vegetarian meals&quot; or &quot;What can I
               make with my pantry items?&quot;
             </p>
@@ -241,23 +300,27 @@ export default function AIMealPlanningAssistant({
             }`}
           >
             <div
-              className={`max-w-[80%] rounded-lg px-4 py-2 ${
+              className={`max-w-[85%] md:max-w-[80%] rounded-lg px-3 md:px-4 py-2 ${
                 message.role === 'user'
                   ? 'bg-emerald-600 text-white'
                   : 'bg-gray-100 text-gray-900'
               }`}
             >
-              <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+              <p className="text-xs md:text-sm whitespace-pre-wrap break-words">
+                {message.content}
+              </p>
             </div>
           </div>
         ))}
 
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-gray-100 rounded-lg px-4 py-2">
+            <div className="bg-gray-100 rounded-lg px-3 md:px-4 py-2">
               <div className="flex items-center gap-2">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
-                <p className="text-sm text-gray-600">Loading suggestions...</p>
+                <div className="animate-spin rounded-full h-3 w-3 md:h-4 md:w-4 border-b-2 border-gray-600"></div>
+                <p className="text-xs md:text-sm text-gray-600">
+                  Loading suggestions...
+                </p>
               </div>
             </div>
           </div>
@@ -268,18 +331,18 @@ export default function AIMealPlanningAssistant({
 
       {/* Error Message */}
       {error && (
-        <div className="px-4 py-2 bg-red-50 border-t border-red-200">
-          <p className="text-sm text-red-700">{error}</p>
+        <div className="px-3 md:px-4 py-2 bg-red-50 border-t border-red-200">
+          <p className="text-xs md:text-sm text-red-700 break-words">{error}</p>
         </div>
       )}
 
       {/* Meal Suggestions */}
       {suggestions.length > 0 && (
-        <div className="border-t border-gray-200 px-4 py-3">
-          <h4 className="text-sm font-semibold text-gray-900 mb-3">
+        <div className="border-t border-gray-200 px-3 md:px-4 py-3">
+          <h4 className="text-xs md:text-sm font-semibold text-gray-900 mb-3">
             Meal Suggestions ({suggestions.length})
           </h4>
-          <div className="space-y-3 max-h-96 overflow-y-auto">
+          <div className="space-y-3 max-h-64 md:max-h-96 overflow-y-auto">
             {suggestions.map((suggestion, index) => (
               <MealSuggestionCard
                 key={index}
@@ -298,9 +361,37 @@ export default function AIMealPlanningAssistant({
                 variant="primary"
                 onClick={handleApplyMeals}
                 className="w-full"
+                disabled={isApplyingMeals}
               >
-                Apply {selectedMealIds.size} Selected Meal
-                {selectedMealIds.size !== 1 ? 's' : ''}
+                {isApplyingMeals ? (
+                  <>
+                    <svg
+                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
+                    </svg>
+                    Applying...
+                  </>
+                ) : (
+                  <>
+                    Apply {selectedMealIds.size} Selected Meal
+                    {selectedMealIds.size !== 1 ? 's' : ''}
+                  </>
+                )}
               </Button>
             </div>
           )}
@@ -308,7 +399,7 @@ export default function AIMealPlanningAssistant({
       )}
 
       {/* Input Area */}
-      <div className="px-4 py-3 border-t border-gray-200">
+      <div className="px-3 md:px-4 py-3 border-t border-gray-200">
         <div className="flex gap-2">
           <Input
             type="text"
@@ -316,17 +407,18 @@ export default function AIMealPlanningAssistant({
             value={userMessage}
             onChange={(e) => setUserMessage(e.target.value)}
             onKeyDown={handleKeyPress}
-            disabled={isLoading}
-            className="flex-1"
+            disabled={isLoading || isApplyingMeals}
+            className="flex-1 text-sm md:text-base"
           />
           <Button
             variant="primary"
             onClick={handleSendMessage}
-            disabled={!userMessage.trim() || isLoading}
+            disabled={!userMessage.trim() || isLoading || isApplyingMeals}
             aria-label="Send message"
+            className="flex-shrink-0"
           >
             <svg
-              className="w-5 h-5"
+              className="w-4 h-4 md:w-5 md:h-5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

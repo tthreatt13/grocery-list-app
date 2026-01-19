@@ -11,6 +11,7 @@ import MobileWeeklyCalendar, {
 } from '@/components/meal-planner/MobileWeeklyCalendar'
 import AddMealModal from '@/components/meal-planner/AddMealModal'
 import GenerateGroceryListFromMealsModal from '@/components/meal-planner/GenerateGroceryListFromMealsModal'
+import AIMealPlanningAssistant from '@/components/meal-planner/AIMealPlanningAssistant'
 import { Button } from '@/components/ui/Button'
 import { ConfirmDeleteModal } from '@/components/ui/ConfirmDeleteModal'
 import { formatDate } from '@/lib/utils'
@@ -23,6 +24,7 @@ import {
   generateGroceryList,
   MealResponse,
 } from '@/lib/api/meals'
+import { MealSuggestion } from '@/lib/types'
 import { getHouseholds, HouseholdResponse } from '@/lib/api/household'
 import { syncUser } from '@/lib/api/client'
 import {
@@ -91,6 +93,10 @@ export default function MealPlannerPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [mealToDelete, setMealToDelete] = useState<string | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
+
+  // State for AI assistant
+  const [showAIAssistant, setShowAIAssistant] = useState(false)
+  const [isApplyingAIMeals, setIsApplyingAIMeals] = useState(false)
 
   // Refs for calendar components to trigger scroll
   const desktopCalendarRef = useRef<WeeklyCalendarRef>(null)
@@ -520,6 +526,119 @@ export default function MealPlannerPage() {
     }
   }
 
+  // Handle applying meals from AI assistant
+  const handleAIMealsApplied = async (suggestions: MealSuggestion[]) => {
+    if (!selectedHouseholdId) {
+      setError('No household selected')
+      return
+    }
+
+    try {
+      setIsApplyingAIMeals(true)
+      setError(null)
+      const token = await getToken()
+      if (!token) {
+        throw new Error('Authentication required')
+      }
+
+      // Create meals from suggestions
+      // Note: suggestion.day_of_week is already in backend format (0=Monday, 6=Sunday)
+      const createdMeals: Meal[] = []
+      for (const suggestion of suggestions) {
+        try {
+          const newMealResponse = await createMeal(
+            {
+              household_id: selectedHouseholdId,
+              name: suggestion.meal_name,
+              meal_type: suggestion.meal_type,
+              day_of_week: suggestion.day_of_week,
+              week_start_date: formatDateForAPI(currentWeekStart),
+              notes: suggestion.notes,
+              ingredients: suggestion.ingredients.join(', '),
+              meal_category: 'normal',
+            },
+            token
+          )
+          const convertedMeal = convertMealResponse(newMealResponse)
+          createdMeals.push(convertedMeal)
+        } catch (err) {
+          console.error(`Failed to create meal "${suggestion.meal_name}":`, err)
+          // Continue with other meals
+        }
+      }
+
+      // Update meals state
+      setMeals([...meals, ...createdMeals])
+
+      // Show success message
+      if (createdMeals.length > 0) {
+        const hasIngredients = createdMeals.some(
+          (m) => m.ingredients && m.ingredients.length > 0
+        )
+        const failedCount = suggestions.length - createdMeals.length
+        let message = `Successfully added ${createdMeals.length} meal${
+          createdMeals.length !== 1 ? 's' : ''
+        } to your meal plan!`
+
+        if (failedCount > 0) {
+          message += ` (${failedCount} meal${failedCount !== 1 ? 's' : ''} failed to create)`
+        }
+
+        if (hasIngredients) {
+          message += ' Would you like to generate a grocery list?'
+        }
+
+        setSuccessMessage(message)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 8000)
+
+        // Note: User can manually click "Generate Grocery List" button if they want
+        // We don't auto-open the modal to keep it optional
+      } else {
+        let errorMessage = 'Failed to create any meals. Please try again.'
+        if (suggestions.length > 0) {
+          errorMessage = `Failed to create ${suggestions.length} meal${
+            suggestions.length !== 1 ? 's' : ''
+          }. Please check your connection and try again.`
+        }
+        setError(errorMessage)
+      }
+    } catch (err) {
+      console.error('Error applying AI meals:', err)
+      let errorMessage = 'Failed to apply meals. Please try again.'
+      if (err instanceof Error) {
+        if (
+          err.message.includes('401') ||
+          err.message.includes('Unauthorized')
+        ) {
+          errorMessage = 'Authentication required. Please sign in again.'
+        } else if (
+          err.message.includes('403') ||
+          err.message.includes('Forbidden')
+        ) {
+          errorMessage = 'You do not have permission to perform this action.'
+        } else if (
+          err.message.includes('500') ||
+          err.message.includes('Internal Server Error')
+        ) {
+          errorMessage = 'Server error. Please try again later.'
+        } else if (
+          err.message.includes('Network') ||
+          err.message.includes('fetch')
+        ) {
+          errorMessage =
+            'Network error. Please check your connection and try again.'
+        } else {
+          errorMessage = err.message
+        }
+      }
+      setError(errorMessage)
+    } finally {
+      setIsApplyingAIMeals(false)
+    }
+  }
+
   // Handle adding ingredients to existing grocery list
   const handleAddToGroceryList = async (data: {
     listId: number
@@ -723,26 +842,49 @@ export default function MealPlannerPage() {
                 </Button>
               </div>
 
-              <Button
-                variant="primary"
-                onClick={handleGenerateGroceryList}
-                className="flex items-center"
-              >
-                <svg
-                  className="w-5 h-5 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowAIAssistant(!showAIAssistant)}
+                  className="flex items-center"
+                  disabled={isApplyingAIMeals}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                  />
-                </svg>
-                Generate Grocery List
-              </Button>
+                  <svg
+                    className="w-5 h-5 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                    />
+                  </svg>
+                  {showAIAssistant ? 'Hide AI Assistant' : 'AI Assistant'}
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={handleGenerateGroceryList}
+                  className="flex items-center"
+                >
+                  <svg
+                    className="w-5 h-5 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                    />
+                  </svg>
+                  Generate Grocery List
+                </Button>
+              </div>
             </div>
           </div>
         )}
@@ -808,6 +950,27 @@ export default function MealPlannerPage() {
                 Today
               </Button>
               <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowAIAssistant(!showAIAssistant)}
+                className="flex-shrink-0"
+                disabled={isApplyingAIMeals}
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                  />
+                </svg>
+              </Button>
+              <Button
                 variant="primary"
                 onClick={handleGenerateGroceryList}
                 className="flex-1 flex items-center justify-center"
@@ -831,6 +994,18 @@ export default function MealPlannerPage() {
           </div>
         )}
 
+        {/* AI Assistant - Desktop View */}
+        {households.length > 0 && showAIAssistant && (
+          <div className="hidden md:block mb-6">
+            <AIMealPlanningAssistant
+              householdId={selectedHouseholdId!}
+              weekStartDate={currentWeekStart}
+              getToken={getToken}
+              onMealsApplied={handleAIMealsApplied}
+            />
+          </div>
+        )}
+
         {/* Weekly Calendar - Desktop View */}
         {households.length > 0 && (
           <div className="hidden md:block bg-white rounded-lg shadow-sm border border-gray-200 p-4">
@@ -842,6 +1017,18 @@ export default function MealPlannerPage() {
               onEmptySlotClick={handleEmptySlotClick}
               onMealEdit={handleMealEdit}
               onMealDelete={handleMealDeleteDirect}
+            />
+          </div>
+        )}
+
+        {/* AI Assistant - Mobile View */}
+        {households.length > 0 && showAIAssistant && (
+          <div className="md:hidden px-4 mb-4">
+            <AIMealPlanningAssistant
+              householdId={selectedHouseholdId!}
+              weekStartDate={currentWeekStart}
+              getToken={getToken}
+              onMealsApplied={handleAIMealsApplied}
             />
           </div>
         )}
