@@ -303,6 +303,12 @@ export default function MealPlannerPage() {
 
     // If editing an existing meal
     if (editingMeal) {
+      console.warn('handleAddMeal: Updating meal', {
+        mealId: editingMeal.id,
+        mealName: mealData.name,
+        originalDate: editingMeal.date.toISOString(),
+      })
+
       const updatedMealResponse = await updateMeal(
         parseInt(editingMeal.id),
         {
@@ -315,7 +321,25 @@ export default function MealPlannerPage() {
       )
 
       const convertedMeal = convertMealResponse(updatedMealResponse)
-      setMeals(meals.map((m) => (m.id === editingMeal.id ? convertedMeal : m)))
+      console.warn('handleAddMeal: Meal updated, converted meal', {
+        mealId: convertedMeal.id,
+        mealName: convertedMeal.name,
+        mealDate: convertedMeal.date.toISOString(),
+        mealType: convertedMeal.mealType,
+        mealsCountBefore: meals.length,
+      })
+
+      // Use functional update to ensure React detects the change
+      setMeals((prevMeals) => {
+        const updatedMeals = prevMeals.map((m) =>
+          m.id === editingMeal.id ? convertedMeal : m
+        )
+        console.warn('handleAddMeal: State updated', {
+          mealsCountAfter: updatedMeals.length,
+          updatedMealId: convertedMeal.id,
+        })
+        return updatedMeals
+      })
       setEditingMeal(null)
     } else {
       // Creating a new meal
@@ -343,7 +367,24 @@ export default function MealPlannerPage() {
       )
 
       const convertedMeal = convertMealResponse(newMealResponse)
-      setMeals([...meals, convertedMeal])
+      console.warn('handleAddMeal: Meal created', {
+        mealId: convertedMeal.id,
+        mealName: convertedMeal.name,
+        mealDate: convertedMeal.date.toISOString(),
+        mealType: convertedMeal.mealType,
+        dayOfWeek,
+        mealsCountBefore: meals.length,
+      })
+
+      // Use functional update to ensure React detects the change
+      setMeals((prevMeals) => {
+        const updatedMeals = [...prevMeals, convertedMeal]
+        console.warn('handleAddMeal: State updated with new meal', {
+          mealsCountAfter: updatedMeals.length,
+          newMealId: convertedMeal.id,
+        })
+        return updatedMeals
+      })
     }
   }
 
@@ -691,11 +732,41 @@ export default function MealPlannerPage() {
               const newMeals = createdMeals.filter(
                 (m) => !existingMealIds.has(m.id)
               )
-              setMeals([...convertedMeals, ...newMeals])
+              console.warn('handleAIMealsApplied: Using fallback merge', {
+                convertedMealsCount: convertedMeals.length,
+                newMealsCount: newMeals.length,
+              })
+              // Use functional update to ensure React detects the change
+              setMeals((prevMeals) => {
+                console.warn(
+                  'handleAIMealsApplied: State update triggered (fallback)',
+                  {
+                    prevMealsCount: prevMeals.length,
+                    newMealsCount: convertedMeals.length + newMeals.length,
+                  }
+                )
+                return [...convertedMeals, ...newMeals]
+              })
             } else {
               const convertedMeals =
                 retryResponse.meals.map(convertMealResponse)
-              setMeals(convertedMeals)
+              console.warn(
+                'handleAIMealsApplied: Retry successful, updating state',
+                {
+                  convertedMealsCount: convertedMeals.length,
+                }
+              )
+              // Use functional update to ensure React detects the change
+              setMeals((prevMeals) => {
+                console.warn(
+                  'handleAIMealsApplied: State update triggered (retry)',
+                  {
+                    prevMealsCount: prevMeals.length,
+                    newMealsCount: convertedMeals.length,
+                  }
+                )
+                return convertedMeals
+              })
             }
           } else {
             const convertedMeals = response.meals.map(convertMealResponse)
@@ -704,8 +775,21 @@ export default function MealPlannerPage() {
               convertedMealDates: convertedMeals.map((m) =>
                 m.date.toISOString()
               ),
+              convertedMealDetails: convertedMeals.map((m) => ({
+                id: m.id,
+                name: m.name,
+                date: m.date.toISOString(),
+                mealType: m.mealType,
+              })),
             })
-            setMeals(convertedMeals)
+            // Use functional update to ensure React detects the change
+            setMeals((prevMeals) => {
+              console.warn('handleAIMealsApplied: State update triggered', {
+                prevMealsCount: prevMeals.length,
+                newMealsCount: convertedMeals.length,
+              })
+              return convertedMeals
+            })
           }
         } catch (refetchError) {
           console.error('handleAIMealsApplied: Refetch failed', {
@@ -726,6 +810,14 @@ export default function MealPlannerPage() {
             const existingMealIds = new Set(prevMeals.map((m) => m.id))
             const newMeals = createdMeals.filter(
               (m) => !existingMealIds.has(m.id)
+            )
+            console.warn(
+              'handleAIMealsApplied: State update triggered (refetch failed)',
+              {
+                prevMealsCount: prevMeals.length,
+                newMealsCount: newMeals.length,
+                totalMealsCount: prevMeals.length + newMeals.length,
+              }
             )
             return [...prevMeals, ...newMeals]
           })
