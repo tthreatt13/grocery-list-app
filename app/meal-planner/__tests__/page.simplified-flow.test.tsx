@@ -396,10 +396,21 @@ describe('MealPlannerPage - Simplified Flow (Meal Plan > Edit Meal)', () => {
       expect(confirmButton).toBeInTheDocument()
       fireEvent.click(confirmButton!)
 
-      // Should handle error and show error message in the page (error state is set in page component)
+      // Wait for delete API to be called
       await waitFor(() => {
-        expect(screen.getByText('Network error')).toBeInTheDocument()
+        expect(mockDeleteMeal).toHaveBeenCalledWith(1, 'mock-token')
       })
+
+      // Should handle error and show error message in the page (error state is set in page component)
+      // Wait for error message to appear - it's set in the catch block after API call fails
+      // Wait for the error banner to appear using testid for reliable querying
+      const errorBanner = await screen.findByTestId(
+        'error-banner',
+        {},
+        { timeout: 3000 }
+      )
+      expect(errorBanner).toBeInTheDocument()
+      expect(errorBanner).toHaveTextContent('Network error')
 
       // Confirmation modal should close on error, but edit modal should remain open
       await waitFor(() => {

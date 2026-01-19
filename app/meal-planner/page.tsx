@@ -62,6 +62,15 @@ function convertMealResponse(meal: MealResponse): Meal {
 export default function MealPlannerPage() {
   const { getToken } = useAuth()
   const { user } = useUser()
+
+  // Wrapper function to ensure getToken returns Promise<string> instead of Promise<string | null>
+  const getTokenOrThrow = async (): Promise<string> => {
+    const token = await getToken()
+    if (!token) {
+      throw new Error('Authentication required')
+    }
+    return token
+  }
   const [households, setHouseholds] = useState<HouseholdResponse[]>([])
   const [selectedHouseholdId, setSelectedHouseholdId] = useState<number | null>(
     null
@@ -187,7 +196,16 @@ export default function MealPlannerPage() {
       if (!selectedHouseholdId || !currentWeekStart) return
 
       try {
-        setError(null)
+        // Don't clear errors that are from other operations (like delete, create, update)
+        // Only clear errors that are related to fetching meals
+        if (
+          error &&
+          (error.includes('load meals') ||
+            error.includes('load households') ||
+            error.includes('Authentication required'))
+        ) {
+          setError(null)
+        }
         const token = await getToken()
         if (!token) {
           setError('Authentication required')
@@ -211,6 +229,7 @@ export default function MealPlannerPage() {
     }
 
     fetchMeals()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedHouseholdId, currentWeekStart, getToken])
 
   // Fetch grocery lists when household changes
@@ -346,13 +365,10 @@ export default function MealPlannerPage() {
           })
 
           if (existingMealIndex === -1) {
-            console.error(
-              'handleAddMeal: Meal not found in state, adding it',
-              {
-                editingMealId: editingMeal.id,
-                convertedMealId: convertedMeal.id,
-              }
-            )
+            console.error('handleAddMeal: Meal not found in state, adding it', {
+              editingMealId: editingMeal.id,
+              convertedMealId: convertedMeal.id,
+            })
             // Meal not found, add it (shouldn't happen but handle gracefully)
             return [...prevMeals, convertedMeal]
           }
@@ -493,7 +509,9 @@ export default function MealPlannerPage() {
         setSuccessMessage(null)
       }, 3000)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete meal')
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to delete meal'
+      setError(errorMessage)
       setSuccessMessage(null)
       // Close delete confirmation modal on error so user can see the error message
       setIsDeleteModalOpen(false)
@@ -652,9 +670,11 @@ export default function MealPlannerPage() {
               : ''
 
           const weekStartDateFormatted = formatDateForAPI(currentWeekStart)
-          
+
           // Calculate the actual date for this meal to check if one already exists
-          const [year, month, day] = weekStartDateFormatted.split('-').map(Number)
+          const [year, month, day] = weekStartDateFormatted
+            .split('-')
+            .map(Number)
           const weekStart = new Date(year, month - 1, day)
           const mealDate = new Date(weekStart)
           mealDate.setDate(weekStart.getDate() + suggestion.day_of_week)
@@ -1146,7 +1166,10 @@ export default function MealPlannerPage() {
       <div className="max-w-7xl mx-auto">
         {/* Error banner */}
         {error && (
-          <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-4">
+          <div
+            className="mb-4 bg-red-50 border border-red-200 rounded-lg p-4"
+            data-testid="error-banner"
+          >
             <p className="text-sm text-red-700">{error}</p>
           </div>
         )}
@@ -1419,7 +1442,7 @@ export default function MealPlannerPage() {
             <AIMealPlanningAssistant
               householdId={selectedHouseholdId!}
               weekStartDate={currentWeekStart}
-              getToken={getToken}
+              getToken={getTokenOrThrow}
               onMealsApplied={handleAIMealsApplied}
             />
           </div>
@@ -1446,7 +1469,7 @@ export default function MealPlannerPage() {
             <AIMealPlanningAssistant
               householdId={selectedHouseholdId!}
               weekStartDate={currentWeekStart}
-              getToken={getToken}
+              getToken={getTokenOrThrow}
               onMealsApplied={handleAIMealsApplied}
             />
           </div>
