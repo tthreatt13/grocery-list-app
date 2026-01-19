@@ -49,9 +49,7 @@ def gather_meal_planning_context(
 
     # Get pantry items
     pantry_items = (
-        db.query(PantryItem)
-        .filter(PantryItem.household_id == household_id)
-        .all()
+        db.query(PantryItem).filter(PantryItem.household_id == household_id).all()
     )
     pantry_data = [
         {
@@ -115,11 +113,7 @@ def gather_meal_planning_context(
     )
     grocery_lists_data = []
     for gl in grocery_lists:
-        items = (
-            db.query(GroceryItem)
-            .filter(GroceryItem.list_id == gl.id)
-            .all()
-        )
+        items = db.query(GroceryItem).filter(GroceryItem.list_id == gl.id).all()
         grocery_lists_data.append(
             {
                 "name": gl.name,
@@ -134,7 +128,9 @@ def gather_meal_planning_context(
             weather_forecast = get_weather_forecast(preferences.zip_code)
             weather_data = weather_forecast
         except Exception as e:
-            logger.warning(f"Failed to fetch weather for zip {preferences.zip_code}: {e}")
+            logger.warning(
+                f"Failed to fetch weather for zip {preferences.zip_code}: {e}"
+            )
 
     # Calculate week end date (Sunday)
     week_end_date = week_start_date + timedelta(days=6)
@@ -152,7 +148,9 @@ def gather_meal_planning_context(
 
 
 def format_meal_planning_prompt(
-    context: Dict[str, Any], user_message: str, conversation_history: List[Dict[str, str]]
+    context: Dict[str, Any],
+    user_message: str,
+    conversation_history: List[Dict[str, str]],
 ) -> str:
     """
     Format context and user message into a prompt for the LLM.
@@ -224,7 +222,15 @@ Only suggest meals for days that don't already have meals of that type, unless t
     if meals:
         prompt_parts.append("\n**Current Week's Meals:**")
         for meal in meals:
-            day_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+            day_names = [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday",
+            ]
             day_name = day_names[meal.get("day_of_week", 0)]
             meal_str = f"- {day_name} {meal.get('meal_type', 'meal')}: {meal.get('name', 'Unnamed')}"
             if meal.get("ingredients"):
@@ -255,7 +261,9 @@ Only suggest meals for days that don't already have meals of that type, unless t
     if grocery_lists:
         prompt_parts.append("\n**Active Grocery Lists:**")
         for gl in grocery_lists:
-            prompt_parts.append(f"- {gl.get('name', 'Unnamed')}: {', '.join(gl.get('items', []))}")
+            prompt_parts.append(
+                f"- {gl.get('name', 'Unnamed')}: {', '.join(gl.get('items', []))}"
+            )
     else:
         prompt_parts.append("\n**Active Grocery Lists:** (none)")
 
@@ -355,10 +363,10 @@ def parse_llm_response(response: Any) -> Dict[str, List[Dict[str, Any]]]:
             # Try to extract JSON from the response (might be wrapped in markdown code blocks)
             original_text = text_content
             text_content = text_content.strip()
-            
+
             # Store original for fallback
             original_stripped = text_content
-            
+
             if "```json" in text_content:
                 # Extract JSON from markdown code block
                 start = text_content.find("```json") + 7
@@ -384,7 +392,9 @@ def parse_llm_response(response: Any) -> Dict[str, List[Dict[str, Any]]]:
 
             # Check if text_content is empty before parsing
             if not text_content:
-                raise ValueError(f"Empty text content after extraction - LLM response may be malformed. Original response length: {len(original_text)}")
+                raise ValueError(
+                    f"Empty text content after extraction - LLM response may be malformed. Original response length: {len(original_text)}"
+                )
 
             # Parse JSON
             parsed = json.loads(text_content)
