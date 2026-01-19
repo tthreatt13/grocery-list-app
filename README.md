@@ -431,6 +431,11 @@ npm run test:ci
 cd backend
 source venv/bin/activate
 
+# ⚠️ IMPORTANT: Ensure you're using Black 23.11.0 (matches CI)
+# Check version: black --version
+# Install correct version: pip install black==23.11.0
+# Different Black versions format code differently and will cause CI failures!
+
 # Run linting (flake8) - matches CI exactly
 flake8 . --exclude=alembic/versions --select=E9,F63,F7,F82 --count --show-source --statistics
 
@@ -456,6 +461,8 @@ The project uses GitHub Actions for automated testing and linting:
 - **Frontend Linting**: ESLint checks ensure TypeScript/React code quality
 - **Backend Linting**: Flake8 validates Python code style with specific error codes (E9,F63,F7,F82)
 - **Code Formatting**: Prettier (frontend) and Black (backend) ensure consistent formatting
+  - **⚠️ Black Version**: Must use Black `23.11.0` (pinned in `backend/requirements.txt`) to match CI
+  - Different Black versions format code differently, causing CI failures
 - **Test Coverage**: Comprehensive test suites for both frontend and backend
 - **CI Pipeline**: All checks must pass before code can be merged
 - **Exact CI Match**: Local pre-commit checks use the exact same commands as CI to prevent failures
@@ -468,8 +475,11 @@ Before committing and pushing, ensure:
 - ✅ Frontend linting passes (`npm run lint`)
 - ✅ Backend linting passes (`flake8 . --exclude=alembic/versions --select=E9,F63,F7,F82 --count --show-source --statistics`)
 - ✅ Code is properly formatted (`npm run format:check` and `black --check --exclude="/(alembic/versions|venv)/" .`)
+- ✅ **Black version matches CI**: Use `black==23.11.0` (check with `black --version`)
 
 **⚠️ CRITICAL:** These checks MUST pass before committing. They exactly match what CI runs. Failure to run these checks locally will result in CI failures.
+
+**⚠️ Black Version Compatibility:** Different versions of Black format code differently. Always use Black `23.11.0` (as specified in `backend/requirements.txt`) to ensure your local formatting matches CI. If you format with a newer version locally, CI will fail.
 
 All tests, linting, and formatting checks must pass before code can be merged.
 
@@ -647,8 +657,10 @@ Contributions are welcome! This is an active full-stack project with both fronte
    - Backend linting: `cd backend && source venv/bin/activate && flake8 . --exclude=alembic/versions --select=E9,F63,F7,F82 --count --show-source --statistics`
    - Frontend formatting: `npm run format:check`
    - Backend formatting: `cd backend && source venv/bin/activate && black --check --exclude="/(alembic/versions|venv)/" .`
+   - **⚠️ Ensure Black version**: `black --version` should show `23.11.0` (matches CI)
 4. **Fix any issues** found by linting or formatting
 5. **Format code**: `npm run format` (frontend) and `black --exclude="/(alembic/versions|venv)/" .` (backend)
+   - **⚠️ Use Black 23.11.0**: Install with `pip install black==23.11.0` to match CI
 6. **For database changes**: Create migration, test locally, run pre-deploy check
 7. **Commit and push**: Migrations run automatically on Railway deployment
 
@@ -658,7 +670,7 @@ Contributions are welcome! This is an active full-stack project with both fronte
 # Frontend
 npm run test:ci && npm run lint && npm run format:check
 
-# Backend
+# Backend (ensure Black 23.11.0 is installed: pip install black==23.11.0)
 cd backend && source venv/bin/activate && \
   pytest && \
   flake8 . --exclude=alembic/versions --select=E9,F63,F7,F82 --count --show-source --statistics && \

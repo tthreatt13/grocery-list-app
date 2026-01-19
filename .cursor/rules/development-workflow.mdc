@@ -123,14 +123,27 @@ Before implementing new features or functionality:
 
 ## Backend Code Formatting (Black)
 
+### ⚠️ CRITICAL: Black Version Compatibility
+**Black version differences can cause CI failures!** Different versions of Black format code differently.
+
+- **Required Version**: Black `23.11.0` (pinned in `backend/requirements.txt` as `black==23.11.0`)
+- **CI Uses**: The exact version from `requirements.txt` (currently `black==23.11.0`)
+- **Local Development**: Ensure you're using Black `23.11.0` or compatible version
+  - Check your version: `black --version` or `python3 -m black --version`
+  - Install correct version: `pip install black==23.11.0`
+  - If using a different version locally, format with: `python3 -m black --exclude="/(alembic/versions|venv)/" .`
+
+**Why this matters**: Black 23.11.0 formats code differently than newer versions (e.g., 25.11.0). If you format with a newer version locally, CI will fail because it uses the version from `requirements.txt`.
+
 ### Format all backend code with Black
 - Run `black --exclude="/(alembic/versions|venv)/" .` from the `backend/` directory to format code
 - Use `black --check --exclude="/(alembic/versions|venv)/" .` to verify formatting without making changes
 - Ensure all code is properly formatted before completing work
+- **Always use the version specified in `requirements.txt`** to match CI behavior
 
 ### Formatting standards
 - Follow Black's default formatting rules
-- Line length: 100 characters (if configured)
+- Line length: 88 characters (Black default)
 - Maintain consistent code style across the entire backend
 - Format code automatically when making edits
 
@@ -138,6 +151,7 @@ Before implementing new features or functionality:
 - Verify backend code is properly formatted
 - Run Black if formatting is inconsistent
 - The CI uses the exact `--check` command, so local results must match
+- **Ensure you're using Black 23.11.0** to match CI exactly
 
 ## Code Quality Checklist
 

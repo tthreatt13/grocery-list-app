@@ -27,6 +27,9 @@ pytest-asyncio>=0.21.1
 httpx>=0.25.1
 
 # Code quality
-black>=23.11.0
+# NOTE: Black version is pinned to ensure CI compatibility
+# Different Black versions format code differently, causing CI failures
+# Always use this exact version: black==23.11.0
+black==23.11.0
 flake8>=6.1.0
 
