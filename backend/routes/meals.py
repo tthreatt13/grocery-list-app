@@ -336,7 +336,8 @@ async def ai_suggest_meals(
 
     # Convert conversation history to format expected by service
     conversation_history = [
-        {"role": msg.role, "content": msg.content} for msg in request.conversation_history
+        {"role": msg.role, "content": msg.content}
+        for msg in request.conversation_history
     ]
 
     try:
@@ -369,9 +370,7 @@ async def ai_suggest_meals(
 
         # Update conversation history with user message and assistant response
         updated_history = request.conversation_history.copy()
-        updated_history.append(
-            ChatMessage(role="user", content=request.user_message)
-        )
+        updated_history.append(ChatMessage(role="user", content=request.user_message))
         # Add assistant response summary
         updated_history.append(
             ChatMessage(

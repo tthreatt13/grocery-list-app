@@ -17,7 +17,9 @@ from services.meal_planning_ai import (
 class TestGatherMealPlanningContext:
     """Tests for context gathering functions."""
 
-    def test_gather_meal_planning_context_with_all_data(self, db_session, sample_household, sample_user):
+    def test_gather_meal_planning_context_with_all_data(
+        self, db_session, sample_household, sample_user
+    ):
         """Test gathering context with pantry, meals, preferences, and grocery lists."""
         from models.pantry_item import PantryItem
         from models.meal import Meal
@@ -76,7 +78,9 @@ class TestGatherMealPlanningContext:
         assert len(context["pantry_items"]) > 0
         assert len(context["meals"]) > 0
 
-    def test_gather_meal_planning_context_empty_data(self, db_session, sample_household, sample_user):
+    def test_gather_meal_planning_context_empty_data(
+        self, db_session, sample_household, sample_user
+    ):
         """Test gathering context with no existing data."""
         week_start = date.today() - timedelta(days=date.today().weekday())
 
@@ -108,7 +112,9 @@ class TestFormatMealPlanningPrompt:
         user_message = "Suggest meals for this week"
         conversation_history = []
 
-        prompt = format_meal_planning_prompt(context, user_message, conversation_history)
+        prompt = format_meal_planning_prompt(
+            context, user_message, conversation_history
+        )
 
         assert isinstance(prompt, str)
         assert "meal planning assistant" in prompt.lower()
@@ -139,7 +145,9 @@ class TestFormatMealPlanningPrompt:
         user_message = "Suggest vegetarian meals"
         conversation_history = []
 
-        prompt = format_meal_planning_prompt(context, user_message, conversation_history)
+        prompt = format_meal_planning_prompt(
+            context, user_message, conversation_history
+        )
 
         assert "Chicken" in prompt or "pantry" in prompt.lower()
         assert "vegetarian" in prompt.lower()
@@ -156,7 +164,9 @@ class TestCallAnthropicAPI:
 
         mock_response = MagicMock()
         mock_response.content = [
-            MagicMock(text='{"suggestions": [{"meal_name": "Pasta", "meal_type": "dinner"}]}')
+            MagicMock(
+                text='{"suggestions": [{"meal_name": "Pasta", "meal_type": "dinner"}]}'
+            )
         ]
         mock_client.messages.create.return_value = mock_response
 
@@ -248,7 +258,13 @@ class TestSuggestMeals:
     @patch("services.meal_planning_ai.format_meal_planning_prompt")
     @patch("services.meal_planning_ai.gather_meal_planning_context")
     def test_suggest_meals_success(
-        self, mock_gather, mock_format, mock_api, db_session, sample_household, sample_user
+        self,
+        mock_gather,
+        mock_format,
+        mock_api,
+        db_session,
+        sample_household,
+        sample_user,
     ):
         """Test successful meal suggestion flow."""
         week_start = date.today() - timedelta(days=date.today().weekday())

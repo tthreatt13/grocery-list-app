@@ -169,5 +169,8 @@ export async function getAllMeals(
   householdId: number,
   token: string
 ): Promise<MealResponse[]> {
-  return get<MealResponse[]>(`/api/meals/all?household_id=${householdId}`, token)
+  return get<MealResponse[]>(
+    `/api/meals/all?household_id=${householdId}`,
+    token
+  )
 }
