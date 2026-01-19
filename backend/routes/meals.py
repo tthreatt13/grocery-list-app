@@ -117,6 +117,31 @@ async def get_meal(
     return meal
 
 
+@router.get("/meals/all", response_model=List[MealResponse])
+async def get_all_meals(
+    household_id: int = Query(..., description="Household ID"),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Get all meals for a household (for diagnostic purposes).
+
+    This endpoint returns all meals for a household regardless of week,
+    useful for debugging date-related issues.
+    """
+    # Check permission: user must be a household member
+    require_household_member(db, household_id, current_user)
+
+    meals = (
+        db.query(Meal)
+        .filter(Meal.household_id == household_id)
+        .order_by(Meal.week_start_date, Meal.day_of_week, Meal.meal_type)
+        .all()
+    )
+
+    return meals
+
+
 @router.post("/meals", response_model=MealResponse, status_code=status.HTTP_201_CREATED)
 async def create_meal(
     meal_data: MealCreate,

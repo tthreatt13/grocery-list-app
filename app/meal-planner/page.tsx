@@ -306,41 +306,76 @@ export default function MealPlannerPage() {
       console.warn('handleAddMeal: Updating meal', {
         mealId: editingMeal.id,
         mealName: mealData.name,
+        mealCategory: mealData.mealCategory,
         originalDate: editingMeal.date.toISOString(),
+        editingMealExists: !!editingMeal,
       })
 
-      const updatedMealResponse = await updateMeal(
-        parseInt(editingMeal.id),
-        {
-          name: mealData.name || undefined,
-          notes: mealData.notes || '',
-          ingredients: mealData.ingredients || '',
-          meal_category: mealData.mealCategory || 'normal',
-        },
-        token
-      )
-
-      const convertedMeal = convertMealResponse(updatedMealResponse)
-      console.warn('handleAddMeal: Meal updated, converted meal', {
-        mealId: convertedMeal.id,
-        mealName: convertedMeal.name,
-        mealDate: convertedMeal.date.toISOString(),
-        mealType: convertedMeal.mealType,
-        mealsCountBefore: meals.length,
-      })
-
-      // Use functional update to ensure React detects the change
-      setMeals((prevMeals) => {
-        const updatedMeals = prevMeals.map((m) =>
-          m.id === editingMeal.id ? convertedMeal : m
+      try {
+        const updatedMealResponse = await updateMeal(
+          parseInt(editingMeal.id),
+          {
+            name: mealData.name || undefined,
+            notes: mealData.notes || '',
+            ingredients: mealData.ingredients || '',
+            meal_category: mealData.mealCategory || 'normal',
+          },
+          token
         )
-        console.warn('handleAddMeal: State updated', {
-          mealsCountAfter: updatedMeals.length,
-          updatedMealId: convertedMeal.id,
+
+        const convertedMeal = convertMealResponse(updatedMealResponse)
+        console.warn('handleAddMeal: Meal updated, converted meal', {
+          mealId: convertedMeal.id,
+          mealName: convertedMeal.name,
+          mealDate: convertedMeal.date.toISOString(),
+          mealType: convertedMeal.mealType,
+          mealCategory: convertedMeal.mealCategory,
+          mealsCountBefore: meals.length,
         })
-        return updatedMeals
-      })
-      setEditingMeal(null)
+
+        // Use functional update to ensure React detects the change
+        setMeals((prevMeals) => {
+          const existingMealIndex = prevMeals.findIndex(
+            (m) => m.id === editingMeal.id
+          )
+          console.warn('handleAddMeal: Finding meal to update', {
+            editingMealId: editingMeal.id,
+            existingMealIndex,
+            prevMealsCount: prevMeals.length,
+            prevMealIds: prevMeals.map((m) => m.id),
+          })
+
+          if (existingMealIndex === -1) {
+            console.error(
+              'handleAddMeal: Meal not found in state, adding it',
+              {
+                editingMealId: editingMeal.id,
+                convertedMealId: convertedMeal.id,
+              }
+            )
+            // Meal not found, add it (shouldn't happen but handle gracefully)
+            return [...prevMeals, convertedMeal]
+          }
+
+          const updatedMeals = prevMeals.map((m) =>
+            m.id === editingMeal.id ? convertedMeal : m
+          )
+          console.warn('handleAddMeal: State updated', {
+            mealsCountAfter: updatedMeals.length,
+            updatedMealId: convertedMeal.id,
+            updatedMealName: convertedMeal.name,
+          })
+          return updatedMeals
+        })
+        setEditingMeal(null)
+      } catch (updateError) {
+        console.error('handleAddMeal: Update failed', {
+          error: updateError,
+          mealId: editingMeal.id,
+          mealData,
+        })
+        throw updateError
+      }
     } else {
       // Creating a new meal
       // Calculate day of week (0=Monday in backend)
@@ -390,6 +425,13 @@ export default function MealPlannerPage() {
 
   // Handle meal click - opens edit modal directly (both mobile and desktop)
   const handleMealClick = (meal: Meal) => {
+    console.warn('handleMealClick: Opening edit modal for meal', {
+      mealId: meal.id,
+      mealName: meal.name,
+      mealCategory: meal.mealCategory,
+      mealDate: meal.date.toISOString(),
+      mealType: meal.mealType,
+    })
     setEditingMeal(meal)
     setSelectedDate(new Date(meal.date))
     setSelectedMealType(meal.mealType)
@@ -610,34 +652,77 @@ export default function MealPlannerPage() {
               : ''
 
           const weekStartDateFormatted = formatDateForAPI(currentWeekStart)
-          console.warn('handleAIMealsApplied: Creating meal', {
-            mealName: suggestion.meal_name,
-            mealType: suggestion.meal_type,
-            dayOfWeek: suggestion.day_of_week,
-            weekStartDate: weekStartDateFormatted,
-            ingredientsCount: suggestion.ingredients?.length || 0,
+          
+          // Calculate the actual date for this meal to check if one already exists
+          const [year, month, day] = weekStartDateFormatted.split('-').map(Number)
+          const weekStart = new Date(year, month - 1, day)
+          const mealDate = new Date(weekStart)
+          mealDate.setDate(weekStart.getDate() + suggestion.day_of_week)
+          mealDate.setHours(0, 0, 0, 0)
+
+          // Check if a meal already exists for this slot
+          const existingMeal = meals.find((m) => {
+            const mDate = new Date(m.date)
+            mDate.setHours(0, 0, 0, 0)
+            return (
+              mDate.getTime() === mealDate.getTime() &&
+              m.mealType.toLowerCase() === suggestion.meal_type.toLowerCase()
+            )
           })
 
-          const newMealResponse = await createMeal(
-            {
-              household_id: selectedHouseholdId,
-              name: suggestion.meal_name,
-              meal_type: suggestion.meal_type,
-              day_of_week: suggestion.day_of_week,
-              week_start_date: weekStartDateFormatted,
-              notes: suggestion.notes,
-              ingredients: ingredientsString,
-              meal_category: 'normal',
-            },
-            token
-          )
-          const convertedMeal = convertMealResponse(newMealResponse)
+          let mealResponse: MealResponse
+          if (existingMeal) {
+            // Update existing meal instead of creating a new one
+            console.warn('handleAIMealsApplied: Updating existing meal', {
+              existingMealId: existingMeal.id,
+              mealName: suggestion.meal_name,
+              mealType: suggestion.meal_type,
+              dayOfWeek: suggestion.day_of_week,
+            })
+            mealResponse = await updateMeal(
+              parseInt(existingMeal.id),
+              {
+                name: suggestion.meal_name,
+                notes: suggestion.notes || '',
+                ingredients: ingredientsString,
+                meal_category: 'normal',
+              },
+              token
+            )
+            console.warn('handleAIMealsApplied: Meal updated successfully', {
+              mealId: mealResponse.id,
+              mealName: suggestion.meal_name,
+            })
+          } else {
+            // Create new meal
+            console.warn('handleAIMealsApplied: Creating new meal', {
+              mealName: suggestion.meal_name,
+              mealType: suggestion.meal_type,
+              dayOfWeek: suggestion.day_of_week,
+              weekStartDate: weekStartDateFormatted,
+              ingredientsCount: suggestion.ingredients?.length || 0,
+            })
+            mealResponse = await createMeal(
+              {
+                household_id: selectedHouseholdId,
+                name: suggestion.meal_name,
+                meal_type: suggestion.meal_type,
+                day_of_week: suggestion.day_of_week,
+                week_start_date: weekStartDateFormatted,
+                notes: suggestion.notes,
+                ingredients: ingredientsString,
+                meal_category: 'normal',
+              },
+              token
+            )
+            console.warn('handleAIMealsApplied: Meal created successfully', {
+              mealId: mealResponse.id,
+              mealName: suggestion.meal_name,
+            })
+          }
+
+          const convertedMeal = convertMealResponse(mealResponse)
           createdMeals.push(convertedMeal)
-          console.warn('handleAIMealsApplied: Meal created successfully', {
-            mealId: newMealResponse.id,
-            mealName: suggestion.meal_name,
-            convertedMealDate: convertedMeal.date.toISOString(),
-          })
         } catch (err) {
           // Collect error information for each failed meal
           const errorMessage =

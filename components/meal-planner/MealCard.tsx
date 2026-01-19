@@ -102,7 +102,7 @@ export default function MealCard({ meal, onEdit, onDelete }: MealCardProps) {
         )}
 
         {/* Action buttons */}
-        <div className="flex items-center space-x-2 pt-3 border-t border-gray-100">
+        <div className="flex items-center space-x-2 pt-3 border-t border-gray-100 pointer-events-auto">
           <button
             onClick={(e) => {
               e.stopPropagation()

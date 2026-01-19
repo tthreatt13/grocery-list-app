@@ -160,3 +160,14 @@ export async function getAIMealSuggestions(
 ): Promise<AISuggestResponse> {
   return post<AISuggestResponse>('/api/meals/ai-suggest', data, token)
 }
+
+/**
+ * Get all meals for a household (for diagnostic purposes)
+ * Returns all meals regardless of week, useful for debugging date-related issues
+ */
+export async function getAllMeals(
+  householdId: number,
+  token: string
+): Promise<MealResponse[]> {
+  return get<MealResponse[]>(`/api/meals/all?household_id=${householdId}`, token)
+}
