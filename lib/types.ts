@@ -98,3 +98,30 @@ export enum SortMethod {
   MEAL_TIME = 'Meal Time',
   LOW_STOCK = 'Low Stock',
 }
+
+// AI Meal Planning Types
+export interface MealSuggestion {
+  meal_name: string
+  meal_type: 'breakfast' | 'lunch' | 'dinner' | 'snack'
+  day_of_week: number // 0=Monday, 6=Sunday
+  ingredients: string[]
+  uses_pantry_items: string[]
+  notes?: string
+}
+
+export interface ChatMessage {
+  role: 'user' | 'assistant'
+  content: string
+}
+
+export interface AISuggestRequest {
+  household_id: number
+  week_start_date: string // ISO date string (YYYY-MM-DD)
+  user_message: string
+  conversation_history?: ChatMessage[]
+}
+
+export interface AISuggestResponse {
+  suggestions: MealSuggestion[]
+  conversation_history: ChatMessage[]
+}

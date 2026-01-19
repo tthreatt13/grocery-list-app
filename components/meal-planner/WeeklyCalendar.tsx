@@ -71,11 +71,22 @@ const WeeklyCalendar = forwardRef<WeeklyCalendarRef, WeeklyCalendarProps>(
       date: Date,
       mealType: MealType
     ): Meal | undefined => {
-      return meals.find(
-        (meal) =>
-          meal.mealType === mealType &&
-          new Date(meal.date).toDateString() === date.toDateString()
-      )
+      // Normalize the input date to midnight (local time)
+      const normalizedDate = new Date(date)
+      normalizedDate.setHours(0, 0, 0, 0)
+      const normalizedTimestamp = normalizedDate.getTime()
+
+      return meals.find((meal) => {
+        if (meal.mealType !== mealType) return false
+
+        // Ensure meal.date is a Date object, normalize to midnight
+        const mealDate =
+          meal.date instanceof Date ? new Date(meal.date) : new Date(meal.date)
+        mealDate.setHours(0, 0, 0, 0)
+
+        // Use timestamp comparison for reliable date matching
+        return mealDate.getTime() === normalizedTimestamp
+      })
     }
 
     // Helper to format the day label
@@ -136,7 +147,29 @@ const WeeklyCalendar = forwardRef<WeeklyCalendarRef, WeeklyCalendarProps>(
                       )}
                     >
                       {meal ? (
-                        <div onClick={() => onMealClick(meal)}>
+                        <div
+                          onClick={(e) => {
+                            // Only trigger if click is not on a button inside MealCard
+                            const target = e.target as HTMLElement
+                            if (
+                              !target.closest('button') &&
+                              !target.closest('svg') &&
+                              !target.closest('path')
+                            ) {
+                              onMealClick(meal)
+                            }
+                          }}
+                          className="cursor-pointer"
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault()
+                              onMealClick(meal)
+                            }
+                          }}
+                          aria-label={`Edit ${meal.name || 'meal'} for ${formatDate(day)}`}
+                        >
                           <MealCard
                             meal={meal}
                             onEdit={onMealEdit}

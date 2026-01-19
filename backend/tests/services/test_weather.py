@@ -270,7 +270,9 @@ class TestCacheForecast:
 
     def test_cache_forecast_and_retrieve(self):
         """Test caching and retrieving forecast."""
-        zip_code = "80202"
+        from services.weather import _forecast_cache
+
+        zip_code = "99999"  # Use a unique zip code to avoid conflicts
         forecast_data = [
             {
                 "date": "2024-01-15",
@@ -280,6 +282,10 @@ class TestCacheForecast:
                 "condition": "Sunny",
             }
         ]
+
+        # Clear any existing cache entry for this zip code
+        if zip_code in _forecast_cache:
+            del _forecast_cache[zip_code]
 
         # Cache should be empty initially
         assert get_cached_forecast(zip_code) is None

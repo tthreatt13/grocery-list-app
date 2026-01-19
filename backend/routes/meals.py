@@ -20,6 +20,10 @@ from schemas.meal import (
     WeeklyPlanResponse,
     GenerateGroceryListRequest,
     GenerateGroceryListResponse,
+    AISuggestRequest,
+    AISuggestResponse,
+    MealSuggestion,
+    ChatMessage,
 )
 
 router = APIRouter(tags=["meals"])
@@ -111,6 +115,31 @@ async def get_meal(
     require_household_member(db, meal.household_id, current_user)
 
     return meal
+
+
+@router.get("/meals/all", response_model=List[MealResponse])
+async def get_all_meals(
+    household_id: int = Query(..., description="Household ID"),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Get all meals for a household (for diagnostic purposes).
+
+    This endpoint returns all meals for a household regardless of week,
+    useful for debugging date-related issues.
+    """
+    # Check permission: user must be a household member
+    require_household_member(db, household_id, current_user)
+
+    meals = (
+        db.query(Meal)
+        .filter(Meal.household_id == household_id)
+        .order_by(Meal.week_start_date, Meal.day_of_week, Meal.meal_type)
+        .all()
+    )
+
+    return meals
 
 
 @router.post("/meals", response_model=MealResponse, status_code=status.HTTP_201_CREATED)
@@ -280,3 +309,94 @@ async def generate_grocery_list(
             f"from {len(meals)} meals"
         ),
     )
+
+
+@router.post("/meals/ai-suggest", response_model=AISuggestResponse)
+async def ai_suggest_meals(
+    request: AISuggestRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Get AI-generated meal suggestions using Anthropic Claude API.
+
+    This endpoint:
+    1. Gathers context (pantry, meals, preferences, weather, etc.)
+    2. Formats a prompt for the LLM
+    3. Calls Anthropic API
+    4. Returns structured meal suggestions
+
+    The response includes meal suggestions and updated conversation history.
+    """
+    # Check permission: user must be a household member
+    require_household_member(db, request.household_id, current_user)
+
+    # Ensure week_start_date is a Monday
+    week_start = get_week_start_monday(request.week_start_date)
+
+    # Convert conversation history to format expected by service
+    conversation_history = [
+        {"role": msg.role, "content": msg.content}
+        for msg in request.conversation_history
+    ]
+
+    try:
+        from services.meal_planning_ai import suggest_meals
+        from config import settings
+
+        # Call AI service
+        result = suggest_meals(
+            db=db,
+            household_id=request.household_id,
+            user_id=current_user.id,
+            week_start_date=week_start,
+            user_message=request.user_message,
+            conversation_history=conversation_history,
+            api_key=settings.anthropic_api_key,
+        )
+
+        # Convert suggestions to MealSuggestion objects
+        suggestions = [
+            MealSuggestion(
+                meal_name=suggestion.get("meal_name", ""),
+                meal_type=suggestion.get("meal_type", "dinner"),
+                day_of_week=suggestion.get("day_of_week", 0),
+                ingredients=suggestion.get("ingredients", []),
+                uses_pantry_items=suggestion.get("uses_pantry_items", []),
+                notes=suggestion.get("notes"),
+            )
+            for suggestion in result.get("suggestions", [])
+        ]
+
+        # Update conversation history with user message and assistant response
+        updated_history = request.conversation_history.copy()
+        updated_history.append(ChatMessage(role="user", content=request.user_message))
+        # Add assistant response summary
+        updated_history.append(
+            ChatMessage(
+                role="assistant",
+                content=f"I've suggested {len(suggestions)} meal(s) for your week.",
+            )
+        )
+
+        return AISuggestResponse(
+            suggestions=suggestions,
+            conversation_history=updated_history,
+        )
+
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid request or API configuration: {str(e)}",
+        )
+    except Exception as e:
+        # Log the error for debugging
+        import logging
+
+        logger = logging.getLogger(__name__)
+        logger.error(f"AI meal suggestion failed: {e}", exc_info=True)
+
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to generate meal suggestions: {str(e)}",
+        )

@@ -257,18 +257,29 @@ describe('MealPlannerPage - Mobile Delete Flow', () => {
     expect(confirmButton).toBeInTheDocument()
     fireEvent.click(confirmButton!)
 
-    // Should show error message in the page (error state is set in page component)
+    // Wait for delete API to be called
+    await waitFor(() => {
+      expect(mockDeleteMeal).toHaveBeenCalledWith(1, 'mock-token')
+    })
+
+    // Wait for confirmation modal to close (error handling closes it)
     await waitFor(
       () => {
-        expect(screen.getByText('Network error')).toBeInTheDocument()
+        expect(screen.queryByText('Delete Meal?')).not.toBeInTheDocument()
       },
-      { timeout: 3000 }
+      { timeout: 2000 }
     )
 
-    // Confirmation modal should close on error, but edit modal should remain open
-    await waitFor(() => {
-      expect(screen.queryByText('Delete Meal?')).not.toBeInTheDocument()
-    })
+    // Should show error message in the page (error state is set in page component)
+    // The error is set in the catch block of handleConfirmDelete
+    // Wait for the error banner to appear using testid for reliable querying
+    const errorBanner = await screen.findByTestId(
+      'error-banner',
+      {},
+      { timeout: 3000 }
+    )
+    expect(errorBanner).toBeInTheDocument()
+    expect(errorBanner).toHaveTextContent('Network error')
     expect(screen.getByText('Edit Meal')).toBeInTheDocument()
   })
 

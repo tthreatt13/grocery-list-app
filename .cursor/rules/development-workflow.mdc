@@ -5,6 +5,22 @@ alwaysApply: true
 
 # Development Workflow Standards
 
+## MANDATORY Pre-Commit Checklist
+
+**⚠️ CRITICAL: These checks MUST pass before committing code. They exactly match what CI runs.**
+
+### Frontend Checks (run from project root)
+- [ ] **ESLint:** `npm run lint` - Must pass with no errors
+- [ ] **Prettier:** `npm run format:check` - Must pass (code must be formatted)
+- [ ] **Tests:** `npm run test:ci` - All tests must pass
+
+### Backend Checks (run from `backend/` directory)
+- [ ] **Flake8 Linting:** `flake8 . --exclude=alembic/versions --select=E9,F63,F7,F82 --count --show-source --statistics` - Must pass with no errors
+- [ ] **Black Formatting:** `black --check --exclude="/(alembic/versions|venv)/" .` - Must pass (code must be formatted)
+- [ ] **Tests:** `pytest` - All tests must pass
+
+**Failure to run these checks locally will result in CI failures. Always verify locally before committing.**
+
 ## Test-Driven Development (TDD)
 
 ### Always write tests first
@@ -24,6 +40,7 @@ Before implementing new features or functionality:
 - Use `describe` blocks to group related tests
 - Test user interactions, not implementation details
 - Ensure all tests pass before marking implementation as complete
+- **Use `npm run test:ci` before committing** to match CI behavior (runs in CI mode with `--runInBand --ci` flags)
 
 ### Test coverage
 - Aim for meaningful test coverage, focusing on critical paths and user-facing functionality
@@ -65,16 +82,96 @@ Before implementing new features or functionality:
 - Verify code is properly formatted
 - Run Prettier if formatting is inconsistent
 
+## Backend Testing
+
+### Testing standards
+- Use Pytest for all backend tests
+- Write descriptive test names that explain what is being tested
+- Use `pytest` fixtures for test setup and teardown
+- Test API endpoints, models, middleware, and services
+- Ensure all tests pass before marking implementation as complete
+
+### Test file conventions
+- Place test files in `backend/tests/` directory
+- Mirror the structure of the source code
+- Use `test_*.py` naming pattern for test files
+- Example: `backend/routes/grocery_lists.py` → `backend/tests/routes/test_grocery_lists.py`
+
+### Running backend tests
+- Run all tests: `cd backend && pytest`
+- Run with coverage: `cd backend && pytest --cov=. --cov-report=html`
+- Run specific test file: `cd backend && pytest tests/routes/test_grocery_lists.py`
+- **Always run `pytest` before committing** to ensure all backend tests pass
+
+## Backend Code Quality (Flake8)
+
+### Always run Flake8 before completing code changes
+- Execute `flake8 . --exclude=alembic/versions --select=E9,F63,F7,F82 --count --show-source --statistics` from the `backend/` directory
+- Fix ALL Flake8 errors before completing work
+- The CI uses this exact command, so local results must match
+
+### Flake8 rules enforced
+- **E9**: Runtime errors (indentation, syntax errors)
+- **F63**: `print` statements (use logging instead)
+- **F7**: Syntax errors in doctests
+- **F82**: Undefined names
+
+### Before completing any code change
+- Run Flake8 from the `backend/` directory
+- Fix any reported errors
+- Ensure code follows Python linting standards
+
+## Backend Code Formatting (Black)
+
+### ⚠️ CRITICAL: Black Version Compatibility
+**Black version differences can cause CI failures!** Different versions of Black format code differently.
+
+- **Required Version**: Black `23.11.0` (pinned in `backend/requirements.txt` as `black==23.11.0`)
+- **CI Uses**: The exact version from `requirements.txt` (currently `black==23.11.0`)
+- **Local Development**: Ensure you're using Black `23.11.0` or compatible version
+  - Check your version: `black --version` or `python3 -m black --version`
+  - Install correct version: `pip install black==23.11.0`
+  - If using a different version locally, format with: `python3 -m black --exclude="/(alembic/versions|venv)/" .`
+
+**Why this matters**: Black 23.11.0 formats code differently than newer versions (e.g., 25.11.0). If you format with a newer version locally, CI will fail because it uses the version from `requirements.txt`.
+
+### Format all backend code with Black
+- Run `black --exclude="/(alembic/versions|venv)/" .` from the `backend/` directory to format code
+- Use `black --check --exclude="/(alembic/versions|venv)/" .` to verify formatting without making changes
+- Ensure all code is properly formatted before completing work
+- **Always use the version specified in `requirements.txt`** to match CI behavior
+
+### Formatting standards
+- Follow Black's default formatting rules
+- Line length: 88 characters (Black default)
+- Maintain consistent code style across the entire backend
+- Format code automatically when making edits
+
+### Before completing any code change
+- Verify backend code is properly formatted
+- Run Black if formatting is inconsistent
+- The CI uses the exact `--check` command, so local results must match
+- **Ensure you're using Black 23.11.0** to match CI exactly
+
 ## Code Quality Checklist
 
 Before marking any code change as complete, ensure:
 
-- [ ] Tests are written and passing (`npm test`)
+### Frontend
+- [ ] Tests are written and passing (`npm run test:ci`)
 - [ ] ESLint passes with no errors (`npm run lint`)
 - [ ] Code is properly formatted (`npm run format:check`)
 - [ ] All linter errors are resolved
 - [ ] Code follows TypeScript best practices
 - [ ] React components follow best practices (hooks, props, etc.)
+
+### Backend
+- [ ] Tests are written and passing (`cd backend && pytest`)
+- [ ] Flake8 passes with no errors (`cd backend && flake8 . --exclude=alembic/versions --select=E9,F63,F7,F82 --count --show-source --statistics`)
+- [ ] Code is properly formatted (`cd backend && black --check --exclude="/(alembic/versions|venv)/" .`)
+- [ ] All linter errors are resolved
+- [ ] Code follows Python best practices
+- [ ] Type hints are used where appropriate
 
 ## File Organization
 
@@ -89,43 +186,88 @@ Before marking any code change as complete, ensure:
 1. Write tests first (TDD)
 2. Implement feature
 3. Run tests to ensure they pass
-4. Check ESLint errors
-5. Format code with Prettier
-6. Verify all checks pass
+   - Frontend: `npm run test:ci`
+   - Backend: `cd backend && pytest`
+4. Check linting errors
+   - Frontend: `npm run lint`
+   - Backend: `cd backend && flake8 . --exclude=alembic/versions --select=E9,F63,F7,F82 --count --show-source --statistics`
+5. Format code
+   - Frontend: `npm run format`
+   - Backend: `cd backend && black --exclude="/(alembic/versions|venv)/" .`
+6. Verify all checks pass (run the MANDATORY Pre-Commit Checklist)
 
 ### For bug fixes
 1. Write a test that reproduces the bug
 2. Fix the bug
 3. Ensure test passes
-4. Run ESLint and fix errors
-5. Format code with Prettier
+   - Frontend: `npm run test:ci`
+   - Backend: `cd backend && pytest`
+4. Run linting and fix errors
+   - Frontend: `npm run lint`
+   - Backend: `cd backend && flake8 . --exclude=alembic/versions --select=E9,F63,F7,F82 --count --show-source --statistics`
+5. Format code
+   - Frontend: `npm run format`
+   - Backend: `cd backend && black --exclude="/(alembic/versions|venv)/" .`
+6. Verify all checks pass (run the MANDATORY Pre-Commit Checklist)
 
 ### For refactoring
 1. Ensure existing tests pass before refactoring
+   - Frontend: `npm run test:ci`
+   - Backend: `cd backend && pytest`
 2. Refactor code
 3. Ensure all tests still pass
-4. Run ESLint and format code
+   - Frontend: `npm run test:ci`
+   - Backend: `cd backend && pytest`
+4. Run linting and format code
+   - Frontend: `npm run lint && npm run format`
+   - Backend: `cd backend && flake8 . --exclude=alembic/versions --select=E9,F63,F7,F82 --count --show-source --statistics && black --exclude="/(alembic/versions|venv)/" .`
+5. Verify all checks pass (run the MANDATORY Pre-Commit Checklist)
 
 ## Tools and Commands
 
-- **Testing:** `npm test` (run tests), `npm run test:watch` (watch mode), `npm run test:coverage` (coverage report)
-- **Linting:** `npm run lint` (check), `npm run lint -- --fix` (auto-fix)
-- **Formatting:** `npm run format` (format), `npm run format:check` (check only)
+### Frontend (run from project root)
+- **Testing:** 
+  - `npm run test:ci` (run tests in CI mode - **use before committing**)
+  - `npm test` (run tests in development mode)
+  - `npm run test:watch` (watch mode)
+  - `npm run test:coverage` (coverage report)
+- **Linting:** 
+  - `npm run lint` (check)
+  - `npm run lint -- --fix` (auto-fix)
+- **Formatting:** 
+  - `npm run format` (format)
+  - `npm run format:check` (check only)
+
+### Backend (run from `backend/` directory)
+- **Testing:** 
+  - `pytest` (run all tests - **use before committing**)
+  - `pytest --cov=. --cov-report=html` (run with coverage)
+  - `pytest tests/routes/test_grocery_lists.py` (run specific test file)
+- **Linting:** 
+  - `flake8 . --exclude=alembic/versions --select=E9,F63,F7,F82 --count --show-source --statistics` (check - **exact CI command**)
+- **Formatting:** 
+  - `black --exclude="/(alembic/versions|venv)/" .` (format)
+  - `black --check --exclude="/(alembic/versions|venv)/" .` (check only - **exact CI command**)
 
 ## Best Practices
 
-1. **Always use the `read_lints` tool** after making code changes to check for linting errors
-2. **Run Prettier** to ensure consistent formatting
-3. **Write tests** for all new functionality
-4. **Keep code simple and readable** - prefer clarity over cleverness
-5. **Follow TypeScript strict mode** - avoid `any` types when possible
-6. **Use meaningful variable and function names**
-7. **Add comments only when necessary** - code should be self-documenting
+1. **Always run the MANDATORY Pre-Commit Checklist** before committing - it matches CI exactly
+2. **Always use the `read_lints` tool** after making code changes to check for linting errors
+3. **Run Prettier and Black** to ensure consistent formatting across frontend and backend
+4. **Write tests** for all new functionality (both frontend and backend)
+5. **Use `npm run test:ci` for frontend** to match CI behavior before committing
+6. **Run `pytest` for backend** to ensure all tests pass before committing
+7. **Keep code simple and readable** - prefer clarity over cleverness
+8. **Follow TypeScript strict mode** - avoid `any` types when possible
+9. **Use meaningful variable and function names**
+10. **Add comments only when necessary** - code should be self-documenting
 
 ## Integration with Cursor
 
 When working in Cursor:
 - Use the `read_lints` tool to check for errors after edits
-- Run formatting commands when needed
-- Write tests alongside implementation
+- Run formatting commands when needed (both frontend and backend)
+- Write tests alongside implementation (both frontend and backend)
+- **Always run the MANDATORY Pre-Commit Checklist before committing**
 - Verify all checks pass before completing tasks
+- Remember: CI runs the exact same commands, so local failures will cause CI failures
