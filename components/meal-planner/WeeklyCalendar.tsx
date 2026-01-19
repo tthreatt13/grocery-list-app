@@ -147,7 +147,29 @@ const WeeklyCalendar = forwardRef<WeeklyCalendarRef, WeeklyCalendarProps>(
                       )}
                     >
                       {meal ? (
-                        <div onClick={() => onMealClick(meal)}>
+                        <div
+                          onClick={(e) => {
+                            // Only trigger if click is not on a button inside MealCard
+                            const target = e.target as HTMLElement
+                            if (
+                              !target.closest('button') &&
+                              !target.closest('svg') &&
+                              !target.closest('path')
+                            ) {
+                              onMealClick(meal)
+                            }
+                          }}
+                          className="cursor-pointer"
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault()
+                              onMealClick(meal)
+                            }
+                          }}
+                          aria-label={`Edit ${meal.name || 'meal'} for ${formatDate(day)}`}
+                        >
                           <MealCard
                             meal={meal}
                             onEdit={onMealEdit}
