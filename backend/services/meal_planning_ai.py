@@ -312,10 +312,79 @@ def call_anthropic_api(prompt: str, api_key: str) -> Any:
         ValueError: If API key is missing
         Exception: If API call fails
     """
+    # #region agent log
+    try:
+        import json
+        import time
+        import os as _os
+        _log_paths = [
+            "/Users/tonythreatt/git/grocery-list-app/.cursor/debug.log",
+            _os.path.join(_os.path.dirname(_os.path.dirname(__file__)), ".cursor", "debug.log"),
+            ".cursor/debug.log",
+        ]
+        _log_data = {
+            "location": "meal_planning_ai.py:300",
+            "message": "call_anthropic_api entry - checking API key",
+            "data": {
+                "api_key_provided": api_key is not None,
+                "api_key_length": len(api_key) if api_key else 0,
+                "api_key_empty": api_key == "",
+                "api_key_is_whitespace": api_key.strip() == "" if api_key else True,
+                "api_key_prefix": api_key[:15] if api_key and len(api_key) > 15 else (api_key if api_key else "N/A"),
+            },
+            "timestamp": int(time.time() * 1000),
+            "sessionId": "debug-session",
+            "runId": "run1",
+            "hypothesisId": "C"
+        }
+        logger.error(f"[DEBUG] call_anthropic_api - api_key provided: {api_key is not None}, length: {len(api_key) if api_key else 0}, empty: {api_key == '' if api_key else 'N/A'}")
+        for _lp in _log_paths:
+            try:
+                _os.makedirs(_os.path.dirname(_lp), exist_ok=True)
+                with open(_lp, "a") as f:
+                    f.write(json.dumps(_log_data) + "\n")
+                break
+            except: continue
+    except Exception as _e:
+        logger.error(f"[DEBUG] Failed to log API key check in call_anthropic_api: {_e}")
+    # #endregion
+    
     if not api_key:
+        logger.error("[DEBUG] Anthropic API key is missing or empty - raising ValueError")
         raise ValueError("Anthropic API key is required")
 
     try:
+        # #region agent log
+        try:
+            import json
+            import time
+            import os as _os
+            _log_paths = [
+                "/Users/tonythreatt/git/grocery-list-app/.cursor/debug.log",
+                _os.path.join(_os.path.dirname(_os.path.dirname(__file__)), ".cursor", "debug.log"),
+                ".cursor/debug.log",
+            ]
+            _log_data = {
+                "location": "meal_planning_ai.py:319",
+                "message": "Creating Anthropic client with API key",
+                "data": {
+                    "api_key_length": len(api_key),
+                    "api_key_prefix": api_key[:15] if len(api_key) > 15 else api_key,
+                },
+                "timestamp": int(time.time() * 1000),
+                "sessionId": "debug-session",
+                "runId": "run1",
+                "hypothesisId": "D"
+            }
+            for _lp in _log_paths:
+                try:
+                    _os.makedirs(_os.path.dirname(_lp), exist_ok=True)
+                    with open(_lp, "a") as f:
+                        f.write(json.dumps(_log_data) + "\n")
+                    break
+                except: continue
+        except: pass
+        # #endregion
         client = Anthropic(api_key=api_key)
         response = client.messages.create(
             model="claude-sonnet-4-20250514",  # Updated to current recommended model (claude-3-5-sonnet-20241022 was deprecated)
@@ -455,6 +524,39 @@ def suggest_meals(
     # Use provided API key or fall back to settings
     if api_key is None:
         api_key = settings.anthropic_api_key
+        # #region agent log
+        try:
+            import json
+            import time
+            import os as _os
+            _log_paths = [
+                "/Users/tonythreatt/git/grocery-list-app/.cursor/debug.log",
+                _os.path.join(_os.path.dirname(_os.path.dirname(__file__)), ".cursor", "debug.log"),
+                ".cursor/debug.log",
+            ]
+            _log_data = {
+                "location": "meal_planning_ai.py:457",
+                "message": "API key retrieved from settings",
+                "data": {
+                    "api_key_provided": api_key is not None,
+                    "api_key_length": len(api_key) if api_key else 0,
+                    "api_key_empty": api_key == "",
+                    "api_key_prefix": api_key[:10] if api_key and len(api_key) > 10 else (api_key if api_key else "N/A"),
+                },
+                "timestamp": int(time.time() * 1000),
+                "sessionId": "debug-session",
+                "runId": "run1",
+                "hypothesisId": "B"
+            }
+            for _lp in _log_paths:
+                try:
+                    _os.makedirs(_os.path.dirname(_lp), exist_ok=True)
+                    with open(_lp, "a") as f:
+                        f.write(json.dumps(_log_data) + "\n")
+                    break
+                except: continue
+        except: pass
+        # #endregion
 
     # Gather context
     context = gather_meal_planning_context(db, household_id, user_id, week_start_date)
