@@ -346,30 +346,44 @@ async def ai_suggest_meals(
 
         # #region agent log
         import logging
+
         _logger = logging.getLogger(__name__)
         try:
             import json
             import time
             import os as _os
+
             _log_paths = [
                 "/Users/tonythreatt/git/grocery-list-app/.cursor/debug.log",
-                _os.path.join(_os.path.dirname(_os.path.dirname(__file__)), ".cursor", "debug.log"),
+                _os.path.join(
+                    _os.path.dirname(_os.path.dirname(__file__)), ".cursor", "debug.log"
+                ),
                 ".cursor/debug.log",
             ]
             _log_data = {
                 "location": "meals.py:345",
                 "message": "Route handler accessing settings.anthropic_api_key",
                 "data": {
-                    "settings_anthropic_api_key_exists": bool(settings.anthropic_api_key),
-                    "settings_anthropic_api_key_length": len(settings.anthropic_api_key),
-                    "settings_anthropic_api_key_empty": settings.anthropic_api_key == "",
-                    "raw_env_ANTHROPIC_API_KEY_exists": "ANTHROPIC_API_KEY" in _os.environ,
-                    "raw_env_ANTHROPIC_API_KEY_length": len(_os.environ.get("ANTHROPIC_API_KEY", "")) if "ANTHROPIC_API_KEY" in _os.environ else 0,
+                    "settings_anthropic_api_key_exists": bool(
+                        settings.anthropic_api_key
+                    ),
+                    "settings_anthropic_api_key_length": len(
+                        settings.anthropic_api_key
+                    ),
+                    "settings_anthropic_api_key_empty": settings.anthropic_api_key
+                    == "",
+                    "raw_env_ANTHROPIC_API_KEY_exists": "ANTHROPIC_API_KEY"
+                    in _os.environ,
+                    "raw_env_ANTHROPIC_API_KEY_length": (
+                        len(_os.environ.get("ANTHROPIC_API_KEY", ""))
+                        if "ANTHROPIC_API_KEY" in _os.environ
+                        else 0
+                    ),
                 },
                 "timestamp": int(time.time() * 1000),
                 "sessionId": "debug-session",
                 "runId": "run1",
-                "hypothesisId": "E"
+                "hypothesisId": "E",
             }
             _logger.error(
                 f"[DEBUG] ANTHROPIC_API_KEY check - settings.anthropic_api_key exists: {bool(settings.anthropic_api_key)}, length: {len(settings.anthropic_api_key)}, raw env exists: {'ANTHROPIC_API_KEY' in _os.environ}, raw env length: {len(_os.environ.get('ANTHROPIC_API_KEY', '')) if 'ANTHROPIC_API_KEY' in _os.environ else 0}"
@@ -380,7 +394,8 @@ async def ai_suggest_meals(
                     with open(_lp, "a") as f:
                         f.write(json.dumps(_log_data) + "\n")
                     break
-                except: continue
+                except:
+                    continue
         except Exception as _e:
             _logger.error(f"[DEBUG] Failed to log API key check: {_e}")
         # #endregion

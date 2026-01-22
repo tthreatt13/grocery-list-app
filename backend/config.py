@@ -10,9 +10,12 @@ try:
     import json
     import time
     import os as _os
+
     _log_paths = [
         "/Users/tonythreatt/git/grocery-list-app/.cursor/debug.log",
-        _os.path.join(_os.path.dirname(_os.path.dirname(__file__)), ".cursor", "debug.log"),
+        _os.path.join(
+            _os.path.dirname(_os.path.dirname(__file__)), ".cursor", "debug.log"
+        ),
         ".cursor/debug.log",
     ]
     _log_data = {
@@ -20,13 +23,22 @@ try:
         "message": "Settings class definition - checking env var availability",
         "data": {
             "ANTHROPIC_API_KEY_exists": "ANTHROPIC_API_KEY" in _os.environ,
-            "ANTHROPIC_API_KEY_length": len(_os.environ.get("ANTHROPIC_API_KEY", "")) if "ANTHROPIC_API_KEY" in _os.environ else 0,
-            "ANTHROPIC_API_KEY_prefix": _os.environ.get("ANTHROPIC_API_KEY", "")[:10] if "ANTHROPIC_API_KEY" in _os.environ and len(_os.environ.get("ANTHROPIC_API_KEY", "")) > 10 else "N/A",
+            "ANTHROPIC_API_KEY_length": (
+                len(_os.environ.get("ANTHROPIC_API_KEY", ""))
+                if "ANTHROPIC_API_KEY" in _os.environ
+                else 0
+            ),
+            "ANTHROPIC_API_KEY_prefix": (
+                _os.environ.get("ANTHROPIC_API_KEY", "")[:10]
+                if "ANTHROPIC_API_KEY" in _os.environ
+                and len(_os.environ.get("ANTHROPIC_API_KEY", "")) > 10
+                else "N/A"
+            ),
         },
         "timestamp": int(time.time() * 1000),
         "sessionId": "debug-session",
         "runId": "run1",
-        "hypothesisId": "A"
+        "hypothesisId": "A",
     }
     for _lp in _log_paths:
         try:
@@ -34,8 +46,10 @@ try:
             with open(_lp, "a") as f:
                 f.write(json.dumps(_log_data) + "\n")
             break
-        except: continue
-except: pass
+        except:
+            continue
+except:
+    pass
 # #endregion
 
 
@@ -198,25 +212,37 @@ try:
         "data": {
             "anthropic_api_key_loaded": bool(settings.anthropic_api_key),
             "anthropic_api_key_length": len(settings.anthropic_api_key),
-            "anthropic_api_key_prefix": settings.anthropic_api_key[:10] if len(settings.anthropic_api_key) > 10 else settings.anthropic_api_key,
+            "anthropic_api_key_prefix": (
+                settings.anthropic_api_key[:10]
+                if len(settings.anthropic_api_key) > 10
+                else settings.anthropic_api_key
+            ),
             "environment": settings.environment,
             "raw_env_var_exists": "ANTHROPIC_API_KEY" in _os.environ,
-            "raw_env_var_length": len(_os.environ.get("ANTHROPIC_API_KEY", "")) if "ANTHROPIC_API_KEY" in _os.environ else 0,
+            "raw_env_var_length": (
+                len(_os.environ.get("ANTHROPIC_API_KEY", ""))
+                if "ANTHROPIC_API_KEY" in _os.environ
+                else 0
+            ),
         },
         "timestamp": int(time.time() * 1000),
         "sessionId": "debug-session",
         "runId": "run1",
-        "hypothesisId": "A"
+        "hypothesisId": "A",
     }
-    _config_logger.error(f"[DEBUG] Settings loaded - anthropic_api_key exists: {bool(settings.anthropic_api_key)}, length: {len(settings.anthropic_api_key)}, env var exists: {'ANTHROPIC_API_KEY' in _os.environ}, env var length: {len(_os.environ.get('ANTHROPIC_API_KEY', '')) if 'ANTHROPIC_API_KEY' in _os.environ else 0}")
+    _config_logger.error(
+        f"[DEBUG] Settings loaded - anthropic_api_key exists: {bool(settings.anthropic_api_key)}, length: {len(settings.anthropic_api_key)}, env var exists: {'ANTHROPIC_API_KEY' in _os.environ}, env var length: {len(_os.environ.get('ANTHROPIC_API_KEY', '')) if 'ANTHROPIC_API_KEY' in _os.environ else 0}"
+    )
     for _lp in _log_paths:
         try:
             _os.makedirs(_os.path.dirname(_lp), exist_ok=True)
             with open(_lp, "a") as f:
                 f.write(json.dumps(_log_data) + "\n")
             break
-        except: continue
+        except:
+            continue
 except Exception as _e:
     import logging
+
     logging.getLogger(__name__).error(f"[DEBUG] Failed to log settings check: {_e}")
 # #endregion
