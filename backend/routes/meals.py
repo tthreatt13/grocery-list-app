@@ -371,7 +371,9 @@ async def ai_suggest_meals(
                 "runId": "run1",
                 "hypothesisId": "E"
             }
-            _logger.error(f"[DEBUG] ANTHROPIC_API_KEY check - settings.anthropic_api_key exists: {bool(settings.anthropic_api_key)}, length: {len(settings.anthropic_api_key)}, raw env exists: {'ANTHROPIC_API_KEY' in _os.environ}, raw env length: {len(_os.environ.get('ANTHROPIC_API_KEY', '')) if 'ANTHROPIC_API_KEY' in _os.environ else 0}")
+            _logger.error(
+                f"[DEBUG] ANTHROPIC_API_KEY check - settings.anthropic_api_key exists: {bool(settings.anthropic_api_key)}, length: {len(settings.anthropic_api_key)}, raw env exists: {'ANTHROPIC_API_KEY' in _os.environ}, raw env length: {len(_os.environ.get('ANTHROPIC_API_KEY', '')) if 'ANTHROPIC_API_KEY' in _os.environ else 0}"
+            )
             for _lp in _log_paths:
                 try:
                     _os.makedirs(_os.path.dirname(_lp), exist_ok=True)
