@@ -61,33 +61,50 @@ class Settings(BaseSettings):
     # pydantic-settings may not automatically map snake_case to UPPER_CASE
     # We use model_validator and service-level fallback to ensure it's loaded
     anthropic_api_key: str = ""
-    
+
     @model_validator(mode="after")
     def ensure_anthropic_api_key(self):
         """Ensure ANTHROPIC_API_KEY is loaded from environment variable."""
         import logging
+
         _validator_logger = logging.getLogger(__name__)
-        
+
         # Log current state
-        _validator_logger.error(f"[DEBUG] model_validator: anthropic_api_key current value length: {len(self.anthropic_api_key)}")
-        _validator_logger.error(f"[DEBUG] model_validator: ANTHROPIC_API_KEY in os.environ: {'ANTHROPIC_API_KEY' in os.environ}")
-        
+        _validator_logger.error(
+            f"[DEBUG] model_validator: anthropic_api_key current value length: {len(self.anthropic_api_key)}"
+        )
+        _validator_logger.error(
+            f"[DEBUG] model_validator: ANTHROPIC_API_KEY in os.environ: {'ANTHROPIC_API_KEY' in os.environ}"
+        )
+
         # Read directly from environment - this overrides any pydantic-settings value
         if "ANTHROPIC_API_KEY" in os.environ:
             env_value = os.environ["ANTHROPIC_API_KEY"].strip()
-            _validator_logger.error(f"[DEBUG] model_validator: env_value length: {len(env_value)}, prefix: {env_value[:15] if len(env_value) > 15 else env_value}")
+            _validator_logger.error(
+                f"[DEBUG] model_validator: env_value length: {len(env_value)}, prefix: {env_value[:15] if len(env_value) > 15 else env_value}"
+            )
             if env_value:
                 # Force set the value using object.__setattr__ to bypass pydantic validation
                 object.__setattr__(self, "anthropic_api_key", env_value)
-                _validator_logger.error(f"[DEBUG] model_validator: Set anthropic_api_key from env var, new length: {len(self.anthropic_api_key)}")
+                _validator_logger.error(
+                    f"[DEBUG] model_validator: Set anthropic_api_key from env var, new length: {len(self.anthropic_api_key)}"
+                )
             else:
-                _validator_logger.error(f"[DEBUG] model_validator: ANTHROPIC_API_KEY exists but is empty/whitespace")
+                _validator_logger.error(
+                    f"[DEBUG] model_validator: ANTHROPIC_API_KEY exists but is empty/whitespace"
+                )
         else:
-            _validator_logger.error(f"[DEBUG] model_validator: ANTHROPIC_API_KEY not found in environment variables")
+            _validator_logger.error(
+                f"[DEBUG] model_validator: ANTHROPIC_API_KEY not found in environment variables"
+            )
             # List all env vars that contain "ANTHROPIC" for debugging
-            anthropic_vars = {k: len(v) for k, v in os.environ.items() if "ANTHROPIC" in k.upper()}
-            _validator_logger.error(f"[DEBUG] model_validator: Environment variables containing 'ANTHROPIC': {anthropic_vars}")
-        
+            anthropic_vars = {
+                k: len(v) for k, v in os.environ.items() if "ANTHROPIC" in k.upper()
+            }
+            _validator_logger.error(
+                f"[DEBUG] model_validator: Environment variables containing 'ANTHROPIC': {anthropic_vars}"
+            )
+
         return self
 
     # API Configuration
