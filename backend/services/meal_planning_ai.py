@@ -528,11 +528,22 @@ def suggest_meals(
         # Fallback: if settings value is empty, read directly from environment
         if not api_key or api_key.strip() == "":
             import os as _os_env
+            logger.error(f"[DEBUG] suggest_meals: API key from settings is empty, checking environment...")
+            logger.error(f"[DEBUG] suggest_meals: ANTHROPIC_API_KEY in environ: {'ANTHROPIC_API_KEY' in _os_env.environ}")
+            
+            # List all env vars containing ANTHROPIC for debugging
+            anthropic_vars = {k: f"length={len(v)}" for k, v in _os_env.environ.items() if "ANTHROPIC" in k.upper()}
+            logger.error(f"[DEBUG] suggest_meals: Environment variables containing 'ANTHROPIC': {anthropic_vars}")
+            
             if "ANTHROPIC_API_KEY" in _os_env.environ:
                 api_key = _os_env.environ["ANTHROPIC_API_KEY"].strip()
                 logger.error(f"[DEBUG] suggest_meals: Read API key directly from env, length: {len(api_key)}")
             else:
                 logger.error(f"[DEBUG] suggest_meals: ANTHROPIC_API_KEY not found in environment")
+                # Try case variations
+                for var_name in _os_env.environ.keys():
+                    if "anthropic" in var_name.lower() and "key" in var_name.lower():
+                        logger.error(f"[DEBUG] suggest_meals: Found similar env var: {var_name} (length: {len(_os_env.environ[var_name])})")
         
         # #region agent log
         try:
