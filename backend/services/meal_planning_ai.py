@@ -317,9 +317,12 @@ def call_anthropic_api(prompt: str, api_key: str) -> Any:
         import json
         import time
         import os as _os
+
         _log_paths = [
             "/Users/tonythreatt/git/grocery-list-app/.cursor/debug.log",
-            _os.path.join(_os.path.dirname(_os.path.dirname(__file__)), ".cursor", "debug.log"),
+            _os.path.join(
+                _os.path.dirname(_os.path.dirname(__file__)), ".cursor", "debug.log"
+            ),
             ".cursor/debug.log",
         ]
         _log_data = {
@@ -330,27 +333,36 @@ def call_anthropic_api(prompt: str, api_key: str) -> Any:
                 "api_key_length": len(api_key) if api_key else 0,
                 "api_key_empty": api_key == "",
                 "api_key_is_whitespace": api_key.strip() == "" if api_key else True,
-                "api_key_prefix": api_key[:15] if api_key and len(api_key) > 15 else (api_key if api_key else "N/A"),
+                "api_key_prefix": (
+                    api_key[:15]
+                    if api_key and len(api_key) > 15
+                    else (api_key if api_key else "N/A")
+                ),
             },
             "timestamp": int(time.time() * 1000),
             "sessionId": "debug-session",
             "runId": "run1",
-            "hypothesisId": "C"
+            "hypothesisId": "C",
         }
-        logger.error(f"[DEBUG] call_anthropic_api - api_key provided: {api_key is not None}, length: {len(api_key) if api_key else 0}, empty: {api_key == '' if api_key else 'N/A'}")
+        logger.error(
+            f"[DEBUG] call_anthropic_api - api_key provided: {api_key is not None}, length: {len(api_key) if api_key else 0}, empty: {api_key == '' if api_key else 'N/A'}"
+        )
         for _lp in _log_paths:
             try:
                 _os.makedirs(_os.path.dirname(_lp), exist_ok=True)
                 with open(_lp, "a") as f:
                     f.write(json.dumps(_log_data) + "\n")
                 break
-            except: continue
+            except:
+                continue
     except Exception as _e:
         logger.error(f"[DEBUG] Failed to log API key check in call_anthropic_api: {_e}")
     # #endregion
-    
+
     if not api_key:
-        logger.error("[DEBUG] Anthropic API key is missing or empty - raising ValueError")
+        logger.error(
+            "[DEBUG] Anthropic API key is missing or empty - raising ValueError"
+        )
         raise ValueError("Anthropic API key is required")
 
     try:
@@ -359,9 +371,12 @@ def call_anthropic_api(prompt: str, api_key: str) -> Any:
             import json
             import time
             import os as _os
+
             _log_paths = [
                 "/Users/tonythreatt/git/grocery-list-app/.cursor/debug.log",
-                _os.path.join(_os.path.dirname(_os.path.dirname(__file__)), ".cursor", "debug.log"),
+                _os.path.join(
+                    _os.path.dirname(_os.path.dirname(__file__)), ".cursor", "debug.log"
+                ),
                 ".cursor/debug.log",
             ]
             _log_data = {
@@ -374,7 +389,7 @@ def call_anthropic_api(prompt: str, api_key: str) -> Any:
                 "timestamp": int(time.time() * 1000),
                 "sessionId": "debug-session",
                 "runId": "run1",
-                "hypothesisId": "D"
+                "hypothesisId": "D",
             }
             for _lp in _log_paths:
                 try:
@@ -382,8 +397,10 @@ def call_anthropic_api(prompt: str, api_key: str) -> Any:
                     with open(_lp, "a") as f:
                         f.write(json.dumps(_log_data) + "\n")
                     break
-                except: continue
-        except: pass
+                except:
+                    continue
+        except:
+            pass
         # #endregion
         client = Anthropic(api_key=api_key)
         response = client.messages.create(
@@ -527,7 +544,9 @@ def suggest_meals(
     )
 
     if api_key is None:
-        logger.error(f"[DEBUG] suggest_meals: api_key is None, getting from settings...")
+        logger.error(
+            f"[DEBUG] suggest_meals: api_key is None, getting from settings..."
+        )
         api_key = settings.anthropic_api_key
         logger.error(
             f"[DEBUG] suggest_meals: Got from settings - length: {len(api_key) if api_key else 0}, value (first 20 chars): {api_key[:20] if api_key and len(api_key) > 20 else api_key}"
@@ -590,15 +609,18 @@ def suggest_meals(
     logger.error(
         f"[DEBUG] suggest_meals: Final api_key before call_anthropic_api - length: {len(api_key) if api_key else 0}, empty: {not api_key or (isinstance(api_key, str) and api_key.strip() == '')}"
     )
-    
+
     # #region agent log
     try:
         import json
         import time
         import os as _os
+
         _log_paths = [
             "/Users/tonythreatt/git/grocery-list-app/.cursor/debug.log",
-            _os.path.join(_os.path.dirname(_os.path.dirname(__file__)), ".cursor", "debug.log"),
+            _os.path.join(
+                _os.path.dirname(_os.path.dirname(__file__)), ".cursor", "debug.log"
+            ),
             ".cursor/debug.log",
         ]
         _log_data = {
@@ -608,12 +630,16 @@ def suggest_meals(
                 "api_key_provided": api_key is not None,
                 "api_key_length": len(api_key) if api_key else 0,
                 "api_key_empty": api_key == "",
-                "api_key_prefix": api_key[:10] if api_key and len(api_key) > 10 else (api_key if api_key else "N/A"),
+                "api_key_prefix": (
+                    api_key[:10]
+                    if api_key and len(api_key) > 10
+                    else (api_key if api_key else "N/A")
+                ),
             },
             "timestamp": int(time.time() * 1000),
             "sessionId": "debug-session",
             "runId": "run1",
-            "hypothesisId": "B"
+            "hypothesisId": "B",
         }
         for _lp in _log_paths:
             try:
@@ -621,8 +647,10 @@ def suggest_meals(
                 with open(_lp, "a") as f:
                     f.write(json.dumps(_log_data) + "\n")
                 break
-            except: continue
-    except: pass
+            except:
+                continue
+    except:
+        pass
     # #endregion
 
     # Gather context
