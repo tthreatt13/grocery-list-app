@@ -559,40 +559,40 @@ def suggest_meals(
         logger.error(f"[DEBUG] suggest_meals: api_key was provided (not None), length: {len(api_key) if api_key else 0}")
     
     logger.error(f"[DEBUG] suggest_meals: Final api_key before call_anthropic_api - length: {len(api_key) if api_key else 0}, empty: {not api_key or (isinstance(api_key, str) and api_key.strip() == '')}")
-        
-        # #region agent log
-        try:
-            import json
-            import time
-            import os as _os
-            _log_paths = [
-                "/Users/tonythreatt/git/grocery-list-app/.cursor/debug.log",
-                _os.path.join(_os.path.dirname(_os.path.dirname(__file__)), ".cursor", "debug.log"),
-                ".cursor/debug.log",
-            ]
-            _log_data = {
-                "location": "meal_planning_ai.py:457",
-                "message": "API key retrieved from settings",
-                "data": {
-                    "api_key_provided": api_key is not None,
-                    "api_key_length": len(api_key) if api_key else 0,
-                    "api_key_empty": api_key == "",
-                    "api_key_prefix": api_key[:10] if api_key and len(api_key) > 10 else (api_key if api_key else "N/A"),
-                },
-                "timestamp": int(time.time() * 1000),
-                "sessionId": "debug-session",
-                "runId": "run1",
-                "hypothesisId": "B"
-            }
-            for _lp in _log_paths:
-                try:
-                    _os.makedirs(_os.path.dirname(_lp), exist_ok=True)
-                    with open(_lp, "a") as f:
-                        f.write(json.dumps(_log_data) + "\n")
-                    break
-                except: continue
-        except: pass
-        # #endregion
+    
+    # #region agent log
+    try:
+        import json
+        import time
+        import os as _os
+        _log_paths = [
+            "/Users/tonythreatt/git/grocery-list-app/.cursor/debug.log",
+            _os.path.join(_os.path.dirname(_os.path.dirname(__file__)), ".cursor", "debug.log"),
+            ".cursor/debug.log",
+        ]
+        _log_data = {
+            "location": "meal_planning_ai.py:457",
+            "message": "API key retrieved from settings",
+            "data": {
+                "api_key_provided": api_key is not None,
+                "api_key_length": len(api_key) if api_key else 0,
+                "api_key_empty": api_key == "",
+                "api_key_prefix": api_key[:10] if api_key and len(api_key) > 10 else (api_key if api_key else "N/A"),
+            },
+            "timestamp": int(time.time() * 1000),
+            "sessionId": "debug-session",
+            "runId": "run1",
+            "hypothesisId": "B"
+        }
+        for _lp in _log_paths:
+            try:
+                _os.makedirs(_os.path.dirname(_lp), exist_ok=True)
+                with open(_lp, "a") as f:
+                    f.write(json.dumps(_log_data) + "\n")
+                break
+            except: continue
+    except: pass
+    # #endregion
 
     # Gather context
     context = gather_meal_planning_context(db, household_id, user_id, week_start_date)
