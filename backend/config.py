@@ -2,7 +2,7 @@
 
 import os
 import json
-from pydantic import Field, field_validator, model_validator
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # #region agent log
@@ -165,10 +165,10 @@ settings = Settings()
 
 # #region agent log
 try:
-    import json
     import time
     import os as _os
     import logging
+
     _config_logger = logging.getLogger(__name__)
     _log_paths = [
         "/Users/tonythreatt/git/grocery-list-app/.cursor/debug.log",

@@ -343,7 +343,6 @@ async def ai_suggest_meals(
     try:
         from services.meal_planning_ai import suggest_meals
         from config import settings
-        import os
 
         # #region agent log
         import logging
