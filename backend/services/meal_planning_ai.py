@@ -522,11 +522,18 @@ def suggest_meals(
         Exception: If API call fails
     """
     # Use provided API key or fall back to settings
+    logger.error(f"[DEBUG] suggest_meals: Entry - api_key is None: {api_key is None}, api_key type: {type(api_key)}")
+    
     if api_key is None:
+        logger.error(f"[DEBUG] suggest_meals: api_key is None, getting from settings...")
         api_key = settings.anthropic_api_key
+        logger.error(f"[DEBUG] suggest_meals: Got from settings - length: {len(api_key) if api_key else 0}, value (first 20 chars): {api_key[:20] if api_key and len(api_key) > 20 else api_key}")
         
         # Fallback: if settings value is empty, read directly from environment
-        if not api_key or api_key.strip() == "":
+        api_key_empty = not api_key or (isinstance(api_key, str) and api_key.strip() == "")
+        logger.error(f"[DEBUG] suggest_meals: api_key_empty check: {api_key_empty}, api_key: {repr(api_key)}")
+        
+        if api_key_empty:
             import os as _os_env
             logger.error(f"[DEBUG] suggest_meals: API key from settings is empty, checking environment...")
             logger.error(f"[DEBUG] suggest_meals: ANTHROPIC_API_KEY in environ: {'ANTHROPIC_API_KEY' in _os_env.environ}")
@@ -534,6 +541,10 @@ def suggest_meals(
             # List all env vars containing ANTHROPIC for debugging
             anthropic_vars = {k: f"length={len(v)}" for k, v in _os_env.environ.items() if "ANTHROPIC" in k.upper()}
             logger.error(f"[DEBUG] suggest_meals: Environment variables containing 'ANTHROPIC': {anthropic_vars}")
+            
+            # Also list ALL environment variables (first 50) to see what's available
+            all_env_vars = list(_os_env.environ.keys())[:50]
+            logger.error(f"[DEBUG] suggest_meals: First 50 environment variable names: {all_env_vars}")
             
             if "ANTHROPIC_API_KEY" in _os_env.environ:
                 api_key = _os_env.environ["ANTHROPIC_API_KEY"].strip()
@@ -544,6 +555,10 @@ def suggest_meals(
                 for var_name in _os_env.environ.keys():
                     if "anthropic" in var_name.lower() and "key" in var_name.lower():
                         logger.error(f"[DEBUG] suggest_meals: Found similar env var: {var_name} (length: {len(_os_env.environ[var_name])})")
+    else:
+        logger.error(f"[DEBUG] suggest_meals: api_key was provided (not None), length: {len(api_key) if api_key else 0}")
+    
+    logger.error(f"[DEBUG] suggest_meals: Final api_key before call_anthropic_api - length: {len(api_key) if api_key else 0}, empty: {not api_key or (isinstance(api_key, str) and api_key.strip() == '')}")
         
         # #region agent log
         try:
