@@ -524,6 +524,16 @@ def suggest_meals(
     # Use provided API key or fall back to settings
     if api_key is None:
         api_key = settings.anthropic_api_key
+        
+        # Fallback: if settings value is empty, read directly from environment
+        if not api_key or api_key.strip() == "":
+            import os as _os_env
+            if "ANTHROPIC_API_KEY" in _os_env.environ:
+                api_key = _os_env.environ["ANTHROPIC_API_KEY"].strip()
+                logger.error(f"[DEBUG] suggest_meals: Read API key directly from env, length: {len(api_key)}")
+            else:
+                logger.error(f"[DEBUG] suggest_meals: ANTHROPIC_API_KEY not found in environment")
+        
         # #region agent log
         try:
             import json
