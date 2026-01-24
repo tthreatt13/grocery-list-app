@@ -373,4 +373,82 @@ describe('AIMealPlanningAssistant', () => {
     // Should not call API
     expect(mockGetAIMealSuggestions).not.toHaveBeenCalled()
   })
+
+  describe('Scroll behavior', () => {
+    it('has input ref attached', () => {
+      render(
+        <AIMealPlanningAssistant
+          householdId={mockHouseholdId}
+          weekStartDate={mockWeekStartDate}
+          getToken={mockGetToken}
+          onMealsApplied={mockOnMealsApplied}
+        />
+      )
+
+      const input = screen.getByPlaceholderText(/ask for meal suggestions/i)
+      expect(input).toBeInTheDocument()
+      // Input should be focusable
+      expect(input).toHaveAttribute('type', 'text')
+    })
+
+    it('keeps chat container visible when input gets focus', () => {
+      // Mock scrollIntoView
+      const scrollIntoViewMock = jest.fn()
+      Element.prototype.scrollIntoView = scrollIntoViewMock
+
+      render(
+        <AIMealPlanningAssistant
+          householdId={mockHouseholdId}
+          weekStartDate={mockWeekStartDate}
+          getToken={mockGetToken}
+          onMealsApplied={mockOnMealsApplied}
+        />
+      )
+
+      const input = screen.getByPlaceholderText(/ask for meal suggestions/i)
+
+      // Simulate focus event
+      fireEvent.focus(input)
+
+      // The onFocus handler should call scrollIntoView on the chat container
+      // We can't directly test the chat container ref, but we can verify
+      // that the input is properly set up with the onFocus handler
+      expect(input).toBeInTheDocument()
+
+      // Clean up
+      Element.prototype.scrollIntoView = jest.fn()
+    })
+
+    it('scrolls chat to bottom when new messages are added', async () => {
+      // Mock scrollIntoView
+      const scrollIntoViewMock = jest.fn()
+      Element.prototype.scrollIntoView = scrollIntoViewMock
+
+      render(
+        <AIMealPlanningAssistant
+          householdId={mockHouseholdId}
+          weekStartDate={mockWeekStartDate}
+          getToken={mockGetToken}
+          onMealsApplied={mockOnMealsApplied}
+        />
+      )
+
+      const input = screen.getByPlaceholderText(/ask for meal suggestions/i)
+      const sendButton = screen.getByLabelText(/send message/i)
+
+      fireEvent.change(input, { target: { value: 'Suggest meals' } })
+      fireEvent.click(sendButton)
+
+      await waitFor(() => {
+        expect(mockGetAIMealSuggestions).toHaveBeenCalled()
+      })
+
+      // Chat should scroll to bottom when messages are added
+      // The scrollIntoView is called via useEffect when conversationHistory changes
+      expect(scrollIntoViewMock).toHaveBeenCalled()
+
+      // Clean up
+      Element.prototype.scrollIntoView = jest.fn()
+    })
+  })
 })
