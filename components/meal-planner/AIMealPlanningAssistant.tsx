@@ -37,12 +37,23 @@ export default function AIMealPlanningAssistant({
   const [isApplyingMeals, setIsApplyingMeals] = useState(false)
 
   const chatEndRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const chatContainerRef = useRef<HTMLDivElement>(null)
+  const prevConversationLengthRef = useRef<number>(0)
 
-  // Scroll to bottom when new messages are added
+  // Scroll to bottom when new messages are added (only when length increases)
   useEffect(() => {
-    if (chatEndRef.current?.scrollIntoView) {
+    const prevLength = prevConversationLengthRef.current
+    const currentLength = conversationHistory.length
+    const hasNewMessages = currentLength > prevLength
+
+    // Only scroll when new messages are actually added (length increased)
+    if (hasNewMessages && chatEndRef.current?.scrollIntoView) {
       chatEndRef.current.scrollIntoView({ behavior: 'smooth' })
     }
+
+    // Update the previous length for next comparison
+    prevConversationLengthRef.current = currentLength
   }, [conversationHistory])
 
   const handleSendMessage = async () => {
@@ -326,7 +337,10 @@ export default function AIMealPlanningAssistant({
       </div>
 
       {/* Chat Messages */}
-      <div className="h-48 md:h-64 overflow-y-auto px-3 md:px-4 py-3 space-y-3">
+      <div
+        ref={chatContainerRef}
+        className="h-48 md:h-64 overflow-y-auto px-3 md:px-4 py-3 space-y-3"
+      >
         {conversationHistory.length === 0 && (
           <div className="text-center text-gray-500 py-6 md:py-8">
             <p className="mb-2 text-sm md:text-base">
@@ -451,11 +465,22 @@ export default function AIMealPlanningAssistant({
       <div className="px-3 md:px-4 py-3 border-t border-gray-200">
         <div className="flex gap-2">
           <Input
+            ref={inputRef}
             type="text"
             placeholder="Ask for meal suggestions..."
             value={userMessage}
             onChange={(e) => setUserMessage(e.target.value)}
             onKeyDown={handleKeyPress}
+            onFocus={(_e) => {
+              // Ensure chat container stays visible when input gets focus
+              // Use 'nearest' to minimize scrolling - only scroll if input is completely out of view
+              if (chatContainerRef.current) {
+                chatContainerRef.current.scrollIntoView({
+                  block: 'nearest',
+                  behavior: 'smooth',
+                })
+              }
+            }}
             disabled={isLoading || isApplyingMeals}
             className="flex-1 text-sm md:text-base"
           />
