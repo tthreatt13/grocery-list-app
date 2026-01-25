@@ -190,8 +190,8 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 3.17 Run `cd backend && black --exclude="/(alembic/versions|venv)/" .` to format code
 
 - [ ] 4.0 Testing and Validation
-  - [ ] 4.1 Run all frontend tests: `npm run test:ci`
-  - [ ] 4.2 Run all backend tests: `cd backend && pytest`
+  - [x] 4.1 Run all frontend tests: `npm run test:ci`
+  - [x] 4.2 Run all backend tests: `cd backend && pytest`
   - [ ] 4.3 Manual testing - Auto-Scroll Fix:
     - Open AI assistant from various scroll positions
     - Verify chat window remains fully visible (header, input, last 2 responses)
@@ -205,8 +205,8 @@ Update the file after completing each sub-task, not just after completing an ent
     - Open MealDetailsModal for meals with notes
     - Verify "Recipe Instructions" label appears (not "Notes")
     - Test on desktop, tablet, and mobile viewports
-  - [ ] 4.6 Run frontend linting: `npm run lint`
-  - [ ] 4.7 Run frontend formatting check: `npm run format:check`
-  - [ ] 4.8 Run backend linting: `cd backend && flake8 . --exclude=alembic/versions --select=E9,F63,F7,F82 --count --show-source --statistics`
-  - [ ] 4.9 Run backend formatting check: `cd backend && black --check --exclude="/(alembic/versions|venv)/" .`
-  - [ ] 4.10 Verify all pre-commit checklist items pass before finalizing
+  - [x] 4.6 Run frontend linting: `npm run lint`
+  - [x] 4.7 Run frontend formatting check: `npm run format:check`
+  - [x] 4.8 Run backend linting: `cd backend && flake8 . --exclude=alembic/versions --select=E9,F63,F7,F82 --count --show-source --statistics`
+  - [x] 4.9 Run backend formatting check: `cd backend && black --check --exclude="/(alembic/versions|venv)/" .`
+  - [x] 4.10 Verify all pre-commit checklist items pass before finalizing

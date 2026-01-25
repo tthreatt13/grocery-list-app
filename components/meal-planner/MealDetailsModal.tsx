@@ -25,7 +25,7 @@ export default function MealDetailsModal({
   onDelete,
 }: MealDetailsModalProps) {
   // #region agent log
-  console.log('[DEBUG] MealDetailsModal - Component rendered', {
+  console.warn('[DEBUG] MealDetailsModal - Component rendered', {
     isOpen,
     hasMeal: !!meal,
     mealId: meal?.id,
@@ -110,13 +110,13 @@ export default function MealDetailsModal({
             </h4>
             {(() => {
               // #region agent log
-              console.log(
+              console.warn(
                 '[DEBUG] MealDetailsModal - meal.notes exists:',
                 !!meal.notes,
                 'length:',
                 meal.notes?.length
               )
-              console.log(
+              console.warn(
                 '[DEBUG] MealDetailsModal - meal.notes content (first 200 chars):',
                 meal.notes?.substring(0, 200)
               )
@@ -142,7 +142,7 @@ export default function MealDetailsModal({
                 runId: 'run1',
                 hypothesisId: 'A',
               }
-              console.log('[DEBUG]', logData)
+              console.warn('[DEBUG]', logData)
               fetch(
                 'http://127.0.0.1:7242/ingest/0962a481-6cbe-4459-8fab-c413be1a5fe6',
                 {
@@ -179,7 +179,7 @@ export default function MealDetailsModal({
                           runId: 'run2',
                           hypothesisId: 'E',
                         }
-                        console.log('[DEBUG]', stepLogData)
+                        console.warn('[DEBUG]', stepLogData)
                         fetch(
                           'http://127.0.0.1:7242/ingest/0962a481-6cbe-4459-8fab-c413be1a5fe6',
                           {
