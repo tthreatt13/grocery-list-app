@@ -48,8 +48,10 @@ export default function AIMealPlanningAssistant({
     const hasNewMessages = currentLength > prevLength
 
     // Only scroll when new messages are actually added (length increased)
-    if (hasNewMessages && chatEndRef.current?.scrollIntoView) {
-      chatEndRef.current.scrollIntoView({ behavior: 'smooth' })
+    // Use scrollTop on the container instead of scrollIntoView to avoid scrolling the page
+    if (hasNewMessages && chatContainerRef.current) {
+      // Scroll the container itself, not the page
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
     }
 
     // Update the previous length for next comparison
@@ -143,8 +145,14 @@ export default function AIMealPlanningAssistant({
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
+      e.stopPropagation()
       handleSendMessage()
     }
+  }
+
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    handleSendMessage()
   }
 
   const handleSelectMeal = (index: number, selected: boolean) => {
@@ -463,7 +471,7 @@ export default function AIMealPlanningAssistant({
 
       {/* Input Area */}
       <div className="px-3 md:px-4 py-3 border-t border-gray-200">
-        <div className="flex gap-2">
+        <form onSubmit={handleFormSubmit} className="flex gap-2">
           <Input
             ref={inputRef}
             type="text"
@@ -485,6 +493,7 @@ export default function AIMealPlanningAssistant({
             className="flex-1 text-sm md:text-base"
           />
           <Button
+            type="submit"
             variant="primary"
             onClick={handleSendMessage}
             disabled={!userMessage.trim() || isLoading || isApplyingMeals}
@@ -505,7 +514,7 @@ export default function AIMealPlanningAssistant({
               />
             </svg>
           </Button>
-        </div>
+        </form>
       </div>
 
       {/* Edit Meal Modal */}

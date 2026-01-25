@@ -50,6 +50,7 @@ export default [
         HTMLButtonElement: 'readonly',
         HTMLTableCellElement: 'readonly',
         HTMLTextAreaElement: 'readonly',
+        HTMLFormElement: 'readonly',
         RequestInit: 'readonly',
         React: 'readonly',
         TextEncoder: 'readonly',

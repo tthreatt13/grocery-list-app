@@ -84,7 +84,7 @@ export default function DashboardLayout({
   const renderQuickActions = () => {
     return (
       <div className="mb-8">
-        <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">
+        <h2 className="text-lg sm:text-xl font-bold text-[var(--text-primary)] mb-4">
           Quick Actions
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
@@ -181,7 +181,7 @@ export default function DashboardLayout({
     return (
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+          <h2 className="text-lg sm:text-xl font-bold text-[var(--text-primary)]">
             Recent Lists
           </h2>
           <Link href="/grocery-lists">
@@ -198,20 +198,22 @@ export default function DashboardLayout({
                   <div className="p-6">
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900 mb-1">
+                        <h3 className="font-semibold text-[var(--text-primary)] mb-1">
                           {list.name}
                         </h3>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-[var(--text-secondary)]">
                           {list.items.length} items •{' '}
                           {list.items.filter((i) => i.checked).length} completed
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-[var(--text-tertiary)]">
                           {formatRelativeTime(list.updatedAt)}
                         </p>
                         {list.sharedWith.length > 0 && (
-                          <p className="text-xs text-green-600 mt-1">Shared</p>
+                          <p className="text-xs text-[var(--warm-green)] mt-1">
+                            Shared
+                          </p>
                         )}
                       </div>
                     </div>
@@ -222,7 +224,7 @@ export default function DashboardLayout({
           ) : (
             <Card>
               <div className="p-8 text-center">
-                <p className="text-gray-600">No recent lists</p>
+                <p className="text-[var(--text-secondary)]">No recent lists</p>
               </div>
             </Card>
           )}
@@ -235,10 +237,10 @@ export default function DashboardLayout({
     <>
       {/* Welcome Header */}
       <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+        <h1 className="text-2xl sm:text-3xl font-bold text-[var(--text-primary)] mb-2">
           Welcome back, Tony! 👋
         </h1>
-        <p className="text-sm sm:text-base text-gray-600">
+        <p className="text-sm sm:text-base text-[var(--text-secondary)]">
           {getWelcomeMessage()}
         </p>
       </div>

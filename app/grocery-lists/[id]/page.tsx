@@ -454,10 +454,10 @@ export default function GroceryListDetailPage() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading list...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--warm-blue)] mx-auto mb-4"></div>
+          <p className="text-[var(--text-secondary)]">Loading list...</p>
         </div>
       </div>
     )
@@ -466,7 +466,7 @@ export default function GroceryListDetailPage() {
   // Error or not found state
   if (error || !list) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center max-w-md px-4">
           <svg
             className="w-16 h-16 mx-auto text-red-400 mb-4"
@@ -481,10 +481,10 @@ export default function GroceryListDetailPage() {
               d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
             {error ? 'Error Loading List' : 'List Not Found'}
           </h2>
-          <p className="text-gray-600 mb-4">
+          <p className="text-[var(--text-secondary)] mb-4">
             {error || "The list you're looking for doesn't exist."}
           </p>
           <Button onClick={() => router.push('/grocery-lists')}>
@@ -538,7 +538,7 @@ export default function GroceryListDetailPage() {
       <div className="space-y-6">
         {sortedCategories.map((category) => (
           <div key={category} className="space-y-3">
-            <h3 className="text-md font-medium text-gray-700 border-b border-gray-200 pb-1">
+            <h3 className="text-md font-medium text-[var(--text-primary)] border-b border-[var(--warm-gray-200)] pb-1">
               {category}
             </h3>
             <div className="space-y-2">
@@ -587,7 +587,7 @@ export default function GroceryListDetailPage() {
       <div className="space-y-6">
         {sortedMealTypes.map((mealType) => (
           <div key={mealType} className="space-y-3">
-            <h3 className="text-md font-medium text-gray-700 border-b border-gray-200 pb-1">
+            <h3 className="text-md font-medium text-[var(--text-primary)] border-b border-[var(--warm-gray-200)] pb-1">
               {mealType}
             </h3>
             <div className="space-y-2">
@@ -638,12 +638,12 @@ export default function GroceryListDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Error banner */}
         {error && (
-          <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-4">
-            <p className="text-sm text-red-700">{error}</p>
+          <div className="mb-4 bg-[var(--warm-coral-light)] border border-[var(--warm-coral)] rounded-lg p-4 shadow-warm-sm">
+            <p className="text-sm text-[var(--warm-coral-dark)]">{error}</p>
           </div>
         )}
 
@@ -651,7 +651,7 @@ export default function GroceryListDetailPage() {
         <div className="mb-6">
           <button
             onClick={() => router.push('/grocery-lists')}
-            className="flex items-center text-gray-600 hover:text-gray-900 mb-4"
+            className="flex items-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] mb-4 transition-warm"
           >
             <svg
               className="w-5 h-5 mr-2"
@@ -672,7 +672,7 @@ export default function GroceryListDetailPage() {
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                <h1 className="text-2xl sm:text-3xl font-bold text-[var(--text-primary)]">
                   {list.name}
                 </h1>
                 <button
@@ -696,7 +696,7 @@ export default function GroceryListDetailPage() {
                   </svg>
                 </button>
               </div>
-              <p className="text-sm sm:text-base text-gray-600">
+              <p className="text-sm sm:text-base text-[var(--text-secondary)]">
                 {list.items.length} items • Updated{' '}
                 {formatRelativeTime(list.updatedAt)}
               </p>
@@ -716,14 +716,14 @@ export default function GroceryListDetailPage() {
           <Card className="mt-4">
             <div className="p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-600">
+                <span className="text-sm font-medium text-[var(--text-secondary)]">
                   Shopping Progress
                 </span>
                 <span className="text-sm font-semibold text-gray-900">
                   {checkedItems.length} / {list.items.length} items
                 </span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-3">
+              <div className="w-full bg-[var(--warm-gray-200)] rounded-full h-3">
                 <div
                   className="bg-green-600 h-3 rounded-full transition-all"
                   style={{
@@ -784,9 +784,9 @@ export default function GroceryListDetailPage() {
         {/* Items List */}
         <div>
           {sortedItems.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
+            <div className="text-center py-12 bg-[var(--warm-white)] rounded-lg border border-[var(--warm-gray-200)] shadow-warm-sm">
               <svg
-                className="w-16 h-16 mx-auto text-gray-400 mb-4"
+                className="w-16 h-16 mx-auto text-[var(--warm-gray-400)] mb-4"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -798,10 +798,10 @@ export default function GroceryListDetailPage() {
                   d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
                 />
               </svg>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <h3 className="text-lg font-medium text-[var(--text-primary)] mb-2">
                 No items yet
               </h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-[var(--text-secondary)] mb-4">
                 Add items to your grocery list to get started
               </p>
               <Button onClick={() => setIsAddModalOpen(true)}>
@@ -823,7 +823,7 @@ export default function GroceryListDetailPage() {
               {/* Checked Items */}
               {checkedItems.length > 0 && (
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-500 mb-3">
+                  <h2 className="text-lg font-semibold text-[var(--text-secondary)] mb-3">
                     Completed ({checkedItems.length})
                   </h2>
                   <div className="opacity-60">{renderItems(checkedItems)}</div>
