@@ -350,11 +350,11 @@ export default function AIMealPlanningAssistant({
         className="h-48 md:h-64 overflow-y-auto px-3 md:px-4 py-3 space-y-3"
       >
         {conversationHistory.length === 0 && (
-          <div className="text-center text-gray-500 py-6 md:py-8">
-            <p className="mb-2 text-sm md:text-base">
+          <div className="text-center text-warm-gray-600 py-6 md:py-8">
+            <p className="mb-2 text-sm md:text-base text-warm-gray-800">
               👋 Start a conversation to get meal suggestions!
             </p>
-            <p className="text-xs md:text-sm px-2">
+            <p className="text-xs md:text-sm px-2 text-warm-gray-600">
               Try: &quot;Suggest some vegetarian meals&quot; or &quot;What can I
               make with my pantry items?&quot;
             </p>
@@ -369,13 +369,17 @@ export default function AIMealPlanningAssistant({
             }`}
           >
             <div
-              className={`max-w-[85%] md:max-w-[80%] rounded-lg px-3 md:px-4 py-2 ${
+              className={`max-w-[85%] md:max-w-[80%] rounded-lg px-3 md:px-4 py-2.5 ${
                 message.role === 'user'
-                  ? 'bg-emerald-600 text-white'
-                  : 'bg-gray-100 text-gray-900'
+                  ? 'bg-[var(--warm-blue)]'
+                  : 'bg-warm-gray-50 border border-warm-gray-200'
               }`}
             >
-              <p className="text-xs md:text-sm whitespace-pre-wrap break-words">
+              <p
+                className={`text-sm md:text-base leading-relaxed whitespace-pre-wrap break-words ${
+                  message.role === 'user' ? 'text-white' : 'text-warm-gray-900'
+                }`}
+              >
                 {message.content}
               </p>
             </div>
@@ -384,10 +388,10 @@ export default function AIMealPlanningAssistant({
 
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-gray-100 rounded-lg px-3 md:px-4 py-2">
+            <div className="bg-warm-gray-50 rounded-lg px-3 md:px-4 py-2.5 border border-warm-gray-200">
               <div className="flex items-center gap-2">
-                <div className="animate-spin rounded-full h-3 w-3 md:h-4 md:w-4 border-b-2 border-gray-600"></div>
-                <p className="text-xs md:text-sm text-gray-600">
+                <div className="animate-spin rounded-full h-3 w-3 md:h-4 md:w-4 border-b-2 border-warm-gray-700"></div>
+                <p className="text-sm md:text-base text-warm-gray-900 leading-relaxed">
                   Loading suggestions...
                 </p>
               </div>
