@@ -13,12 +13,14 @@ This PR introduces three major enhancements to the AI Meal Planning Assistant th
 **Solution:** Implemented intelligent scroll management that prevents unwanted page scrolling and ensures the chat window remains fully visible.
 
 **Key Changes:**
+
 - Added `useRef` hooks for input and container elements
 - Modified scroll behavior to use `scrollTop` on chat container instead of `scrollIntoView`
 - Implemented length-based detection to only scroll when new messages are added
 - Preserved keyboard navigation and accessibility
 
 **Files Modified:**
+
 - `components/meal-planner/AIMealPlanningAssistant.tsx`
 - `components/meal-planner/__tests__/AIMealPlanningAssistant.test.tsx`
 
@@ -29,6 +31,7 @@ This PR introduces three major enhancements to the AI Meal Planning Assistant th
 **Solution:** Enhanced the AI prompt system to recognize 11+ common phrases for eating out scenarios and automatically assign `meal_category: "eat_out"`.
 
 **Recognized Phrases:**
+
 - "Eating out", "Dining at a restaurant", "Takeout for lunch"
 - "Fast food breakfast", "Ordering in pizza", "Cafe breakfast"
 - "Grabbing lunch out", "Dinner at a sushi place"
@@ -36,12 +39,14 @@ This PR introduces three major enhancements to the AI Meal Planning Assistant th
 - "Coffee and pastry from a bakery"
 
 **Key Changes:**
+
 - Updated `format_meal_planning_prompt` in `backend/services/meal_planning_ai.py`
 - Added explicit instructions for recognizing eating out scenarios
 - Enhanced JSON structure example to include `meal_category` field
 - Added comprehensive test coverage
 
 **Files Modified:**
+
 - `backend/services/meal_planning_ai.py`
 - `backend/tests/services/test_meal_planning_ai.py`
 
@@ -52,6 +57,7 @@ This PR introduces three major enhancements to the AI Meal Planning Assistant th
 **Solution:** Transformed the "Notes" section into a structured "Recipe Instructions" display with cook time and step-by-step instructions.
 
 **New Format:**
+
 ```
 Cook Time: 30 minutes
 
@@ -61,6 +67,7 @@ Step 3: Bake for 20 minutes
 ```
 
 **Key Changes:**
+
 - Created `parseRecipeInstructions` utility function
 - Updated `MealDetailsModal.tsx` to parse and display structured instructions
 - Enhanced AI prompt to generate structured recipe format
@@ -68,6 +75,7 @@ Step 3: Bake for 20 minutes
 - Maintained backward compatibility with legacy plain text notes
 
 **Files Modified:**
+
 - `components/meal-planner/MealDetailsModal.tsx`
 - `components/meal-planner/AddMealModal.tsx`
 - `lib/utils.ts` (added `parseRecipeInstructions` function)
@@ -87,17 +95,20 @@ Step 3: Bake for 20 minutes
 ## 🧪 Testing
 
 ### Frontend Tests
+
 - ✅ Auto-scroll behavior tests (78+ tests)
 - ✅ Recipe instruction parsing tests (147+ tests)
 - ✅ MealDetailsModal display tests (322+ tests)
 - ✅ AddMealModal preview tests
 
 ### Backend Tests
+
 - ✅ AI prompt enhancement tests (203+ tests)
 - ✅ Eating out phrase recognition tests
 - ✅ Meal categorization accuracy tests
 
 ### Test Coverage
+
 - Comprehensive edge case handling
 - Backward compatibility verification
 - Accessibility testing
@@ -106,12 +117,14 @@ Step 3: Bake for 20 minutes
 ## 🎨 User Experience Improvements
 
 ### Before
+
 - ❌ Chat window would scroll off-screen when opened
 - ❌ Eating out meals incorrectly categorized
 - ❌ Plain text notes difficult to follow
 - ❌ No cook time visibility
 
 ### After
+
 - ✅ Chat window always visible and accessible
 - ✅ Accurate eating out meal categorization
 - ✅ Professional recipe instructions display
@@ -121,18 +134,21 @@ Step 3: Bake for 20 minutes
 ## 🔧 Technical Details
 
 ### Auto-Scroll Implementation
+
 - Uses React refs for DOM element access
 - Implements length-based change detection
 - Container-based scrolling prevents page jumps
 - Preserves keyboard navigation and screen reader compatibility
 
 ### Eating Out Recognition
+
 - Enhanced LLM prompt with explicit examples
 - JSON structure includes `meal_category` field
 - Comprehensive phrase recognition coverage
 - Maintains backward compatibility
 
 ### Recipe Instructions
+
 - Parses structured format: "Cook Time: X\n\nStep 1: ..."
 - Handles legacy plain text gracefully
 - Extracts cook time and numbered steps
@@ -186,6 +202,7 @@ Step 3: Bake for 20 minutes
 ## 🎯 Future Enhancements
 
 Potential improvements for future releases:
+
 - Recipe instruction editing interface
 - Cook time estimation suggestions
 - Ingredient substitution recommendations
