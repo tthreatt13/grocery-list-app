@@ -42,7 +42,7 @@ export default function Navbar() {
                 className={cn(
                   'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
                   pathname === link.href
-                    ? 'bg-[var(--warm-green)] text-white shadow-warm-sm'
+                    ? 'bg-[var(--warm-green-dark)] text-white hover:text-white hover:no-underline shadow-warm-sm !outline-none focus:!outline-none focus-visible:!outline-none'
                     : 'text-[var(--text-secondary)] hover:bg-[var(--warm-gray-50)] hover:text-[var(--text-primary)]'
                 )}
               >
