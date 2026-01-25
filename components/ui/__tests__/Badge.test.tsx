@@ -16,7 +16,7 @@ describe('Badge', () => {
   it('applies primary variant styles', () => {
     render(<Badge variant="primary">Primary</Badge>)
     const badge = screen.getByText('Primary')
-    expect(badge).toHaveClass('bg-primary-100', 'text-primary-800')
+    expect(badge).toHaveClass('bg-blue-100', 'text-blue-800')
   })
 
   it('applies success variant styles', () => {
@@ -28,7 +28,7 @@ describe('Badge', () => {
   it('applies warning variant styles', () => {
     render(<Badge variant="warning">Warning</Badge>)
     const badge = screen.getByText('Warning')
-    expect(badge).toHaveClass('bg-yellow-100', 'text-yellow-800')
+    expect(badge).toHaveClass('bg-orange-100', 'text-orange-800')
   })
 
   it('applies danger variant styles', () => {

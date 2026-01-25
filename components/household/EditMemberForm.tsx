@@ -27,8 +27,8 @@ export default function EditMemberForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <p className="text-sm text-gray-700">
+      <div className="bg-warm-blue-light border border-warm-blue rounded-lg p-4">
+        <p className="text-sm text-text-secondary">
           Editing role for: <strong>{memberName}</strong>
         </p>
       </div>
@@ -36,7 +36,7 @@ export default function EditMemberForm({
       <div>
         <label
           htmlFor="role"
-          className="block text-sm font-medium text-gray-700 mb-2"
+          className="block text-sm font-medium text-text-secondary mb-2"
         >
           Member Role
         </label>
@@ -50,7 +50,7 @@ export default function EditMemberForm({
           <option value={MemberRole.MEMBER}>Member - Can edit lists</option>
           <option value={MemberRole.VIEWER}>Viewer - Can only view</option>
         </Select>
-        <p className="mt-2 text-sm text-gray-500">
+        <p className="mt-2 text-sm text-text-tertiary">
           {role === MemberRole.ADMIN &&
             'Admins can manage members and all household settings.'}
           {role === MemberRole.MEMBER &&

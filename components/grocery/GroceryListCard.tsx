@@ -65,7 +65,7 @@ export default function GroceryListCard({
         <div className="p-6">
           {/* Header */}
           <div className="flex items-start justify-between mb-4">
-            <h3 className="font-semibold text-lg text-gray-900 flex-1">
+            <h3 className="font-semibold text-lg text-text-primary flex-1">
               {list.name}
             </h3>
             <div className="flex items-center space-x-2">
@@ -74,7 +74,7 @@ export default function GroceryListCard({
               {!isArchived && onArchive && (
                 <button
                   onClick={handleArchiveClick}
-                  className="p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-md hover:bg-gray-50"
+                  className="p-1 text-warm-gray-400 hover:text-warm-gray-600 transition-warm rounded-md hover:bg-warm-gray-50"
                   aria-label={`Archive list ${list.name}`}
                   title="Archive list"
                 >
@@ -96,7 +96,7 @@ export default function GroceryListCard({
               {isArchived && onUnarchive && (
                 <button
                   onClick={handleUnarchiveClick}
-                  className="p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-md hover:bg-gray-50"
+                  className="p-1 text-warm-gray-400 hover:text-warm-gray-600 transition-warm rounded-md hover:bg-warm-gray-50"
                   aria-label={`Unarchive list ${list.name}`}
                   title="Unarchive list"
                 >
@@ -118,7 +118,7 @@ export default function GroceryListCard({
               {onDelete && (
                 <button
                   onClick={handleDeleteClick}
-                  className="p-1 text-gray-400 hover:text-red-600 transition-colors rounded-md hover:bg-red-50"
+                  className="p-1 text-warm-gray-400 hover:text-warm-coral transition-warm rounded-md hover:bg-warm-coral-light"
                   aria-label={`Delete list ${list.name}`}
                   title="Delete list"
                 >
@@ -143,23 +143,23 @@ export default function GroceryListCard({
           {/* Stats */}
           <div className="space-y-3 mb-4">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">Items</span>
-              <span className="font-medium text-gray-900">
+              <span className="text-text-secondary">Items</span>
+              <span className="font-medium text-text-primary">
                 {completedItems} / {totalItems}
               </span>
             </div>
 
             {/* Progress Bar */}
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full bg-warm-gray-200 rounded-full h-2">
               <div
-                className="bg-green-600 h-2 rounded-full transition-all"
+                className="bg-warm-green h-2 rounded-full transition-all"
                 style={{ width: `${completionPercentage}%` }}
               />
             </div>
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between text-xs text-gray-500">
+          <div className="flex items-center justify-between text-xs text-text-tertiary">
             <span>
               Updated{' '}
               {formatRelativeTime(
