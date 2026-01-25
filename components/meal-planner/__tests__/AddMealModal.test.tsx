@@ -63,7 +63,7 @@ describe('AddMealModal', () => {
     )
     expect(screen.getByLabelText(/Meal Name/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/Ingredients/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/Notes/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/Instructions/i)).toBeInTheDocument()
   })
 
   it('calls onClose when cancel button is clicked', () => {
@@ -94,7 +94,7 @@ describe('AddMealModal', () => {
 
     const nameInput = screen.getByLabelText(/Meal Name/i)
     const ingredientsInput = screen.getByLabelText(/Ingredients/i)
-    const notesInput = screen.getByLabelText(/Notes/i)
+    const notesInput = screen.getByLabelText(/Instructions/i)
     const addButton = screen.getByRole('button', { name: /add meal/i })
 
     fireEvent.change(nameInput, { target: { value: 'Spaghetti' } })
@@ -221,7 +221,7 @@ describe('AddMealModal', () => {
         /Ingredients/i
       ) as HTMLTextAreaElement & { value: string } & { value: string }
       const notesInput = screen.getByLabelText(
-        /Notes/i
+        /Instructions/i
       ) as HTMLTextAreaElement & { value: string }
 
       expect(nameInput.value).toBe('Existing Meal')

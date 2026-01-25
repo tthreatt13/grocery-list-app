@@ -167,15 +167,52 @@ def format_meal_planning_prompt(
 
     # System instruction
     prompt_parts.append(
-        """You are a meal planning assistant for a grocery list app. Help the user plan meals for the week.
+        """You are an executive chef and strategic meal planning assistant. Your role is to optimize meal planning for efficiency, cost-effectiveness, and minimal grocery shopping while ensuring delicious, satisfying meals.
 
-Your goal is to suggest practical, delicious meals that:
-1. Use pantry items when possible to reduce waste and save money
-2. Suggest additional ingredients for shopping when needed
-3. Focus on dinners that create leftovers for lunch (efficient meal planning)
-4. Consider dietary preferences and available cooking equipment
-5. Avoid recently made meals (check previous_meals in preferences)
-6. Consider weather when relevant (e.g., hot soups on cold days, grilling on nice days)
+**CORE PLANNING STRATEGY:**
+1. **Strategic Meal Count**: Plan 1-3 main dinners per week for "normal" nights (excluding eating out). These meals should be designed to create strategic leftovers that cover additional meals.
+2. **Protein Optimization**: CRITICAL - Avoid suggesting multiple different proteins in one week. Reuse the same protein across 1-3 meals (e.g., one large roast chicken used for multiple dishes, or ground beef for tacos then spaghetti). This minimizes grocery purchases and reduces waste.
+3. **Portion Planning**: All meals should be sized for 2 adults with intentional leftovers. Plan large-batch recipes that naturally create leftovers for subsequent meals.
+4. **Pantry-First Approach**: Prioritize using existing pantry items before suggesting new purchases. When new ingredients are needed, choose versatile items that can be used across multiple meals.
+5. **Leftover Strategy**: Design meals that create strategic leftovers - either explicit leftover transformations (e.g., "Monday's roast chicken → Tuesday's chicken salad") or large-batch recipes that naturally yield multiple servings.
+6. **Ingredient Reuse**: Maximize ingredient reuse across the 1-3 main meals. If suggesting ground beef, use it in multiple dishes. If suggesting vegetables, plan multiple ways to use them.
+7. **Cost Efficiency**: Minimize the total number of unique ingredients needed. A well-planned week should require fewer grocery items, not more.
+8. **Dietary Preferences**: Respect dietary preferences and available cooking equipment from user preferences.
+9. **Meal Variety**: Avoid recently made meals (check previous_meals in preferences) while maintaining ingredient efficiency.
+10. **Weather Consideration**: Consider weather when relevant (e.g., hot soups on cold days, grilling on nice days).
+
+**IMPORTANT: Meal Category Recognition**
+You must recognize when the user indicates they are eating out, dining at a restaurant, getting takeout, or ordering food. When you detect phrases like:
+- "eating out", "dining out", "dining at a restaurant"
+- "takeout", "takeout for lunch", "getting takeout"
+- "fast food", "fast food breakfast", "drive-thru"
+- "ordering in", "ordering in pizza", "delivery"
+- "restaurant", "cafe breakfast", "sushi place", "noodle shop", "bakery"
+- "grabbing lunch out", "getting burgers from a drive-thru", "had ramen at a noodle shop"
+
+You MUST set the meal_category to "eat_out" for that meal. For quick/easy home-cooked meals, use "quick_meal". For regular home-cooked meals, use "normal".
+
+**PLANNING APPROACH:**
+- When planning a week, think like an executive chef: "What's the minimum set of proteins and ingredients I need to create 1-3 delicious main meals that will feed 2 adults with leftovers?"
+- Group meals by shared proteins and ingredients. For example: "Ground beef week" (tacos, spaghetti, chili) or "Chicken week" (roast chicken, chicken salad, chicken soup).
+- In the notes field, include leftover strategy suggestions when relevant (e.g., "Make extra for chicken salad tomorrow" or "Leftovers work great for lunch").
+
+**RECIPE INSTRUCTIONS FORMAT (for home-cooked meals):**
+When providing notes for home-cooked meals (meal_category: "normal" or "quick_meal"), format them as structured recipe instructions:
+1. Start with cook time: "Cook Time: [X] minutes" (or hours if applicable, e.g., "Cook Time: 1.5 hours")
+2. Follow with step-by-step instructions, each clearly numbered: "Step 1:", "Step 2:", etc.
+3. Include ingredients and measurements inline within each step instruction (e.g., "Step 1: Whisk 2 cups flour and 3 eggs together")
+4. Derive ingredient measurements from the ingredients list and include them naturally in the step instructions
+5. Each step should be a complete instruction that includes what ingredients to use and how to use them
+
+Example format:
+"Cook Time: 30 minutes
+
+Step 1: Whisk 2 cups flour and 3 eggs together in a large bowl
+Step 2: Fold in 1 cup spinach and 1/2 cup grated cheese
+Step 3: Pour into greased pan and bake for 20 minutes at 375°F"
+
+For eating out meals (meal_category: "eat_out"), use simple notes without recipe format.
 
 Format your response as JSON with this structure:
 {
@@ -186,12 +223,24 @@ Format your response as JSON with this structure:
       "day_of_week": 0-6 (0=Monday, 6=Sunday),
       "ingredients": ["list", "of", "ingredients"],
       "uses_pantry_items": ["list", "of", "pantry", "items", "used"],
-      "notes": "string (optional cooking tips, dietary notes, etc.)"
+      "notes": "string (optional: cooking tips, leftover strategy, ingredient reuse notes, dietary notes). For home-cooked meals, format as structured recipe instructions with cook time and step-by-step instructions. Format: 'Cook Time: [time] minutes\\n\\nStep 1: [instruction with inline ingredients and measurements]\\nStep 2: [instruction with inline ingredients and measurements]' (ingredients and measurements must be inline within each step, not listed separately)",
+      "meal_category": "normal|quick_meal|eat_out"
     }
   ]
 }
 
-Only suggest meals for days that don't already have meals of that type, unless the user explicitly asks to replace existing meals."""
+meal_category values:
+- "normal": Regular home-cooked meals (default) - these are your 1-3 strategic main dinners
+- "quick_meal": Quick and easy home-cooked meals
+- "eat_out": Restaurant meals, takeout, fast food, ordering in, or any meal not cooked at home
+
+**CRITICAL RULES FOR SUGGESTING MEALS:**
+1. **Count existing "normal" meals first**: Check the "Current Week's Meals" section and count how many meals have meal_category="normal". 
+2. **Respect the 1-3 limit**: If there are already 1-3 normal meals planned, DO NOT suggest additional normal meals unless the user explicitly asks for more or to replace existing meals.
+3. **Only suggest for empty days**: Only suggest meals for days that don't already have meals of that type, unless the user explicitly asks to replace existing meals.
+4. **If limit reached, return empty suggestions**: If the strategic limit (1-3 normal meals) is already met, return an empty suggestions array: {"suggestions": []} with a note explaining why.
+
+Focus on strategic, efficient meal planning that minimizes grocery shopping while maximizing satisfaction."""
     )
 
     # Add context
@@ -221,6 +270,22 @@ Only suggest meals for days that don't already have meals of that type, unless t
     meals = context.get("meals", [])
     if meals:
         prompt_parts.append("\n**Current Week's Meals:**")
+        # Count meals by category for strategic planning
+        normal_count = sum(1 for m in meals if m.get("meal_category") == "normal")
+        quick_meal_count = sum(
+            1 for m in meals if m.get("meal_category") == "quick_meal"
+        )
+        eat_out_count = sum(1 for m in meals if m.get("meal_category") == "eat_out")
+
+        prompt_parts.append(
+            f"**Meal Summary:** {normal_count} normal meal(s), {quick_meal_count} quick meal(s), {eat_out_count} eat out meal(s)"
+        )
+        prompt_parts.append(
+            "**CRITICAL:** You should plan 1-3 main 'normal' dinners per week. "
+            f"If there are already {normal_count} normal meal(s), you should NOT suggest additional normal meals "
+            "unless the user explicitly asks for more or to replace existing meals."
+        )
+
         for meal in meals:
             day_names = [
                 "Monday",
@@ -232,7 +297,8 @@ Only suggest meals for days that don't already have meals of that type, unless t
                 "Sunday",
             ]
             day_name = day_names[meal.get("day_of_week", 0)]
-            meal_str = f"- {day_name} {meal.get('meal_type', 'meal')}: {meal.get('name', 'Unnamed')}"
+            meal_category = meal.get("meal_category", "normal")
+            meal_str = f"- {day_name} {meal.get('meal_type', 'meal')}: {meal.get('name', 'Unnamed')} [category: {meal_category}]"
             if meal.get("ingredients"):
                 meal_str += f" (ingredients: {meal['ingredients']})"
             prompt_parts.append(meal_str)
@@ -312,96 +378,10 @@ def call_anthropic_api(prompt: str, api_key: str) -> Any:
         ValueError: If API key is missing
         Exception: If API call fails
     """
-    # #region agent log
-    try:
-        import json
-        import time
-        import os as _os
-
-        _log_paths = [
-            "/Users/tonythreatt/git/grocery-list-app/.cursor/debug.log",
-            _os.path.join(
-                _os.path.dirname(_os.path.dirname(__file__)), ".cursor", "debug.log"
-            ),
-            ".cursor/debug.log",
-        ]
-        _log_data = {
-            "location": "meal_planning_ai.py:300",
-            "message": "call_anthropic_api entry - checking API key",
-            "data": {
-                "api_key_provided": api_key is not None,
-                "api_key_length": len(api_key) if api_key else 0,
-                "api_key_empty": api_key == "",
-                "api_key_is_whitespace": api_key.strip() == "" if api_key else True,
-                "api_key_prefix": (
-                    api_key[:15]
-                    if api_key and len(api_key) > 15
-                    else (api_key if api_key else "N/A")
-                ),
-            },
-            "timestamp": int(time.time() * 1000),
-            "sessionId": "debug-session",
-            "runId": "run1",
-            "hypothesisId": "C",
-        }
-        logger.error(
-            f"[DEBUG] call_anthropic_api - api_key provided: {api_key is not None}, length: {len(api_key) if api_key else 0}, empty: {api_key == '' if api_key else 'N/A'}"
-        )
-        for _lp in _log_paths:
-            try:
-                _os.makedirs(_os.path.dirname(_lp), exist_ok=True)
-                with open(_lp, "a") as f:
-                    f.write(json.dumps(_log_data) + "\n")
-                break
-            except:
-                continue
-    except Exception as _e:
-        logger.error(f"[DEBUG] Failed to log API key check in call_anthropic_api: {_e}")
-    # #endregion
-
     if not api_key:
-        logger.error(
-            "[DEBUG] Anthropic API key is missing or empty - raising ValueError"
-        )
         raise ValueError("Anthropic API key is required")
 
     try:
-        # #region agent log
-        try:
-            import json
-            import time
-            import os as _os
-
-            _log_paths = [
-                "/Users/tonythreatt/git/grocery-list-app/.cursor/debug.log",
-                _os.path.join(
-                    _os.path.dirname(_os.path.dirname(__file__)), ".cursor", "debug.log"
-                ),
-                ".cursor/debug.log",
-            ]
-            _log_data = {
-                "location": "meal_planning_ai.py:319",
-                "message": "Creating Anthropic client with API key",
-                "data": {
-                    "api_key_length": len(api_key),
-                    "api_key_prefix": api_key[:15] if len(api_key) > 15 else api_key,
-                },
-                "timestamp": int(time.time() * 1000),
-                "sessionId": "debug-session",
-                "runId": "run1",
-                "hypothesisId": "D",
-            }
-            for _lp in _log_paths:
-                try:
-                    _os.makedirs(_os.path.dirname(_lp), exist_ok=True)
-                    with open(_lp, "a") as f:
-                        f.write(json.dumps(_log_data) + "\n")
-                    break
-                except:
-                    continue
-        except:
-            pass
-        # #endregion
         client = Anthropic(api_key=api_key)
         response = client.messages.create(
             model="claude-sonnet-4-20250514",  # Updated to current recommended model (claude-3-5-sonnet-20241022 was deprecated)
@@ -435,6 +415,11 @@ def parse_llm_response(response: Any) -> Dict[str, List[Dict[str, Any]]]:
     """
     try:
         # Extract text from response
+        if not hasattr(response, "content") or not response.content:
+            raise ValueError(
+                "Invalid response format from LLM - no content attribute or content is empty"
+            )
+
         if hasattr(response, "content") and response.content:
             text_content = ""
             for content_block in response.content:
@@ -539,119 +524,15 @@ def suggest_meals(
         Exception: If API call fails
     """
     # Use provided API key or fall back to settings
-    logger.error(
-        f"[DEBUG] suggest_meals: Entry - api_key is None: {api_key is None}, api_key type: {type(api_key)}"
-    )
-
     if api_key is None:
-        logger.error(
-            f"[DEBUG] suggest_meals: api_key is None, getting from settings..."
-        )
         api_key = settings.anthropic_api_key
-        logger.error(
-            f"[DEBUG] suggest_meals: Got from settings - length: {len(api_key) if api_key else 0}, value (first 20 chars): {api_key[:20] if api_key and len(api_key) > 20 else api_key}"
-        )
 
         # Fallback: if settings value is empty, read directly from environment
-        api_key_empty = not api_key or (
-            isinstance(api_key, str) and api_key.strip() == ""
-        )
-        logger.error(
-            f"[DEBUG] suggest_meals: api_key_empty check: {api_key_empty}, api_key: {repr(api_key)}"
-        )
-
-        if api_key_empty:
+        if not api_key or (isinstance(api_key, str) and api_key.strip() == ""):
             import os as _os_env
-
-            logger.error(
-                f"[DEBUG] suggest_meals: API key from settings is empty, checking environment..."
-            )
-            logger.error(
-                f"[DEBUG] suggest_meals: ANTHROPIC_API_KEY in environ: {'ANTHROPIC_API_KEY' in _os_env.environ}"
-            )
-
-            # List all env vars containing ANTHROPIC for debugging
-            anthropic_vars = {
-                k: f"length={len(v)}"
-                for k, v in _os_env.environ.items()
-                if "ANTHROPIC" in k.upper()
-            }
-            logger.error(
-                f"[DEBUG] suggest_meals: Environment variables containing 'ANTHROPIC': {anthropic_vars}"
-            )
-
-            # Also list ALL environment variables (first 50) to see what's available
-            all_env_vars = list(_os_env.environ.keys())[:50]
-            logger.error(
-                f"[DEBUG] suggest_meals: First 50 environment variable names: {all_env_vars}"
-            )
 
             if "ANTHROPIC_API_KEY" in _os_env.environ:
                 api_key = _os_env.environ["ANTHROPIC_API_KEY"].strip()
-                logger.error(
-                    f"[DEBUG] suggest_meals: Read API key directly from env, length: {len(api_key)}"
-                )
-            else:
-                logger.error(
-                    f"[DEBUG] suggest_meals: ANTHROPIC_API_KEY not found in environment"
-                )
-                # Try case variations
-                for var_name in _os_env.environ.keys():
-                    if "anthropic" in var_name.lower() and "key" in var_name.lower():
-                        logger.error(
-                            f"[DEBUG] suggest_meals: Found similar env var: {var_name} (length: {len(_os_env.environ[var_name])})"
-                        )
-    else:
-        logger.error(
-            f"[DEBUG] suggest_meals: api_key was provided (not None), length: {len(api_key) if api_key else 0}"
-        )
-
-    logger.error(
-        f"[DEBUG] suggest_meals: Final api_key before call_anthropic_api - length: {len(api_key) if api_key else 0}, empty: {not api_key or (isinstance(api_key, str) and api_key.strip() == '')}"
-    )
-
-    # #region agent log
-    try:
-        import json
-        import time
-        import os as _os
-
-        _log_paths = [
-            "/Users/tonythreatt/git/grocery-list-app/.cursor/debug.log",
-            _os.path.join(
-                _os.path.dirname(_os.path.dirname(__file__)), ".cursor", "debug.log"
-            ),
-            ".cursor/debug.log",
-        ]
-        _log_data = {
-            "location": "meal_planning_ai.py:457",
-            "message": "API key retrieved from settings",
-            "data": {
-                "api_key_provided": api_key is not None,
-                "api_key_length": len(api_key) if api_key else 0,
-                "api_key_empty": api_key == "",
-                "api_key_prefix": (
-                    api_key[:10]
-                    if api_key and len(api_key) > 10
-                    else (api_key if api_key else "N/A")
-                ),
-            },
-            "timestamp": int(time.time() * 1000),
-            "sessionId": "debug-session",
-            "runId": "run1",
-            "hypothesisId": "B",
-        }
-        for _lp in _log_paths:
-            try:
-                _os.makedirs(_os.path.dirname(_lp), exist_ok=True)
-                with open(_lp, "a") as f:
-                    f.write(json.dumps(_log_data) + "\n")
-                break
-            except:
-                continue
-    except:
-        pass
-    # #endregion
 
     # Gather context
     context = gather_meal_planning_context(db, household_id, user_id, week_start_date)

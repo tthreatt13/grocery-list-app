@@ -1,12 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { MealType, Meal } from '@/lib/types'
 import { Modal } from '@/components/ui/Modal'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { Select } from '@/components/ui/Select'
-import { formatDate, normalizeIngredientsInput } from '@/lib/utils'
+import {
+  formatDate,
+  normalizeIngredientsInput,
+  parseRecipeInstructions,
+} from '@/lib/utils'
 
 interface AddMealModalProps {
   isOpen: boolean
@@ -41,6 +45,7 @@ export default function AddMealModal({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const notesTextareaRef = useRef<HTMLTextAreaElement>(null)
 
   const isEditMode = !!meal
 
@@ -65,6 +70,18 @@ export default function AddMealModal({
       setIsSubmitting(false)
     }
   }, [isOpen])
+
+  // Auto-resize textarea based on content
+  useEffect(() => {
+    if (notesTextareaRef.current && isOpen) {
+      const textarea = notesTextareaRef.current
+      // Reset height to auto to get accurate scrollHeight
+      textarea.style.height = 'auto'
+      // Set height based on content, with minimum height
+      const newHeight = Math.max(textarea.scrollHeight, 64) // 64px = 4rem min-height
+      textarea.style.height = `${newHeight}px`
+    }
+  }, [notes, isOpen])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -178,6 +195,61 @@ export default function AddMealModal({
               disabled={isSubmitting}
             />
 
+            {/* Show formatted preview when there are existing structured instructions */}
+            {notes &&
+              (() => {
+                const parsed = parseRecipeInstructions(notes)
+                if (parsed && parsed.isStructured && parsed.steps.length > 0) {
+                  return (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Instructions
+                      </label>
+                      <div className="p-3 bg-gray-50 rounded-md border border-gray-200">
+                        {parsed.cookTime && (
+                          <div className="text-sm font-medium text-gray-800 bg-orange-50 px-3 py-2 rounded-md border border-orange-200 mb-3">
+                            Cook Time: {parsed.cookTime}
+                          </div>
+                        )}
+                        <div>
+                          {parsed.steps.map((step, index) => (
+                            <div
+                              key={step.number}
+                              className="text-sm text-gray-600 flex items-start"
+                              style={
+                                index < parsed.steps.length - 1
+                                  ? {
+                                      paddingBottom: '1rem',
+                                      marginBottom: '1rem',
+                                      borderBottom: '2px solid #d1d5db',
+                                      borderBottomWidth: '2px',
+                                      borderBottomStyle: 'solid',
+                                      borderBottomColor: '#d1d5db',
+                                    }
+                                  : {}
+                              }
+                            >
+                              <span
+                                className="mr-2 min-w-[3rem]"
+                                style={{
+                                  fontWeight: 700,
+                                  color: '#111827',
+                                  fontFamily: 'inherit',
+                                }}
+                              >
+                                Step {step.number}:
+                              </span>
+                              <span className="flex-1">{step.instruction}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }
+                return null
+              })()}
+
             <div>
               <label
                 htmlFor="meal-ingredients"
@@ -204,15 +276,19 @@ export default function AddMealModal({
                 htmlFor="meal-notes"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Notes (Optional)
+                Instructions Text area
               </label>
               <textarea
+                ref={notesTextareaRef}
                 id="meal-notes"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="Add any notes or special instructions..."
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                placeholder="Cook Time: 30 minutes
+
+Step 1: Whisk 2 cups flour and 3 eggs together
+Step 2: Fold in 1 cup spinach
+Step 3: Bake for 20 minutes"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed min-h-[4rem] overflow-y-auto resize-none"
                 disabled={isSubmitting}
               />
             </div>

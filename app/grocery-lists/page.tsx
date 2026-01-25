@@ -207,10 +207,12 @@ export default function GroceryListsPage() {
   // Show loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your grocery lists...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--warm-blue)] mx-auto mb-4"></div>
+          <p className="text-[var(--text-secondary)]">
+            Loading your grocery lists...
+          </p>
         </div>
       </div>
     )
@@ -219,11 +221,11 @@ export default function GroceryListsPage() {
   // Show error state
   if (error && lists.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+          <div className="bg-[var(--warm-coral-light)] border border-[var(--warm-coral)] rounded-lg p-6 text-center shadow-warm-sm">
             <svg
-              className="w-12 h-12 text-red-400 mx-auto mb-4"
+              className="w-12 h-12 text-[var(--warm-coral)] mx-auto mb-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -235,10 +237,10 @@ export default function GroceryListsPage() {
                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <h3 className="text-lg font-medium text-red-900 mb-2">
+            <h3 className="text-lg font-medium text-[var(--warm-coral-dark)] mb-2">
               Error Loading Data
             </h3>
-            <p className="text-red-700 mb-4">{error}</p>
+            <p className="text-[var(--warm-coral-dark)] mb-4">{error}</p>
             <Button onClick={() => window.location.reload()}>Try Again</Button>
           </div>
         </div>
@@ -247,22 +249,22 @@ export default function GroceryListsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Error banner (non-blocking) */}
         {error && (
-          <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-4">
-            <p className="text-sm text-red-700">{error}</p>
+          <div className="mb-4 bg-[var(--warm-coral-light)] border border-[var(--warm-coral)] rounded-lg p-4 shadow-warm-sm">
+            <p className="text-sm text-[var(--warm-coral-dark)]">{error}</p>
           </div>
         )}
 
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[var(--text-primary)] mb-2">
               Grocery Lists
             </h1>
-            <p className="text-sm sm:text-base text-gray-600">
+            <p className="text-sm sm:text-base text-[var(--text-secondary)]">
               Manage your shopping lists and track items
             </p>
           </div>

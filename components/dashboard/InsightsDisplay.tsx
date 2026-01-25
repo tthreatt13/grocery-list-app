@@ -110,7 +110,7 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
       case 'needs_attention':
         return 'text-orange-600'
       default:
-        return 'text-gray-600'
+        return 'text-[var(--warm-gray-600)]'
     }
   }
 
@@ -126,13 +126,13 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
       case 'needs_attention':
         return 'bg-orange-100 text-orange-800'
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-[var(--warm-gray-100)] text-[var(--warm-gray-800)]'
     }
   }
 
   return (
     <div className="mb-8">
-      <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">
+      <h2 className="text-lg sm:text-xl font-bold text-[var(--text-primary)] mb-4">
         Insights & Patterns
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -141,16 +141,16 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
           <div className="p-6">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
-                <h3 className="text-base font-semibold text-gray-900 mb-1">
+                <h3 className="text-base font-semibold text-[var(--text-primary)] mb-1">
                   Shopping Efficiency
                 </h3>
                 <p className="text-sm text-gray-600">
                   {getShoppingEfficiencyMessage()}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-4">
+              <div className="w-12 h-12 bg-[var(--warm-peach-light)] rounded-lg flex items-center justify-center flex-shrink-0 ml-4">
                 <svg
-                  className="w-6 h-6 text-purple-600"
+                  className="w-6 h-6 text-[var(--warm-peach-dark)]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -166,7 +166,7 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
             </div>
             <div className="mt-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-[var(--text-primary)]">
                   Completion Rate
                 </span>
                 <span
@@ -193,7 +193,7 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
                   aria-valuemax={100}
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-[var(--text-tertiary)] mt-2">
                 {stats.completed_items} of {stats.total_items} items completed
               </p>
             </div>
@@ -205,7 +205,7 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
           <div className="p-6">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
-                <h3 className="text-base font-semibold text-gray-900 mb-1">
+                <h3 className="text-base font-semibold text-[var(--text-primary)] mb-1">
                   Meal Planning Coverage
                 </h3>
                 <p className="text-sm text-gray-600">
@@ -230,7 +230,7 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
             </div>
             <div className="mt-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-[var(--text-primary)]">
                   Week Coverage
                 </span>
                 <span
@@ -257,7 +257,7 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
                   aria-valuemax={100}
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-[var(--text-tertiary)] mt-2">
                 {stats.planned_days} of 7 days planned • {stats.meals_this_week}{' '}
                 meals this week
               </p>
@@ -270,16 +270,16 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
           <div className="p-6">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
-                <h3 className="text-base font-semibold text-gray-900 mb-1">
+                <h3 className="text-base font-semibold text-[var(--text-primary)] mb-1">
                   Pantry Health
                 </h3>
                 <p className="text-sm text-gray-600">
                   {getPantryHealthMessage()}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-4">
+              <div className="w-12 h-12 bg-[var(--warm-orange-light)] rounded-lg flex items-center justify-center flex-shrink-0 ml-4">
                 <svg
-                  className="w-6 h-6 text-orange-600"
+                  className="w-6 h-6 text-[var(--warm-orange-dark)]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -295,7 +295,7 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
             </div>
             <div className="mt-4 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-[var(--text-primary)]">
                   Status
                 </span>
                 <span
@@ -312,13 +312,17 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
               </div>
               <div className="grid grid-cols-2 gap-4 pt-2">
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Low Stock</p>
+                  <p className="text-xs text-[var(--text-tertiary)] mb-1">
+                    Low Stock
+                  </p>
                   <p className={`text-xl font-bold ${getPantryHealthColor()}`}>
                     {stats.low_stock_count}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Expiring Soon</p>
+                  <p className="text-xs text-[var(--text-tertiary)] mb-1">
+                    Expiring Soon
+                  </p>
                   <p className={`text-xl font-bold ${getPantryHealthColor()}`}>
                     {stats.expiring_soon_count}
                   </p>
@@ -333,7 +337,7 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
           <div className="p-6">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
-                <h3 className="text-base font-semibold text-gray-900 mb-1">
+                <h3 className="text-base font-semibold text-[var(--text-primary)] mb-1">
                   Active Lists
                 </h3>
                 <p className="text-sm text-gray-600">
@@ -362,10 +366,10 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
             </div>
             <div className="mt-4">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-[var(--text-primary)]">
                   Total Lists
                 </span>
-                <span className="text-2xl font-bold text-gray-900">
+                <span className="text-2xl font-bold text-[var(--text-primary)]">
                   {stats.total_lists}
                 </span>
               </div>

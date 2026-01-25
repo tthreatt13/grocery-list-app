@@ -111,14 +111,14 @@ function AddToListModal({
     >
       <div className="space-y-4">
         <div>
-          <p className="text-sm text-gray-600 mb-2">
+          <p className="text-sm text-[var(--text-secondary)] mb-2">
             Select a grocery list to add <strong>{item.name}</strong> to:
           </p>
         </div>
 
         {isLoading ? (
           <div className="text-center py-4">
-            <p className="text-gray-600">Loading lists...</p>
+            <p className="text-[var(--text-secondary)]">Loading lists...</p>
           </div>
         ) : lists.length === 0 ? (
           <div className="text-center py-4">
@@ -130,7 +130,7 @@ function AddToListModal({
           <div>
             <label
               htmlFor="select-list"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-[var(--text-primary)] mb-2"
             >
               Select List
             </label>
@@ -261,7 +261,7 @@ export default function UrgentActionItems({
   if (items.length === 0) {
     return (
       <div className="mb-8">
-        <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">
+        <h2 className="text-lg sm:text-xl font-bold text-[var(--text-primary)] mb-4">
           Urgent Action Items
         </h2>
         <Card>
@@ -279,10 +279,10 @@ export default function UrgentActionItems({
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <p className="text-gray-600 font-medium">
+            <p className="text-[var(--text-secondary)] font-medium">
               No urgent items requiring attention
             </p>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-[var(--text-tertiary)] mt-1">
               All items are well-stocked and up to date!
             </p>
           </div>
@@ -309,7 +309,7 @@ export default function UrgentActionItems({
                 {/* Item Details */}
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <h3 className="text-lg font-semibold text-gray-900">
+                    <h3 className="text-lg font-semibold text-[var(--text-primary)]">
                       {item.name}
                     </h3>
                     {getUrgencyBadge(item)}
@@ -355,7 +355,7 @@ export default function UrgentActionItems({
               {/* Action Buttons */}
               {/* Mobile: Side-by-side buttons at bottom */}
               {/* Desktop: Side-by-side on the right */}
-              <div className="flex flex-row items-center gap-2 sm:flex-shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-200">
+              <div className="flex flex-row items-center gap-2 sm:flex-shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-[var(--warm-gray-200)]">
                 <Button
                   variant="primary"
                   size="sm"

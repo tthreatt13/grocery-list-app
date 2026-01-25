@@ -111,18 +111,20 @@ function CreateListModal({
     >
       <div className="space-y-4">
         <div>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-[var(--text-secondary)] mb-4">
             Create a new grocery list to start planning your shopping.
           </p>
         </div>
 
         {isLoading ? (
           <div className="text-center py-4">
-            <p className="text-gray-600">Loading households...</p>
+            <p className="text-[var(--text-secondary)]">
+              Loading households...
+            </p>
           </div>
         ) : households.length === 0 ? (
           <div className="text-center py-4">
-            <p className="text-gray-600">
+            <p className="text-[var(--text-secondary)]">
               No households found. Create a household first.
             </p>
           </div>
@@ -140,7 +142,7 @@ function CreateListModal({
             <div>
               <label
                 htmlFor="select-household"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-[var(--text-primary)] mb-2"
               >
                 Household
               </label>
@@ -305,13 +307,13 @@ export default function SmartSuggestions({
   if (sortedSuggestions.length === 0) {
     return (
       <div className="mb-8">
-        <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">
+        <h2 className="text-lg sm:text-xl font-bold text-[var(--text-primary)] mb-4">
           Smart Suggestions
         </h2>
         <Card>
           <div className="p-8 text-center">
             <svg
-              className="mx-auto h-12 w-12 text-gray-400 mb-3"
+              className="mx-auto h-12 w-12 text-[var(--warm-gray-400)] mb-3"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -323,10 +325,10 @@ export default function SmartSuggestions({
                 d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
               />
             </svg>
-            <p className="text-gray-600 font-medium">
+            <p className="text-[var(--text-secondary)] font-medium">
               No suggestions at this time
             </p>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-[var(--text-tertiary)] mt-1">
               We&apos;ll provide personalized recommendations as you use the
               app!
             </p>
@@ -359,14 +361,14 @@ export default function SmartSuggestions({
                 {/* Suggestion Details */}
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <h3 className="text-lg font-semibold text-gray-900">
+                    <h3 className="text-lg font-semibold text-[var(--text-primary)]">
                       {suggestion.title}
                     </h3>
                     {getSuggestionTypeBadge(suggestion.type)}
                   </div>
 
                   {/* Suggestion Description */}
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-[var(--text-secondary)]">
                     {suggestion.description}
                   </p>
                 </div>
@@ -375,7 +377,7 @@ export default function SmartSuggestions({
               {/* Action Buttons */}
               {/* Mobile: Side-by-side buttons at bottom */}
               {/* Desktop: Side-by-side on the right */}
-              <div className="flex flex-row items-center gap-2 sm:flex-shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-200">
+              <div className="flex flex-row items-center gap-2 sm:flex-shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-[var(--warm-gray-200)]">
                 <Button
                   variant="primary"
                   size="sm"

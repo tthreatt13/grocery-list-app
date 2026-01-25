@@ -152,6 +152,130 @@ class TestFormatMealPlanningPrompt:
         assert "Chicken" in prompt or "pantry" in prompt.lower()
         assert "vegetarian" in prompt.lower()
 
+    def test_format_meal_planning_prompt_includes_meal_category_instructions(self):
+        """Test that prompt includes instructions for meal_category recognition."""
+        context = {
+            "pantry_items": [],
+            "meals": [],
+            "preferences": None,
+            "grocery_lists": [],
+            "weather": None,
+            "household_name": "Test Household",
+        }
+        user_message = "Suggest meals"
+        conversation_history = []
+
+        prompt = format_meal_planning_prompt(
+            context, user_message, conversation_history
+        )
+
+        # Check for meal_category in JSON structure
+        assert "meal_category" in prompt.lower()
+        # Check for eating out recognition instructions
+        assert "eat_out" in prompt.lower() or "eating out" in prompt.lower()
+        # Check for examples of eating out phrases
+        assert (
+            "restaurant" in prompt.lower()
+            or "takeout" in prompt.lower()
+            or "fast food" in prompt.lower()
+        )
+
+    def test_format_meal_planning_prompt_includes_eating_out_examples(self):
+        """Test that prompt includes examples of eating out phrases."""
+        context = {
+            "pantry_items": [],
+            "meals": [],
+            "preferences": None,
+            "grocery_lists": [],
+            "weather": None,
+            "household_name": "Test Household",
+        }
+        user_message = "Eating out"
+        conversation_history = []
+
+        prompt = format_meal_planning_prompt(
+            context, user_message, conversation_history
+        )
+
+        # Check for various eating out phrase examples
+        eating_out_indicators = [
+            "eating out",
+            "dining out",
+            "restaurant",
+            "takeout",
+            "fast food",
+            "ordering in",
+            "grabbing lunch out",
+        ]
+        found_indicators = [
+            indicator
+            for indicator in eating_out_indicators
+            if indicator in prompt.lower()
+        ]
+        assert (
+            len(found_indicators) > 0
+        ), f"Prompt should include eating out examples. Found: {found_indicators}"
+
+    def test_format_meal_planning_prompt_includes_recipe_instructions_format(
+        self,
+    ):
+        """Test that prompt includes instructions for recipe instructions format."""
+        context = {
+            "pantry_items": [],
+            "meals": [],
+            "preferences": None,
+            "grocery_lists": [],
+            "weather": None,
+            "household_name": "Test Household",
+        }
+        user_message = "Suggest meals"
+        conversation_history = []
+
+        prompt = format_meal_planning_prompt(
+            context, user_message, conversation_history
+        )
+
+        # Check for recipe instructions format requirements
+        assert "recipe instructions" in prompt.lower() or "recipe" in prompt.lower()
+        assert "cook time" in prompt.lower() or "step" in prompt.lower()
+        # Check for structured format example
+        assert (
+            "step 1:" in prompt.lower()
+            or "step-by-step" in prompt.lower()
+            or "numbered" in prompt.lower()
+        )
+
+    def test_format_meal_planning_prompt_instructs_llm_to_format_steps_with_ingredients(
+        self,
+    ):
+        """Test that prompt instructs LLM to format steps with inline ingredients."""
+        context = {
+            "pantry_items": [],
+            "meals": [],
+            "preferences": None,
+            "grocery_lists": [],
+            "weather": None,
+            "household_name": "Test Household",
+        }
+        user_message = "Suggest meals"
+        conversation_history = []
+
+        prompt = format_meal_planning_prompt(
+            context, user_message, conversation_history
+        )
+
+        # Check for instructions about inline ingredients
+        assert (
+            "inline" in prompt.lower()
+            or "ingredients" in prompt.lower()
+            or "measurements" in prompt.lower()
+        )
+        # Check that it mentions ingredients should be in steps
+        assert (
+            "step" in prompt.lower()
+            and ("ingredient" in prompt.lower() or "measurement" in prompt.lower())
+        ) or "derive" in prompt.lower()
+
 
 class TestCallAnthropicAPI:
     """Tests for Anthropic API calling function."""
@@ -249,6 +373,85 @@ class TestParseLLMResponse:
 
         with pytest.raises(ValueError, match="suggestions"):
             parse_llm_response(mock_response)
+
+    def test_parse_llm_response_with_meal_category(self):
+        """Test parsing response that includes meal_category field."""
+        response_text = """
+        {
+            "suggestions": [
+                {
+                    "meal_name": "Pizza from restaurant",
+                    "meal_type": "dinner",
+                    "day_of_week": 0,
+                    "ingredients": [],
+                    "uses_pantry_items": [],
+                    "notes": "Eating out",
+                    "meal_category": "eat_out"
+                }
+            ]
+        }
+        """
+        # Create mock response object
+        mock_response = MagicMock()
+        mock_content_block = MagicMock()
+        mock_content_block.text = response_text.strip()
+        mock_response.content = [mock_content_block]
+
+        result = parse_llm_response(mock_response)
+
+        assert "suggestions" in result
+        assert len(result["suggestions"]) == 1
+        assert result["suggestions"][0]["meal_name"] == "Pizza from restaurant"
+        assert result["suggestions"][0]["meal_category"] == "eat_out"
+
+    def test_parse_llm_response_with_all_meal_categories(self):
+        """Test parsing response with all meal_category values."""
+        response_text = """
+        {
+            "suggestions": [
+                {
+                    "meal_name": "Home cooked pasta",
+                    "meal_type": "dinner",
+                    "day_of_week": 0,
+                    "ingredients": ["pasta", "sauce"],
+                    "uses_pantry_items": ["pasta"],
+                    "notes": "Regular meal",
+                    "meal_category": "normal"
+                },
+                {
+                    "meal_name": "Quick sandwich",
+                    "meal_type": "lunch",
+                    "day_of_week": 1,
+                    "ingredients": ["bread", "cheese"],
+                    "uses_pantry_items": ["bread"],
+                    "notes": "Quick meal",
+                    "meal_category": "quick_meal"
+                },
+                {
+                    "meal_name": "Restaurant dinner",
+                    "meal_type": "dinner",
+                    "day_of_week": 2,
+                    "ingredients": [],
+                    "uses_pantry_items": [],
+                    "notes": "Eating out",
+                    "meal_category": "eat_out"
+                }
+            ]
+        }
+        """
+        # Create mock response object
+        mock_response = MagicMock()
+        mock_content_block = MagicMock()
+        mock_content_block.text = response_text.strip()
+        mock_response.content = [mock_content_block]
+
+        result = parse_llm_response(mock_response)
+
+        assert "suggestions" in result
+        assert len(result["suggestions"]) == 3
+        assert result["suggestions"][0]["meal_category"] == "normal"
+        assert result["suggestions"][1]["meal_category"] == "quick_meal"
+        assert result["suggestions"][2]["meal_category"] == "eat_out"
 
 
 class TestSuggestMeals:
