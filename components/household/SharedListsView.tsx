@@ -28,8 +28,8 @@ export default function SharedListsView({ lists }: SharedListsViewProps) {
   if (lists.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500 text-lg">No shared lists yet</p>
-        <p className="text-gray-400 text-sm mt-2">
+        <p className="text-text-tertiary text-lg">No shared lists yet</p>
+        <p className="text-warm-gray-400 text-sm mt-2">
           Create a list and share it with your household members
         </p>
       </div>
@@ -85,15 +85,15 @@ export default function SharedListsView({ lists }: SharedListsViewProps) {
 
         return (
           <Link key={list.id} href={`/grocery-lists/${list.id}`}>
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Card className="hover:shadow-warm-lg transition-warm cursor-pointer">
               <div className="p-4">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                    <h3 className="text-lg font-semibold text-text-primary mb-1">
                       {list.name}
                     </h3>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-text-secondary">
                       Created by {creatorName}
                     </p>
                   </div>
@@ -104,8 +104,8 @@ export default function SharedListsView({ lists }: SharedListsViewProps) {
 
                 {/* Footer */}
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">{sharedText}</span>
-                  <span className="text-gray-500">
+                  <span className="text-text-secondary">{sharedText}</span>
+                  <span className="text-text-tertiary">
                     Last edited: {lastEditTime}
                   </span>
                 </div>

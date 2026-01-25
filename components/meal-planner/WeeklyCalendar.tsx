@@ -102,26 +102,26 @@ const WeeklyCalendar = forwardRef<WeeklyCalendarRef, WeeklyCalendarProps>(
         <table className="w-full border-collapse min-w-[800px]">
           <thead>
             <tr>
-              <th className="w-32 p-2 bg-gray-50 border border-gray-200"></th>
+              <th className="w-32 p-2 bg-warm-gray-50 border border-warm-gray-200"></th>
               {weekDays.map((day) => (
                 <th
                   key={day.toISOString()}
                   ref={isToday(day) ? todayColumnRef : null}
                   className={cn(
-                    'p-3 text-center border border-gray-200',
-                    isToday(day) ? 'bg-blue-50' : 'bg-gray-50'
+                    'p-3 text-center border border-warm-gray-200',
+                    isToday(day) ? 'bg-warm-blue-light' : 'bg-warm-gray-50'
                   )}
                   role="columnheader"
                 >
-                  <div className="font-semibold text-gray-900">
+                  <div className="font-semibold text-text-primary">
                     {getDayLabel(day)}
                   </div>
                   <div
                     className={cn(
                       'text-sm',
                       isToday(day)
-                        ? 'text-blue-600 font-semibold'
-                        : 'text-gray-600'
+                        ? 'text-warm-blue font-semibold'
+                        : 'text-text-secondary'
                     )}
                   >
                     {formatDate(day, 'MMM d')}
@@ -133,7 +133,7 @@ const WeeklyCalendar = forwardRef<WeeklyCalendarRef, WeeklyCalendarProps>(
           <tbody>
             {mealTypes.map((mealType) => (
               <tr key={mealType}>
-                <td className="p-3 font-medium text-gray-700 bg-gray-50 border border-gray-200 text-center">
+                <td className="p-3 font-medium text-text-secondary bg-warm-gray-50 border border-warm-gray-200 text-center">
                   {mealType}
                 </td>
                 {weekDays.map((day) => {
@@ -142,8 +142,8 @@ const WeeklyCalendar = forwardRef<WeeklyCalendarRef, WeeklyCalendarProps>(
                     <td
                       key={`${day.toISOString()}-${mealType}`}
                       className={cn(
-                        'p-2 border border-gray-200 align-top',
-                        isToday(day) ? 'bg-blue-50/30' : 'bg-white'
+                        'p-2 border border-warm-gray-200 align-top',
+                        isToday(day) ? 'bg-warm-blue-light/30' : 'bg-warm-white'
                       )}
                     >
                       {meal ? (
@@ -179,12 +179,12 @@ const WeeklyCalendar = forwardRef<WeeklyCalendarRef, WeeklyCalendarProps>(
                       ) : (
                         <button
                           onClick={() => onEmptySlotClick(day, mealType)}
-                          className="w-full h-32 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-all group"
+                          className="w-full h-32 flex items-center justify-center border-2 border-dashed border-warm-gray-300 rounded-lg hover:border-warm-blue hover:bg-warm-blue-light transition-warm group"
                           aria-label={`Add meal for ${mealType} on ${formatDate(day)}`}
                         >
                           <div className="text-center">
                             <svg
-                              className="w-8 h-8 mx-auto text-gray-400 group-hover:text-blue-500 transition-colors"
+                              className="w-8 h-8 mx-auto text-warm-gray-400 group-hover:text-warm-blue transition-warm"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -196,7 +196,7 @@ const WeeklyCalendar = forwardRef<WeeklyCalendarRef, WeeklyCalendarProps>(
                                 d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                               />
                             </svg>
-                            <span className="text-xs text-gray-500 group-hover:text-blue-600 mt-1 block">
+                            <span className="text-xs text-text-tertiary group-hover:text-warm-blue mt-1 block">
                               Add Meal
                             </span>
                           </div>

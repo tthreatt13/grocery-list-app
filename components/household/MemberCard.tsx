@@ -18,13 +18,13 @@ interface MemberCardProps {
 const getRoleBadgeClass = (role: MemberRole): string => {
   switch (role) {
     case MemberRole.ADMIN:
-      return 'bg-purple-100 text-purple-800'
+      return 'bg-warm-peach-light text-warm-peach-dark'
     case MemberRole.MEMBER:
-      return 'bg-blue-100 text-blue-800'
+      return 'bg-warm-blue-light text-warm-blue-dark'
     case MemberRole.VIEWER:
-      return 'bg-gray-100 text-gray-800'
+      return 'bg-warm-gray-100 text-warm-gray-800'
     default:
-      return 'bg-gray-100 text-gray-800'
+      return 'bg-warm-gray-100 text-warm-gray-800'
   }
 }
 
@@ -48,7 +48,7 @@ export default function MemberCard({
   const showRemoveButton = isCurrentUserAdmin || isCurrentUser
 
   return (
-    <Card className="hover:shadow-lg transition-shadow">
+    <Card className="hover:shadow-warm-lg transition-warm">
       <div className="p-4">
         <div className="flex items-center gap-4 mb-3">
           {/* Avatar */}
@@ -63,7 +63,7 @@ export default function MemberCard({
                 />
               </div>
             ) : (
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-xl">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-warm-blue to-warm-peach flex items-center justify-center text-warm-white font-bold text-xl">
                 {getInitials(member.name)}
               </div>
             )}
@@ -72,16 +72,16 @@ export default function MemberCard({
           {/* Member Info */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <h3 className="text-lg font-semibold text-gray-900 truncate">
+              <h3 className="text-lg font-semibold text-text-primary truncate">
                 {member.name}
               </h3>
               {isCurrentUser && (
-                <Badge className="bg-blue-100 text-blue-800 text-xs">You</Badge>
+                <Badge className="bg-warm-blue-light text-warm-blue-dark text-xs">You</Badge>
               )}
             </div>
-            <p className="text-sm text-gray-600 truncate">{member.email}</p>
+            <p className="text-sm text-text-secondary truncate">{member.email}</p>
             {member.lastActive && (
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-text-tertiary mt-1">
                 Active: {formatDistanceToNow(member.lastActive)}
               </p>
             )}
@@ -97,7 +97,7 @@ export default function MemberCard({
 
         {/* Action Buttons */}
         {(showEditButton || showRemoveButton) && (
-          <div className="flex gap-2 pt-3 border-t border-gray-200">
+          <div className="flex gap-2 pt-3 border-t border-warm-gray-200">
             {showEditButton && onEdit && (
               <Button
                 variant="outline"
@@ -126,7 +126,7 @@ export default function MemberCard({
                 variant="outline"
                 size="sm"
                 onClick={() => onRemove(member)}
-                className="flex-1 text-sm text-red-600 hover:bg-red-50 hover:border-red-300"
+                className="flex-1 text-sm text-warm-coral hover:bg-warm-coral-light hover:border-warm-coral transition-warm"
               >
                 <svg
                   className="w-4 h-4 mr-1"

@@ -359,7 +359,7 @@ export default function PreferencesForm({
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Diet Types */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">
+        <label className="block text-sm font-medium text-text-secondary mb-3">
           Diet Types
         </label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -372,7 +372,7 @@ export default function PreferencesForm({
             />
           ))}
         </div>
-        <p className="mt-2 text-xs text-gray-500">
+        <p className="mt-2 text-xs text-text-tertiary">
           Select all that apply. Select &quot;None&quot; if you don&apos;t
           follow any specific diet.
         </p>
@@ -380,7 +380,7 @@ export default function PreferencesForm({
 
       {/* Cooking Apparatus */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">
+        <label className="block text-sm font-medium text-text-secondary mb-3">
           Available Cooking Apparatus
         </label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -393,7 +393,7 @@ export default function PreferencesForm({
             />
           ))}
         </div>
-        <p className="mt-2 text-xs text-gray-500">
+        <p className="mt-2 text-xs text-text-tertiary">
           Select all cooking equipment you have available.
         </p>
       </div>
@@ -414,7 +414,7 @@ export default function PreferencesForm({
               {isLoadingMeals && (
                 <div className="mt-6" role="status" aria-label="Loading meals">
                   <svg
-                    className="animate-spin h-5 w-5 text-gray-400"
+                    className="animate-spin h-5 w-5 text-warm-gray-400"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -439,13 +439,13 @@ export default function PreferencesForm({
           </div>
         </div>
         <div className="flex items-start gap-2 mt-1">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-text-tertiary">
             Meals from last week&apos;s meal planner will be auto-populated.
             Enter meals you&apos;ve already made this week, separated by commas.
           </p>
           {fetchedMeals && fetchedMeals.length > 0 && (
             <span
-              className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 whitespace-nowrap"
+              className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-warm-blue-light text-warm-blue-dark whitespace-nowrap"
               title="Auto-populated from meal planner"
             >
               Auto-populated
@@ -466,7 +466,7 @@ export default function PreferencesForm({
           error={zipCodeError}
           maxLength={10}
         />
-        <p className="mt-1 text-xs text-gray-500">
+        <p className="mt-1 text-xs text-text-tertiary">
           Enter your zip code to receive weather forecasts for meal planning.
         </p>
       </div>

@@ -38,7 +38,7 @@ describe('MobileNav', () => {
 
     render(<MobileNav />)
     const listsLink = screen.getByText('Lists').closest('a')
-    expect(listsLink).toHaveClass('text-green-600')
+    expect(listsLink).toHaveClass('text-warm-green')
   })
 
   it('is hidden on desktop (md breakpoint)', () => {
@@ -52,7 +52,7 @@ describe('MobileNav', () => {
 
     render(<MobileNav />)
     const listsLink = screen.getByText('Lists').closest('a')
-    expect(listsLink).toHaveClass('text-green-600')
+    expect(listsLink).toHaveClass('text-warm-green')
   })
 
   it('highlights Lists navigation when on the lists page', () => {
@@ -60,7 +60,7 @@ describe('MobileNav', () => {
 
     render(<MobileNav />)
     const listsLink = screen.getByText('Lists').closest('a')
-    expect(listsLink).toHaveClass('text-green-600')
+    expect(listsLink).toHaveClass('text-warm-green')
   })
 
   it('highlights Pantry navigation when on pantry page', () => {
@@ -68,7 +68,7 @@ describe('MobileNav', () => {
 
     render(<MobileNav />)
     const pantryLink = screen.getByText('Pantry').closest('a')
-    expect(pantryLink).toHaveClass('text-green-600')
+    expect(pantryLink).toHaveClass('text-warm-green')
   })
 
   it('highlights Home navigation only when on exact home page', () => {
@@ -76,7 +76,7 @@ describe('MobileNav', () => {
 
     render(<MobileNav />)
     const homeLink = screen.getByText('Home').closest('a')
-    expect(homeLink).toHaveClass('text-green-600')
+    expect(homeLink).toHaveClass('text-warm-green')
   })
 
   it('does not highlight Home when on other pages', () => {
@@ -84,7 +84,7 @@ describe('MobileNav', () => {
 
     render(<MobileNav />)
     const homeLink = screen.getByText('Home').closest('a')
-    expect(homeLink).not.toHaveClass('text-green-600')
-    expect(homeLink).toHaveClass('text-gray-500')
+    expect(homeLink).not.toHaveClass('text-warm-green')
+    expect(homeLink).toHaveClass('text-warm-gray-500')
   })
 })
