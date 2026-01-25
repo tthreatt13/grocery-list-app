@@ -121,24 +121,25 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 1.12 Run `npm run format` to format code
 
 - [ ] 2.0 Optimize AI Prompt for Eating Out Recognition
-  - [ ] 2.1 Read `backend/services/meal_planning_ai.py` to understand current prompt structure
-  - [ ] 2.2 Review the `format_meal_planning_prompt` function to see current system instructions
-  - [ ] 2.3 Update system instruction to include recognition of "eating out" scenarios with examples:
+  - [x] 2.1 Read `backend/services/meal_planning_ai.py` to understand current prompt structure
+  - [x] 2.2 Review the `format_meal_planning_prompt` function to see current system instructions
+  - [x] 2.3 Update system instruction to include recognition of "eating out" scenarios with examples:
     - Add instructions to recognize phrases like "eating out", "dining out", "restaurant", "takeout", "fast food", "ordering in", "grabbing lunch out"
     - Add explicit instruction to set `meal_category: "eat_out"` when user indicates eating out
-  - [ ] 2.4 Update JSON structure example in prompt to include `meal_category` field:
+  - [x] 2.4 Update JSON structure example in prompt to include `meal_category` field:
     - Add `"meal_category": "normal|quick_meal|eat_out"` to the example JSON structure
     - Document when to use each category: `"eat_out"` for restaurant/takeout, `"quick_meal"` for quick/easy meals, `"normal"` for regular home-cooked
-  - [ ] 2.5 Verify parsing logic in `parse_llm_response` handles `meal_category` field (should already work since it parses full JSON)
-  - [ ] 2.6 Write/update tests in `backend/tests/services/test_meal_planning_ai.py`:
+  - [x] 2.5 Verify parsing logic in `parse_llm_response` handles `meal_category` field (should already work since it parses full JSON)
+  - [x] 2.6 Write/update tests in `backend/tests/services/test_meal_planning_ai.py`:
     - Test that prompt includes meal_category instructions
     - Test that eating out phrases are recognized (use test phrases from PRD)
     - Test that home-cooked phrases still work correctly (regression test)
   - [ ] 2.7 Test with all 11 test phrases from PRD acceptance criteria:
     - "Eating out", "Dining at a restaurant", "Takeout for lunch", "Fast food breakfast", "Ordering in pizza", "Cafe breakfast", "Grabbing lunch out", "Dinner at a sushi place", "Getting burgers from a drive-thru", "Had ramen at a noodle shop", "Coffee and pastry from a bakery"
-  - [ ] 2.8 Run `cd backend && pytest` to ensure all backend tests pass
-  - [ ] 2.9 Run `cd backend && flake8 . --exclude=alembic/versions --select=E9,F63,F7,F82 --count --show-source --statistics` and fix any errors
-  - [ ] 2.10 Run `cd backend && black --exclude="/(alembic/versions|venv)/" .` to format code
+    - Note: This requires manual/integration testing with the actual API and will be done in task 4.0 (Testing and Validation)
+  - [x] 2.8 Run `cd backend && pytest` to ensure all backend tests pass
+  - [x] 2.9 Run `cd backend && flake8 . --exclude=alembic/versions --select=E9,F63,F7,F82 --count --show-source --statistics` and fix any errors
+  - [x] 2.10 Run `cd backend && black --exclude="/(alembic/versions|venv)/" .` to format code
 
 - [ ] 3.0 Update MealDetailsModal to Show Recipe Instructions
   - [ ] 3.1 Read `components/meal-planner/MealDetailsModal.tsx` to understand current structure
