@@ -499,9 +499,9 @@ export default function HouseholdPage() {
                   {members.length}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-[var(--warm-blue-light)] rounded-lg flex items-center justify-center">
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                 <svg
-                  className="w-6 h-6 text-[var(--warm-blue)]"
+                  className="w-6 h-6 text-blue-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -509,7 +509,7 @@ export default function HouseholdPage() {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
+                    strokeWidth={2.5}
                     d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
                   />
                 </svg>
@@ -527,9 +527,9 @@ export default function HouseholdPage() {
                   {adminCount}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-[var(--warm-peach-light)] rounded-lg flex items-center justify-center">
+              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
                 <svg
-                  className="w-6 h-6 text-[var(--warm-peach-dark)]"
+                  className="w-6 h-6 text-orange-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -537,7 +537,7 @@ export default function HouseholdPage() {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
+                    strokeWidth={2.5}
                     d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
                   />
                 </svg>
@@ -555,9 +555,9 @@ export default function HouseholdPage() {
                   {memberCount}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-[var(--warm-green-light)] rounded-lg flex items-center justify-center">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                 <svg
-                  className="w-6 h-6 text-[var(--warm-green)]"
+                  className="w-6 h-6 text-green-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -565,7 +565,7 @@ export default function HouseholdPage() {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
+                    strokeWidth={2.5}
                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                   />
                 </svg>
@@ -583,9 +583,9 @@ export default function HouseholdPage() {
                   {viewerCount}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-[var(--warm-gray-100)] rounded-lg flex items-center justify-center">
+              <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
                 <svg
-                  className="w-6 h-6 text-[var(--warm-gray-600)]"
+                  className="w-6 h-6 text-gray-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -593,13 +593,13 @@ export default function HouseholdPage() {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
+                    strokeWidth={2.5}
                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
                   />
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
+                    strokeWidth={2.5}
                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                   />
                 </svg>

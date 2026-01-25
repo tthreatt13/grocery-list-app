@@ -225,7 +225,7 @@ export default function UrgentActionItems({
     if (item.type === 'low_stock') {
       return (
         <svg
-          className="w-5 h-5 text-yellow-600"
+          className="w-6 h-6 text-yellow-600"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -241,7 +241,7 @@ export default function UrgentActionItems({
     } else if (item.type === 'expiring_soon') {
       return (
         <svg
-          className="w-5 h-5 text-red-600"
+          className="w-6 h-6 text-red-600"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"

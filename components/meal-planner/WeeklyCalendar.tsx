@@ -99,7 +99,7 @@ const WeeklyCalendar = forwardRef<WeeklyCalendarRef, WeeklyCalendarProps>(
 
     return (
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse min-w-[800px]">
+        <table className="w-full border-separate border-spacing-2 min-w-[800px]">
           <thead>
             <tr>
               <th className="w-32 p-2 bg-warm-gray-50 border border-warm-gray-200"></th>
@@ -142,7 +142,7 @@ const WeeklyCalendar = forwardRef<WeeklyCalendarRef, WeeklyCalendarProps>(
                     <td
                       key={`${day.toISOString()}-${mealType}`}
                       className={cn(
-                        'p-2 border border-warm-gray-200 align-top',
+                        'p-3 border border-warm-gray-200 align-top',
                         isToday(day) ? 'bg-warm-blue-light/30' : 'bg-warm-white'
                       )}
                     >

@@ -18,13 +18,13 @@ interface MemberCardProps {
 const getRoleBadgeClass = (role: MemberRole): string => {
   switch (role) {
     case MemberRole.ADMIN:
-      return 'bg-warm-peach-light text-warm-peach-dark'
+      return 'bg-orange-100 text-orange-800'
     case MemberRole.MEMBER:
-      return 'bg-warm-blue-light text-warm-blue-dark'
+      return 'bg-green-100 text-green-800'
     case MemberRole.VIEWER:
-      return 'bg-warm-gray-100 text-warm-gray-800'
+      return 'bg-gray-100 text-gray-800'
     default:
-      return 'bg-warm-gray-100 text-warm-gray-800'
+      return 'bg-gray-100 text-gray-800'
   }
 }
 
@@ -76,10 +76,12 @@ export default function MemberCard({
                 {member.name}
               </h3>
               {isCurrentUser && (
-                <Badge className="bg-warm-blue-light text-warm-blue-dark text-xs">You</Badge>
+                <Badge className="bg-blue-100 text-blue-800 text-xs">You</Badge>
               )}
             </div>
-            <p className="text-sm text-text-secondary truncate">{member.email}</p>
+            <p className="text-sm text-text-secondary truncate">
+              {member.email}
+            </p>
             {member.lastActive && (
               <p className="text-xs text-text-tertiary mt-1">
                 Active: {formatDistanceToNow(member.lastActive)}

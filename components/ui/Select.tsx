@@ -53,7 +53,9 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             'focus:outline-none focus:ring-2 focus:ring-warm-blue focus:border-transparent',
             'disabled:bg-warm-gray-100 disabled:cursor-not-allowed',
             'transition-warm cursor-pointer',
-            error ? 'border-warm-coral focus:ring-warm-coral' : 'border-warm-gray-300',
+            error
+              ? 'border-warm-coral focus:ring-warm-coral'
+              : 'border-warm-gray-300',
             className
           )}
           aria-invalid={error ? 'true' : 'false'}
