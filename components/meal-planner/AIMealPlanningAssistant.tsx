@@ -200,8 +200,8 @@ export default function AIMealPlanningAssistant({
       await onMealsApplied([suggestion])
       // Remove the added meal from suggestions using index-based filtering
       setSuggestions(suggestions.filter((_, i) => i !== index))
-      // Populate input field with meal name
-      setUserMessage(suggestion.meal_name)
+      // Clear input field after adding meal
+      setUserMessage('')
       setError(null) // Clear any errors on success
     } catch (err) {
       let errorMessage = 'Failed to add meal. Please try again.'

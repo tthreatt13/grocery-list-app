@@ -3,7 +3,11 @@
 import { Meal } from '@/lib/types'
 import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
-import { formatDate, getMealDisplayName } from '@/lib/utils'
+import {
+  formatDate,
+  getMealDisplayName,
+  parseRecipeInstructions,
+} from '@/lib/utils'
 
 interface MealDetailsModalProps {
   isOpen: boolean
@@ -20,6 +24,13 @@ export default function MealDetailsModal({
   onEdit,
   onDelete,
 }: MealDetailsModalProps) {
+  // #region agent log
+  console.log('[DEBUG] MealDetailsModal - Component rendered', {
+    isOpen,
+    hasMeal: !!meal,
+    mealId: meal?.id,
+  })
+  // #endregion
   if (!meal) return null
 
   const handleDelete = async () => {
@@ -91,11 +102,182 @@ export default function MealDetailsModal({
           </div>
         </div>
 
-        {/* Notes */}
+        {/* Recipe Instructions */}
         {meal.notes && (
           <div>
-            <h4 className="text-sm font-semibold text-gray-700 mb-1">Notes</h4>
-            <p className="text-sm text-gray-600">{meal.notes}</p>
+            <h4 className="text-sm font-semibold text-gray-700 mb-2">
+              Recipe Instructions
+            </h4>
+            {(() => {
+              // #region agent log
+              console.log(
+                '[DEBUG] MealDetailsModal - meal.notes exists:',
+                !!meal.notes,
+                'length:',
+                meal.notes?.length
+              )
+              console.log(
+                '[DEBUG] MealDetailsModal - meal.notes content (first 200 chars):',
+                meal.notes?.substring(0, 200)
+              )
+              // #endregion
+              const parsed = parseRecipeInstructions(meal.notes)
+              // #region agent log
+              const logData = {
+                location: 'MealDetailsModal.tsx:105',
+                message: 'Parsed recipe instructions',
+                data: {
+                  parsed: parsed
+                    ? {
+                        isStructured: parsed.isStructured,
+                        stepsCount: parsed.steps?.length,
+                        cookTime: parsed.cookTime,
+                        firstStep: parsed.steps?.[0],
+                      }
+                    : null,
+                  notesLength: meal.notes?.length,
+                },
+                timestamp: Date.now(),
+                sessionId: 'debug-session',
+                runId: 'run1',
+                hypothesisId: 'A',
+              }
+              console.log('[DEBUG]', logData)
+              fetch(
+                'http://127.0.0.1:7242/ingest/0962a481-6cbe-4459-8fab-c413be1a5fe6',
+                {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(logData),
+                }
+              ).catch(() => {})
+              // #endregion
+              if (parsed && parsed.isStructured) {
+                return (
+                  <div className="space-y-3">
+                    {parsed.cookTime && (
+                      <div className="text-sm font-medium text-gray-800 bg-orange-50 px-3 py-2 rounded-md border border-orange-200">
+                        Cook Time: {parsed.cookTime}
+                      </div>
+                    )}
+                    <div>
+                      {parsed.steps.map((step, index) => {
+                        // #region agent log
+                        const isLast = index === parsed.steps.length - 1
+                        const stepLogData = {
+                          location: 'MealDetailsModal.tsx:115',
+                          message: 'Rendering step',
+                          data: {
+                            stepNumber: step.number,
+                            index,
+                            isLast,
+                            instructionLength: step.instruction?.length,
+                            stepInstruction: step.instruction?.substring(0, 50),
+                          },
+                          timestamp: Date.now(),
+                          sessionId: 'debug-session',
+                          runId: 'run2',
+                          hypothesisId: 'E',
+                        }
+                        console.log('[DEBUG]', stepLogData)
+                        fetch(
+                          'http://127.0.0.1:7242/ingest/0962a481-6cbe-4459-8fab-c413be1a5fe6',
+                          {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(stepLogData),
+                          }
+                        ).catch(() => {})
+                        // #endregion
+                        return (
+                          <div
+                            key={step.number}
+                            className="text-sm text-gray-600 flex items-start"
+                            style={
+                              !isLast
+                                ? {
+                                    paddingBottom: '1rem',
+                                    marginBottom: '1rem',
+                                    borderBottom: '2px solid #d1d5db',
+                                    borderBottomWidth: '2px',
+                                    borderBottomStyle: 'solid',
+                                    borderBottomColor: '#d1d5db',
+                                  }
+                                : {}
+                            }
+                          >
+                            <span
+                              className="mr-2 min-w-[3rem]"
+                              style={{
+                                fontWeight: 700,
+                                color: '#111827',
+                                fontFamily: 'inherit',
+                              }}
+                            >
+                              Step {step.number}:
+                            </span>
+                            <span className="flex-1">{step.instruction}</span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )
+              } else if (parsed && !parsed.isStructured) {
+                // #region agent log
+                fetch(
+                  'http://127.0.0.1:7242/ingest/0962a481-6cbe-4459-8fab-c413be1a5fe6',
+                  {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      location: 'MealDetailsModal.tsx:133',
+                      message: 'Rendering legacy plain text',
+                      data: {
+                        parsedExists: !!parsed,
+                        isStructured: parsed?.isStructured,
+                      },
+                      timestamp: Date.now(),
+                      sessionId: 'debug-session',
+                      runId: 'run1',
+                      hypothesisId: 'A',
+                    }),
+                  }
+                ).catch(() => {})
+                // #endregion
+                // Legacy plain text format
+                return (
+                  <p className="text-sm text-gray-600 whitespace-pre-wrap">
+                    {meal.notes}
+                  </p>
+                )
+              } else {
+                // #region agent log
+                fetch(
+                  'http://127.0.0.1:7242/ingest/0962a481-6cbe-4459-8fab-c413be1a5fe6',
+                  {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      location: 'MealDetailsModal.tsx:141',
+                      message: 'Rendering fallback',
+                      data: { parsedExists: !!parsed },
+                      timestamp: Date.now(),
+                      sessionId: 'debug-session',
+                      runId: 'run1',
+                      hypothesisId: 'A',
+                    }),
+                  }
+                ).catch(() => {})
+                // #endregion
+                // Fallback if parsing fails
+                return (
+                  <p className="text-sm text-gray-600 whitespace-pre-wrap">
+                    {meal.notes}
+                  </p>
+                )
+              }
+            })()}
           </div>
         )}
 

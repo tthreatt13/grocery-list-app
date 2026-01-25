@@ -197,6 +197,23 @@ You MUST set the meal_category to "eat_out" for that meal. For quick/easy home-c
 - Group meals by shared proteins and ingredients. For example: "Ground beef week" (tacos, spaghetti, chili) or "Chicken week" (roast chicken, chicken salad, chicken soup).
 - In the notes field, include leftover strategy suggestions when relevant (e.g., "Make extra for chicken salad tomorrow" or "Leftovers work great for lunch").
 
+**RECIPE INSTRUCTIONS FORMAT (for home-cooked meals):**
+When providing notes for home-cooked meals (meal_category: "normal" or "quick_meal"), format them as structured recipe instructions:
+1. Start with cook time: "Cook Time: [X] minutes" (or hours if applicable, e.g., "Cook Time: 1.5 hours")
+2. Follow with step-by-step instructions, each clearly numbered: "Step 1:", "Step 2:", etc.
+3. Include ingredients and measurements inline within each step instruction (e.g., "Step 1: Whisk 2 cups flour and 3 eggs together")
+4. Derive ingredient measurements from the ingredients list and include them naturally in the step instructions
+5. Each step should be a complete instruction that includes what ingredients to use and how to use them
+
+Example format:
+"Cook Time: 30 minutes
+
+Step 1: Whisk 2 cups flour and 3 eggs together in a large bowl
+Step 2: Fold in 1 cup spinach and 1/2 cup grated cheese
+Step 3: Pour into greased pan and bake for 20 minutes at 375°F"
+
+For eating out meals (meal_category: "eat_out"), use simple notes without recipe format.
+
 Format your response as JSON with this structure:
 {
   "suggestions": [
@@ -206,7 +223,7 @@ Format your response as JSON with this structure:
       "day_of_week": 0-6 (0=Monday, 6=Sunday),
       "ingredients": ["list", "of", "ingredients"],
       "uses_pantry_items": ["list", "of", "pantry", "items", "used"],
-      "notes": "string (optional: cooking tips, leftover strategy, ingredient reuse notes, dietary notes)",
+      "notes": "string (optional: cooking tips, leftover strategy, ingredient reuse notes, dietary notes). For home-cooked meals, format as structured recipe instructions with cook time and step-by-step instructions. Format: 'Cook Time: [time] minutes\\n\\nStep 1: [instruction with inline ingredients and measurements]\\nStep 2: [instruction with inline ingredients and measurements]' (ingredients and measurements must be inline within each step, not listed separately)",
       "meal_category": "normal|quick_meal|eat_out"
     }
   ]
