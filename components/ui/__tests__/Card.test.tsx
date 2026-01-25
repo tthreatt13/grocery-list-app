@@ -40,6 +40,10 @@ describe('Card', () => {
   it('applies default styles', () => {
     render(<Card data-testid="card">Content</Card>)
     const card = screen.getByTestId('card')
-    expect(card).toHaveClass('bg-white', 'rounded-lg', 'shadow')
+    expect(card).toHaveClass(
+      'bg-[var(--warm-white)]',
+      'rounded-lg',
+      'shadow-warm-md'
+    )
   })
 })

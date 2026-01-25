@@ -12,7 +12,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={cn(
-          'bg-white rounded-lg shadow border border-gray-200',
+          'bg-[var(--warm-white)] rounded-lg shadow-warm-md border border-[var(--warm-gray-200)]',
           className
         )}
         {...props}
@@ -28,7 +28,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
         )}
         <div className="px-6 py-4">{children}</div>
         {footer && (
-          <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 rounded-b-lg">
+          <div className="px-6 py-4 border-t border-[var(--warm-gray-200)] bg-[var(--warm-gray-50)] rounded-b-lg">
             {footer}
           </div>
         )}

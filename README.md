@@ -55,12 +55,16 @@ A modern, full-stack grocery list and meal planning application built for busy p
   - Context-aware suggestions that use pantry items to reduce waste
   - Apply AI-suggested meals directly to your meal plan with one click
   - Optionally generate grocery lists from AI-suggested meals
+  - **Enhanced chat experience** with auto-scroll fix - chat window always remains visible and accessible
+  - **Smart eating out recognition** - automatically categorizes restaurant meals, takeout, and fast food correctly
+  - **Structured recipe instructions** - view step-by-step recipes with cook time and ingredients inline
 - Visual calendar view with easy navigation between weeks
 - Add meals with ingredients and notes
 - Meal categories: Normal, Quick Meal, or Eat Out
 - Visual indicators for meal categories (⚡ for Quick Meal, 🍴 for Eat Out)
 - Generate grocery lists automatically from your meal plan (excludes Eat Out meals)
 - Delete confirmation modal to prevent accidental deletions
+- **Recipe Instructions Display** - view formatted recipes with cook time and step-by-step instructions
 - Mobile-optimized scrollable calendar
 - Quick stats showing meals planned and ingredients needed
 
@@ -574,6 +578,9 @@ This is a **production-ready full-stack application** with complete backend inte
   - One-click meal application to meal plan
   - Optional grocery list generation from AI-suggested meals
   - Ingredient normalization utility for consistent ingredient formatting
+  - **Enhanced chat experience** with auto-scroll fix ensuring chat window always remains visible
+  - **Smart eating out recognition** - automatically categorizes restaurant meals, takeout, and fast food correctly (recognizes 11+ common phrases)
+  - **Structured recipe instructions** - view step-by-step recipes with cook time and ingredients inline in meal details modal
 - **Pantry Inventory**: Complete backend integration with low-stock alerts and grocery list generation (create new lists or add to existing lists)
 - **Household Management**: Full backend integration with member roles and household preferences (dietary preferences, weather preferences, cooking apparatus selection)
 - **Weather Integration**: 7-day weather forecasts with zip code preferences and caching
@@ -581,7 +588,7 @@ This is a **production-ready full-stack application** with complete backend inte
 - **API Client**: Type-safe frontend API layer with error handling
 - **Dashboard Insights API**: New backend endpoint (`/api/dashboard/insights`) aggregating urgent items, suggestions, and statistics
 - **Context Detection**: Utilities for detecting time of day, day of week, and shopping patterns
-- **Utility Functions**: Ingredient normalization, category sorting, meal type sorting, and date formatting utilities
+- **Utility Functions**: Ingredient normalization, category sorting, meal type sorting, date formatting utilities, and recipe instruction parsing
 - **Testing**: Comprehensive test suites for both frontend and backend (including meal planner, grocery lists, pantry, household preferences, and utility functions)
 - **CI/CD**: GitHub Actions pipeline for automated testing and linting
 - **Deployment**: Railway backend deployment with automatic migrations
@@ -705,6 +712,7 @@ For questions or feedback, please open an issue on GitHub.
 - [Weather API Testing](docs/WEATHER_API_TESTING.md) - Weather API testing guide
 - [Increasing Jest Coverage](docs/INCREASING_JEST_COVERAGE.md) - Guide for improving test coverage
 - [Sequence Diagram](docs/SEQUENCE_DIAGRAM.md) - Application flow and architecture diagrams
+- [AI Meal Planner Enhancements](docs/ReleaseNotes/AI_MEAL_PLANNER_ENHANCEMENTS.md) - Latest release notes for AI meal planner improvements
 
 ## 🔧 Development Tools
 
