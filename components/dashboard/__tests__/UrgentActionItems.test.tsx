@@ -404,8 +404,8 @@ describe('UrgentActionItems', () => {
       />
     )
 
-    // Check for warning color classes (warm-peach-light)
-    const badge = container.querySelector('.bg-warm-peach-light')
+    // Check for warning color classes (Badge uses bg-orange-100 for warning variant)
+    const badge = container.querySelector('.bg-orange-100')
     expect(badge).toBeInTheDocument()
   })
 
@@ -419,8 +419,8 @@ describe('UrgentActionItems', () => {
       />
     )
 
-    // Check for danger color classes (warm-coral-light)
-    const badge = container.querySelector('.bg-warm-coral-light')
+    // Check for danger color classes (Badge uses bg-red-100 for danger variant)
+    const badge = container.querySelector('.bg-red-100')
     expect(badge).toBeInTheDocument()
   })
 })
