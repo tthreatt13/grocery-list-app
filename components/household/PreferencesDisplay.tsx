@@ -48,7 +48,7 @@ export default function PreferencesDisplay({
   if (!preferences || !hasAnyPreferences) {
     return (
       <div className="space-y-4">
-        <p className="text-gray-500 text-sm">
+        <p className="text-text-tertiary text-sm">
           No preferences set yet. Click Edit to add your preferences.
         </p>
         <Button variant="primary" onClick={onEdit}>
@@ -63,7 +63,9 @@ export default function PreferencesDisplay({
       {/* Diet Types */}
       {preferences.diet_types && preferences.diet_types.length > 0 && (
         <div>
-          <h3 className="text-sm font-medium text-gray-700 mb-2">Diet Types</h3>
+          <h3 className="text-sm font-medium text-text-secondary mb-2">
+            Diet Types
+          </h3>
           <div className="flex flex-wrap gap-2">
             {preferences.diet_types.map((diet) => (
               <Badge key={diet} variant="default">
@@ -78,7 +80,7 @@ export default function PreferencesDisplay({
       {preferences.cooking_apparatus &&
         preferences.cooking_apparatus.length > 0 && (
           <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-2">
+            <h3 className="text-sm font-medium text-text-secondary mb-2">
               Available Cooking Apparatus
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -94,7 +96,7 @@ export default function PreferencesDisplay({
       {/* Previous Meals */}
       {preferences.previous_meals && preferences.previous_meals.length > 0 && (
         <div>
-          <h3 className="text-sm font-medium text-gray-700 mb-2">
+          <h3 className="text-sm font-medium text-text-secondary mb-2">
             Previous Meals Made This Week
           </h3>
           <div className="flex flex-wrap gap-2">
@@ -110,8 +112,10 @@ export default function PreferencesDisplay({
       {/* Zip Code */}
       {preferences.zip_code && (
         <div>
-          <h3 className="text-sm font-medium text-gray-700 mb-2">Zip Code</h3>
-          <p className="text-gray-900">{preferences.zip_code}</p>
+          <h3 className="text-sm font-medium text-text-secondary mb-2">
+            Zip Code
+          </h3>
+          <p className="text-text-primary">{preferences.zip_code}</p>
         </div>
       )}
 

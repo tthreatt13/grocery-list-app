@@ -59,7 +59,7 @@ describe('GroceryListCard', () => {
 
   it('calculates completion percentage correctly', () => {
     const { container } = render(<GroceryListCard list={mockList} />)
-    const progressBar = container.querySelector('.bg-green-600')
+    const progressBar = container.querySelector('.bg-warm-green')
     expect(progressBar).toHaveStyle({ width: '50%' })
   })
 

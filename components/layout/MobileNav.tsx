@@ -106,7 +106,7 @@ export default function MobileNav() {
   ]
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-warm-white border-t border-warm-gray-200 z-50">
       <div className="flex justify-around items-center h-16">
         {navItems.map((item) => {
           // For home page, use exact match. For other pages, match if pathname starts with href
@@ -119,10 +119,10 @@ export default function MobileNav() {
               key={item.href}
               href={item.href}
               className={cn(
-                'flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors',
+                'flex flex-col items-center justify-center w-full h-full space-y-1 transition-warm',
                 isActive
-                  ? 'text-green-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'text-warm-green'
+                  : 'text-warm-gray-500 hover:text-warm-gray-700'
               )}
             >
               {item.icon}

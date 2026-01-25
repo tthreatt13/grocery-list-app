@@ -57,7 +57,7 @@ describe('GroceryListItem', () => {
     const checkedItem = { ...mockItem, checked: true }
     render(<GroceryListItem item={checkedItem} onToggle={mockOnToggle} />)
     const label = screen.getByText('Bananas')
-    expect(label).toHaveClass('line-through', 'text-gray-500')
+    expect(label).toHaveClass('line-through', 'text-text-tertiary')
   })
 
   it('does not apply strike-through when item is unchecked', () => {
