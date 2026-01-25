@@ -107,18 +107,23 @@ This enhancement package for the AI Meal Planner addresses three distinct issues
 
 - The "Notes" section in the MealDetailsModal is replaced with a clearly labeled "Recipe Instructions" section.
   - _Pass condition:_ No visual or textual references to "Notes" exist within the modal UI.
-- Each recipe instruction is displayed in sequence (Step 1, Step 2, etc.), each delineated clearly.
+- Recipe instructions must include cook time prominently displayed at the top.
+  - _Format example:_ "Cook Time: 30 minutes" or "Cook Time: 1 hour 15 minutes"
+- Each recipe instruction is displayed in sequence (Step 1, Step 2, etc.), each clearly marked and delineated.
   - _Format example:_
-    - Step 1: Whisk flour and eggs together (Ingredients: flour, eggs)
-    - Step 2: Fold in spinach (Ingredients: spinach)
-    - Step 3: Bake for 20 minutes (Ingredients: none)
-  - _Pass condition:_ Every saved recipe displays all steps with embedded ingredient details.
+    - Cook Time: 30 minutes
+    - Step 1: Whisk 2 cups flour and 3 eggs together
+    - Step 2: Fold in 1 cup spinach
+    - Step 3: Bake for 20 minutes
+  - _Pass condition:_ Every saved recipe displays cook time and all steps with ingredients and measurements inline.
 
 **Ingredient Inclusion per Step**
 
-- For each recipe step, only the ingredients actually used in that step are listed, derived from the structured recipe data.
-  - _Test protocol:_ Provide recipes with multi-step processes and verify ingredient mapping to each instruction; steps with no ingredient use explicitly state "Ingredients: none."
-- Steps lacking ingredient annotation or missing ingredients for steps must trigger a validation warning in QA.
+- For each recipe step, ingredients and their measurements must be included inline within the instruction text itself (not listed separately).
+  - Users should not need to cross-reference with a separate ingredients list - all measurements are directly in the step.
+  - _Test protocol:_ Provide recipes with multi-step processes and verify that each step contains the necessary ingredient names and measurements inline (e.g., "2 cups flour", "3 eggs", "1 cup spinach").
+- Steps should be written naturally with measurements integrated into the instruction text.
+- Cook time must be clearly displayed and easily visible at the top of the recipe instructions section.
 
 **Responsive and Cross-Device Layout**
 
@@ -144,8 +149,9 @@ This enhancement package for the AI Meal Planner addresses three distinct issues
 
 - **MealDetailsModal Recipe Instructions (Priority: Medium)**
   - Replace "Notes" field in the MealDetailsModal with a "Recipe Instructions" section.
-  - Display ingredients within each instruction step, reflecting the process rather than a bulleted list.
-  - Ensure multi-step instructions are supported with clarity.
+  - Display cook time prominently at the top of the recipe instructions.
+  - Display ingredients and measurements inline within each instruction step (e.g., "Whisk 2 cups flour and 3 eggs together") so users don't need to cross-reference with a separate ingredients list.
+  - Ensure multi-step instructions are clearly marked (Step 1, Step 2, etc.) and supported with clarity.
 
 ---
 

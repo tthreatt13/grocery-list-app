@@ -216,6 +216,66 @@ class TestFormatMealPlanningPrompt:
             len(found_indicators) > 0
         ), f"Prompt should include eating out examples. Found: {found_indicators}"
 
+    def test_format_meal_planning_prompt_includes_recipe_instructions_format(
+        self,
+    ):
+        """Test that prompt includes instructions for recipe instructions format."""
+        context = {
+            "pantry_items": [],
+            "meals": [],
+            "preferences": None,
+            "grocery_lists": [],
+            "weather": None,
+            "household_name": "Test Household",
+        }
+        user_message = "Suggest meals"
+        conversation_history = []
+
+        prompt = format_meal_planning_prompt(
+            context, user_message, conversation_history
+        )
+
+        # Check for recipe instructions format requirements
+        assert "recipe instructions" in prompt.lower() or "recipe" in prompt.lower()
+        assert "cook time" in prompt.lower() or "step" in prompt.lower()
+        # Check for structured format example
+        assert (
+            "step 1:" in prompt.lower()
+            or "step-by-step" in prompt.lower()
+            or "numbered" in prompt.lower()
+        )
+
+    def test_format_meal_planning_prompt_instructs_llm_to_format_steps_with_ingredients(
+        self,
+    ):
+        """Test that prompt instructs LLM to format steps with inline ingredients."""
+        context = {
+            "pantry_items": [],
+            "meals": [],
+            "preferences": None,
+            "grocery_lists": [],
+            "weather": None,
+            "household_name": "Test Household",
+        }
+        user_message = "Suggest meals"
+        conversation_history = []
+
+        prompt = format_meal_planning_prompt(
+            context, user_message, conversation_history
+        )
+
+        # Check for instructions about inline ingredients
+        assert (
+            "inline" in prompt.lower()
+            or "ingredients" in prompt.lower()
+            or "measurements" in prompt.lower()
+        )
+        # Check that it mentions ingredients should be in steps
+        assert (
+            "step" in prompt.lower()
+            and ("ingredient" in prompt.lower() or "measurement" in prompt.lower())
+        ) or "derive" in prompt.lower()
+
 
 class TestCallAnthropicAPI:
     """Tests for Anthropic API calling function."""

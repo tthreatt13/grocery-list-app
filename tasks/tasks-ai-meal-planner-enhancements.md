@@ -6,14 +6,15 @@
 
 - `components/meal-planner/AIMealPlanningAssistant.tsx` - Main AI assistant component that needs auto-scroll fix
 - `components/meal-planner/__tests__/AIMealPlanningAssistant.test.tsx` - Unit tests for AIMealPlanningAssistant component
-- `components/meal-planner/MealDetailsModal.tsx` - Modal component that needs Notes to Recipe Instructions update
+- `components/meal-planner/MealDetailsModal.tsx` - Modal component that needs Notes to Recipe Instructions update with structured step parsing
 - `components/meal-planner/__tests__/MealDetailsModal.test.tsx` - Unit tests for MealDetailsModal component
 - `lib/types.ts` - Type definitions (may need updates for meal_category handling)
 - `lib/api/meals.ts` - API types for meal_category handling
+- `lib/utils.ts` - May need utility function for parsing recipe steps from notes string
 
 ### Backend Files
 
-- `backend/services/meal_planning_ai.py` - AI prompt formatting and meal suggestion logic that needs eating out recognition
+- `backend/services/meal_planning_ai.py` - AI prompt formatting and meal suggestion logic that needs eating out recognition AND recipe instructions format
 - `backend/tests/services/test_meal_planning_ai.py` - Unit tests for meal planning AI service
 
 ### Notes
@@ -141,20 +142,52 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 2.9 Run `cd backend && flake8 . --exclude=alembic/versions --select=E9,F63,F7,F82 --count --show-source --statistics` and fix any errors
   - [x] 2.10 Run `cd backend && black --exclude="/(alembic/versions|venv)/" .` to format code
 
-- [ ] 3.0 Update MealDetailsModal to Show Recipe Instructions
-  - [ ] 3.1 Read `components/meal-planner/MealDetailsModal.tsx` to understand current structure
-  - [ ] 3.2 Locate the "Notes" section (around line 97 based on PRD)
-  - [ ] 3.3 Change label from "Notes" to "Recipe Instructions" in the heading/label
-  - [ ] 3.4 Update any other references to "Notes" in the modal to "Recipe Instructions"
-  - [ ] 3.5 Verify the display logic for notes/recipe instructions (keep simple for now - just label change)
-  - [ ] 3.6 Test that existing meals with notes display correctly with new label
-  - [ ] 3.7 Test responsive layout on desktop, tablet, and mobile viewports
-  - [ ] 3.8 Write/update tests in `components/meal-planner/__tests__/MealDetailsModal.test.tsx`:
+- [x] 3.0 Update MealDetailsModal to Show Recipe Instructions
+  - [x] 3.1 Read `components/meal-planner/MealDetailsModal.tsx` to understand current structure
+  - [x] 3.2 Read `backend/services/meal_planning_ai.py` to understand current LLM prompt structure
+  - [x] 3.3 Update LLM prompt in `format_meal_planning_prompt` to output structured recipe steps:
+    - Update the JSON structure example to include recipe instructions format
+    - Add instructions for LLM to format notes as step-by-step recipe instructions with cook time
+    - Format should start with cook time: "Cook Time: [time] minutes" (or hours if applicable)
+    - Each step should be clearly marked: "Step 1:", "Step 2:", etc.
+    - Ingredients and measurements must be inline within each step instruction (not listed separately)
+    - Example format: "Cook Time: 30 minutes\n\nStep 1: Whisk 2 cups flour and 3 eggs together\nStep 2: Fold in 1 cup spinach\nStep 3: Bake for 20 minutes"
+    - The LLM should derive ingredient measurements from the ingredients list and include them naturally in the step instructions
+  - [x] 3.4 Update `MealDetailsModal.tsx` to parse and display recipe steps:
+    - Change label from "Notes" to "Recipe Instructions"
+    - Parse the notes field to extract cook time and step-by-step instructions
+    - Display cook time prominently at the top of the recipe instructions section
+    - Display each step with ingredients and measurements already inline (no separate ingredient list needed)
+    - Handle both new structured format and legacy plain text notes (backwards compatibility)
+  - [x] 3.5 Create a utility function to parse recipe steps from notes string:
+    - Parse format: "Cook Time: [time]\n\nStep 1: [instruction with inline ingredients]\nStep 2: [instruction with inline ingredients]"
+    - Extract cook time (if present)
+    - Extract step number and instruction text (ingredients are already inline in the instruction)
+    - Handle edge cases (missing cook time, missing step numbers, malformed format, legacy plain text)
+  - [x] 3.6 Update MealDetailsModal UI to display steps in a structured format:
+    - Display cook time prominently at the top (e.g., "Cook Time: 30 minutes")
+    - Show each step clearly numbered (Step 1, Step 2, etc.)
+    - Display instructions with ingredients and measurements already inline (no need to cross-reference with ingredients list)
+    - Ensure proper spacing and readability
+  - [x] 3.7 Test that existing meals with plain text notes still display correctly (backwards compatibility)
+  - [x] 3.8 Test that new meals with structured recipe steps display correctly
+  - [ ] 3.9 Test responsive layout on desktop, tablet, and mobile viewports
+  - [x] 3.10 Write/update tests in `components/meal-planner/__tests__/MealDetailsModal.test.tsx`:
     - Test that "Recipe Instructions" label appears instead of "Notes"
-    - Test that notes content still displays correctly
-  - [ ] 3.9 Run `npm run test:ci` to ensure all frontend tests pass
-  - [ ] 3.10 Run `npm run lint` and fix any ESLint errors
-  - [ ] 3.11 Run `npm run format` to format code
+    - Test parsing of structured recipe steps format with cook time
+    - Test display of cook time at the top of recipe instructions
+    - Test display of steps with inline ingredients and measurements
+    - Test backwards compatibility with plain text notes
+    - Test edge cases (missing cook time, missing step numbers, malformed format)
+  - [x] 3.11 Write/update tests in `backend/tests/services/test_meal_planning_ai.py`:
+    - Test that LLM prompt includes recipe instructions format requirements
+    - Test that prompt instructs LLM to format steps with ingredients
+  - [x] 3.12 Run `npm run test:ci` to ensure all frontend tests pass
+  - [x] 3.13 Run `cd backend && pytest` to ensure all backend tests pass
+  - [x] 3.14 Run `npm run lint` and fix any ESLint errors
+  - [x] 3.15 Run `npm run format` to format code
+  - [x] 3.16 Run `cd backend && flake8 . --exclude=alembic/versions --select=E9,F63,F7,F82 --count --show-source --statistics` and fix any errors
+  - [x] 3.17 Run `cd backend && black --exclude="/(alembic/versions|venv)/" .` to format code
 
 - [ ] 4.0 Testing and Validation
   - [ ] 4.1 Run all frontend tests: `npm run test:ci`
