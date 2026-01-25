@@ -8,6 +8,64 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // Warm Neutrals
+        'warm-white': 'var(--warm-white)',
+        'warm-cream': 'var(--warm-cream)',
+        'warm-beige': 'var(--warm-beige)',
+        'warm-gray': {
+          50: 'var(--warm-gray-50)',
+          100: 'var(--warm-gray-100)',
+          200: 'var(--warm-gray-200)',
+          300: 'var(--warm-gray-300)',
+          400: 'var(--warm-gray-400)',
+          500: 'var(--warm-gray-500)',
+          600: 'var(--warm-gray-600)',
+          700: 'var(--warm-gray-700)',
+          800: 'var(--warm-gray-800)',
+          900: 'var(--warm-gray-900)',
+        },
+        // Warm Accents
+        'warm-coral': {
+          DEFAULT: 'var(--warm-coral)',
+          light: 'var(--warm-coral-light)',
+          dark: 'var(--warm-coral-dark)',
+        },
+        'warm-peach': {
+          DEFAULT: 'var(--warm-peach)',
+          light: 'var(--warm-peach-light)',
+          dark: 'var(--warm-peach-dark)',
+        },
+        'warm-orange': {
+          DEFAULT: 'var(--warm-orange)',
+          light: 'var(--warm-orange-light)',
+          dark: 'var(--warm-orange-dark)',
+        },
+        'warm-green': {
+          DEFAULT: 'var(--warm-green)',
+          light: 'var(--warm-green-light)',
+          dark: 'var(--warm-green-dark)',
+        },
+        'warm-mint': {
+          DEFAULT: 'var(--warm-mint)',
+          light: 'var(--warm-mint-light)',
+          dark: 'var(--warm-mint-dark)',
+        },
+        'warm-blue': {
+          DEFAULT: 'var(--warm-blue)',
+          light: 'var(--warm-blue-light)',
+          dark: 'var(--warm-blue-dark)',
+        },
+        'warm-sky': {
+          DEFAULT: 'var(--warm-sky)',
+          light: 'var(--warm-sky-light)',
+          dark: 'var(--warm-sky-dark)',
+        },
+        // Text Colors
+        'text-primary': 'var(--text-primary)',
+        'text-secondary': 'var(--text-secondary)',
+        'text-tertiary': 'var(--text-tertiary)',
+        'text-inverse': 'var(--text-inverse)',
+        // Legacy primary/secondary/accent (kept for backward compatibility)
         primary: {
           50: '#f0f9ff',
           100: '#e0f2fe',
@@ -47,6 +105,24 @@ module.exports = {
           900: '#7c2d12',
           950: '#431407',
         },
+      },
+      boxShadow: {
+        'warm-sm': 'var(--shadow-sm)',
+        'warm-md': 'var(--shadow-md)',
+        'warm-lg': 'var(--shadow-lg)',
+        'warm-xl': 'var(--shadow-xl)',
+        'warm-accent': 'var(--shadow-warm)',
+      },
+      borderRadius: {
+        'warm-sm': 'var(--radius-sm)',
+        'warm-md': 'var(--radius-md)',
+        'warm-lg': 'var(--radius-lg)',
+        'warm-xl': 'var(--radius-xl)',
+      },
+      transitionDuration: {
+        'warm-fast': 'var(--transition-fast)',
+        'warm-base': 'var(--transition-base)',
+        'warm-slow': 'var(--transition-slow)',
       },
     },
   },

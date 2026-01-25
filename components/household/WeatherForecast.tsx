@@ -115,10 +115,10 @@ export default function WeatherForecast({
       <Card>
         <div className="text-center py-8">
           <div className="text-4xl mb-3">🌤️</div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          <h3 className="text-lg font-semibold text-text-primary mb-2">
             No Zip Code Set
           </h3>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-text-secondary">
             Add a zip code in your preferences to see weather forecasts
           </p>
         </div>
@@ -131,8 +131,8 @@ export default function WeatherForecast({
     return (
       <Card>
         <div className="text-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-          <p className="text-sm text-gray-600">Loading weather forecast...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-warm-green mx-auto mb-4"></div>
+          <p className="text-sm text-text-secondary">Loading weather forecast...</p>
         </div>
       </Card>
     )
@@ -144,10 +144,10 @@ export default function WeatherForecast({
       <Card>
         <div className="text-center py-8">
           <div className="text-4xl mb-3">⚠️</div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          <h3 className="text-lg font-semibold text-text-primary mb-2">
             Unable to Load Forecast
           </h3>
-          <p className="text-sm text-gray-600">{error}</p>
+          <p className="text-sm text-text-secondary">{error}</p>
         </div>
       </Card>
     )
@@ -159,10 +159,10 @@ export default function WeatherForecast({
       <Card>
         <div className="text-center py-8">
           <div className="text-4xl mb-3">🌤️</div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          <h3 className="text-lg font-semibold text-text-primary mb-2">
             No Forecast Available
           </h3>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-text-secondary">
             Weather forecast data is not available at this time
           </p>
         </div>
@@ -173,42 +173,42 @@ export default function WeatherForecast({
   return (
     <Card>
       <div className="mb-4">
-        <h3 className="text-lg font-semibold text-gray-900 mb-1">
+        <h3 className="text-lg font-semibold text-text-primary mb-1">
           7-Day Weather Forecast
         </h3>
-        <p className="text-sm text-gray-600">Zip Code: {forecast.zip_code}</p>
+        <p className="text-sm text-text-secondary">Zip Code: {forecast.zip_code}</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-4">
         {forecast.forecasts.map((day, index) => (
           <div
             key={day.date || index}
-            className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:border-emerald-300 transition-colors"
+            className="bg-warm-gray-50 rounded-lg p-4 border border-warm-gray-200 hover:border-warm-green transition-warm"
           >
             <div className="text-center">
               <div className="text-2xl mb-2">
                 {getWeatherIcon(day.condition)}
               </div>
-              <div className="text-sm font-medium text-gray-900 mb-1">
+              <div className="text-sm font-medium text-text-primary mb-1">
                 {formatDate(day.date)}
               </div>
               {day.condition && (
-                <div className="text-xs text-gray-600 mb-3 line-clamp-2">
+                <div className="text-xs text-text-secondary mb-3 line-clamp-2">
                   {day.condition}
                 </div>
               )}
 
               <div className="space-y-1">
                 {day.high_temp !== null && (
-                  <div className="text-lg font-semibold text-gray-900">
+                  <div className="text-lg font-semibold text-text-primary">
                     {day.high_temp}°F
                   </div>
                 )}
                 {day.low_temp !== null && (
-                  <div className="text-sm text-gray-600">{day.low_temp}°F</div>
+                  <div className="text-sm text-text-secondary">{day.low_temp}°F</div>
                 )}
                 {day.precipitation_chance !== null && (
-                  <div className="text-xs text-gray-600 mt-2">
+                  <div className="text-xs text-text-secondary mt-2">
                     <span className="font-medium">
                       {day.precipitation_chance}%
                     </span>{' '}

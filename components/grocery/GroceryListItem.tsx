@@ -52,7 +52,7 @@ export default function GroceryListItem({
   }
 
   return (
-    <div className="flex items-center space-x-3 p-4 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors">
+    <div className="flex items-center space-x-3 p-4 bg-warm-white rounded-lg border border-warm-gray-200 hover:border-warm-gray-300 transition-warm">
       <Checkbox
         checked={item.checked}
         onChange={() => onToggle(item.id)}
@@ -64,8 +64,8 @@ export default function GroceryListItem({
           <label
             htmlFor={`item-${item.id}`}
             className={cn(
-              'font-medium text-gray-900 cursor-pointer',
-              item.checked && 'line-through text-gray-500'
+              'font-medium text-text-primary cursor-pointer',
+              item.checked && 'line-through text-text-tertiary'
             )}
           >
             {item.name}
@@ -82,11 +82,11 @@ export default function GroceryListItem({
           </div>
         </div>
 
-        <div className="flex items-center space-x-3 mt-1 text-sm text-gray-600">
+        <div className="flex items-center space-x-3 mt-1 text-sm text-text-secondary">
           <span>{formatQuantity(item.quantity, item.unit)}</span>
           {item.notes && (
             <>
-              <span className="text-gray-400">•</span>
+              <span className="text-warm-gray-400">•</span>
               <span className="truncate">{item.notes}</span>
             </>
           )}
@@ -97,7 +97,7 @@ export default function GroceryListItem({
         {onEdit && (
           <button
             onClick={() => onEdit(item.id)}
-            className="text-gray-400 hover:text-blue-600 transition-colors p-2"
+            className="text-warm-gray-400 hover:text-warm-blue transition-warm p-2"
             aria-label="Edit item"
           >
             <svg
@@ -118,7 +118,7 @@ export default function GroceryListItem({
         {onDelete && (
           <button
             onClick={() => onDelete(item.id)}
-            className="text-gray-400 hover:text-red-600 transition-colors p-2"
+            className="text-warm-gray-400 hover:text-warm-coral transition-warm p-2"
             aria-label="Delete item"
           >
             <svg

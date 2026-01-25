@@ -40,7 +40,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         {label && (
           <label
             htmlFor={selectId}
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-text-secondary mb-1"
           >
             {label}
           </label>
@@ -49,11 +49,11 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           ref={ref}
           id={selectId}
           className={cn(
-            'w-full px-3 py-2 border rounded-lg shadow-sm bg-white',
-            'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent',
-            'disabled:bg-gray-100 disabled:cursor-not-allowed',
-            'transition-colors cursor-pointer',
-            error ? 'border-red-500 focus:ring-red-500' : 'border-gray-300',
+            'w-full px-3 py-2 border rounded-lg shadow-warm-sm bg-warm-white',
+            'focus:outline-none focus:ring-2 focus:ring-warm-blue focus:border-transparent',
+            'disabled:bg-warm-gray-100 disabled:cursor-not-allowed',
+            'transition-warm cursor-pointer',
+            error ? 'border-warm-coral focus:ring-warm-coral' : 'border-warm-gray-300',
             className
           )}
           aria-invalid={error ? 'true' : 'false'}
@@ -76,7 +76,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             : children}
         </select>
         {error && (
-          <p id={`${selectId}-error`} className="mt-1 text-sm text-red-600">
+          <p id={`${selectId}-error`} className="mt-1 text-sm text-warm-coral">
             {error}
           </p>
         )}
