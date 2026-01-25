@@ -83,7 +83,9 @@ export default function PantryItemCard({
       <div className="p-4 space-y-3">
         {/* Header with name and category */}
         <div className="flex items-start justify-between gap-2">
-          <h3 className="font-semibold text-text-primary flex-1">{item.name}</h3>
+          <h3 className="font-semibold text-text-primary flex-1">
+            {item.name}
+          </h3>
           <Badge
             variant={getBadgeVariant(item.category)}
             className="text-xs whitespace-nowrap"

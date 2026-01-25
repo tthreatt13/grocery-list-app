@@ -36,21 +36,21 @@ describe('MemberCard', () => {
   it('renders member role with correct styling for Admin', () => {
     render(<MemberCard member={mockMember} />)
     const roleBadge = screen.getByText('Admin')
-    expect(roleBadge).toHaveClass('bg-warm-peach-light')
+    expect(roleBadge).toHaveClass('bg-orange-100', 'text-orange-800')
   })
 
   it('renders member role with correct styling for Member', () => {
     const regularMember = { ...mockMember, role: MemberRole.MEMBER }
     render(<MemberCard member={regularMember} />)
     const roleBadge = screen.getByText('Member')
-    expect(roleBadge).toHaveClass('bg-warm-blue-light')
+    expect(roleBadge).toHaveClass('bg-green-100', 'text-green-800')
   })
 
   it('renders member role with correct styling for Viewer', () => {
     const viewerMember = { ...mockMember, role: MemberRole.VIEWER }
     render(<MemberCard member={viewerMember} />)
     const roleBadge = screen.getByText('Viewer')
-    expect(roleBadge).toHaveClass('bg-warm-gray-100')
+    expect(roleBadge).toHaveClass('bg-gray-100', 'text-gray-800')
   })
 
   it('displays avatar initials when no avatar URL provided', () => {

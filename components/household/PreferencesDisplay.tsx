@@ -63,7 +63,9 @@ export default function PreferencesDisplay({
       {/* Diet Types */}
       {preferences.diet_types && preferences.diet_types.length > 0 && (
         <div>
-          <h3 className="text-sm font-medium text-text-secondary mb-2">Diet Types</h3>
+          <h3 className="text-sm font-medium text-text-secondary mb-2">
+            Diet Types
+          </h3>
           <div className="flex flex-wrap gap-2">
             {preferences.diet_types.map((diet) => (
               <Badge key={diet} variant="default">
@@ -110,7 +112,9 @@ export default function PreferencesDisplay({
       {/* Zip Code */}
       {preferences.zip_code && (
         <div>
-          <h3 className="text-sm font-medium text-text-secondary mb-2">Zip Code</h3>
+          <h3 className="text-sm font-medium text-text-secondary mb-2">
+            Zip Code
+          </h3>
           <p className="text-text-primary">{preferences.zip_code}</p>
         </div>
       )}

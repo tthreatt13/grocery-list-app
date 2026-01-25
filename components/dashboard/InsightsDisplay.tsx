@@ -118,15 +118,15 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
   const getPantryHealthBadgeColor = () => {
     switch (pantryHealthScore) {
       case 'excellent':
-        return 'bg-warm-green-light text-warm-green-dark'
+        return 'bg-green-100 text-green-800'
       case 'good':
-        return 'bg-warm-blue-light text-warm-blue-dark'
+        return 'bg-blue-100 text-blue-800'
       case 'fair':
-        return 'bg-warm-peach-light text-warm-peach-dark'
+        return 'bg-orange-100 text-orange-800'
       case 'needs_attention':
-        return 'bg-warm-orange-light text-warm-orange-dark'
+        return 'bg-red-100 text-red-800'
       default:
-        return 'bg-warm-gray-100 text-warm-gray-800'
+        return 'bg-gray-100 text-gray-800'
     }
   }
 
@@ -148,9 +148,9 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
                   {getShoppingEfficiencyMessage()}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-warm-peach-light rounded-lg flex items-center justify-center flex-shrink-0 ml-4">
+              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-4">
                 <svg
-                  className="w-6 h-6 text-warm-peach-dark"
+                  className="w-6 h-6 text-orange-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -212,9 +212,9 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
                   {getMealPlanningMessage()}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-warm-mint-light rounded-lg flex items-center justify-center flex-shrink-0 ml-4">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-4">
                 <svg
-                  className="w-6 h-6 text-warm-mint-dark"
+                  className="w-6 h-6 text-green-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -277,9 +277,9 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
                   {getPantryHealthMessage()}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-warm-orange-light rounded-lg flex items-center justify-center flex-shrink-0 ml-4">
+              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-4">
                 <svg
-                  className="w-6 h-6 text-warm-orange-dark"
+                  className="w-6 h-6 text-orange-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -312,9 +312,7 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
               </div>
               <div className="grid grid-cols-2 gap-4 pt-2">
                 <div>
-                  <p className="text-xs text-text-tertiary mb-1">
-                    Low Stock
-                  </p>
+                  <p className="text-xs text-text-tertiary mb-1">Low Stock</p>
                   <p className={`text-xl font-bold ${getPantryHealthColor()}`}>
                     {stats.low_stock_count}
                   </p>
@@ -348,9 +346,9 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
                       : `You have ${stats.total_lists} active grocery lists.`}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-warm-green-light rounded-lg flex items-center justify-center flex-shrink-0 ml-4">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-4">
                 <svg
-                  className="w-6 h-6 text-warm-green-dark"
+                  className="w-6 h-6 text-green-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

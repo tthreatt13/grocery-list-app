@@ -254,7 +254,7 @@ export default function SmartSuggestions({
       case 'restock':
         return (
           <svg
-            className="w-5 h-5 text-yellow-600"
+            className="w-6 h-6 text-yellow-600"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -270,7 +270,7 @@ export default function SmartSuggestions({
       case 'meal_planning':
         return (
           <svg
-            className="w-5 h-5 text-blue-600"
+            className="w-6 h-6 text-blue-600"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -286,7 +286,7 @@ export default function SmartSuggestions({
       case 'routine':
         return (
           <svg
-            className="w-5 h-5 text-green-600"
+            className="w-6 h-6 text-green-600"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"

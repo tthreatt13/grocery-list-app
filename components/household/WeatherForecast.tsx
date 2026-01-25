@@ -132,7 +132,9 @@ export default function WeatherForecast({
       <Card>
         <div className="text-center py-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-warm-green mx-auto mb-4"></div>
-          <p className="text-sm text-text-secondary">Loading weather forecast...</p>
+          <p className="text-sm text-text-secondary">
+            Loading weather forecast...
+          </p>
         </div>
       </Card>
     )
@@ -176,7 +178,9 @@ export default function WeatherForecast({
         <h3 className="text-lg font-semibold text-text-primary mb-1">
           7-Day Weather Forecast
         </h3>
-        <p className="text-sm text-text-secondary">Zip Code: {forecast.zip_code}</p>
+        <p className="text-sm text-text-secondary">
+          Zip Code: {forecast.zip_code}
+        </p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-4">
@@ -205,7 +209,9 @@ export default function WeatherForecast({
                   </div>
                 )}
                 {day.low_temp !== null && (
-                  <div className="text-sm text-text-secondary">{day.low_temp}°F</div>
+                  <div className="text-sm text-text-secondary">
+                    {day.low_temp}°F
+                  </div>
                 )}
                 {day.precipitation_chance !== null && (
                   <div className="text-xs text-text-secondary mt-2">

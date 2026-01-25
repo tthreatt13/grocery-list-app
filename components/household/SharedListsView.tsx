@@ -58,7 +58,7 @@ export default function SharedListsView({ lists }: SharedListsViewProps) {
   })
 
   return (
-    <div className="space-y-4">
+    <div>
       {sortedLists.map((list) => {
         // Handle both API response format (item_count) and full GroceryList format (items array)
         const itemCount = list.item_count ?? list.items?.length ?? 0
@@ -84,13 +84,17 @@ export default function SharedListsView({ lists }: SharedListsViewProps) {
               : 'Shared with household'
 
         return (
-          <Link key={list.id} href={`/grocery-lists/${list.id}`}>
+          <Link
+            key={list.id}
+            href={`/grocery-lists/${list.id}`}
+            className="block mb-6 last:mb-0"
+          >
             <Card className="hover:shadow-warm-lg transition-warm cursor-pointer">
-              <div className="p-4">
+              <div className="p-6">
                 {/* Header */}
-                <div className="flex items-start justify-between mb-3">
+                <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-text-primary mb-1">
+                    <h3 className="text-lg font-semibold text-text-primary mb-2">
                       {list.name}
                     </h3>
                     <p className="text-sm text-text-secondary">
@@ -103,7 +107,7 @@ export default function SharedListsView({ lists }: SharedListsViewProps) {
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center justify-between text-sm gap-4">
                   <span className="text-text-secondary">{sharedText}</span>
                   <span className="text-text-tertiary">
                     Last edited: {lastEditTime}
