@@ -54,7 +54,12 @@ const WeeklyCalendar = forwardRef<WeeklyCalendarRef, WeeklyCalendarProps>(
       return date
     })
 
-    const mealTypes = [MealType.BREAKFAST, MealType.LUNCH, MealType.DINNER]
+    const mealTypes = [
+      MealType.BREAKFAST,
+      MealType.LUNCH,
+      MealType.DINNER,
+      MealType.SNACK,
+    ]
 
     // Helper to check if a date is today
     const isToday = (date: Date) => {

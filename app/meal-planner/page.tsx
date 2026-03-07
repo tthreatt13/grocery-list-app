@@ -1550,7 +1550,7 @@ export default function MealPlannerPage() {
                 <div className="ml-4">
                   <p className="text-sm text-gray-600">Empty Slots</p>
                   <p className="text-2xl font-bold text-gray-900">
-                    {21 -
+                    {28 -
                       meals.filter((m) => {
                         const date = new Date(m.date)
                         const weekEnd = new Date(currentWeekStart)

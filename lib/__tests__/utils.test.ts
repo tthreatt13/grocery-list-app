@@ -674,6 +674,18 @@ describe('utils', () => {
   })
 
   describe('parseRecipeInstructions', () => {
+    it('returns null for undefined input', () => {
+      expect(parseRecipeInstructions(undefined)).toBeNull()
+    })
+
+    it('returns null for empty string', () => {
+      expect(parseRecipeInstructions('')).toBeNull()
+    })
+
+    it('returns null for whitespace-only string', () => {
+      expect(parseRecipeInstructions('   \n\n  ')).toBeNull()
+    })
+
     it('parses structured recipe with cook time and steps', () => {
       const notes = `Cook Time: 30 minutes
 
@@ -754,21 +766,6 @@ Step 2: Second step`
       expect(result?.cookTime).toBeUndefined()
     })
 
-    it('handles empty string', () => {
-      const result = parseRecipeInstructions('')
-      expect(result).toBeNull()
-    })
-
-    it('handles undefined', () => {
-      const result = parseRecipeInstructions(undefined)
-      expect(result).toBeNull()
-    })
-
-    it('handles whitespace-only string', () => {
-      const result = parseRecipeInstructions('   \n\n  ')
-      expect(result).toBeNull()
-    })
-
     it('handles multi-line step instructions', () => {
       const notes = `Cook Time: 45 minutes
 
@@ -801,7 +798,6 @@ STEP 2: Second instruction`
 
       const result = parseRecipeInstructions(notes)
 
-      // Should fall back to legacy format
       expect(result).not.toBeNull()
       expect(result?.isStructured).toBe(false)
     })

@@ -334,26 +334,17 @@ export interface ParsedRecipeInstructions {
 export function parseRecipeInstructions(
   notes?: string
 ): ParsedRecipeInstructions | null {
-  if (!notes) {
-    return null
-  }
+  if (!notes) return null
 
   const trimmedNotes = notes.trim()
+  if (!trimmedNotes) return null
 
-  // Empty or whitespace-only string returns null
-  if (!trimmedNotes) {
-    return null
-  }
-
-  // Check if it's structured format (has "Step" markers)
   const hasSteps = /Step \d+:/i.test(trimmedNotes)
 
-  // If it has steps (with or without cook time), parse as structured format
   if (hasSteps) {
     const cookTimeMatch = trimmedNotes.match(/Cook Time:\s*([^\n]+)/i)
     const cookTime = cookTimeMatch ? cookTimeMatch[1].trim() : undefined
 
-    // Extract steps - match "Step X: [instruction]"
     const stepRegex = /Step (\d+):\s*([^\n]+(?:\n(?!Step \d+:)[^\n]+)*)/gi
     const steps: RecipeStep[] = []
     let match
@@ -366,20 +357,13 @@ export function parseRecipeInstructions(
       }
     }
 
-    // Sort steps by number in case they're out of order
     steps.sort((a, b) => a.number - b.number)
 
-    // If we found steps, return structured format
     if (steps.length > 0) {
-      return {
-        cookTime,
-        steps,
-        isStructured: true,
-      }
+      return { cookTime, steps, isStructured: true }
     }
   }
 
-  // Legacy plain text format - return as single step
   return {
     steps: [{ number: 1, instruction: trimmedNotes }],
     isStructured: false,

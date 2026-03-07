@@ -42,7 +42,12 @@ const MobileWeeklyCalendar = forwardRef<
     return date
   })
 
-  const mealTypes = [MealType.BREAKFAST, MealType.LUNCH, MealType.DINNER]
+  const mealTypes = [
+    MealType.BREAKFAST,
+    MealType.LUNCH,
+    MealType.DINNER,
+    MealType.SNACK,
+  ]
 
   // Helper to check if a date is today
   const isToday = (date: Date) => {
@@ -87,6 +92,8 @@ const MobileWeeklyCalendar = forwardRef<
         return 'bg-blue-50 border-blue-200'
       case MealType.DINNER:
         return 'bg-emerald-50 border-emerald-200'
+      case MealType.SNACK:
+        return 'bg-purple-50 border-purple-200'
       default:
         return 'bg-gray-50 border-gray-200'
     }
@@ -100,6 +107,8 @@ const MobileWeeklyCalendar = forwardRef<
         return 'bg-blue-100 text-blue-800'
       case MealType.DINNER:
         return 'bg-emerald-100 text-emerald-800'
+      case MealType.SNACK:
+        return 'bg-purple-100 text-purple-800'
       default:
         return 'bg-gray-100 text-gray-800'
     }

@@ -75,10 +75,8 @@ export default function AddMealModal({
   useEffect(() => {
     if (notesTextareaRef.current && isOpen) {
       const textarea = notesTextareaRef.current
-      // Reset height to auto to get accurate scrollHeight
       textarea.style.height = 'auto'
-      // Set height based on content, with minimum height
-      const newHeight = Math.max(textarea.scrollHeight, 64) // 64px = 4rem min-height
+      const newHeight = Math.max(textarea.scrollHeight, 64)
       textarea.style.height = `${newHeight}px`
     }
   }, [notes, isOpen])
@@ -195,7 +193,7 @@ export default function AddMealModal({
               disabled={isSubmitting}
             />
 
-            {/* Show formatted preview when there are existing structured instructions */}
+            {/* Formatted instructions preview for structured recipes */}
             {notes &&
               (() => {
                 const parsed = parseRecipeInstructions(notes)
@@ -222,21 +220,11 @@ export default function AddMealModal({
                                       paddingBottom: '1rem',
                                       marginBottom: '1rem',
                                       borderBottom: '2px solid #d1d5db',
-                                      borderBottomWidth: '2px',
-                                      borderBottomStyle: 'solid',
-                                      borderBottomColor: '#d1d5db',
                                     }
                                   : {}
                               }
                             >
-                              <span
-                                className="mr-2 min-w-[3rem]"
-                                style={{
-                                  fontWeight: 700,
-                                  color: '#111827',
-                                  fontFamily: 'inherit',
-                                }}
-                              >
+                              <span className="mr-2 min-w-[3rem] font-bold text-gray-900">
                                 Step {step.number}:
                               </span>
                               <span className="flex-1">{step.instruction}</span>
@@ -276,18 +264,14 @@ export default function AddMealModal({
                 htmlFor="meal-notes"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Instructions Text area
+                Cooking Instructions (Optional)
               </label>
               <textarea
                 ref={notesTextareaRef}
                 id="meal-notes"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="Cook Time: 30 minutes
-
-Step 1: Whisk 2 cups flour and 3 eggs together
-Step 2: Fold in 1 cup spinach
-Step 3: Bake for 20 minutes"
+                placeholder={`Cook Time: 30 minutes\n\nStep 1: Whisk 2 cups flour and 3 eggs together\nStep 2: Fold in 1 cup spinach\nStep 3: Bake for 20 minutes`}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed min-h-[4rem] overflow-y-auto resize-none"
                 disabled={isSubmitting}
               />
