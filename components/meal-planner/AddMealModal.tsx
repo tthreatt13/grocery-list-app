@@ -193,7 +193,7 @@ export default function AddMealModal({
               disabled={isSubmitting}
             />
 
-            {/* Formatted instructions preview for structured recipes */}
+            {/* Formatted instructions preview - structured or plain text */}
             {notes &&
               (() => {
                 const parsed = parseRecipeInstructions(notes)
@@ -213,16 +213,11 @@ export default function AddMealModal({
                           {parsed.steps.map((step, index) => (
                             <div
                               key={step.number}
-                              className="text-sm text-gray-600 flex items-start"
-                              style={
+                              className={`text-sm text-gray-600 flex items-start ${
                                 index < parsed.steps.length - 1
-                                  ? {
-                                      paddingBottom: '1rem',
-                                      marginBottom: '1rem',
-                                      borderBottom: '2px solid #d1d5db',
-                                    }
-                                  : {}
-                              }
+                                  ? 'pb-4 mb-4 border-b-2 border-gray-300'
+                                  : ''
+                              }`}
                             >
                               <span className="mr-2 min-w-[3rem] font-bold text-gray-900">
                                 Step {step.number}:
@@ -235,7 +230,18 @@ export default function AddMealModal({
                     </div>
                   )
                 }
-                return null
+                return (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Instructions
+                    </label>
+                    <div className="p-3 bg-gray-50 rounded-md border border-gray-200">
+                      <p className="text-sm text-gray-600 whitespace-pre-wrap">
+                        {notes}
+                      </p>
+                    </div>
+                  </div>
+                )
               })()}
 
             <div>
@@ -254,28 +260,27 @@ export default function AddMealModal({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
                 disabled={isSubmitting}
               />
-              <p className="mt-1 text-xs text-gray-500">
-                Separate ingredients with commas
-              </p>
             </div>
 
-            <div>
-              <label
-                htmlFor="meal-notes"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Cooking Instructions (Optional)
-              </label>
-              <textarea
-                ref={notesTextareaRef}
-                id="meal-notes"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder={`Cook Time: 30 minutes\n\nStep 1: Whisk 2 cups flour and 3 eggs together\nStep 2: Fold in 1 cup spinach\nStep 3: Bake for 20 minutes`}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed min-h-[4rem] overflow-y-auto resize-none"
-                disabled={isSubmitting}
-              />
-            </div>
+            {!isEditMode && (
+              <div>
+                <label
+                  htmlFor="meal-notes"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Cooking Instructions (Optional)
+                </label>
+                <textarea
+                  ref={notesTextareaRef}
+                  id="meal-notes"
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder={`Cook Time: 30 minutes\n\nStep 1: Whisk 2 cups flour and 3 eggs together\nStep 2: Fold in 1 cup spinach\nStep 3: Bake for 20 minutes`}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed min-h-[4rem] overflow-y-auto resize-none"
+                  disabled={isSubmitting}
+                />
+              </div>
+            )}
           </div>
 
           <div className="flex justify-between mt-6">

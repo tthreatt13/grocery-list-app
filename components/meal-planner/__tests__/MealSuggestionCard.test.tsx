@@ -106,21 +106,6 @@ describe('MealSuggestionCard', () => {
     expect(screen.getByText('A classic Italian dish')).toBeInTheDocument()
   })
 
-  it('does not render notes section when notes are not provided', () => {
-    const suggestionWithoutNotes = { ...mockSuggestion, notes: undefined }
-    render(
-      <MealSuggestionCard
-        suggestion={suggestionWithoutNotes}
-        weekStartDate={createMonday()}
-        isSelected={false}
-        onSelect={mockOnSelect}
-        onEdit={mockOnEdit}
-        index={0}
-      />
-    )
-    expect(screen.queryByText('A classic Italian dish')).not.toBeInTheDocument()
-  })
-
   it('highlights pantry items in ingredients list', () => {
     render(
       <MealSuggestionCard
@@ -304,5 +289,81 @@ describe('MealSuggestionCard', () => {
     )
     fireEvent.click(addButton)
     expect(mockOnAdd).toHaveBeenCalledWith(mockSuggestion, 0)
+  })
+
+  describe('cooking instructions', () => {
+    it('renders structured notes as cook time badge and numbered steps', () => {
+      const structuredNotes = `Cook Time: 30 minutes
+
+Step 1: Boil water and add pasta
+Step 2: Brown the ground beef in a pan
+Step 3: Add tomato sauce and simmer`
+      const suggestionWithStructuredNotes = {
+        ...mockSuggestion,
+        notes: structuredNotes,
+      }
+      render(
+        <MealSuggestionCard
+          suggestion={suggestionWithStructuredNotes}
+          weekStartDate={createMonday()}
+          isSelected={false}
+          onSelect={mockOnSelect}
+          onEdit={mockOnEdit}
+          index={0}
+        />
+      )
+      // Structured rendering: cook time in a highlighted badge
+      expect(screen.getByText(/Cook Time: 30 minutes/i)).toBeInTheDocument()
+      const cookTimeElement = screen.getByText(/Cook Time: 30 minutes/i)
+      expect(cookTimeElement.closest('[class*="orange"]')).toBeInTheDocument()
+      // Numbered steps with bold labels
+      expect(screen.getByText(/Step 1:/i)).toBeInTheDocument()
+      expect(screen.getByText(/Boil water and add pasta/i)).toBeInTheDocument()
+      expect(screen.getByText(/Step 2:/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/Brown the ground beef in a pan/i)
+      ).toBeInTheDocument()
+      expect(screen.getByText(/Step 3:/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/Add tomato sauce and simmer/i)
+      ).toBeInTheDocument()
+    })
+
+    it('renders unstructured notes as plain text', () => {
+      const unstructuredNotes = 'Just mix everything together and bake.'
+      const suggestionWithUnstructuredNotes = {
+        ...mockSuggestion,
+        notes: unstructuredNotes,
+      }
+      render(
+        <MealSuggestionCard
+          suggestion={suggestionWithUnstructuredNotes}
+          weekStartDate={createMonday()}
+          isSelected={false}
+          onSelect={mockOnSelect}
+          onEdit={mockOnEdit}
+          index={0}
+        />
+      )
+      expect(
+        screen.getByText('Just mix everything together and bake.')
+      ).toBeInTheDocument()
+    })
+
+    it('does not render notes section when notes are not provided', () => {
+      const suggestionWithoutNotes = { ...mockSuggestion, notes: undefined }
+      render(
+        <MealSuggestionCard
+          suggestion={suggestionWithoutNotes}
+          weekStartDate={createMonday()}
+          isSelected={false}
+          onSelect={mockOnSelect}
+          onEdit={mockOnEdit}
+          index={0}
+        />
+      )
+      expect(screen.queryByText(/Cook Time/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/Step 1/i)).not.toBeInTheDocument()
+    })
   })
 })
