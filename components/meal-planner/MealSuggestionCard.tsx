@@ -2,7 +2,7 @@
 
 import { MealSuggestion } from '@/lib/types'
 import { Badge } from '@/components/ui/Badge'
-import { formatDate } from '@/lib/utils'
+import { formatDate, parseRecipeInstructions } from '@/lib/utils'
 
 interface MealSuggestionCardProps {
   suggestion: MealSuggestion
@@ -120,9 +120,56 @@ export default function MealSuggestionCard({
             </div>
           )}
 
-          {/* Notes */}
+          {/* Cooking Instructions */}
           {suggestion.notes && (
-            <p className="text-sm text-gray-600 mb-3">{suggestion.notes}</p>
+            <div className="mb-3">
+              {(() => {
+                const parsed = parseRecipeInstructions(suggestion.notes)
+                if (parsed && parsed.isStructured) {
+                  return (
+                    <div className="space-y-3">
+                      {parsed.cookTime && (
+                        <div className="text-sm font-medium text-gray-800 bg-orange-50 px-3 py-2 rounded-md border border-orange-200">
+                          Cook Time: {parsed.cookTime}
+                        </div>
+                      )}
+                      <div>
+                        {parsed.steps.map((step, index) => {
+                          const isLast = index === parsed.steps.length - 1
+                          return (
+                            <div
+                              key={step.number}
+                              className={`text-sm text-gray-600 flex items-start ${
+                                !isLast
+                                  ? 'pb-4 mb-4 border-b-2 border-gray-300'
+                                  : ''
+                              }`}
+                            >
+                              <span className="mr-2 min-w-[3rem] font-bold text-gray-900">
+                                Step {step.number}:
+                              </span>
+                              <span className="flex-1">{step.instruction}</span>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )
+                }
+                if (parsed && !parsed.isStructured) {
+                  return (
+                    <p className="text-sm text-gray-600 whitespace-pre-wrap">
+                      {suggestion.notes}
+                    </p>
+                  )
+                }
+                return (
+                  <p className="text-sm text-gray-600 whitespace-pre-wrap">
+                    {suggestion.notes}
+                  </p>
+                )
+              })()}
+            </div>
           )}
 
           {/* Actions */}

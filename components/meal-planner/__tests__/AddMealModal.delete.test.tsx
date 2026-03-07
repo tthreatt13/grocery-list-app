@@ -101,7 +101,8 @@ describe('AddMealModal - Delete Functionality', () => {
 
       expect(screen.getByDisplayValue('Scrambled Eggs')).toBeInTheDocument()
       expect(screen.getByDisplayValue('eggs, butter, salt')).toBeInTheDocument()
-      expect(screen.getByDisplayValue('Quick breakfast')).toBeInTheDocument()
+      // In edit mode, notes are read-only in Instructions block (no textarea)
+      expect(screen.getByText('Quick breakfast')).toBeInTheDocument()
     })
 
     it('calls onDelete when delete is clicked', async () => {

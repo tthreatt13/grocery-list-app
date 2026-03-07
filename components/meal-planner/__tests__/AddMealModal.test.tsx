@@ -51,7 +51,7 @@ describe('AddMealModal', () => {
     expect(screen.getByText(/Breakfast/i)).toBeInTheDocument()
   })
 
-  it('renders all form fields', () => {
+  it('renders all form fields in add mode', () => {
     render(
       <AddMealModal
         isOpen={true}
@@ -63,7 +63,9 @@ describe('AddMealModal', () => {
     )
     expect(screen.getByLabelText(/Meal Name/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/Ingredients/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/Cooking Instructions/i)).toBeInTheDocument()
+    expect(
+      screen.getByLabelText(/Cooking Instructions \(Optional\)/i)
+    ).toBeInTheDocument()
   })
 
   it('calls onClose when cancel button is clicked', () => {
@@ -219,14 +221,12 @@ describe('AddMealModal', () => {
       const nameInput = screen.getByLabelText(/Meal Name/i) as HTMLInputElement
       const ingredientsInput = screen.getByLabelText(
         /Ingredients/i
-      ) as HTMLTextAreaElement & { value: string } & { value: string }
-      const notesInput = screen.getByLabelText(
-        /Cooking Instructions/i
       ) as HTMLTextAreaElement & { value: string }
 
       expect(nameInput.value).toBe('Existing Meal')
       expect(ingredientsInput.value).toBe('pasta, tomato sauce')
-      expect(notesInput.value).toBe('Original notes')
+      // In edit mode, notes are read-only in Instructions block (no textarea)
+      expect(screen.getByText('Original notes')).toBeInTheDocument()
     })
 
     it('displays "Update Meal" button text in edit mode', () => {
@@ -244,6 +244,22 @@ describe('AddMealModal', () => {
       expect(
         screen.getByRole('button', { name: /update meal/i })
       ).toBeInTheDocument()
+    })
+
+    it('does not render Cooking Instructions textarea in edit mode', () => {
+      render(
+        <AddMealModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onAdd={mockOnAdd}
+          mealType={MealType.DINNER}
+          date={new Date('2024-11-10')}
+          meal={mockMeal}
+        />
+      )
+      expect(
+        screen.queryByLabelText(/Cooking Instructions \(Optional\)/i)
+      ).not.toBeInTheDocument()
     })
 
     it('calls onAdd with updated data when update button is clicked', async () => {
@@ -530,7 +546,7 @@ describe('AddMealModal', () => {
       expect(screen.getByText('Step 3:')).toBeInTheDocument()
     })
 
-    it('does not show formatted preview for plain text notes', () => {
+    it('shows Instructions block with plain text when meal has unstructured notes', () => {
       const mealWithPlainNotes = {
         id: '1',
         name: 'Soup',
@@ -552,7 +568,34 @@ describe('AddMealModal', () => {
         />
       )
 
-      expect(screen.queryByText('Instructions')).not.toBeInTheDocument()
+      expect(screen.getByText('Instructions')).toBeInTheDocument()
+      expect(screen.getByText('Just a simple note')).toBeInTheDocument()
+    })
+
+    it('shows Cook Time when meal has structured instructions with cook time', () => {
+      const mealWithSteps = {
+        id: '1',
+        name: 'Pancakes',
+        mealType: MealType.DINNER,
+        date: new Date('2024-11-10'),
+        ingredients: ['flour', 'eggs'],
+        notes:
+          'Cook Time: 20 minutes\n\nStep 1: Mix dry ingredients\nStep 2: Add wet ingredients',
+        createdBy: 'User',
+      }
+
+      render(
+        <AddMealModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onAdd={mockOnAdd}
+          mealType={MealType.DINNER}
+          date={new Date('2024-11-10')}
+          meal={mealWithSteps}
+        />
+      )
+
+      expect(screen.getByText(/Cook Time: 20 minutes/i)).toBeInTheDocument()
     })
   })
 

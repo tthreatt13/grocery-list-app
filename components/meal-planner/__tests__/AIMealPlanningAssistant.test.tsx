@@ -374,6 +374,103 @@ describe('AIMealPlanningAssistant', () => {
     expect(mockGetAIMealSuggestions).not.toHaveBeenCalled()
   })
 
+  describe('Add All Meals', () => {
+    it('shows Add All Meals button when suggestions are present', async () => {
+      render(
+        <AIMealPlanningAssistant
+          householdId={mockHouseholdId}
+          weekStartDate={mockWeekStartDate}
+          getToken={mockGetToken}
+          onMealsApplied={mockOnMealsApplied}
+        />
+      )
+
+      const input = screen.getByPlaceholderText(/ask for meal suggestions/i)
+      const sendButton = screen.getByLabelText(/send message/i)
+
+      fireEvent.change(input, { target: { value: 'Suggest meals' } })
+      fireEvent.click(sendButton)
+
+      await waitFor(() => {
+        expect(screen.getByText('Spaghetti Bolognese')).toBeInTheDocument()
+      })
+
+      expect(
+        screen.getByRole('button', { name: /add all meals/i })
+      ).toBeInTheDocument()
+    })
+
+    it('calls onMealsApplied with all suggestions when Add All Meals is clicked', async () => {
+      render(
+        <AIMealPlanningAssistant
+          householdId={mockHouseholdId}
+          weekStartDate={mockWeekStartDate}
+          getToken={mockGetToken}
+          onMealsApplied={mockOnMealsApplied}
+        />
+      )
+
+      const input = screen.getByPlaceholderText(/ask for meal suggestions/i)
+      const sendButton = screen.getByLabelText(/send message/i)
+
+      fireEvent.change(input, { target: { value: 'Suggest meals' } })
+      fireEvent.click(sendButton)
+
+      await waitFor(() => {
+        expect(screen.getByText('Spaghetti Bolognese')).toBeInTheDocument()
+      })
+
+      const addAllButton = screen.getByRole('button', {
+        name: /add all meals/i,
+      })
+      fireEvent.click(addAllButton)
+
+      await waitFor(() => {
+        expect(mockOnMealsApplied).toHaveBeenCalledWith(mockSuggestions)
+      })
+    })
+
+    it('disables Add All Meals button while applying', async () => {
+      let resolveApply: (value: void) => void
+      const applyPromise = new Promise<void>((resolve) => {
+        resolveApply = resolve
+      })
+      mockOnMealsApplied.mockReturnValue(applyPromise)
+
+      render(
+        <AIMealPlanningAssistant
+          householdId={mockHouseholdId}
+          weekStartDate={mockWeekStartDate}
+          getToken={mockGetToken}
+          onMealsApplied={mockOnMealsApplied}
+        />
+      )
+
+      const input = screen.getByPlaceholderText(/ask for meal suggestions/i)
+      const sendButton = screen.getByLabelText(/send message/i)
+
+      fireEvent.change(input, { target: { value: 'Suggest meals' } })
+      fireEvent.click(sendButton)
+
+      await waitFor(() => {
+        expect(screen.getByText('Spaghetti Bolognese')).toBeInTheDocument()
+      })
+
+      const addAllButton = screen.getByRole('button', {
+        name: /add all meals/i,
+      })
+      fireEvent.click(addAllButton)
+
+      // Button should be disabled while applying
+      await waitFor(() => {
+        expect(addAllButton).toBeDisabled()
+      })
+
+      // Resolve the promise to allow test to complete
+      resolveApply!()
+    })
+  })
+
   describe('Scroll behavior', () => {
     it('has input ref attached', () => {
       render(

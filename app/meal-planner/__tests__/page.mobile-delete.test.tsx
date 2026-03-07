@@ -147,7 +147,8 @@ describe('MealPlannerPage - Mobile Delete Flow', () => {
     // Should show meal information in edit modal
     expect(screen.getByDisplayValue('Scrambled Eggs')).toBeInTheDocument()
     expect(screen.getByDisplayValue('eggs, butter, salt')).toBeInTheDocument()
-    expect(screen.getByDisplayValue('Quick breakfast')).toBeInTheDocument()
+    // In edit mode, notes are read-only in Instructions block (no textarea)
+    expect(screen.getAllByText('Quick breakfast').length).toBeGreaterThanOrEqual(1)
     expect(screen.getByText('Delete')).toBeInTheDocument()
     expect(screen.getByText('Update Meal')).toBeInTheDocument()
   })

@@ -297,6 +297,50 @@ export default function AIMealPlanningAssistant({
     }
   }
 
+  const handleAddAllMeals = async () => {
+    if (suggestions.length === 0) return
+
+    try {
+      setIsApplyingMeals(true)
+      setError(null)
+      await onMealsApplied(suggestions)
+      setSelectedMealIds(new Set())
+      setSuggestions([])
+      setError(null)
+    } catch (err) {
+      let errorMessage = 'Failed to add meals. Please try again.'
+      if (err instanceof Error) {
+        if (
+          err.message.includes('401') ||
+          err.message.includes('Unauthorized')
+        ) {
+          errorMessage = 'Authentication required. Please sign in again.'
+        } else if (
+          err.message.includes('403') ||
+          err.message.includes('Forbidden')
+        ) {
+          errorMessage = 'You do not have permission to perform this action.'
+        } else if (
+          err.message.includes('500') ||
+          err.message.includes('Internal Server Error')
+        ) {
+          errorMessage = 'Server error. Please try again later.'
+        } else if (
+          err.message.includes('Network') ||
+          err.message.includes('fetch')
+        ) {
+          errorMessage =
+            'Network error. Please check your connection and try again.'
+        } else {
+          errorMessage = err.message
+        }
+      }
+      setError(errorMessage)
+    } finally {
+      setIsApplyingMeals(false)
+    }
+  }
+
   const handleClearConversation = () => {
     setConversationHistory([])
     setSuggestions([])
@@ -412,9 +456,20 @@ export default function AIMealPlanningAssistant({
       {/* Meal Suggestions */}
       {suggestions.length > 0 && (
         <div className="border-t border-gray-200 px-3 md:px-4 py-3">
-          <h4 className="text-xs md:text-sm font-semibold text-gray-900 mb-3">
-            Meal Suggestions ({suggestions.length})
-          </h4>
+          <div className="flex items-center justify-between gap-2 mb-3">
+            <h4 className="text-xs md:text-sm font-semibold text-gray-900">
+              Meal Suggestions ({suggestions.length})
+            </h4>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={handleAddAllMeals}
+              disabled={isApplyingMeals}
+              aria-label="Add all meals"
+            >
+              Add All Meals
+            </Button>
+          </div>
           <div className="space-y-3 max-h-64 md:max-h-96 overflow-y-auto">
             {suggestions.map((suggestion, index) => (
               <MealSuggestionCard
