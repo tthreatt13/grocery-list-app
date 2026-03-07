@@ -54,16 +54,16 @@ describe('Navbar', () => {
 
     render(<Navbar />)
     const listsLink = screen.getByText('Lists').closest('a')
-    expect(listsLink).toHaveClass('bg-green-50', 'text-green-700')
+    expect(listsLink).toHaveClass('bg-[var(--warm-green-dark)]', 'text-white')
   })
 
   it('applies correct styling to navbar container', () => {
     const { container } = render(<Navbar />)
     const nav = container.querySelector('nav')
     expect(nav).toHaveClass(
-      'bg-white',
+      'bg-[var(--warm-white)]',
       'border-b',
-      'border-gray-200',
+      'border-[var(--warm-gray-200)]',
       'sticky',
       'top-0'
     )

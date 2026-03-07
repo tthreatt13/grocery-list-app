@@ -56,7 +56,7 @@ export const Modal: React.FC<ModalProps> = ({
     >
       <div
         className={cn(
-          'bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto',
+          'bg-warm-white rounded-lg shadow-warm-xl max-w-md w-full max-h-[90vh] overflow-y-auto',
           className
         )}
         onClick={(e) => e.stopPropagation()}
@@ -64,18 +64,18 @@ export const Modal: React.FC<ModalProps> = ({
         aria-modal="true"
         aria-labelledby={title ? 'modal-title' : undefined}
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-warm-gray-200">
           {title && (
             <h2
               id="modal-title"
-              className="text-xl font-semibold text-gray-900"
+              className="text-xl font-semibold text-text-primary"
             >
               {title}
             </h2>
           )}
           <button
             onClick={onClose}
-            className="ml-auto text-gray-400 hover:text-gray-600 transition-colors p-2 -mr-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
+            className="ml-auto text-warm-gray-400 hover:text-warm-gray-600 transition-warm p-2 -mr-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
             aria-label="Close modal"
           >
             <svg

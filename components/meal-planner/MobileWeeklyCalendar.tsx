@@ -42,7 +42,12 @@ const MobileWeeklyCalendar = forwardRef<
     return date
   })
 
-  const mealTypes = [MealType.BREAKFAST, MealType.LUNCH, MealType.DINNER]
+  const mealTypes = [
+    MealType.BREAKFAST,
+    MealType.LUNCH,
+    MealType.DINNER,
+    MealType.SNACK,
+  ]
 
   // Helper to check if a date is today
   const isToday = (date: Date) => {
@@ -87,6 +92,8 @@ const MobileWeeklyCalendar = forwardRef<
         return 'bg-blue-50 border-blue-200'
       case MealType.DINNER:
         return 'bg-emerald-50 border-emerald-200'
+      case MealType.SNACK:
+        return 'bg-purple-50 border-purple-200'
       default:
         return 'bg-gray-50 border-gray-200'
     }
@@ -100,13 +107,15 @@ const MobileWeeklyCalendar = forwardRef<
         return 'bg-blue-100 text-blue-800'
       case MealType.DINNER:
         return 'bg-emerald-100 text-emerald-800'
+      case MealType.SNACK:
+        return 'bg-purple-100 text-purple-800'
       default:
         return 'bg-gray-100 text-gray-800'
     }
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-5">
       {weekDays.map((day) => {
         const dayMeals = getMealsForDay(day)
         const today = isToday(day)
@@ -155,7 +164,7 @@ const MobileWeeklyCalendar = forwardRef<
             </div>
 
             {/* Meals for the day */}
-            <div className="p-3 space-y-2">
+            <div className="p-4 space-y-4">
               {mealTypes.map((mealType) => {
                 const meal = getMealForSlot(day, mealType)
 
@@ -165,62 +174,57 @@ const MobileWeeklyCalendar = forwardRef<
                       <button
                         onClick={() => onMealClick(meal)}
                         className={cn(
-                          'w-full text-left p-4 rounded-lg border-2 transition-all active:scale-98',
+                          'w-full text-left p-4 rounded-xl border-2 transition-all active:scale-98 flex flex-col',
                           getMealTypeColor(mealType)
                         )}
                       >
-                        <div className="flex items-start justify-between mb-2">
-                          <div className="flex items-center gap-2 flex-1">
-                            <h4 className="font-semibold text-gray-900 text-base">
-                              {getMealDisplayName(meal)}
-                            </h4>
+                        {/* ROW 1: Meal name + Badge */}
+                        <div className="flex items-start justify-between gap-3 w-full mb-3">
+                          <h4 className="font-bold text-gray-900 text-base leading-snug">
+                            {getMealDisplayName(meal)}
                             {meal.mealCategory === 'quick_meal' && (
-                              <span
-                                className="text-amber-600 text-base"
-                                title="Quick Meal"
-                                aria-label="Quick Meal"
-                              >
+                              <span className="ml-1" aria-label="Quick Meal">
                                 ⚡
                               </span>
                             )}
                             {meal.mealCategory === 'eat_out' && (
-                              <span
-                                className="text-blue-600 text-base"
-                                title="Eat Out"
-                                aria-label="Eat Out"
-                              >
+                              <span className="ml-1" aria-label="Eat Out">
                                 🍴
                               </span>
                             )}
-                          </div>
+                          </h4>
                           <span
                             className={cn(
-                              'text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap ml-2',
+                              'text-xs font-semibold px-2.5 py-1 rounded-full flex-shrink-0 mt-0.5',
                               getMealTypeBadgeColor(mealType)
                             )}
                           >
                             {mealType}
                           </span>
                         </div>
-                        {meal.notes && (
-                          <p className="text-sm text-gray-600 line-clamp-1">
-                            {meal.notes}
-                          </p>
-                        )}
-                        {meal.ingredients && meal.ingredients.length > 0 && (
-                          <p className="text-xs text-gray-500 mt-2">
-                            {meal.ingredients.length} ingredient
-                            {meal.ingredients.length !== 1 ? 's' : ''}
-                          </p>
-                        )}
+
+                        {/* ROW 2: Supporting info */}
+                        <div className="w-full">
+                          {meal.notes && (
+                            <p className="text-sm text-gray-600 line-clamp-2 mb-1">
+                              {meal.notes}
+                            </p>
+                          )}
+                          {meal.ingredients && meal.ingredients.length > 0 && (
+                            <p className="text-xs text-gray-500 font-medium">
+                              {meal.ingredients.length} ingredient
+                              {meal.ingredients.length !== 1 ? 's' : ''}
+                            </p>
+                          )}
+                        </div>
                       </button>
                     ) : (
                       <button
                         onClick={() => onEmptySlotClick(day, mealType)}
-                        className="w-full p-4 rounded-lg border-2 border-dashed border-gray-300 hover:border-blue-400 hover:bg-blue-50 transition-all active:scale-98 flex items-center justify-center"
+                        className="w-full py-5 rounded-xl border-2 border-dashed border-gray-300 hover:border-blue-400 hover:bg-blue-50 transition-all active:scale-98 flex flex-col items-center justify-center gap-1"
                       >
                         <svg
-                          className="w-5 h-5 mr-2 text-gray-400"
+                          className="w-6 h-6 text-gray-400"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -232,7 +236,7 @@ const MobileWeeklyCalendar = forwardRef<
                             d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                           />
                         </svg>
-                        <span className="text-sm text-gray-600 font-medium">
+                        <span className="text-sm text-gray-500 font-medium">
                           Add {mealType.toLowerCase()}
                         </span>
                       </button>

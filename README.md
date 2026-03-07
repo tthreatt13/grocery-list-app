@@ -55,12 +55,16 @@ A modern, full-stack grocery list and meal planning application built for busy p
   - Context-aware suggestions that use pantry items to reduce waste
   - Apply AI-suggested meals directly to your meal plan with one click
   - Optionally generate grocery lists from AI-suggested meals
+  - **Enhanced chat experience** with auto-scroll fix - chat window always remains visible and accessible
+  - **Smart eating out recognition** - automatically categorizes restaurant meals, takeout, and fast food correctly
+  - **Structured recipe instructions** - view step-by-step recipes with cook time and ingredients inline
 - Visual calendar view with easy navigation between weeks
 - Add meals with ingredients and notes
 - Meal categories: Normal, Quick Meal, or Eat Out
 - Visual indicators for meal categories (⚡ for Quick Meal, 🍴 for Eat Out)
 - Generate grocery lists automatically from your meal plan (excludes Eat Out meals)
 - Delete confirmation modal to prevent accidental deletions
+- **Recipe Instructions Display** - view formatted recipes with cook time and step-by-step instructions
 - Mobile-optimized scrollable calendar
 - Quick stats showing meals planned and ingredients needed
 
@@ -321,25 +325,94 @@ grocery-list-app/
 
 ## 🎨 Design System
 
+The application uses a **warm and friendly design system** built on CSS custom properties (CSS variables) and Tailwind CSS. This ensures consistent styling, easy maintenance, and a cohesive visual experience across all components.
+
 ### Color Palette
 
-- **Primary (Green)**: `#059669` - Actions, active states
-- **Secondary (Blue)**: `#3B82F6` - Accents, information
-- **Success (Green)**: `#10B981` - Success messages, Produce category
-- **Warning (Yellow)**: `#F59E0B` - Warnings, low stock alerts
-- **Danger (Red)**: `#EF4444` - Errors, Meat category
+The design system features a warm color palette with neutrals and accent colors:
+
+**Warm Neutrals:**
+
+- **Cream & Beige**: `--warm-cream`, `--warm-beige` - Background colors
+- **Warm Grays**: 9 shades (50-900) from light (`--warm-gray-50`) to dark (`--warm-gray-900`)
+
+**Warm Accents:**
+
+- **Coral**: `--warm-coral` - Primary actions, highlights (with light/dark variants)
+- **Peach**: `--warm-peach` - Secondary accents (with light/dark variants)
+- **Orange**: `--warm-orange` - Warnings, alerts (with light/dark variants)
+- **Green**: `--warm-green` - Success, positive actions (with light/dark variants)
+- **Mint**: `--warm-mint` - Fresh, light accents (with light/dark variants)
+
+**Friendly Blues:**
+
+- **Blue**: `--warm-blue` - Information, links (with light/dark variants)
+- **Sky**: `--warm-sky` - Light accents (with light/dark variants)
+
+**Text Colors:**
+
+- **Primary**: `--text-primary` (#2c1c18) - Main text content
+- **Secondary**: `--text-secondary` (#645448) - Supporting text
+- **Tertiary**: `--text-tertiary` (#9c8e80) - Muted text
+- **Inverse**: `--text-inverse` (#faf8f5) - Light text on dark backgrounds
+
+**Legacy Colors (for backward compatibility):**
+
+- Primary (Green): `#059669` - Actions, active states
+- Secondary (Blue): `#3B82F6` - Accents, information
+- Success (Green): `#10B981` - Success messages, Produce category
+- Warning (Yellow): `#F59E0B` - Warnings, low stock alerts
+- Danger (Red): `#EF4444` - Errors, Meat category
+
+### Design Tokens
+
+**Shadows:**
+
+- `shadow-warm-sm`, `shadow-warm-md`, `shadow-warm-lg`, `shadow-warm-xl` - Depth and elevation
+- `shadow-warm-accent` - Special emphasis shadows
+
+**Border Radius:**
+
+- `rounded-warm-sm`, `rounded-warm-md`, `rounded-warm-lg`, `rounded-warm-xl` - Consistent rounded corners
+
+**Transitions:**
+
+- `transition-warm` - Smooth animations (150ms-300ms with cubic-bezier easing)
 
 ### Typography
 
 - **Font Family**: Inter (Google Fonts)
 - **Headings**: Bold, 2xl-3xl on mobile, 3xl-4xl on desktop
 - **Body**: Regular, 14px-16px
+- **Text Colors**: Use `text-[var(--text-primary)]`, `text-[var(--text-secondary)]`, etc.
 
 ### Touch Targets
 
 - All interactive elements meet WCAG 2.1 minimum touch target size of 44×44px
 - Optimized for mobile-first experience
 - Large, easy-to-tap checkboxes and buttons
+
+### Using the Design System
+
+Components use CSS variables and Tailwind classes from the warm design system:
+
+```tsx
+// Text colors
+<p className="text-[var(--text-primary)]">Primary text</p>
+<p className="text-[var(--text-secondary)]">Secondary text</p>
+
+// Background colors
+<div className="bg-warm-cream">Background</div>
+<button className="bg-warm-blue">Button</button>
+
+// Borders and shadows
+<div className="border-warm-gray-300 shadow-warm-md">Card</div>
+
+// Transitions
+<button className="transition-warm hover:bg-warm-blue-light">Hover effect</button>
+```
+
+All design tokens are defined in `app/globals.css` and extended in `tailwind.config.js`.
 
 ## 📱 Responsive Design
 
@@ -574,6 +647,9 @@ This is a **production-ready full-stack application** with complete backend inte
   - One-click meal application to meal plan
   - Optional grocery list generation from AI-suggested meals
   - Ingredient normalization utility for consistent ingredient formatting
+  - **Enhanced chat experience** with auto-scroll fix ensuring chat window always remains visible
+  - **Smart eating out recognition** - automatically categorizes restaurant meals, takeout, and fast food correctly (recognizes 11+ common phrases)
+  - **Structured recipe instructions** - view step-by-step recipes with cook time and ingredients inline in meal details modal
 - **Pantry Inventory**: Complete backend integration with low-stock alerts and grocery list generation (create new lists or add to existing lists)
 - **Household Management**: Full backend integration with member roles and household preferences (dietary preferences, weather preferences, cooking apparatus selection)
 - **Weather Integration**: 7-day weather forecasts with zip code preferences and caching
@@ -581,7 +657,7 @@ This is a **production-ready full-stack application** with complete backend inte
 - **API Client**: Type-safe frontend API layer with error handling
 - **Dashboard Insights API**: New backend endpoint (`/api/dashboard/insights`) aggregating urgent items, suggestions, and statistics
 - **Context Detection**: Utilities for detecting time of day, day of week, and shopping patterns
-- **Utility Functions**: Ingredient normalization, category sorting, meal type sorting, and date formatting utilities
+- **Utility Functions**: Ingredient normalization, category sorting, meal type sorting, date formatting utilities, and recipe instruction parsing
 - **Testing**: Comprehensive test suites for both frontend and backend (including meal planner, grocery lists, pantry, household preferences, and utility functions)
 - **CI/CD**: GitHub Actions pipeline for automated testing and linting
 - **Deployment**: Railway backend deployment with automatic migrations
@@ -705,6 +781,7 @@ For questions or feedback, please open an issue on GitHub.
 - [Weather API Testing](docs/WEATHER_API_TESTING.md) - Weather API testing guide
 - [Increasing Jest Coverage](docs/INCREASING_JEST_COVERAGE.md) - Guide for improving test coverage
 - [Sequence Diagram](docs/SEQUENCE_DIAGRAM.md) - Application flow and architecture diagrams
+- [AI Meal Planner Enhancements](docs/ReleaseNotes/AI_MEAL_PLANNER_ENHANCEMENTS.md) - Latest release notes for AI meal planner improvements
 
 ## 🔧 Development Tools
 

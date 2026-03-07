@@ -114,8 +114,8 @@ describe('WeeklyCalendar', () => {
     )
 
     const addButtons = screen.getAllByRole('button', { name: /add meal/i })
-    // Should have 7 days × 3 meal types = 21 empty slots
-    expect(addButtons.length).toBe(21)
+    // Should have 7 days × 4 meal types = 28 empty slots (breakfast, lunch, dinner, snack)
+    expect(addButtons.length).toBe(28)
   })
 
   it('highlights current day', () => {

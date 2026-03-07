@@ -1,6 +1,16 @@
 // Learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom'
 
+// Mock global fetch - set up before each test to handle resetMocks
+beforeEach(() => {
+  // eslint-disable-next-line no-undef
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: true,
+    json: async () => ({}),
+    text: async () => '',
+  })
+})
+
 // Mock Clerk
 jest.mock('@clerk/nextjs', () => ({
   auth: () => ({ userId: 'user_test123' }),

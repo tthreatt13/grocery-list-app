@@ -18,13 +18,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variantStyles = {
       primary:
-        'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500',
+        'bg-[var(--warm-blue)] text-white hover:bg-[var(--warm-blue-dark)] focus:ring-[var(--warm-blue)] shadow-warm-md hover:shadow-warm-lg transition-warm',
       secondary:
-        'bg-secondary-600 text-white hover:bg-secondary-700 focus:ring-secondary-500',
+        'bg-[var(--warm-peach)] text-white hover:bg-[var(--warm-peach-dark)] focus:ring-[var(--warm-peach)] shadow-warm-md hover:shadow-warm-lg transition-warm',
       outline:
-        'border border-gray-300 bg-transparent hover:bg-gray-50 text-gray-700 focus:ring-gray-500',
+        'border border-[var(--warm-gray-300)] bg-transparent hover:bg-[var(--warm-gray-50)] text-[var(--text-primary)] focus:ring-[var(--warm-blue)] transition-warm',
       ghost:
-        'bg-transparent hover:bg-gray-100 text-gray-700 focus:ring-gray-500',
+        'bg-transparent hover:bg-[var(--warm-gray-100)] text-[var(--text-primary)] focus:ring-[var(--warm-blue)] transition-warm',
     }
 
     const sizeStyles = {

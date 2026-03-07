@@ -13,6 +13,7 @@ import {
   sortItemsByEntryOrder,
   getMealOrder,
   normalizeIngredientsInput,
+  parseRecipeInstructions,
 } from '../utils'
 import { ItemCategory, MealType } from '../types'
 
@@ -669,6 +670,148 @@ describe('utils', () => {
       expect(normalizeIngredientsInput(input)).toBe(
         '2 cups flour, 1/2 cup sugar'
       )
+    })
+  })
+
+  describe('parseRecipeInstructions', () => {
+    it('returns null for undefined input', () => {
+      expect(parseRecipeInstructions(undefined)).toBeNull()
+    })
+
+    it('returns null for empty string', () => {
+      expect(parseRecipeInstructions('')).toBeNull()
+    })
+
+    it('returns null for whitespace-only string', () => {
+      expect(parseRecipeInstructions('   \n\n  ')).toBeNull()
+    })
+
+    it('parses structured recipe with cook time and steps', () => {
+      const notes = `Cook Time: 30 minutes
+
+Step 1: Whisk 2 cups flour and 3 eggs together in a large bowl
+Step 2: Fold in 1 cup spinach and 1/2 cup grated cheese
+Step 3: Pour into greased pan and bake for 20 minutes at 375°F`
+
+      const result = parseRecipeInstructions(notes)
+
+      expect(result).not.toBeNull()
+      expect(result?.cookTime).toBe('30 minutes')
+      expect(result?.isStructured).toBe(true)
+      expect(result?.steps).toHaveLength(3)
+      expect(result?.steps[0]).toEqual({
+        number: 1,
+        instruction: 'Whisk 2 cups flour and 3 eggs together in a large bowl',
+      })
+      expect(result?.steps[1]).toEqual({
+        number: 2,
+        instruction: 'Fold in 1 cup spinach and 1/2 cup grated cheese',
+      })
+      expect(result?.steps[2]).toEqual({
+        number: 3,
+        instruction: 'Pour into greased pan and bake for 20 minutes at 375°F',
+      })
+    })
+
+    it('parses cook time with hours', () => {
+      const notes = `Cook Time: 1.5 hours
+
+Step 1: Prepare ingredients`
+
+      const result = parseRecipeInstructions(notes)
+
+      expect(result).not.toBeNull()
+      expect(result?.cookTime).toBe('1.5 hours')
+      expect(result?.isStructured).toBe(true)
+    })
+
+    it('handles missing cook time but has steps', () => {
+      const notes = `Step 1: Mix ingredients
+Step 2: Bake for 30 minutes`
+
+      const result = parseRecipeInstructions(notes)
+
+      expect(result).not.toBeNull()
+      expect(result?.cookTime).toBeUndefined()
+      expect(result?.isStructured).toBe(true)
+      expect(result?.steps).toHaveLength(2)
+    })
+
+    it('handles steps out of order and sorts them', () => {
+      const notes = `Cook Time: 20 minutes
+
+Step 3: Final step
+Step 1: First step
+Step 2: Second step`
+
+      const result = parseRecipeInstructions(notes)
+
+      expect(result).not.toBeNull()
+      expect(result?.steps).toHaveLength(3)
+      expect(result?.steps[0].number).toBe(1)
+      expect(result?.steps[1].number).toBe(2)
+      expect(result?.steps[2].number).toBe(3)
+    })
+
+    it('handles legacy plain text notes', () => {
+      const notes = 'This is just a simple note without structured format'
+
+      const result = parseRecipeInstructions(notes)
+
+      expect(result).not.toBeNull()
+      expect(result?.isStructured).toBe(false)
+      expect(result?.steps).toHaveLength(1)
+      expect(result?.steps[0].number).toBe(1)
+      expect(result?.steps[0].instruction).toBe(notes)
+      expect(result?.cookTime).toBeUndefined()
+    })
+
+    it('handles multi-line step instructions', () => {
+      const notes = `Cook Time: 45 minutes
+
+Step 1: This is a step
+that spans multiple lines
+Step 2: Another step`
+
+      const result = parseRecipeInstructions(notes)
+
+      expect(result).not.toBeNull()
+      expect(result?.steps).toHaveLength(2)
+      expect(result?.steps[0].instruction).toContain('spans multiple lines')
+    })
+
+    it('handles case-insensitive cook time and step markers', () => {
+      const notes = `cook time: 30 minutes
+
+step 1: First instruction
+STEP 2: Second instruction`
+
+      const result = parseRecipeInstructions(notes)
+
+      expect(result).not.toBeNull()
+      expect(result?.cookTime).toBe('30 minutes')
+      expect(result?.steps).toHaveLength(2)
+    })
+
+    it('handles malformed format with only cook time', () => {
+      const notes = 'Cook Time: 30 minutes'
+
+      const result = parseRecipeInstructions(notes)
+
+      expect(result).not.toBeNull()
+      expect(result?.isStructured).toBe(false)
+    })
+
+    it('handles malformed format with only steps', () => {
+      const notes = `Step 1: First step
+Step 2: Second step`
+
+      const result = parseRecipeInstructions(notes)
+
+      expect(result).not.toBeNull()
+      expect(result?.isStructured).toBe(true)
+      expect(result?.cookTime).toBeUndefined()
+      expect(result?.steps).toHaveLength(2)
     })
   })
 })

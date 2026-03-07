@@ -303,3 +303,69 @@ export function getMealDisplayName(meal: Meal): string {
   const categoryLabel = categoryLabels[meal.mealCategory || 'normal']
   return `${categoryLabel} - TBD`
 }
+
+/**
+ * Parsed recipe step structure
+ */
+export interface RecipeStep {
+  number: number
+  instruction: string
+}
+
+/**
+ * Parsed recipe instructions structure
+ */
+export interface ParsedRecipeInstructions {
+  cookTime?: string
+  steps: RecipeStep[]
+  isStructured: boolean
+}
+
+/**
+ * Parses recipe instructions from notes string.
+ * Handles both structured format (with cook time and numbered steps) and legacy plain text.
+ *
+ * Structured format:
+ * "Cook Time: 30 minutes\n\nStep 1: [instruction]\nStep 2: [instruction]"
+ *
+ * @param notes - Notes string that may contain recipe instructions
+ * @returns Parsed recipe instructions with cook time and steps, or null if not a recipe format
+ */
+export function parseRecipeInstructions(
+  notes?: string
+): ParsedRecipeInstructions | null {
+  if (!notes) return null
+
+  const trimmedNotes = notes.trim()
+  if (!trimmedNotes) return null
+
+  const hasSteps = /Step \d+:/i.test(trimmedNotes)
+
+  if (hasSteps) {
+    const cookTimeMatch = trimmedNotes.match(/Cook Time:\s*([^\n]+)/i)
+    const cookTime = cookTimeMatch ? cookTimeMatch[1].trim() : undefined
+
+    const stepRegex = /Step (\d+):\s*([^\n]+(?:\n(?!Step \d+:)[^\n]+)*)/gi
+    const steps: RecipeStep[] = []
+    let match
+
+    while ((match = stepRegex.exec(trimmedNotes)) !== null) {
+      const stepNumber = parseInt(match[1], 10)
+      const instruction = match[2].trim()
+      if (instruction) {
+        steps.push({ number: stepNumber, instruction })
+      }
+    }
+
+    steps.sort((a, b) => a.number - b.number)
+
+    if (steps.length > 0) {
+      return { cookTime, steps, isStructured: true }
+    }
+  }
+
+  return {
+    steps: [{ number: 1, instruction: trimmedNotes }],
+    isStructured: false,
+  }
+}

@@ -25,13 +25,13 @@ describe('Button', () => {
   it('applies primary variant styles', () => {
     render(<Button variant="primary">Primary</Button>)
     const button = screen.getByRole('button')
-    expect(button).toHaveClass('bg-primary-600')
+    expect(button).toHaveClass('bg-[var(--warm-blue)]')
   })
 
   it('applies secondary variant styles', () => {
     render(<Button variant="secondary">Secondary</Button>)
     const button = screen.getByRole('button')
-    expect(button).toHaveClass('bg-secondary-600')
+    expect(button).toHaveClass('bg-[var(--warm-peach)]')
   })
 
   it('applies outline variant styles', () => {
@@ -43,7 +43,7 @@ describe('Button', () => {
   it('applies ghost variant styles', () => {
     render(<Button variant="ghost">Ghost</Button>)
     const button = screen.getByRole('button')
-    expect(button).toHaveClass('hover:bg-gray-100')
+    expect(button).toHaveClass('hover:bg-[var(--warm-gray-100)]')
   })
 
   it('applies small size styles', () => {

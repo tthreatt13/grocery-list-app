@@ -84,33 +84,33 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
 
   // Get color for completion rate
   const getCompletionRateColor = () => {
-    if (completionRate >= 80) return 'text-green-600'
-    if (completionRate >= 60) return 'text-blue-600'
-    if (completionRate >= 40) return 'text-yellow-600'
-    return 'text-orange-600'
+    if (completionRate >= 80) return 'text-warm-green'
+    if (completionRate >= 60) return 'text-warm-blue'
+    if (completionRate >= 40) return 'text-warm-peach'
+    return 'text-warm-orange'
   }
 
   // Get color for meal planning coverage
   const getMealPlanningColor = () => {
-    if (mealPlanningCoverage >= 80) return 'text-green-600'
-    if (mealPlanningCoverage >= 60) return 'text-blue-600'
-    if (mealPlanningCoverage >= 40) return 'text-yellow-600'
-    return 'text-orange-600'
+    if (mealPlanningCoverage >= 80) return 'text-warm-green'
+    if (mealPlanningCoverage >= 60) return 'text-warm-blue'
+    if (mealPlanningCoverage >= 40) return 'text-warm-peach'
+    return 'text-warm-orange'
   }
 
   // Get color for pantry health
   const getPantryHealthColor = () => {
     switch (pantryHealthScore) {
       case 'excellent':
-        return 'text-green-600'
+        return 'text-warm-green'
       case 'good':
-        return 'text-blue-600'
+        return 'text-warm-blue'
       case 'fair':
-        return 'text-yellow-600'
+        return 'text-warm-peach'
       case 'needs_attention':
-        return 'text-orange-600'
+        return 'text-warm-orange'
       default:
-        return 'text-gray-600'
+        return 'text-warm-gray-600'
     }
   }
 
@@ -122,9 +122,9 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
       case 'good':
         return 'bg-blue-100 text-blue-800'
       case 'fair':
-        return 'bg-yellow-100 text-yellow-800'
-      case 'needs_attention':
         return 'bg-orange-100 text-orange-800'
+      case 'needs_attention':
+        return 'bg-red-100 text-red-800'
       default:
         return 'bg-gray-100 text-gray-800'
     }
@@ -132,7 +132,7 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
 
   return (
     <div className="mb-8">
-      <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">
+      <h2 className="text-lg sm:text-xl font-bold text-text-primary mb-4">
         Insights & Patterns
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -141,16 +141,16 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
           <div className="p-6">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
-                <h3 className="text-base font-semibold text-gray-900 mb-1">
+                <h3 className="text-base font-semibold text-[var(--text-primary)] mb-1">
                   Shopping Efficiency
                 </h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-text-secondary">
                   {getShoppingEfficiencyMessage()}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-4">
+              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-4">
                 <svg
-                  className="w-6 h-6 text-purple-600"
+                  className="w-6 h-6 text-orange-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -166,7 +166,7 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
             </div>
             <div className="mt-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-text-primary">
                   Completion Rate
                 </span>
                 <span
@@ -175,16 +175,16 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
                   {completionRate}%
                 </span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5">
+              <div className="w-full bg-warm-gray-200 rounded-full h-2.5">
                 <div
                   className={`h-2.5 rounded-full ${
                     completionRate >= 80
-                      ? 'bg-green-500'
+                      ? 'bg-warm-green'
                       : completionRate >= 60
-                        ? 'bg-blue-500'
+                        ? 'bg-warm-blue'
                         : completionRate >= 40
-                          ? 'bg-yellow-500'
-                          : 'bg-orange-500'
+                          ? 'bg-warm-peach'
+                          : 'bg-warm-orange'
                   }`}
                   style={{ width: `${completionRate}%` }}
                   role="progressbar"
@@ -193,7 +193,7 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
                   aria-valuemax={100}
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-text-tertiary mt-2">
                 {stats.completed_items} of {stats.total_items} items completed
               </p>
             </div>
@@ -205,16 +205,16 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
           <div className="p-6">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
-                <h3 className="text-base font-semibold text-gray-900 mb-1">
+                <h3 className="text-base font-semibold text-text-primary mb-1">
                   Meal Planning Coverage
                 </h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-text-secondary">
                   {getMealPlanningMessage()}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-4">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-4">
                 <svg
-                  className="w-6 h-6 text-emerald-600"
+                  className="w-6 h-6 text-green-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -230,7 +230,7 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
             </div>
             <div className="mt-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-text-primary">
                   Week Coverage
                 </span>
                 <span
@@ -239,16 +239,16 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
                   {mealPlanningCoverage}%
                 </span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5">
+              <div className="w-full bg-warm-gray-200 rounded-full h-2.5">
                 <div
                   className={`h-2.5 rounded-full ${
                     mealPlanningCoverage >= 80
-                      ? 'bg-green-500'
+                      ? 'bg-warm-green'
                       : mealPlanningCoverage >= 60
-                        ? 'bg-blue-500'
+                        ? 'bg-warm-blue'
                         : mealPlanningCoverage >= 40
-                          ? 'bg-yellow-500'
-                          : 'bg-orange-500'
+                          ? 'bg-warm-peach'
+                          : 'bg-warm-orange'
                   }`}
                   style={{ width: `${mealPlanningCoverage}%` }}
                   role="progressbar"
@@ -257,7 +257,7 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
                   aria-valuemax={100}
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-text-tertiary mt-2">
                 {stats.planned_days} of 7 days planned • {stats.meals_this_week}{' '}
                 meals this week
               </p>
@@ -270,10 +270,10 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
           <div className="p-6">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
-                <h3 className="text-base font-semibold text-gray-900 mb-1">
+                <h3 className="text-base font-semibold text-text-primary mb-1">
                   Pantry Health
                 </h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-text-secondary">
                   {getPantryHealthMessage()}
                 </p>
               </div>
@@ -295,7 +295,7 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
             </div>
             <div className="mt-4 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-text-primary">
                   Status
                 </span>
                 <span
@@ -312,13 +312,15 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
               </div>
               <div className="grid grid-cols-2 gap-4 pt-2">
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Low Stock</p>
+                  <p className="text-xs text-text-tertiary mb-1">Low Stock</p>
                   <p className={`text-xl font-bold ${getPantryHealthColor()}`}>
                     {stats.low_stock_count}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Expiring Soon</p>
+                  <p className="text-xs text-text-tertiary mb-1">
+                    Expiring Soon
+                  </p>
                   <p className={`text-xl font-bold ${getPantryHealthColor()}`}>
                     {stats.expiring_soon_count}
                   </p>
@@ -333,10 +335,10 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
           <div className="p-6">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
-                <h3 className="text-base font-semibold text-gray-900 mb-1">
+                <h3 className="text-base font-semibold text-text-primary mb-1">
                   Active Lists
                 </h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-text-secondary">
                   {stats.total_lists === 0
                     ? 'Create your first grocery list to get started.'
                     : stats.total_lists === 1
@@ -362,10 +364,10 @@ export default function InsightsDisplay({ stats }: InsightsDisplayProps) {
             </div>
             <div className="mt-4">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-text-primary">
                   Total Lists
                 </span>
-                <span className="text-2xl font-bold text-gray-900">
+                <span className="text-2xl font-bold text-text-primary">
                   {stats.total_lists}
                 </span>
               </div>

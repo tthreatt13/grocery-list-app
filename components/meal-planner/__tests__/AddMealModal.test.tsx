@@ -63,7 +63,7 @@ describe('AddMealModal', () => {
     )
     expect(screen.getByLabelText(/Meal Name/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/Ingredients/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/Notes/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/Cooking Instructions/i)).toBeInTheDocument()
   })
 
   it('calls onClose when cancel button is clicked', () => {
@@ -94,7 +94,7 @@ describe('AddMealModal', () => {
 
     const nameInput = screen.getByLabelText(/Meal Name/i)
     const ingredientsInput = screen.getByLabelText(/Ingredients/i)
-    const notesInput = screen.getByLabelText(/Notes/i)
+    const notesInput = screen.getByLabelText(/Cooking Instructions/i)
     const addButton = screen.getByRole('button', { name: /add meal/i })
 
     fireEvent.change(nameInput, { target: { value: 'Spaghetti' } })
@@ -221,7 +221,7 @@ describe('AddMealModal', () => {
         /Ingredients/i
       ) as HTMLTextAreaElement & { value: string } & { value: string }
       const notesInput = screen.getByLabelText(
-        /Notes/i
+        /Cooking Instructions/i
       ) as HTMLTextAreaElement & { value: string }
 
       expect(nameInput.value).toBe('Existing Meal')
@@ -496,6 +496,63 @@ describe('AddMealModal', () => {
           mealCategory: 'normal',
         })
       })
+    })
+  })
+
+  describe('Instructions Preview', () => {
+    it('shows formatted preview when meal has structured instructions', () => {
+      const mealWithSteps = {
+        id: '1',
+        name: 'Pancakes',
+        mealType: MealType.DINNER,
+        date: new Date('2024-11-10'),
+        ingredients: ['flour', 'eggs'],
+        notes:
+          'Cook Time: 20 minutes\n\nStep 1: Mix dry ingredients\nStep 2: Add wet ingredients\nStep 3: Cook on griddle',
+        createdBy: 'User',
+      }
+
+      render(
+        <AddMealModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onAdd={mockOnAdd}
+          mealType={MealType.DINNER}
+          date={new Date('2024-11-10')}
+          meal={mealWithSteps}
+        />
+      )
+
+      expect(screen.getByText('Instructions')).toBeInTheDocument()
+      expect(screen.getByText('Step 1:')).toBeInTheDocument()
+      expect(screen.getByText('Mix dry ingredients')).toBeInTheDocument()
+      expect(screen.getByText('Step 2:')).toBeInTheDocument()
+      expect(screen.getByText('Step 3:')).toBeInTheDocument()
+    })
+
+    it('does not show formatted preview for plain text notes', () => {
+      const mealWithPlainNotes = {
+        id: '1',
+        name: 'Soup',
+        mealType: MealType.DINNER,
+        date: new Date('2024-11-10'),
+        ingredients: [],
+        notes: 'Just a simple note',
+        createdBy: 'User',
+      }
+
+      render(
+        <AddMealModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onAdd={mockOnAdd}
+          mealType={MealType.DINNER}
+          date={new Date('2024-11-10')}
+          meal={mealWithPlainNotes}
+        />
+      )
+
+      expect(screen.queryByText('Instructions')).not.toBeInTheDocument()
     })
   })
 

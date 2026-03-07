@@ -425,10 +425,10 @@ export default function HouseholdPage() {
   // Show loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading household...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--warm-blue)] mx-auto mb-4"></div>
+          <p className="text-[var(--text-secondary)]">Loading household...</p>
         </div>
       </div>
     )
@@ -438,8 +438,8 @@ export default function HouseholdPage() {
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       {/* Error banner */}
       {error && (
-        <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-sm text-red-700">{error}</p>
+        <div className="mb-4 bg-[var(--warm-coral-light)] border border-[var(--warm-coral)] rounded-lg p-4 shadow-warm-sm">
+          <p className="text-sm text-[var(--warm-coral-dark)]">{error}</p>
         </div>
       )}
 
@@ -447,7 +447,7 @@ export default function HouseholdPage() {
       {households.length === 0 && !isLoading && (
         <div className="text-center py-12">
           <svg
-            className="w-16 h-16 mx-auto text-gray-400 mb-4"
+            className="w-16 h-16 mx-auto text-[var(--warm-gray-400)] mb-4"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -459,10 +459,10 @@ export default function HouseholdPage() {
               d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
             />
           </svg>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <h3 className="text-lg font-medium text-[var(--text-primary)] mb-2">
             No Household Found
           </h3>
-          <p className="text-gray-600 mb-4">
+          <p className="text-[var(--text-secondary)] mb-4">
             Create your first household to start managing grocery lists
           </p>
           <Button
@@ -477,10 +477,10 @@ export default function HouseholdPage() {
       {/* Header */}
       {households.length > 0 && (
         <div className="mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[var(--text-primary)] mb-2">
             Household Management
           </h1>
-          <p className="text-sm sm:text-base text-gray-600">
+          <p className="text-sm sm:text-base text-[var(--text-secondary)]">
             Manage your household members and view shared grocery lists
           </p>
         </div>
@@ -489,13 +489,13 @@ export default function HouseholdPage() {
       {/* Stats Cards */}
       {households.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+          <div className="bg-[var(--warm-white)] rounded-lg shadow-warm-md p-6 border-l-4 border-[var(--warm-blue)]">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 mb-1">
+                <p className="text-sm font-medium text-[var(--text-secondary)] mb-1">
                   Total Members
                 </p>
-                <p className="text-3xl font-bold text-gray-900">
+                <p className="text-3xl font-bold text-[var(--text-primary)]">
                   {members.length}
                 </p>
               </div>
@@ -509,7 +509,7 @@ export default function HouseholdPage() {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
+                    strokeWidth={2.5}
                     d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
                   />
                 </svg>
@@ -517,15 +517,19 @@ export default function HouseholdPage() {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-purple-500">
+          <div className="bg-[var(--warm-white)] rounded-lg shadow-warm-md p-6 border-l-4 border-[var(--warm-peach)]">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 mb-1">Admins</p>
-                <p className="text-3xl font-bold text-gray-900">{adminCount}</p>
+                <p className="text-sm font-medium text-[var(--text-secondary)] mb-1">
+                  Admins
+                </p>
+                <p className="text-3xl font-bold text-[var(--text-primary)]">
+                  {adminCount}
+                </p>
               </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
                 <svg
-                  className="w-6 h-6 text-purple-600"
+                  className="w-6 h-6 text-orange-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -533,7 +537,7 @@ export default function HouseholdPage() {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
+                    strokeWidth={2.5}
                     d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
                   />
                 </svg>
@@ -541,13 +545,13 @@ export default function HouseholdPage() {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+          <div className="bg-[var(--warm-white)] rounded-lg shadow-warm-md p-6 border-l-4 border-[var(--warm-green)]">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 mb-1">
+                <p className="text-sm font-medium text-[var(--text-secondary)] mb-1">
                   Members
                 </p>
-                <p className="text-3xl font-bold text-gray-900">
+                <p className="text-3xl font-bold text-[var(--text-primary)]">
                   {memberCount}
                 </p>
               </div>
@@ -561,7 +565,7 @@ export default function HouseholdPage() {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
+                    strokeWidth={2.5}
                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                   />
                 </svg>
@@ -569,13 +573,13 @@ export default function HouseholdPage() {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-gray-500">
+          <div className="bg-[var(--warm-white)] rounded-lg shadow-warm-md p-6 border-l-4 border-[var(--warm-gray-400)]">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 mb-1">
+                <p className="text-sm font-medium text-[var(--text-secondary)] mb-1">
                   Viewers
                 </p>
-                <p className="text-3xl font-bold text-gray-900">
+                <p className="text-3xl font-bold text-[var(--text-primary)]">
                   {viewerCount}
                 </p>
               </div>
@@ -589,13 +593,13 @@ export default function HouseholdPage() {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
+                    strokeWidth={2.5}
                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
                   />
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
+                    strokeWidth={2.5}
                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                   />
                 </svg>
@@ -610,10 +614,10 @@ export default function HouseholdPage() {
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+              <h2 className="text-xl sm:text-2xl font-bold text-[var(--text-primary)]">
                 Household Members
               </h2>
-              <p className="text-gray-600 text-sm mt-1">
+              <p className="text-[var(--text-secondary)] text-sm mt-1">
                 Manage who has access to your household&apos;s grocery lists
               </p>
             </div>
@@ -658,21 +662,23 @@ export default function HouseholdPage() {
       {households.length > 0 && (
         <div className="mb-8">
           <div className="mb-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+            <h2 className="text-xl sm:text-2xl font-bold text-[var(--text-primary)]">
               My Preferences
             </h2>
-            <p className="text-gray-600 text-sm mt-1">
+            <p className="text-[var(--text-secondary)] text-sm mt-1">
               Set your personal preferences for this household (diet, weather,
               cooking equipment, and meals made this week)
             </p>
           </div>
 
           <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-[var(--warm-white)] rounded-lg shadow-warm-md p-6">
               {isPreferencesLoading ? (
                 <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-                  <p className="text-gray-600">Loading preferences...</p>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--warm-blue)] mx-auto mb-4"></div>
+                  <p className="text-[var(--text-secondary)]">
+                    Loading preferences...
+                  </p>
                 </div>
               ) : isEditingPreferences ? (
                 <PreferencesForm
@@ -708,10 +714,10 @@ export default function HouseholdPage() {
       {households.length > 0 && (
         <div>
           <div className="mb-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+            <h2 className="text-xl sm:text-2xl font-bold text-[var(--text-primary)]">
               Shared Grocery Lists
             </h2>
-            <p className="text-gray-600 text-sm mt-1">
+            <p className="text-[var(--text-secondary)] text-sm mt-1">
               View all grocery lists that are shared with household members
             </p>
           </div>

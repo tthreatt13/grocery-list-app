@@ -83,7 +83,9 @@ export default function PantryItemCard({
       <div className="p-4 space-y-3">
         {/* Header with name and category */}
         <div className="flex items-start justify-between gap-2">
-          <h3 className="font-semibold text-gray-900 flex-1">{item.name}</h3>
+          <h3 className="font-semibold text-text-primary flex-1">
+            {item.name}
+          </h3>
           <Badge
             variant={getBadgeVariant(item.category)}
             className="text-xs whitespace-nowrap"
@@ -110,8 +112,8 @@ export default function PantryItemCard({
 
         <div className="space-y-1 text-sm">
           <div className="flex items-center justify-between">
-            <span className="text-gray-600">Quantity</span>
-            <span className="font-medium text-gray-900">
+            <span className="text-text-secondary">Quantity</span>
+            <span className="font-medium text-text-primary">
               {item.quantity}
               {item.unit ? ` ${item.unit}` : ''}
             </span>
@@ -119,7 +121,7 @@ export default function PantryItemCard({
 
           {item.expirationDate && (
             <div className="flex items-center justify-between">
-              <span className="text-gray-600">Expires</span>
+              <span className="text-text-secondary">Expires</span>
               <span
                 className={`text-sm ${expirationStatus ? 'font-medium' : ''}`}
               >
@@ -131,11 +133,11 @@ export default function PantryItemCard({
 
         {/* Action Buttons */}
         {(onEdit || onDelete) && (
-          <div className="flex items-center justify-end gap-2 pt-2 border-t border-gray-100">
+          <div className="flex items-center justify-end gap-2 pt-2 border-t border-warm-gray-100">
             {onEdit && (
               <button
                 onClick={() => onEdit(item.id)}
-                className="text-gray-400 hover:text-blue-600 transition-colors p-2"
+                className="text-warm-gray-400 hover:text-warm-blue transition-warm p-2"
                 aria-label="Edit item"
               >
                 <svg
@@ -156,7 +158,7 @@ export default function PantryItemCard({
             {onDelete && (
               <button
                 onClick={() => onDelete(item.id)}
-                className="text-gray-400 hover:text-red-600 transition-colors p-2"
+                className="text-warm-gray-400 hover:text-warm-coral transition-warm p-2"
                 aria-label="Delete item"
               >
                 <svg
