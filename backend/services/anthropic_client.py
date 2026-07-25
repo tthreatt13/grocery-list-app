@@ -42,6 +42,7 @@ def call_anthropic_api(prompt: str, api_key: str, model: Optional[str] = None) -
         response = client.messages.create(
             model=model_id,
             max_tokens=4096,
+            thinking={"type": "disabled"},
             messages=[
                 {
                     "role": "user",
@@ -65,12 +66,25 @@ def extract_text_from_response(response: Any) -> str:
 
     text_content = ""
     for content_block in response.content:
+        block_type = getattr(content_block, "type", None)
+        if block_type == "thinking":
+            continue
+
         if hasattr(content_block, "text"):
-            text_content += content_block.text
-        elif isinstance(content_block, dict) and "text" in content_block:
-            text_content += content_block["text"]
+            text_content += content_block.text or ""
+        elif isinstance(content_block, dict):
+            if content_block.get("type") == "thinking":
+                continue
+            if "text" in content_block:
+                text_content += content_block["text"] or ""
 
     if not text_content:
+        stop_reason = getattr(response, "stop_reason", None)
+        if stop_reason == "max_tokens":
+            raise ValueError(
+                "Empty response from LLM - output token limit reached "
+                "before response text was generated"
+            )
         raise ValueError("Empty response from LLM")
 
     return text_content
