@@ -5,10 +5,10 @@ from unittest.mock import patch, Mock, MagicMock
 from datetime import date, timedelta
 from sqlalchemy.orm import Session
 
+from services.anthropic_client import call_anthropic_api, extract_json_from_response
 from services.meal_planning_ai import (
     gather_meal_planning_context,
     format_meal_planning_prompt,
-    call_anthropic_api,
     parse_llm_response,
     suggest_meals,
 )
@@ -280,7 +280,7 @@ class TestFormatMealPlanningPrompt:
 class TestCallAnthropicAPI:
     """Tests for Anthropic API calling function."""
 
-    @patch("services.meal_planning_ai.Anthropic")
+    @patch("services.anthropic_client.Anthropic")
     def test_call_anthropic_api_success(self, mock_anthropic_class):
         """Test successful API call."""
         mock_client = MagicMock()
@@ -302,13 +302,13 @@ class TestCallAnthropicAPI:
         assert result is not None
         mock_client.messages.create.assert_called_once()
 
-    @patch("services.meal_planning_ai.Anthropic")
+    @patch("services.anthropic_client.Anthropic")
     def test_call_anthropic_api_missing_key(self, mock_anthropic_class):
         """Test API call with missing API key."""
         with pytest.raises(ValueError, match="API key"):
             call_anthropic_api("test prompt", "")
 
-    @patch("services.meal_planning_ai.Anthropic")
+    @patch("services.anthropic_client.Anthropic")
     def test_call_anthropic_api_error(self, mock_anthropic_class):
         """Test API call with error handling."""
         mock_client = MagicMock()

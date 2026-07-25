@@ -2,6 +2,7 @@
  * Grocery List API functions
  */
 
+import { AIReviewRequest, AIReviewResponse } from '@/lib/types'
 import { get, post, put, del } from './client'
 
 // API Response Types (matching backend schemas)
@@ -210,4 +211,19 @@ export async function unarchiveGroceryList(
   token: string
 ): Promise<GroceryListResponse> {
   return updateGroceryList(listId, { is_archived: false }, token)
+}
+
+/**
+ * Get AI-powered dietary review for a grocery list
+ */
+export async function getAIGroceryReview(
+  listId: number,
+  data: AIReviewRequest,
+  token: string
+): Promise<AIReviewResponse> {
+  return post<AIReviewResponse>(
+    `/api/grocery-lists/${listId}/ai-review`,
+    data,
+    token
+  )
 }

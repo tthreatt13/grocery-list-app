@@ -16,6 +16,7 @@ export interface GroceryItem {
 export interface GroceryList {
   id: string
   name: string
+  householdId?: string
   items: GroceryItem[]
   createdBy: string
   createdAt: Date
@@ -123,5 +124,27 @@ export interface AISuggestRequest {
 
 export interface AISuggestResponse {
   suggestions: MealSuggestion[]
+  conversation_history: ChatMessage[]
+}
+
+// AI Grocery Review Types
+export interface GrocerySuggestion {
+  action: 'add' | 'remove' | 'swap'
+  name: string
+  quantity?: string
+  category?: string
+  meal_type?: string
+  target_item_id?: number
+  reason?: string
+}
+
+export interface AIReviewRequest {
+  user_message: string
+  conversation_history?: ChatMessage[]
+}
+
+export interface AIReviewResponse {
+  gap_analysis: string
+  suggestions: GrocerySuggestion[]
   conversation_history: ChatMessage[]
 }

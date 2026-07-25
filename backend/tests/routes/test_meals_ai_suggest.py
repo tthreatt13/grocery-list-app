@@ -18,7 +18,7 @@ class TestAISuggestMeals:
     """Test cases for AI meal suggestion endpoint."""
 
     @patch("config.settings")
-    @patch("services.meal_planning_ai.Anthropic")
+    @patch("services.anthropic_client.Anthropic")
     def test_ai_suggest_meals_success(
         self,
         mock_anthropic_class,
@@ -117,7 +117,7 @@ class TestAISuggestMeals:
         mock_anthropic_instance.messages.create.assert_called_once()
 
     @patch("config.settings")
-    @patch("services.meal_planning_ai.Anthropic")
+    @patch("services.anthropic_client.Anthropic")
     def test_ai_suggest_meals_with_conversation_history(
         self,
         mock_anthropic_class,
@@ -222,7 +222,7 @@ class TestAISuggestMeals:
 
         assert response.status_code == 401
 
-    @patch("services.meal_planning_ai.Anthropic")
+    @patch("services.anthropic_client.Anthropic")
     def test_ai_suggest_meals_invalid_household(
         self, mock_anthropic_class, db_session, sample_user
     ):
@@ -260,7 +260,7 @@ class TestAISuggestMeals:
         assert response.status_code == 403
 
     @patch("config.settings")
-    @patch("services.meal_planning_ai.Anthropic")
+    @patch("services.anthropic_client.Anthropic")
     def test_ai_suggest_meals_api_error(
         self,
         mock_anthropic_class,
@@ -314,7 +314,7 @@ class TestAISuggestMeals:
         data = response.json()
         assert "detail" in data
 
-    @patch("services.meal_planning_ai.Anthropic")
+    @patch("services.anthropic_client.Anthropic")
     def test_ai_suggest_meals_invalid_json_response(
         self, mock_anthropic_class, db_session, sample_user, sample_household
     ):
@@ -363,7 +363,7 @@ class TestAISuggestMeals:
         assert "detail" in data
 
     @patch("config.settings")
-    @patch("services.meal_planning_ai.Anthropic")
+    @patch("services.anthropic_client.Anthropic")
     def test_ai_suggest_meals_auto_adjusts_week_start(
         self,
         mock_anthropic_class,

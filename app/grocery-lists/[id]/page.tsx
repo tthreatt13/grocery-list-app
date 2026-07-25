@@ -12,12 +12,14 @@ import AddItemForm from '@/components/grocery/AddItemForm'
 import EditItemForm from '@/components/grocery/EditItemForm'
 import SortMethodSelector from '@/components/grocery/SortMethodSelector'
 import ReuseListModal from '@/components/grocery/ReuseListModal'
+import AIGroceryReviewAssistant from '@/components/grocery/AIGroceryReviewAssistant'
 import {
   ItemCategory,
   GroceryItem,
   MealType,
   SortMethod,
   GroceryList,
+  GrocerySuggestion,
 } from '@/lib/types'
 import {
   formatRelativeTime,
@@ -451,6 +453,44 @@ export default function GroceryListDetailPage() {
     }
   }
 
+  const refreshList = async () => {
+    const token = await getToken()
+    if (!token) return
+    const listDataResponse = await getGroceryList(listId, token)
+    const listData = transformGroceryList(listDataResponse)
+    setList(listData)
+  }
+
+  const handleApplySuggestion = async (suggestion: GrocerySuggestion) => {
+    if (!list) return
+
+    const token = await getToken()
+    if (!token) {
+      throw new Error('Authentication required')
+    }
+
+    if (suggestion.action === 'remove' || suggestion.action === 'swap') {
+      if (!suggestion.target_item_id) {
+        throw new Error('Missing target item for remove/swap suggestion')
+      }
+      await deleteGroceryItem(listId, suggestion.target_item_id, token)
+    }
+
+    if (suggestion.action === 'add' || suggestion.action === 'swap') {
+      await addGroceryItem(
+        listId,
+        {
+          name: suggestion.name,
+          quantity: suggestion.quantity,
+          category: suggestion.category,
+          meal_type: suggestion.meal_type,
+          checked: false,
+        },
+        token
+      )
+    }
+  }
+
   // Loading state
   if (isLoading) {
     return (
@@ -780,6 +820,13 @@ export default function GroceryListDetailPage() {
             </div>
           </div>
         </div>
+
+        <AIGroceryReviewAssistant
+          listId={listId}
+          getToken={getToken}
+          onSuggestionsApplied={refreshList}
+          onApplySuggestion={handleApplySuggestion}
+        />
 
         {/* Items List */}
         <div>

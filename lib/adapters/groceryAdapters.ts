@@ -88,6 +88,7 @@ export function transformGroceryList(
   return {
     id: apiList.id.toString(),
     name: apiList.name,
+    householdId: apiList.household_id.toString(),
     items: Array.isArray(apiList.items)
       ? apiList.items.map(transformGroceryItem)
       : [],
