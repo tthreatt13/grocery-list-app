@@ -37,16 +37,16 @@ A working, deployable app with all tests passing, running on current supported d
 
 ### Key Decisions
 
-| ID | Decision | Rationale |
-|----|----------|-----------|
-| K1 | Treat app refresh, model upgrade, and grocery AI chat as **equal-priority workstreams** in one coordinated release | User wants all three done together, not sequenced by priority |
-| K2 | App refresh scope = **dependencies + deploy health + security/maintenance** | Full stack refresh, not any single dimension |
-| K3 | Grocery AI delivers **gap analysis + actionable suggestions** (add/remove/swap) | Core value is knowing what's missing and fixing the list, not compliance checking or free-form Q&A alone |
-| K4 | Suggestions support **one-click apply per item** and **batch apply for selected items** | Reduces friction between review and list update |
-| K5 | Dietary baseline = **stored household preferences + meal context on items + ad-hoc goals in chat** | Preferences are default context; meal tags and chat refine the review |
-| K6 | Claude model is **configurable (env-driven)**, defaulting to **latest Sonnet** | Easy to swap models without code changes; Sonnet balances quality and cost for this workload |
-| K7 | Review output is **qualitative by default**; numeric nutritional detail **only when requested in chat** | Avoids turning the feature into a nutrition tracker while allowing depth on demand |
-| K8 | Recommended approach: **adapt the existing meal planner AI chat pattern** for grocery lists | Reuses proven UX and test patterns; avoids over-engineering a shared AI platform upfront |
+| ID  | Decision                                                                                                           | Rationale                                                                                                |
+| --- | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| K1  | Treat app refresh, model upgrade, and grocery AI chat as **equal-priority workstreams** in one coordinated release | User wants all three done together, not sequenced by priority                                            |
+| K2  | App refresh scope = **dependencies + deploy health + security/maintenance**                                        | Full stack refresh, not any single dimension                                                             |
+| K3  | Grocery AI delivers **gap analysis + actionable suggestions** (add/remove/swap)                                    | Core value is knowing what's missing and fixing the list, not compliance checking or free-form Q&A alone |
+| K4  | Suggestions support **one-click apply per item** and **batch apply for selected items**                            | Reduces friction between review and list update                                                          |
+| K5  | Dietary baseline = **stored household preferences + meal context on items + ad-hoc goals in chat**                 | Preferences are default context; meal tags and chat refine the review                                    |
+| K6  | Claude model is **configurable (env-driven)**, defaulting to **latest Sonnet**                                     | Easy to swap models without code changes; Sonnet balances quality and cost for this workload             |
+| K7  | Review output is **qualitative by default**; numeric nutritional detail **only when requested in chat**            | Avoids turning the feature into a nutrition tracker while allowing depth on demand                       |
+| K8  | Recommended approach: **adapt the existing meal planner AI chat pattern** for grocery lists                        | Reuses proven UX and test patterns; avoids over-engineering a shared AI platform upfront                 |
 
 ### Requirements
 
@@ -105,16 +105,16 @@ A working, deployable app with all tests passing, running on current supported d
 
 ### Key Technical Decisions
 
-| ID | Decision | Rationale |
-|----|----------|-----------|
-| KTD1 | Default model = `claude-sonnet-5` via `ANTHROPIC_MODEL` env var | Latest Sonnet per Anthropic docs (June 2026); replaces hardcoded `claude-sonnet-4-20250514` in `backend/services/meal_planning_ai.py` |
-| KTD2 | Extract minimal `backend/services/anthropic_client.py` for shared API call + JSON extraction | Single place for model config and Sonnet 5 API constraints; meal and grocery services stay separate |
-| KTD3 | New endpoint `POST /api/grocery-lists/{list_id}/ai-review` | Mirrors `POST /api/meals/ai-suggest`; grocery-specific prompt and response schema |
-| KTD4 | Frontend: `AIGroceryReviewAssistant` adapted from `AIMealPlanningAssistant` | Reuses chat UX, selection, batch apply, and test patterns (K8) |
-| KTD5 | Upgrade Clerk 6→7 and React 18→19 with codemod + CI Node 20 | Clerk Core 3 requires Node 20.9+; app already on Next 16 with ClerkProvider in body |
-| KTD6 | Incremental dependency bumps with test gate after each major version | Reduces blast radius; run `npm run test:ci` and `pytest` after Clerk, React, and backend bumps |
-| KTD7 | Add `householdId` to frontend `GroceryList` type and adapter | AI review needs household context for auth and preferences; API already returns `household_id` |
-| KTD8 | Remove debug `#region agent log` blocks from `backend/config.py` and routes during refresh | Security/maintenance cleanup; stray file writes to `.cursor/debug.log` |
+| ID   | Decision                                                                                     | Rationale                                                                                                                             |
+| ---- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| KTD1 | Default model = `claude-sonnet-5` via `ANTHROPIC_MODEL` env var                              | Latest Sonnet per Anthropic docs (June 2026); replaces hardcoded `claude-sonnet-4-20250514` in `backend/services/meal_planning_ai.py` |
+| KTD2 | Extract minimal `backend/services/anthropic_client.py` for shared API call + JSON extraction | Single place for model config and Sonnet 5 API constraints; meal and grocery services stay separate                                   |
+| KTD3 | New endpoint `POST /api/grocery-lists/{list_id}/ai-review`                                   | Mirrors `POST /api/meals/ai-suggest`; grocery-specific prompt and response schema                                                     |
+| KTD4 | Frontend: `AIGroceryReviewAssistant` adapted from `AIMealPlanningAssistant`                  | Reuses chat UX, selection, batch apply, and test patterns (K8)                                                                        |
+| KTD5 | Upgrade Clerk 6→7 and React 18→19 with codemod + CI Node 20                                  | Clerk Core 3 requires Node 20.9+; app already on Next 16 with ClerkProvider in body                                                   |
+| KTD6 | Incremental dependency bumps with test gate after each major version                         | Reduces blast radius; run `npm run test:ci` and `pytest` after Clerk, React, and backend bumps                                        |
+| KTD7 | Add `householdId` to frontend `GroceryList` type and adapter                                 | AI review needs household context for auth and preferences; API already returns `household_id`                                        |
+| KTD8 | Remove debug `#region agent log` blocks from `backend/config.py` and routes during refresh   | Security/maintenance cleanup; stray file writes to `.cursor/debug.log`                                                                |
 
 ### High-Level Technical Design
 
@@ -134,11 +134,11 @@ Meal Planner (existing)
 
 **Suggestion apply mapping:**
 
-| Action | Frontend handler |
-|--------|------------------|
-| add | `addGroceryItem()` |
-| remove | `deleteGroceryItem()` |
-| swap | remove old + add new (or update if item id provided) |
+| Action | Frontend handler                                     |
+| ------ | ---------------------------------------------------- |
+| add    | `addGroceryItem()`                                   |
+| remove | `deleteGroceryItem()`                                |
+| swap   | remove old + add new (or update if item id provided) |
 
 ### Assumptions
 
@@ -156,12 +156,12 @@ Meal Planner (existing)
 
 ### Risks & Dependencies
 
-| Risk | Mitigation |
-|------|------------|
-| Clerk 7 breaking auth in tests | Update `jest.setup.js` mocks; run full frontend test suite |
-| React 19 + Testing Library compatibility | Bump `@testing-library/react` to v15+ if needed |
-| Sonnet 5 token usage increase | Keep `max_tokens=4096`; monitor response size |
-| JSON parse failures from LLM | Reuse markdown-stripping parser from meal planner; return 400 with clear error |
+| Risk                                     | Mitigation                                                                     |
+| ---------------------------------------- | ------------------------------------------------------------------------------ |
+| Clerk 7 breaking auth in tests           | Update `jest.setup.js` mocks; run full frontend test suite                     |
+| React 19 + Testing Library compatibility | Bump `@testing-library/react` to v15+ if needed                                |
+| Sonnet 5 token usage increase            | Keep `max_tokens=4096`; monitor response size                                  |
+| JSON parse failures from LLM             | Reuse markdown-stripping parser from meal planner; return 400 with clear error |
 
 ### Sources / Research
 
@@ -181,17 +181,20 @@ Meal Planner (existing)
 **Requirements:** R2
 
 **Files:**
+
 - Modify: `backend/config.py`, `backend/services/meal_planning_ai.py`
 - Create: `backend/services/anthropic_client.py`
 - Modify: `railway-env-template.txt`, `backend/tests/services/test_meal_planning_ai.py`
 
 **Approach:**
+
 - Add `anthropic_model: str = "claude-sonnet-5"` to Settings (env `ANTHROPIC_MODEL`).
 - Extract `call_anthropic_api(prompt, api_key, model)` and JSON markdown-stripping helper to `anthropic_client.py`.
 - Update `meal_planning_ai.py` to use shared client and `settings.anthropic_model`.
 - Remove debug agent-log regions from `config.py`.
 
 **Test scenarios:**
+
 - Default model is `claude-sonnet-5` when env unset.
 - Custom `ANTHROPIC_MODEL` passed through to Anthropic client mock.
 - Meal planning AI tests still pass with mocked client.
@@ -209,10 +212,12 @@ Meal Planner (existing)
 **Requirements:** R1
 
 **Files:**
+
 - Modify: `package.json`, `package-lock.json`, `.github/workflows/ci.yml`
 - Review/fix: `proxy.ts`, `jest.setup.js`, `app/providers.tsx`
 
 **Approach:**
+
 - Run `npx @clerk/upgrade` for Clerk 6→7.
 - Bump React/React-DOM to 19, `@types/react*` to 19, `@testing-library/react` as needed.
 - Update CI Node from 18 to 20.
@@ -220,6 +225,7 @@ Meal Planner (existing)
 - Run `npm run lint`, `npm run format:check`, `npm run test:ci`, `npm run build`.
 
 **Test scenarios:**
+
 - All existing frontend tests pass.
 - Build succeeds.
 - ESLint and Prettier checks pass.
@@ -237,14 +243,17 @@ Meal Planner (existing)
 **Requirements:** R1
 
 **Files:**
+
 - Modify: `backend/requirements.txt`
 
 **Approach:**
+
 - Bump `anthropic`, `fastapi`, and other outdated packages within compatible ranges.
 - Keep `black==23.11.0` pinned per CI requirement.
 - Run flake8 and black check, then full pytest suite.
 
 **Test scenarios:**
+
 - All backend tests pass.
 - Flake8 and Black formatting checks pass.
 
@@ -261,12 +270,14 @@ Meal Planner (existing)
 **Requirements:** R3, K3, K5, K7
 
 **Files:**
+
 - Create: `backend/services/grocery_list_ai.py`
 - Modify: `backend/schemas/grocery.py`, `backend/routes/grocery_lists.py`
 - Create: `backend/tests/services/test_grocery_list_ai.py`
 - Create: `backend/tests/routes/test_grocery_lists_ai_review.py`
 
 **Approach:**
+
 - Create `grocery_list_ai.py` mirroring meal service structure:
   - `gather_grocery_review_context(db, household_id, user_id, list_id)` — list items (with meal_type), preferences, optional pantry/meals.
   - `format_grocery_review_prompt()` — qualitative gap analysis instructions; numeric detail only when user message requests it.
@@ -276,6 +287,7 @@ Meal Planner (existing)
 - Response JSON shape: `{ gap_analysis, suggestions[], conversation_history[] }`.
 
 **Test scenarios:**
+
 - Successful review returns gap_analysis and suggestions array.
 - Conversation history appended and truncated to last 5 turns.
 - 401 without auth, 403 for non-member, 404 for missing list.
@@ -296,6 +308,7 @@ Meal Planner (existing)
 **Requirements:** R3, K4, K5
 
 **Files:**
+
 - Create: `components/grocery/AIGroceryReviewAssistant.tsx`
 - Create: `components/grocery/GrocerySuggestionCard.tsx`
 - Modify: `app/grocery-lists/[id]/page.tsx`, `lib/api/grocery.ts`, `lib/types.ts`, `lib/adapters/groceryAdapters.ts`
@@ -303,6 +316,7 @@ Meal Planner (existing)
 - Modify: `app/grocery-lists/[id]/__tests__/page.test.tsx`
 
 **Approach:**
+
 - Add types: `GrocerySuggestion`, `GapAnalysis`, `AIReviewRequest`, `AIReviewResponse`.
 - Add `householdId` to `GroceryList` type and adapter.
 - Add `getAIGroceryReview()` to `lib/api/grocery.ts`.
@@ -311,6 +325,7 @@ Meal Planner (existing)
 - Mount assistant on grocery list detail page (collapsible panel or section below list header).
 
 **Test scenarios:**
+
 - Assistant renders on list detail page.
 - Send message triggers API call and displays gap analysis + suggestions.
 - One-click apply calls correct grocery API for add/remove/swap.
@@ -331,9 +346,11 @@ Meal Planner (existing)
 **Requirements:** R1, R2
 
 **Files:**
+
 - Modify: `railway-env-template.txt`, `docs/DEPLOYMENT_CHECKLIST.md`, `README.md`
 
 **Approach:**
+
 - Add `ANTHROPIC_MODEL=claude-sonnet-5` to env template.
 - Document grocery AI review feature and model config in README and deployment checklist.
 
@@ -389,11 +406,11 @@ All commands must pass before merge.
 
 ### Per-unit
 
-| Unit | Done when |
-|------|-----------|
-| U1 | Model configurable; meal AI tests pass |
-| U2 | Frontend deps upgraded; lint/format/test/build pass |
-| U3 | Backend deps upgraded; flake8/black/pytest pass |
-| U4 | ai-review endpoint tested; auth enforced |
-| U5 | Assistant integrated on list detail; frontend tests pass |
-| U6 | Docs and env template updated |
+| Unit | Done when                                                |
+| ---- | -------------------------------------------------------- |
+| U1   | Model configurable; meal AI tests pass                   |
+| U2   | Frontend deps upgraded; lint/format/test/build pass      |
+| U3   | Backend deps upgraded; flake8/black/pytest pass          |
+| U4   | ai-review endpoint tested; auth enforced                 |
+| U5   | Assistant integrated on list detail; frontend tests pass |
+| U6   | Docs and env template updated                            |

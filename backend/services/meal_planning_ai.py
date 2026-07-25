@@ -6,8 +6,8 @@ from typing import Dict, List, Optional, Any
 from datetime import date, timedelta
 from sqlalchemy.orm import Session
 
-from anthropic import Anthropic
 from config import settings
+from services.anthropic_client import call_anthropic_api, extract_json_from_response
 from services.weather import get_weather_forecast
 
 logger = logging.getLogger(__name__)
@@ -363,43 +363,6 @@ Focus on strategic, efficient meal planning that minimizes grocery shopping whil
     return "\n".join(prompt_parts)
 
 
-def call_anthropic_api(prompt: str, api_key: str) -> Any:
-    """
-    Call Anthropic Claude API with the formatted prompt.
-
-    Args:
-        prompt: Formatted prompt string
-        api_key: Anthropic API key
-
-    Returns:
-        API response object
-
-    Raises:
-        ValueError: If API key is missing
-        Exception: If API call fails
-    """
-    if not api_key:
-        raise ValueError("Anthropic API key is required")
-
-    try:
-        client = Anthropic(api_key=api_key)
-        response = client.messages.create(
-            model="claude-sonnet-4-20250514",  # Updated to current recommended model (claude-3-5-sonnet-20241022 was deprecated)
-            max_tokens=4096,
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt,
-                }
-            ],
-            timeout=60.0,  # 60 second timeout
-        )
-        return response
-    except Exception as e:
-        logger.error(f"Anthropic API call failed: {e}")
-        raise
-
-
 def parse_llm_response(response: Any) -> Dict[str, List[Dict[str, Any]]]:
     """
     Parse LLM response into structured meal suggestions.
@@ -414,76 +377,16 @@ def parse_llm_response(response: Any) -> Dict[str, List[Dict[str, Any]]]:
         ValueError: If response cannot be parsed or is invalid
     """
     try:
-        # Extract text from response
-        if not hasattr(response, "content") or not response.content:
-            raise ValueError(
-                "Invalid response format from LLM - no content attribute or content is empty"
-            )
+        parsed = extract_json_from_response(response)
 
-        if hasattr(response, "content") and response.content:
-            text_content = ""
-            for content_block in response.content:
-                if hasattr(content_block, "text"):
-                    text_content += content_block.text
-                elif isinstance(content_block, dict) and "text" in content_block:
-                    text_content += content_block["text"]
+        if "suggestions" not in parsed:
+            raise ValueError("Response missing 'suggestions' key")
 
-            if not text_content:
-                raise ValueError("Empty response from LLM")
+        if not isinstance(parsed["suggestions"], list):
+            raise ValueError("'suggestions' must be a list")
 
-            # Try to extract JSON from the response (might be wrapped in markdown code blocks)
-            original_text = text_content
-            text_content = text_content.strip()
+        return parsed
 
-            # Store original for fallback
-            original_stripped = text_content
-
-            if "```json" in text_content:
-                # Extract JSON from markdown code block
-                start = text_content.find("```json") + 7
-                end = text_content.find("```", start)
-                if end != -1:
-                    extracted = text_content[start:end].strip()
-                    # Only use extracted if it's not empty
-                    if extracted:
-                        text_content = extracted
-                    else:
-                        text_content = original_stripped
-            elif "```" in text_content:
-                # Extract from generic code block
-                start = text_content.find("```") + 3
-                end = text_content.find("```", start)
-                if end != -1:
-                    extracted = text_content[start:end].strip()
-                    # Only use extracted if it's not empty
-                    if extracted:
-                        text_content = extracted
-                    else:
-                        text_content = original_stripped
-
-            # Check if text_content is empty before parsing
-            if not text_content:
-                raise ValueError(
-                    f"Empty text content after extraction - LLM response may be malformed. Original response length: {len(original_text)}"
-                )
-
-            # Parse JSON
-            parsed = json.loads(text_content)
-
-            if "suggestions" not in parsed:
-                raise ValueError("Response missing 'suggestions' key")
-
-            if not isinstance(parsed["suggestions"], list):
-                raise ValueError("'suggestions' must be a list")
-
-            return parsed
-
-        else:
-            raise ValueError("Invalid response format from LLM")
-
-    except json.JSONDecodeError as e:
-        logger.error(f"Failed to parse JSON from LLM response: {e}")
-        raise ValueError(f"Could not parse JSON response from LLM: {e}")
     except Exception as e:
         logger.error(f"Failed to parse LLM response: {e}")
         raise
@@ -541,7 +444,7 @@ def suggest_meals(
     prompt = format_meal_planning_prompt(context, user_message, conversation_history)
 
     # Call API
-    response = call_anthropic_api(prompt, api_key)
+    response = call_anthropic_api(prompt, api_key, settings.anthropic_model)
 
     # Parse response
     result = parse_llm_response(response)

@@ -178,6 +178,7 @@ npm run dev
 - `DATABASE_URL` - Database connection string (PostgreSQL or SQLite)
 - `CLERK_SECRET_KEY` - Clerk authentication secret key
 - `ANTHROPIC_API_KEY` - Anthropic Claude API key for AI meal planning (get from https://console.anthropic.com/)
+- `ANTHROPIC_MODEL` - Anthropic model identifier (defaults to `claude-sonnet-5`)
 - `ENVIRONMENT` - Environment name (development/production)
 - `ALLOWED_ORIGINS` - Comma-separated list of allowed CORS origins (optional)
 

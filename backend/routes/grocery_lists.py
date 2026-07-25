@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session, joinedload
 
 from database import get_db
-from middleware.auth import get_current_user_optional
+from middleware.auth import get_current_user, get_current_user_optional
 from middleware.permissions import require_household_member
 from models.grocery_list import GroceryList
 from models.grocery_item import GroceryItem
@@ -19,6 +19,10 @@ from schemas.grocery import (
     GroceryItemCreate,
     GroceryItemUpdate,
     GroceryItemResponse,
+    AIReviewRequest,
+    AIReviewResponse,
+    GrocerySuggestion,
+    ChatMessage,
 )
 
 router = APIRouter(prefix="/api/grocery-lists", tags=["grocery-lists"])
@@ -393,3 +397,74 @@ def get_grocery_items(
 
     items = query.all()
     return items
+
+
+@router.post("/{list_id}/ai-review", response_model=AIReviewResponse)
+async def ai_review_grocery_list(
+    list_id: int,
+    request: AIReviewRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Get AI-powered dietary gap analysis and suggestions for a grocery list.
+    """
+    grocery_list = db.query(GroceryList).filter(GroceryList.id == list_id).first()
+    if not grocery_list:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Grocery list with id {list_id} not found",
+        )
+
+    require_household_member(db, grocery_list.household_id, current_user)
+
+    conversation_history = [
+        {"role": msg.role, "content": msg.content}
+        for msg in request.conversation_history
+    ]
+
+    try:
+        from services.grocery_list_ai import review_grocery_list
+
+        result = review_grocery_list(
+            db=db,
+            household_id=grocery_list.household_id,
+            user_id=current_user.id,
+            list_id=list_id,
+            user_message=request.user_message,
+            conversation_history=conversation_history,
+        )
+
+        assistant_summary = result.get("gap_analysis", "")
+        if result.get("suggestions"):
+            assistant_summary += (
+                f"\n\n{len(result['suggestions'])} suggestion(s) provided."
+            )
+
+        updated_history = conversation_history + [
+            {"role": "user", "content": request.user_message},
+            {"role": "assistant", "content": assistant_summary},
+        ]
+
+        suggestions = [
+            GrocerySuggestion(**suggestion)
+            for suggestion in result.get("suggestions", [])
+        ]
+
+        return AIReviewResponse(
+            gap_analysis=result.get("gap_analysis", ""),
+            suggestions=suggestions,
+            conversation_history=[
+                ChatMessage(role=msg["role"], content=msg["content"])
+                for msg in updated_history
+            ],
+        )
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)
+        ) from e
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to generate grocery list review",
+        ) from e

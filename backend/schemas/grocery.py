@@ -95,3 +95,37 @@ class GroceryListWithItems(GroceryListResponse):
     items: List[GroceryItemResponse] = Field(default_factory=list)
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class GrocerySuggestion(BaseModel):
+    """Schema for AI-generated grocery list suggestion."""
+
+    action: str = Field(..., pattern="^(add|remove|swap)$")
+    name: str = Field(..., max_length=200)
+    quantity: Optional[str] = Field(None, max_length=50)
+    category: Optional[str] = Field(None, max_length=50)
+    meal_type: Optional[str] = Field(None, max_length=50)
+    target_item_id: Optional[int] = None
+    reason: Optional[str] = Field(None, max_length=500)
+
+
+class ChatMessage(BaseModel):
+    """Schema for chat message in conversation history."""
+
+    role: str = Field(..., pattern="^(user|assistant)$")
+    content: str
+
+
+class AIReviewRequest(BaseModel):
+    """Schema for AI grocery list review request."""
+
+    user_message: str
+    conversation_history: List[ChatMessage] = Field(default_factory=list)
+
+
+class AIReviewResponse(BaseModel):
+    """Schema for AI grocery list review response."""
+
+    gap_analysis: str
+    suggestions: List[GrocerySuggestion] = Field(default_factory=list)
+    conversation_history: List[ChatMessage] = Field(default_factory=list)
