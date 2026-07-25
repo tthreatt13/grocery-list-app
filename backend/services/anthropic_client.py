@@ -2,7 +2,7 @@
 
 import json
 import logging
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from anthropic import Anthropic
 
@@ -16,7 +16,7 @@ def get_anthropic_model() -> str:
     return settings.anthropic_model
 
 
-def call_anthropic_api(prompt: str, api_key: str, model: str | None = None) -> Any:
+def call_anthropic_api(prompt: str, api_key: str, model: Optional[str] = None) -> Any:
     """
     Call Anthropic Claude API with the formatted prompt.
 
