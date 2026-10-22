@@ -1,11 +1,11 @@
 """Tests for household management routes."""
 
 import pytest
-import jwt
 from datetime import datetime
 from fastapi.testclient import TestClient
 
 from models.user import User
+from tests.jwt_test_keys import make_auth_token
 from models.household import Household
 from models.household_member import HouseholdMember
 
@@ -13,12 +13,7 @@ from models.household_member import HouseholdMember
 @pytest.fixture
 def auth_headers(sample_user):
     """Create authentication headers for testing."""
-    # Create a mock JWT token
-    token_payload = {
-        "sub": sample_user.clerk_user_id,
-        "email": sample_user.email,
-    }
-    token = jwt.encode(token_payload, "secret", algorithm="HS256")
+    token = make_auth_token(sample_user.clerk_user_id, sample_user.email)
     return {"Authorization": f"Bearer {token}"}
 
 

@@ -22,6 +22,10 @@ class Settings(BaseSettings):
     clerk_secret_key: str = ""
     clerk_publishable_key: str = ""
     clerk_api_url: str = "https://api.clerk.com/v1"
+    # Optional override. When empty, the JWKS URL is derived from the publishable key.
+    clerk_jwks_url: str = ""
+    # PEM public key honored only when environment is "test".
+    clerk_test_jwt_public_key: str = ""
 
     # Anthropic AI
     anthropic_api_key: str = ""

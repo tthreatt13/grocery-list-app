@@ -44,8 +44,12 @@ def create_test_user(db: Session, clerk_user_id: str, email: str, name: str) -> 
 
 
 def generate_token(clerk_user_id: str, email: str) -> str:
-    """Generate a JWT token for testing."""
-    # Create token payload matching what Clerk would send
+    """Generate a local HS256 JWT for manual experiments.
+
+    The API verifies RS256 signatures against Clerk's JWKS. This token is
+    rejected unless ENVIRONMENT=test and the matching test public key is
+    configured.
+    """
     current_time = int(time.time())
     token_payload = {
         "sub": clerk_user_id,  # Subject (user ID)
@@ -55,8 +59,7 @@ def generate_token(clerk_user_id: str, email: str) -> str:
         "exp": current_time + (365 * 24 * 60 * 60),  # Expires in 1 year
     }
 
-    # Generate token (signature verification is disabled in auth middleware for testing)
-    # Using HS256 algorithm for simplicity
+    # Local HS256 token. The running API rejects it unless the test key is set.
     token = jwt.encode(token_payload, "secret", algorithm="HS256")
 
     return token
