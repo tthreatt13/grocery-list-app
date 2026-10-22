@@ -1,13 +1,92 @@
 """Clerk authentication middleware and dependencies."""
 
+import base64
 from typing import Optional
-from fastapi import Depends, HTTPException, Header, status
+
+from fastapi import Depends, Header, HTTPException, status
+from jwt import ExpiredSignatureError, PyJWKClient, PyJWTError
 from sqlalchemy.orm import Session
 import jwt
-from jwt import PyJWTError, ExpiredSignatureError
 
+from config import settings
 from database import get_db
 from models.user import User
+
+_jwks_clients: dict[str, PyJWKClient] = {}
+
+
+def jwks_url_from_publishable_key(publishable_key: str) -> str:
+    """Build the Clerk JWKS URL from a publishable key.
+
+    Clerk publishable keys are ``pk_test_<base64>`` or ``pk_live_<base64>``.
+    The base64 payload is the Frontend API host, often with a trailing ``$``.
+    """
+    host = _frontend_api_host(publishable_key)
+    return f"https://{host}/.well-known/jwks.json"
+
+
+def _frontend_api_host(publishable_key: str) -> str:
+    if not publishable_key.startswith("pk_"):
+        raise ValueError("Invalid Clerk publishable key")
+
+    parts = publishable_key.split("_", 2)
+    if len(parts) < 3 or not parts[2]:
+        raise ValueError("Invalid Clerk publishable key")
+
+    encoded = parts[2]
+    padded = encoded + "=" * (-len(encoded) % 4)
+    try:
+        decoded = base64.b64decode(padded).decode("utf-8")
+    except Exception as exc:
+        raise ValueError("Invalid Clerk publishable key") from exc
+
+    host = decoded.strip().rstrip("$")
+    if not host or any(char in host for char in "/ \t\r\n"):
+        raise ValueError("Invalid Clerk publishable key")
+    return host
+
+
+def get_jwks_client() -> PyJWKClient:
+    """Return a cached JWKS client for the configured Clerk instance."""
+    url = settings.clerk_jwks_url.strip()
+    if not url:
+        try:
+            url = jwks_url_from_publishable_key(settings.clerk_publishable_key)
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Clerk JWKS is not configured",
+            ) from exc
+
+    client = _jwks_clients.get(url)
+    if client is None:
+        client = PyJWKClient(url)
+        _jwks_clients[url] = client
+    return client
+
+
+def _uses_test_verification_key() -> bool:
+    return settings.environment.lower() == "test" and bool(
+        settings.clerk_test_jwt_public_key
+    )
+
+
+def _decode_clerk_token(token: str) -> dict:
+    """Verify a Clerk session token and return its claims."""
+    if token.startswith("Bearer "):
+        token = token[7:]
+
+    if _uses_test_verification_key():
+        verification_key = settings.clerk_test_jwt_public_key
+    else:
+        verification_key = get_jwks_client().get_signing_key_from_jwt(token).key
+
+    return jwt.decode(
+        token,
+        verification_key,
+        algorithms=["RS256"],
+        options={"verify_aud": False},
+    )
 
 
 def verify_clerk_token(token: str, db: Session) -> User:
@@ -27,24 +106,8 @@ def verify_clerk_token(token: str, db: Session) -> User:
             - 404: If user is not found in database
     """
     try:
-        # Decode JWT token (in production, verify signature with Clerk's public key)
-        # For now, we'll decode without verification for testing
-        # In production, you'd fetch JWKS from Clerk and verify
+        payload = _decode_clerk_token(token)
 
-        # Remove "Bearer " prefix if present
-        if token.startswith("Bearer "):
-            token = token[7:]
-
-        # Decode token
-        # Note: In production, you should verify the signature
-        # using Clerk's public keys from their JWKS endpoint
-        payload = jwt.decode(
-            token,
-            options={"verify_signature": False},  # Disabled for testing
-            algorithms=["RS256"],
-        )
-
-        # Extract user ID from token
         clerk_user_id = payload.get("sub")
         if not clerk_user_id:
             raise HTTPException(
@@ -52,10 +115,8 @@ def verify_clerk_token(token: str, db: Session) -> User:
                 detail="Invalid token: missing subject",
             )
 
-        # Look up user in database
         user = db.query(User).filter(User.clerk_user_id == clerk_user_id).first()
 
-        # Raise 404 if user not found
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -65,15 +126,15 @@ def verify_clerk_token(token: str, db: Session) -> User:
         return user
 
     except HTTPException:
-        # Re-raise HTTP exceptions as-is
         raise
     except ExpiredSignatureError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Token has expired"
         )
-    except PyJWTError as e:
+    except PyJWTError as exc:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Invalid token: {str(e)}"
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Invalid token: {str(exc)}",
         )
 
 
@@ -106,7 +167,6 @@ def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    # Extract token from "Bearer <token>" format
     if not token.startswith("Bearer "):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -114,7 +174,7 @@ def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    token_value = token[7:]  # Remove "Bearer " prefix
+    token_value = token[7:]
 
     return verify_clerk_token(token_value, db)
 

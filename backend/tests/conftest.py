@@ -14,8 +14,22 @@ from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.pool import StaticPool
 from fastapi.testclient import TestClient
 
+from config import settings
 from database import Base, get_db
 from main import app
+from tests.jwt_test_keys import TEST_PUBLIC_KEY_PEM
+
+
+@pytest.fixture(scope="session", autouse=True)
+def configure_test_jwt_verification():
+    """Verify route tokens with the in-process RSA key instead of Clerk JWKS."""
+    previous_environment = settings.environment
+    previous_key = settings.clerk_test_jwt_public_key
+    object.__setattr__(settings, "environment", "test")
+    object.__setattr__(settings, "clerk_test_jwt_public_key", TEST_PUBLIC_KEY_PEM)
+    yield
+    object.__setattr__(settings, "environment", previous_environment)
+    object.__setattr__(settings, "clerk_test_jwt_public_key", previous_key)
 
 
 @pytest.fixture(scope="function")
